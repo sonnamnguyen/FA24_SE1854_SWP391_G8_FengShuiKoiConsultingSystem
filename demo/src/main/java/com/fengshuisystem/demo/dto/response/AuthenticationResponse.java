@@ -1,4 +1,4 @@
-package com.fengshuisystem.demo.dto.reponse;
+package com.fengshuisystem.demo.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntrospectResponse {
-    boolean valid;
+public class AuthenticationResponse {
+    String token;
+    boolean authenticated;
 }

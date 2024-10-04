@@ -31,14 +31,8 @@ public class UserUpdateRequest {
     @Size(min = 10, message = "INVALID_PHONE_NUMBER")
     String phoneNumber;
 
-    String avatar;
 
     @Pattern(regexp = "male|female", message = "INVALID_GENDER")
     String gender;
 
-    String code;
-
-    Boolean status;
-
-    List<String> roles;
 }

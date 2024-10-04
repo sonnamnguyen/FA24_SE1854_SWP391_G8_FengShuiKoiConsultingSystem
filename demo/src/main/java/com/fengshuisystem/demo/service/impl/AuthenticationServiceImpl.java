@@ -1,22 +1,13 @@
-package com.fengshuisystem.demo.service;
-
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.UUID;
-
+package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.constant.PredefinedRole;
-import com.fengshuisystem.demo.dto.reponse.AuthenticationResponse;
-import com.fengshuisystem.demo.dto.reponse.IntrospectResponse;
+
 import com.fengshuisystem.demo.dto.request.*;
+import com.fengshuisystem.demo.dto.response.AuthenticationResponse;
+import com.fengshuisystem.demo.dto.response.IntrospectResponse;
+import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.InvalidatedToken;
 import com.fengshuisystem.demo.entity.Role;
-import com.fengshuisystem.demo.entity.User;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.repository.InvalidatedTokenRepository;
@@ -24,35 +15,41 @@ import com.fengshuisystem.demo.repository.RoleRepository;
 import com.fengshuisystem.demo.repository.UserRepository;
 import com.fengshuisystem.demo.repository.httpclient.OutboundIdentityClient;
 import com.fengshuisystem.demo.repository.httpclient.OutboundUserClient;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-
+import com.fengshuisystem.demo.service.AuthenticateService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticateService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     OutboundIdentityClient outboundIdentityClient;
     OutboundUserClient outboundUserClient;
-    private final RoleRepository roleRepository;
+ RoleRepository roleRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -80,7 +77,7 @@ public class AuthenticationService {
 
     @NonFinal
     protected final String GRANT_TYPE = "authorization_code";
-
+@Override
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
         boolean isValid = true;
@@ -99,6 +96,7 @@ public class AuthenticationService {
             return roleRepository.save(newRole);
         });
     }
+    @Override
     public AuthenticationResponse outboundAuthenticate(String code){
         var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
@@ -121,7 +119,7 @@ public class AuthenticationService {
 
         // Onboard user
         var user = userRepository.findByUsername(userInfo.getEmail()).orElseGet(
-                () -> userRepository.save(User.builder()
+                () -> userRepository.save(Account.builder()
                         .username(userInfo.getEmail())
                         .roles(roles)
                         .build()));
@@ -133,7 +131,7 @@ public class AuthenticationService {
                 .token(token)
                 .build();
     }
-
+@Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository
@@ -148,7 +146,7 @@ public class AuthenticationService {
 
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
-
+@Override
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         try {
             var signToken = verifyToken(request.getToken(), true);
@@ -164,7 +162,7 @@ public class AuthenticationService {
             log.info("Token already expired");
         }
     }
-
+@Override
     public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         var signedJWT = verifyToken(request.getToken(), true);
 
@@ -186,18 +184,17 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
-    private String generateToken(User user) {
+    private String generateToken(Account account) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
-
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUsername())
+                .subject(account.getUsername())
                 .issuer("fengshuikoiconsultingsystem.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()
                 ))
                 .jwtID(UUID.randomUUID().toString())
-                .claim("scope", buildScope(user))
+                .claim("scope", buildScope(account))
 
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -233,15 +230,25 @@ public class AuthenticationService {
         return signedJWT;
     }
 
-    private String buildScope(User user) {
+    private String buildScope(Account account) {
+        List<Role> roles = userRepository.findRolesByUserId(account.getId());
         StringJoiner stringJoiner = new StringJoiner(" ");
 
-        if (!CollectionUtils.isEmpty(user.getRoles()))
-            user.getRoles().forEach(role -> {
+
+        if (!CollectionUtils.isEmpty(account.getRoles())) {
+            roles.forEach(role -> {
                 stringJoiner.add("ROLE_" + role.getName());
             });
+        }
 
         return stringJoiner.toString();
     }
+
+    private Collection<? extends GrantedAuthority> rolesToAuthorities(Collection<Role> roles) {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName())) // Prefix roles with "ROLE_".
+                .collect(Collectors.toList());
+    }
+
 }
 

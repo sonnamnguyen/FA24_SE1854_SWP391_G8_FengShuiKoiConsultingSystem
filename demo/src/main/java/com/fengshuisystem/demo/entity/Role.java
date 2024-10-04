@@ -1,38 +1,33 @@
 package com.fengshuisystem.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.Nationalized;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "role")
 public class Role {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Use IDENTITY for auto-increment
-    @Column(name = "role_id")
-    Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-    @Column(name = "name", nullable = false, unique = true) // Ensure role names are unique
-    String name;
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "name")
+    private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.REFRESH,
-            CascadeType.DETACH
-    })
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    Set<User> users;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    private Set<Account> accounts = new LinkedHashSet<>();
+
 }

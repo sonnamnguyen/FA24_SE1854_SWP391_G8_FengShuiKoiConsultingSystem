@@ -1,7 +1,7 @@
 package com.fengshuisystem.demo.repository.httpclient;
 
-import com.fengshuisystem.demo.dto.reponse.ExchangeTokenResponse;
 import com.fengshuisystem.demo.dto.request.ExchangeTokenRequest;
+import com.fengshuisystem.demo.dto.response.ExchangeTokenResponse;
 import feign.QueryMap;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;

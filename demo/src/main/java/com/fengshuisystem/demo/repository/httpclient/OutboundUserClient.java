@@ -1,6 +1,6 @@
 package com.fengshuisystem.demo.repository.httpclient;
 
-import com.fengshuisystem.demo.dto.reponse.OutboundUserResponse;
+import com.fengshuisystem.demo.dto.response.OutboundUserResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
