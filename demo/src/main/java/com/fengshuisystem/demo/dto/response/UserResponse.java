@@ -1,10 +1,11 @@
-package com.fengshuisystem.demo.dto.reponse;
+package com.fengshuisystem.demo.dto.response;
 
+
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Set;
 
-import com.fengshuisystem.demo.validator.DobConstraint;
-import jakarta.validation.constraints.Size;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,16 +18,18 @@ public class UserResponse {
     String id;
     String username;
     String password;
+    String fullName;
     String email;
-    LocalDate dob;
     String phoneNumber;
-    String avatar;
     String gender;
+    String avatar;
+    LocalDate dob;
     String code;
-    Boolean status;
-    LocalDate createDate;
+    String status;
+    Instant createDate;
+    String createdBy;
+    Instant updateDate;
+    String updatedBy;
     Boolean noPassword;
     Set<RoleResponse> roles;
-
-
 }

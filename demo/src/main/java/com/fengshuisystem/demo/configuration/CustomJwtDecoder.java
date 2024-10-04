@@ -2,18 +2,20 @@ package com.fengshuisystem.demo.configuration;
 
 import java.text.ParseException;
 import java.util.Objects;
+import java.time.Instant;
+import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
 
 
 import com.fengshuisystem.demo.dto.request.IntrospectRequest;
-import com.fengshuisystem.demo.service.AuthenticationService;
+import com.fengshuisystem.demo.service.AuthenticateService;
+import com.fengshuisystem.demo.service.impl.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Component;
 
 
@@ -25,7 +27,8 @@ public class CustomJwtDecoder implements JwtDecoder {
     private String signerKey;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    @Lazy
+    private AuthenticateService authenticationService;
 
     private NimbusJwtDecoder nimbusJwtDecoder = null;
 
@@ -50,4 +53,6 @@ public class CustomJwtDecoder implements JwtDecoder {
 
         return nimbusJwtDecoder.decode(token);
     }
+
+
 }

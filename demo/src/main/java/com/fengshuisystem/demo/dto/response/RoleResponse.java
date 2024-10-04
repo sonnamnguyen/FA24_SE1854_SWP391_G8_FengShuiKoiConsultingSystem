@@ -1,6 +1,6 @@
-package com.fengshuisystem.demo.dto.reponse;
+package com.fengshuisystem.demo.dto.response;
 
-import java.util.Set;
+
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,5 +13,4 @@ import lombok.experimental.FieldDefaults;
 public class RoleResponse {
     Integer id;
     String name;
-
 }

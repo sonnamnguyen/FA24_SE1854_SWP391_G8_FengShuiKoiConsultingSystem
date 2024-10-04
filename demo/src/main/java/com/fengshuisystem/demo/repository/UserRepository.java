@@ -1,13 +1,21 @@
 package com.fengshuisystem.demo.repository;
 
 
-import com.fengshuisystem.demo.entity.User;
+import com.fengshuisystem.demo.entity.Account;
+import com.fengshuisystem.demo.entity.Role;
+import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
-
-public interface UserRepository extends JpaRepository<User, Integer> {
+@Repository
+public interface UserRepository extends JpaRepository<Account, Integer> {
     boolean existsByUsername(String username);
-
-    Optional<User> findByUsername(String username);
+ //   boolean existsByEmail(String email);
+    Optional<Account> findByUsername(String username);
+    Optional<Account> findByEmail(String email);
+    @Query(value = "SELECT r FROM Role r JOIN r.accounts u WHERE u.id = :userId")
+    List<Role> findRolesByUserId(@Param("userId") Integer userId);
 }
