@@ -14,7 +14,8 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NumberDTO {
-    private DestinyDTO destiny;
-    private Integer number;
-    private List<ConsultationAnimalDTO> consultationAnimals;
+    Integer id;
+ DestinyDTO destiny;
+     Integer number;
+     List<ConsultationAnimalDTO> consultationAnimals;
 }

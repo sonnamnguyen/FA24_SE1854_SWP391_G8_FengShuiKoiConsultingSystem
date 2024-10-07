@@ -3,20 +3,22 @@ package com.fengshuisystem.demo.configuration;
 public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
-                "/animals", "/animals/{search}"
+                "/animals", "/animals/{search}", "/shelters", "/shelters/{search}",
+                "/colors", "shapes"
 
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
-                "/animals"
+                "/animals", "/shelters", "/colors", "/shapes"
 
         };
 
         public static final String[] ADMIN_PUT_ENDPOINTS = {
-                "/animals/{id}"
+                "/animals/{id}", "/shelters/{id}", "/colors/{id}",  "/shapes/{id}"
         };
 
         public static final String[] ADMIN_DELETE_ENDPOINTS = {
-                "/animals/{id}"
+                "/animals/{id}", "/shelters/{id}", "/colors/{id}",
+                "/shapes/{id}"
         };
 
         public static final String[] PUBLIC_ENDPOINTS = {

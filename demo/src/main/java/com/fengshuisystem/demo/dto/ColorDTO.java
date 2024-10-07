@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.dto;
 
+import com.fengshuisystem.demo.entity.Destiny;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,12 +13,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ColorDTO {
     Integer id;
-    DestinyDTO destiny;
+    Destiny destiny;
     String color;
     String status;
     Instant createdDate;
     String createdBy;
     Instant updatedDate;
     String updatedBy;
-    List<AnimalCategoryDTO> animalCategoriesDTO;
+    List<AnimalCategoryDTO> animalCategories;
 }

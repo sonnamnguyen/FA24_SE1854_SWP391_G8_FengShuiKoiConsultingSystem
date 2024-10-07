@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.dto;
 
+import com.fengshuisystem.demo.dto.response.UserResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationRequestDTO {
      Integer id;
-     Integer accountId;
+     UserResponse account;
      Integer packageId;
     String description;
      String status;

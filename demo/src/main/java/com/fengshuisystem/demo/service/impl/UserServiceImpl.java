@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -68,23 +69,26 @@ public UserResponse createUser(UserCreationRequest request) {
 
     Account user = userMapper.toUser(request);
     user.setPassword(passwordEncoder.encode(request.getPassword()));
-    log.info("UserCreationRequest: {}", request);
-
 
     Set<Role> roles = new HashSet<>();
     Role userRole = roleRepository.findByName(PredefinedRole.USER_ROLE)
             .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
-    log.info("UserCreationRequest: {}", roles);
     roles.add(userRole);
     user.setRoles(roles);
     user.setStatus(Status.ACTIVE);
     user.setCreatedDate(Instant.now());
     user.setUpdatedDate(Instant.now());
-    log.info("Roles User: {}", user.getRoles());
-
     return userMapper.toUserResponse(userRepository.save(user));
 }
+public void giveEmailForgotPassword(String email) {
+    Account user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+   user.setCode(generateCode());
+    sendForgotCodeToRestPassword(user.getEmail(), user.getCode());
+}
+//public UserResponse forgotPassword(String link) {
+//
+//}
     public UserResponse createAdmin(UserCreationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
 
@@ -183,6 +187,29 @@ public UserResponse createUser(UserCreationRequest request) {
         emailService.sendEmail("phuy61371@gmail.com", email, subject, text);
     }
 
+    private void sendForgotCodeToRestPassword(String email, String code) {
+
+        String subject = "Reset your password at FengShuiConsultingSystem.com";
+
+        String text = "<html><body>";
+        text += "Dear User,<br/><br/>";
+        text += "We received a request to reset the password for your account at FengShuiConsultingSystem.com.<br/><br/>";
+        text += "Please use the following code to reset your password: <strong>" + code + "</strong><br/><br/>";
+        text += "Alternatively, you can reset your password by clicking on the following link:<br/>";
+
+        String url = "http://localhost:3000/reset-password/" + email + "/" + code;
+        text += "<a href=\"" + url + "\">" + url + "</a><br/><br/>";
+
+        text += "If you did not request a password reset, please ignore this email or contact support.<br/><br/>";
+        text += "Need help? Feel free to contact our support team at support@fengshuiconsultingsystem.com.<br/>";
+        text += "We are here to assist you.<br/><br/>";
+        text += "Best regards,<br/> The FengShuiConsultingSystem Support Team";
+        text += "</body></html>";
+
+        emailService.sendEmail("phuy61371@gmail.com", email, subject, text);
+    }
+
+
 
 //    public ApiResponse<Account> activeAccount(String email, String code) {
 //        Account account = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -207,21 +234,8 @@ public UserResponse createUser(UserCreationRequest request) {
 
 
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        Account account = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-//        Collection<? extends GrantedAuthority> authorities = rolesToAuthorities(account.getRoles());
-//        return new org.springframework.security.core.userdetails.User(
-//                account.getUsername(),
-//                account.getPassword(),
-//                authorities
-//        );
-//    }
 
-//    private Collection<? extends GrantedAuthority> rolesToAuthorities(Collection<Role> roles) {
-//        return roles.stream()
-//                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
-//                .collect(Collectors.toList());
-//    }
+
+
 
 }

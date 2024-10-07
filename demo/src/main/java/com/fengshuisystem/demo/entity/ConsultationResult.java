@@ -40,12 +40,6 @@ public class ConsultationResult {
     @JoinColumn(name = "consultation_category_id")
     private ConsultationCategory consultationCategory;
 
-    @Column(name = "consultation_animal_id")
-    private Integer consultationAnimalId;
-
-    @Column(name = "consultation_shelter_id")
-    private Integer consultationShelterId;
-
     @Column(name = "consultation_date")
     private Instant consultationDate;
 

@@ -46,7 +46,7 @@ public class ShelterServiceImpl implements ShelterService {
     @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<ShelterCategoryDTO> getSheltersBySearch(String name, int page, int size) {
         Sort sort = Sort.by("createdDate").descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = shelterRepository.findAllByShelterCategoryName(name, pageable);
         if(pageData.isEmpty()) {
             throw new AppException(ErrorCode.SHELTER_NOT_EXISTED);
@@ -65,7 +65,7 @@ public class ShelterServiceImpl implements ShelterService {
     public PageResponse<ShelterCategoryDTO> getAllShelters(int page, int size) {
         String status = "ACTIVE";
         Sort sort = Sort.by("createdDate").descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = shelterRepository.findAllByStatus(status, pageable);
         if(pageData.isEmpty()) {
             throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);

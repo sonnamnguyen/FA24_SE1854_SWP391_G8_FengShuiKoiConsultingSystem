@@ -13,19 +13,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AnimalRepository extends JpaRepository<AnimalCategory, Integer> {
     boolean existsByAnimalCategoryName(String name);
-//    Page<AnimalCategory> findAllByStatus(Status status, Pageable pageable);
-    @Query(value = "SELECT a FROM AnimalCategory a " +
-            "JOIN a.animalImages ai " +
-            "JOIN a.colors c " +
-            "WHERE a.status = 'ACTIVE' AND " +
-            "(:#{#dto.animalCategoryName} IS NULL OR a.animalCategoryName LIKE %:#{#dto.animalCategoryName}%) AND " +
-            "(:#{#dto.origin} IS NULL OR a.origin LIKE %:#{#dto.origin}%) AND " +
-            "(:#{#dto.createdDate} IS NULL OR a.createdDate = :#{#dto.createdDate}) AND " +
-            "(:#{#dto.colors} IS NULL OR :#{#dto.colors} member of a.colors)"
-    )
-    Page<AnimalCategory> findAllBySearch(AnimalCategoryDTO dto, Pageable pageable);
-
-
+    Page<AnimalCategory> findAllByStatus(Status status, Pageable pageable);
+    @Query("SELECT ac FROM AnimalCategory ac " +
+            "WHERE :#{#dto.animalCategoryName} = 'ACTIVE' " +
+            "OR ac.animalCategoryName LIKE %:#{#dto.animalCategoryName}% " +
+            "OR  ac.origin LIKE %:#{#dto.origin}%")
+    Page<AnimalCategory> findAllByAnimalCategoryNameContainingOriginContaining(AnimalCategoryDTO dto, Pageable pageable);
 
 
 }
