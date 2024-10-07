@@ -1,6 +1,7 @@
 package com.fengshuisystem.demo.dto;
 
 import com.fengshuisystem.demo.dto.request.UserCreationRequest;
+import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,10 +18,8 @@ public class ConsultationResultDTO {
     Integer id;
     ConsultationRequest request;
     ConsultationRequestDetailDTO requestDetail;
-    UserCreationRequest account;
+    UserResponse account;
     ConsultationCategory consultationCategory;
-    Integer consultationAnimalId;
-    Integer consultationShelterId;
     Instant consultationDate;
     String consultantName;
     String status ;

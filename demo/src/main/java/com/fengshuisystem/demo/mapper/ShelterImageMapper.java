@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(
         config = DefaultConfigMapper.class
+
 )
 public interface ShelterImageMapper extends EntityMapper<ShelterImageDTO, ShelterImage>{
 }

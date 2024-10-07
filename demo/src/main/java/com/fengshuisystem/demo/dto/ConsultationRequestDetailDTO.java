@@ -12,9 +12,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationRequestDetailDTO {
     Integer id;
-    ConsultationResultDTO requestDetailId;
-    ShelterCategoryDTO shelterCategoryId;
-    AnimalCategoryDTO animalCategoryId;
+    ConsultationResultDTO requestDetail;
+    ShelterCategoryDTO shelterCategory;
+    AnimalCategoryDTO animalCategory;
     String status;
     Instant createdDate;
     String createdBy;

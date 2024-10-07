@@ -10,9 +10,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DirectionDTO {
-     Integer id;
-     String direction;
-     DestinyDTO destinyDTO;
-     List<ConsultationShelterDTO> consultationShelters;
+public class ConsulationCategoryDTO {
+    Integer id;
+    String name;
+    String status;
+    List<ConsultationResultDTO> consulationResults;
 }

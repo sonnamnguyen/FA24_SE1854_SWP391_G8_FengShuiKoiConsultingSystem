@@ -2,7 +2,6 @@ package com.fengshuisystem.demo.controller;
 
 
 import com.fengshuisystem.demo.dto.ApiResponse;
-
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
 import com.fengshuisystem.demo.service.ShelterService;
@@ -41,7 +40,7 @@ public class ShelterController {
     }
 
   @GetMapping("/{name}")
-  public ApiResponse<PageResponse<ShelterCategoryDTO>> getAnimalBySearch(
+  public ApiResponse<PageResponse<ShelterCategoryDTO>> getShelterBySearch(
           @PathVariable String name,
           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
           @RequestParam(value = "size", required = false, defaultValue = "10") int size

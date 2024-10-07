@@ -7,7 +7,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
+
 
 @Data
 @NoArgsConstructor
@@ -17,7 +17,7 @@ import java.util.Set;
 public class AnimalCategoryDTO {
     Integer id;
     String animalCategoryName;
-    String discription;
+    String description;
     String origin;
     String status;
     Instant createdDate;
@@ -25,7 +25,7 @@ public class AnimalCategoryDTO {
     Instant updatedDate;
     String updatedBy;
     List<AnimalImageDTO> animalImages;
-    List<ConsultationAnimalDTO> consultationAnimalDTOList;
-    List<ConsultationRequestDetailDTO> consultationRequestDetailList;
+    List<ConsultationAnimalDTO> consultationAnimals;
+    List<ConsultationRequestDetailDTO> consultationRequestDetails;
     List<ColorDTO> colors;
 }

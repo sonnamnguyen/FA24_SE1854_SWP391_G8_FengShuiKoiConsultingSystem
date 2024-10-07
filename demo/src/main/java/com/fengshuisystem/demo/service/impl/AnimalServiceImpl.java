@@ -43,8 +43,8 @@ public class AnimalServiceImpl implements AnimalService {
     @PreAuthorize("hasRole('ADMIN')")
    public PageResponse<AnimalCategoryDTO> getAnimalsBySearch(AnimalCategoryDTO search, int page, int size) {
         Sort sort = Sort.by("createdDate").descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-      var pageData = animalRepository.findAllBySearch(search, pageable);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+      var pageData = animalRepository.findAllByAnimalCategoryNameContainingOriginContaining(search,pageable);
       if(pageData.isEmpty()) {
           throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
       }
@@ -63,8 +63,8 @@ public class AnimalServiceImpl implements AnimalService {
     public PageResponse<AnimalCategoryDTO> getAnimals(int page, int size) {
         Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-        var pageData = animalRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = animalRepository.findAllByStatus(status, pageable);
         if(pageData.isEmpty()) {
             throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
         }

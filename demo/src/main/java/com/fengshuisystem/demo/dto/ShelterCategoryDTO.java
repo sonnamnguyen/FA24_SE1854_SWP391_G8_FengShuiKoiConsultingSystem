@@ -1,7 +1,5 @@
 package com.fengshuisystem.demo.dto;
-import com.fengshuisystem.demo.entity.ConsultationRequestDetail;
-import com.fengshuisystem.demo.entity.ConsultationShelter;
-import com.fengshuisystem.demo.entity.ShelterImage;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.Instant;

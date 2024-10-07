@@ -60,14 +60,11 @@ public class Account {
     private LocalDate dob;
 
     @Column(name = "code")
-    private Integer code;
-
-
+    private String code;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status = Status.INACTIVE;
-
 
     @Column(name = "created_date")
     private Instant createdDate ;
