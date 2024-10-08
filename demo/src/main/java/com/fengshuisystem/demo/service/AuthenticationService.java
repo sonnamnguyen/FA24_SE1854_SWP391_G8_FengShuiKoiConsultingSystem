@@ -81,6 +81,7 @@ public class AuthenticationService {
     @NonFinal
     protected final String GRANT_TYPE = "authorization_code";
 
+    // Kiểm tra tính hợp lệ của token (introspect)
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
         boolean isValid = true;
@@ -93,12 +94,16 @@ public class AuthenticationService {
 
         return IntrospectResponse.builder().valid(isValid).build();
     }
+
+    // Tìm kiếm hoặc tạo role
     public Role findOrCreateRole(String roleName) {
         return roleRepository.findByName(roleName).orElseGet(() -> {
             Role newRole = Role.builder().name(roleName).build();
             return roleRepository.save(newRole);
         });
     }
+
+    // Xác thực qua code từ hệ thống khác (outbound)
     public AuthenticationResponse outboundAuthenticate(String code){
         var response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
@@ -119,7 +124,7 @@ public class AuthenticationService {
         Role userRole = findOrCreateRole(PredefinedRole.USER_ROLE);
         roles.add(userRole);
 
-        // Onboard user
+        // Tạo mới user nếu chưa tồn tại
         var user = userRepository.findByUsername(userInfo.getEmail()).orElseGet(
                 () -> userRepository.save(User.builder()
                         .username(userInfo.getEmail())
@@ -134,6 +139,7 @@ public class AuthenticationService {
                 .build();
     }
 
+    // Xác thực thông thường (local)
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository
@@ -149,6 +155,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
+    // Đăng xuất (logout)
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         try {
             var signToken = verifyToken(request.getToken(), true);
@@ -156,6 +163,7 @@ public class AuthenticationService {
             String jit = signToken.getJWTClaimsSet().getJWTID();
             Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
 
+            // Lưu token vào danh sách bị vô hiệu
             InvalidatedToken invalidatedToken =
                     InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
@@ -165,6 +173,7 @@ public class AuthenticationService {
         }
     }
 
+    // Refresh token
     public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         var signedJWT = verifyToken(request.getToken(), true);
 
@@ -186,6 +195,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
+    // Tạo JWT token
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
@@ -200,6 +210,7 @@ public class AuthenticationService {
                 .claim("scope", buildScope(user))
 
                 .build();
+
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
         JWSObject jwsObject = new JWSObject(header, payload);
@@ -213,6 +224,7 @@ public class AuthenticationService {
         }
     }
 
+    // Xác minh JWT token
     private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
@@ -233,6 +245,7 @@ public class AuthenticationService {
         return signedJWT;
     }
 
+    // Xây dựng scope dựa trên các role của user
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
 

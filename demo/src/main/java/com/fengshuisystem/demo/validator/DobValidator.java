@@ -9,21 +9,25 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class DobValidator implements ConstraintValidator<DobConstraint, LocalDate> {
 
-    // minimum age
+    // minimum and maximum age
     private int min;
+    private int max;
 
     @Override
     public boolean isValid(LocalDate value, ConstraintValidatorContext context) {
-        if (Objects.isNull(value)) return true;
+        // trường ngày sinh bắt buộc
+        if (Objects.isNull(value)) return false;
 
         long years = ChronoUnit.YEARS.between(value, LocalDate.now());
 
-        return years >= min;
+        // Kiểm tra khoảng ngày sinh hợp lệ
+        return years >= min && years <= max;
     }
 
     @Override
     public void initialize(DobConstraint constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
         min = constraintAnnotation.min();
+        max = constraintAnnotation.max();
     }
 }

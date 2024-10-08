@@ -17,6 +17,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+    // trả về lỗi '401 Unauthorized' với 1 JSON failed response.
     @Override
     public void commence(
             HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)

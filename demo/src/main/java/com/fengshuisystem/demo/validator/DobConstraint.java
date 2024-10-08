@@ -15,7 +15,9 @@ import jakarta.validation.Payload;
 public @interface DobConstraint {
     String message() default "Invalid date of birth";
 
-    int min();
+    // tuổi tối thiểu và tối đa cho phép
+    int min() default 1;
+    int max() default 150;
 
     Class<?>[] groups() default {};
 
