@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class DobValidator implements ConstraintValidator<DobConstraint, LocalDate> {
 
+    // minimum age
     private int min;
 
     @Override
