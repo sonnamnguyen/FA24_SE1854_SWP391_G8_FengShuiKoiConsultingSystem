@@ -12,17 +12,14 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "role")
-public class Role {
-
+@Table(name = "post_category")
+public class PostCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
-    Integer id;
-
-    @Column(name = "name", nullable = false, unique = true)
-    String name;
-
+    @Column(name = "post_category_id",nullable = false)
+    Integer postCategoryId;
+    @Column(name="post_category_name",nullable=false,length=255)
+    String postCategoryName;
     @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE,
@@ -30,9 +27,9 @@ public class Role {
             CascadeType.DETACH
     })
     @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            name = "post_postCategory",
+            joinColumns = @JoinColumn(name = "post_category_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id")
     )
-    Set<User> users;
+    Set<Post> post;
 }

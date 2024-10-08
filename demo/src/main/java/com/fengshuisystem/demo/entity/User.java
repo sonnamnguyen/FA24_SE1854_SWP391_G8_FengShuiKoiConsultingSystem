@@ -61,4 +61,8 @@ public class User {
                 inverseJoinColumns = @JoinColumn(name = "role_id")
         )
         Set<Role> roles;
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        private List<Post> post;
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        private List<Bill> bills;
 }

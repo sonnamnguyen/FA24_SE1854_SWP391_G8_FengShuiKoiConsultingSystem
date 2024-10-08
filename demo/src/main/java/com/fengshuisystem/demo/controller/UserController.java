@@ -1,24 +1,19 @@
 package com.fengshuisystem.demo.controller;
 
-import java.util.List;
-
-
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.reponse.UserResponse;
 import com.fengshuisystem.demo.dto.request.PasswordCreationRequest;
 import com.fengshuisystem.demo.dto.request.UserCreationRequest;
 import com.fengshuisystem.demo.dto.request.UserUpdateRequest;
-import com.fengshuisystem.demo.service.UserService;
+import com.fengshuisystem.demo.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.*;
-
-
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -26,17 +21,17 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserController {
-    UserService userService;
+    UserServiceImpl userService;
 
     @PostMapping
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.createUser(request))
                 .build();
     }
 
     @PostMapping("/create-password")
-    ApiResponse<Void> createPassword(@RequestBody @Valid PasswordCreationRequest request) {
+   ApiResponse<Void> createPassword(@RequestBody @Valid PasswordCreationRequest request) {
         userService.createPassword(request);
         return ApiResponse.<Void>builder()
                 .message("Password has been created, you could use it to log-in")
@@ -51,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    ApiResponse<UserResponse> getUser(@PathVariable("userId") Integer userId) {
+     ApiResponse<UserResponse> getUser(@PathVariable("userId") Integer userId) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getUser(userId))
                 .build();
@@ -70,10 +65,10 @@ public class UserController {
         return ApiResponse.<String>builder().result("User has been deleted").build();
     }
 
-//    @PutMapping("/{userId}")
-//    ApiResponse<UserResponse> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest request) {
-//        return ApiResponse.<UserResponse>builder()
-//                .result(userService.updateUser(userId, request))
-//                .build();
-//    }
+    @PutMapping("/{userId}")
+    ApiResponse<UserResponse> updateUser(@PathVariable Integer userId, @RequestBody UserUpdateRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.updateUser(userId, request))
+                .build();
+    }
 }
