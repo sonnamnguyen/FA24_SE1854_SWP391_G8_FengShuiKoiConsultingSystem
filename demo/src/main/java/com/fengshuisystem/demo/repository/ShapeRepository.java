@@ -17,6 +17,6 @@ public interface ShapeRepository extends JpaRepository<Shape, Integer> {
     Page<Shape> findAllByStatus(Status status, Pageable pageable);
     @Query(value = "select s from Shape s where s.status = 'ACTIVE'")
     Page<Shape> findAlByShape(String shape, Pageable pageable);
-    @Query(value = "SELECT r FROM Shape r JOIN r.destiny d WHERE d.id = :destinyId")
+    @Query(value = "SELECT s FROM Shape s JOIN s.destiny d WHERE d.id = :destinyId AND s.status = 'ACTIVE'")
     List<Shape> findAllByDestiny(@Param("destinyId")Integer destinyId);
 }

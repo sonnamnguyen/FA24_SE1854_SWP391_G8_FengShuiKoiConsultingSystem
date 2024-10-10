@@ -22,6 +22,6 @@ public interface AnimalRepository extends JpaRepository<AnimalCategory, Integer>
             "OR ac.animalCategoryName LIKE %:#{#dto.animalCategoryName}% " +
             "OR  ac.origin LIKE %:#{#dto.origin}%")
     Page<AnimalCategory> findAllByAnimalCategoryNameContainingOriginContaining(AnimalCategoryDTO dto, Pageable pageable);
-    @Query("SELECT ac FROM AnimalCategory ac JOIN ac.colors c WHERE c.id = :colorId")
+    @Query("SELECT ac FROM AnimalCategory ac JOIN ac.colors c WHERE c.id = :colorId AND ac.status = 'ACTIVE'")
     List<AnimalCategory> findAllByColorId(@Param("colorId") Integer colorId);
 }

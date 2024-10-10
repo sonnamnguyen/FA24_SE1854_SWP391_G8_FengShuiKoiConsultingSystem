@@ -9,4 +9,5 @@ import org.mapstruct.Mapper;
 
 )
 public interface NumberMapper extends EntityMapper<NumberDTO, Number>{
+
 }

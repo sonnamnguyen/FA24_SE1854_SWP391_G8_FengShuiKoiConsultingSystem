@@ -1,7 +1,8 @@
 package com.fengshuisystem.demo.service.impl;
 
-import com.fengshuisystem.demo.dto.ColorDTO;
 import com.fengshuisystem.demo.dto.DirectionDTO;
+import com.fengshuisystem.demo.dto.NumberDTO;
+import com.fengshuisystem.demo.entity.Direction;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.DirectionMapper;
@@ -36,5 +37,12 @@ public class DirectionServiceImpl implements DirectionService {
             throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
         }
         return directions;
+    }
+
+    @Override
+    public DirectionDTO updateDirection(Integer directionId, DirectionDTO directionDTO) {
+        Direction direction = directionRepository.findById(directionId).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
+        directionMapper.update(directionDTO, direction);
+        return directionMapper.toDto(directionRepository.save(direction));
     }
 }

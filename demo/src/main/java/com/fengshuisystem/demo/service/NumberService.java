@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface NumberService {
     List<NumberDTO> getNumbers(Integer destiny);
+    NumberDTO updateNumber(Integer numberId, NumberDTO number);
 }

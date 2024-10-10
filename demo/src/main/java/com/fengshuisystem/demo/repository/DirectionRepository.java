@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.repository;
 
+import com.fengshuisystem.demo.entity.Color;
 import com.fengshuisystem.demo.entity.Direction;
 import feign.Param;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -5,11 +5,17 @@ import com.fengshuisystem.demo.dto.DestinyDTO;
 import java.util.List;
 
 public interface DestinyService {
-    public String getDestinyFromYear(int yearOfBirth);
-    public String findTuongSinhTruoc(String destiny);
-    public String findTuongSinhSau(String destiny);
-    public String findTuongKhacTruoc(String destiny);
-    public String findTuongKhacSau(String destiny);
-    public DestinyDTO getDestinyId(String destiny);
-    public List<DestinyDTO> getAllDestinyByAnimal(int animalId);
+    String getDestinyFromYear(int yearOfBirth);
+    String findTuongSinhTruoc(String destiny);
+    String findTuongSinhSau(String destiny);
+    String findTuongKhacTruoc(String destiny);
+    String findTuongKhacSau(String destiny);
+    DestinyDTO getDestinyId(String destiny);
+    List<DestinyDTO> getAllDestinyByAnimal(int animalId);
+    List<String> getShapeNames(Integer destinyId);
+    List<String> getColorNames(Integer destinyId);
+    List<String> getDirectionNames(Integer destinyId);
+    List<Integer> getNumberNames(Integer destinyId);
+    List<String> getAnimalNames(Integer destinyId, String tuongKhacTruoc, String tuongKhacSau);
+    List<String> getShelterNames(Integer destinyId);
 }

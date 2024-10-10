@@ -2,7 +2,7 @@ package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.response.AutoConsultationResponseContainer;
-import com.fengshuisystem.demo.service.impl.DestinyServiceImpl;
+import com.fengshuisystem.demo.service.impl.AutoConsultationServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class DestinyController {
 
-    DestinyServiceImpl destinyService;
+   AutoConsultationServiceImpl autoConsultationService;
 
     @GetMapping("/destiny/{yearOfBirth}")
     public ApiResponse<AutoConsultationResponseContainer> getElement(@PathVariable int yearOfBirth) {
         return ApiResponse.<AutoConsultationResponseContainer>builder()
-                .result(destinyService.autoConsultationResponseContainer(yearOfBirth))
+                .result(autoConsultationService.autoConsultationResponseContainer(yearOfBirth))
                 .build();
     }
 }
