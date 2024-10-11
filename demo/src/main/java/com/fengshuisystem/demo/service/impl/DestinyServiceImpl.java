@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class DestinyServiceImpl implements DestinyService {
     int[] EARTHLY_BRANCH_VALUES = {1, 1, 2, 2, 0, 0, 1, 1, 2, 2, 0, 0};
 
     List<String> tuongSinhList = Arrays.asList("KIM", "THỦY", "MỘC", "HỎA", "THỔ");
-    List<String> tuongKhacList = Arrays.asList("KIM", "MỘC", "THỦY", "HỎA", "THỔ");
+    List<String> tuongKhacList = Arrays.asList("KIM", "MỘC", "THỔ", "THỦY", "HỎA");
 
     String[] ELEMENTS = {"KIM", "THỦY", "HỎA", "THỔ", "MỘC"};
     private final ShapeMapper shapeMapper;
@@ -107,6 +108,24 @@ public class DestinyServiceImpl implements DestinyService {
 
     @Override
     @PreAuthorize("hasRole('USER')")
+    public DestinyDTO getDestinyByDirecton(int directionId) {
+        return destinyMapper.toDto(destinyRepository.findByDireciontId(directionId));
+    }
+
+    @Override
+    @PreAuthorize("hasRole('USER')")
+    public DestinyDTO getDestinyByShape(int shapeId) {
+        return destinyMapper.toDto(destinyRepository.findByShapeId(shapeId));
+    }
+
+    @Override
+    @PreAuthorize("hasRole('USER')")
+    public DestinyDTO getDestinyByNumber(int numberId) {
+        return destinyMapper.toDto(destinyRepository.findByNumber(numberId));
+    }
+
+    @Override
+    @PreAuthorize("hasRole('USER')")
     public List<String> getShapeNames(Integer destinyId) {
         return shapeServiceImpl.getShapesByDestiny(destinyId).stream()
                 .map(ShapeDTO::getShape)
@@ -142,27 +161,43 @@ public class DestinyServiceImpl implements DestinyService {
     @PreAuthorize("hasRole('USER')")
     public List<String> getAnimalNames(Integer destinyId, String tuongKhacTruoc, String tuongKhacSau) {
         List<ColorDTO> colors = colorServiceImpl.getColorsByDestiny(destinyId);
-        return colors.stream()
-                .flatMap(color -> animalService.getAnimalCategoryByColorId(color.getId()).stream())
-                .filter(animalCategory -> {
-                    List<String> animalDestinies = getAllDestinyByAnimal(animalCategory.getId()).stream()
-                            .map(DestinyDTO::getDestiny)
-                            .toList();
-                    return animalDestinies.stream()
-                            .noneMatch(destinyItem -> destinyItem.equals(tuongKhacTruoc) || destinyItem.equals(tuongKhacSau));
-                })
-                .map(AnimalCategoryDTO::getAnimalCategoryName)
-                .collect(Collectors.toList());
+        List<String> animalNames = new ArrayList<>();
+        for (ColorDTO color : colors) {
+            List<AnimalCategoryDTO> animalCategories = animalService.getAnimalCategoryByColorId(color.getId());
+            for (AnimalCategoryDTO animalCategory : animalCategories) {
+                List<Integer> animalDestinies = getAllDestinyByAnimal(animalCategory.getId()).stream()
+                        .map(DestinyDTO::getId)
+                        .toList();
+                boolean hasConflict = false;
+                for (Integer destinyItem : animalDestinies) {
+                    if (destinyItem.equals(getDestinyId(tuongKhacTruoc).getId()) ||
+                            destinyItem.equals(getDestinyId(tuongKhacSau).getId())) {
+                        hasConflict = true;
+                        break;
+                    }
+                }
+                if (!hasConflict) {
+                    animalNames.add(animalCategory.getAnimalCategoryName());
+                }
+            }
+        }
+
+        return animalNames;
     }
+
 
     @Override
     @PreAuthorize("hasRole('USER')")
     public List<String> getShelterNames(Integer destinyId) {
         List<ShapeDTO> shapes = shapeServiceImpl.getShapesByDestiny(destinyId);
-        return shapes.stream()
-                .flatMap(shape -> shelterService.getAllSheltersByShape(shape.getId()).stream())
-                .map(ShelterCategoryDTO::getShelterCategoryName)
-                .collect(Collectors.toList());
+        List<String> shelterNames = new ArrayList<>();
+        for (ShapeDTO shape : shapes) {
+            List<ShelterCategoryDTO> shelters = shelterService.getAllSheltersByShape(shape.getId());
+            for (ShelterCategoryDTO shelter : shelters) {
+                shelterNames.add(shelter.getShelterCategoryName());
+            }
+        }
+        return shelterNames;
     }
 
 }

@@ -33,7 +33,6 @@ public class AutoConsultationServiceImpl implements AutoConsultationService {
 
         return AutoConsultationResponseDTO.builder()
                 .message("Mang lại sự ổn định, hòa thuận và bền vững")
-                .destiny(destiny)
                 .numbers(destinyService.getNumberNames(tuongHopId.getId()))
                 .directions(destinyService.getDirectionNames(tuongHopId.getId()))
                 .shapes(destinyService.getShapeNames(tuongHopId.getId()))
@@ -56,7 +55,6 @@ public class AutoConsultationServiceImpl implements AutoConsultationService {
 
         return AutoConsultationResponseDTO.builder()
                 .message("Mang đến sự phát triển, hỗ trợ và thăng tiến")
-                .destiny(destiny)
                 .numbers(destinyService.getNumberNames(tuongSinhId.getId()))
                 .directions(destinyService.getDirectionNames(tuongSinhId.getId()))
                 .shapes(destinyService.getShapeNames(tuongSinhId.getId()))

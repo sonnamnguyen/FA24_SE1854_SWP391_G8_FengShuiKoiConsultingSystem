@@ -27,7 +27,7 @@ public class EndPoint {
         };
 
         public static final String[] USER_ENDPOINTS = {
-                "/api/destiny/{yearOfBirth}"
+                "/api/destiny/{yearOfBirth}", "api/compatibility/{yearOfBirth}"
         };
     }
 

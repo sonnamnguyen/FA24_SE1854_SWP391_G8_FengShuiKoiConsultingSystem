@@ -1,6 +1,9 @@
 package com.fengshuisystem.demo.service;
 
 import com.fengshuisystem.demo.dto.DestinyDTO;
+import com.fengshuisystem.demo.dto.DirectionDTO;
+import com.fengshuisystem.demo.dto.NumberDTO;
+import com.fengshuisystem.demo.dto.ShapeDTO;
 
 import java.util.List;
 
@@ -12,6 +15,9 @@ public interface DestinyService {
     String findTuongKhacSau(String destiny);
     DestinyDTO getDestinyId(String destiny);
     List<DestinyDTO> getAllDestinyByAnimal(int animalId);
+    DestinyDTO getDestinyByDirecton(int directionId);
+    DestinyDTO getDestinyByShape(int shapeId);
+    DestinyDTO getDestinyByNumber(int numberId);
     List<String> getShapeNames(Integer destinyId);
     List<String> getColorNames(Integer destinyId);
     List<String> getDirectionNames(Integer destinyId);

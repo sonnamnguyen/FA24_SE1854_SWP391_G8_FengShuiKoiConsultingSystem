@@ -1,16 +1,16 @@
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
+import com.fengshuisystem.demo.dto.DestinyInputDTO;
 import com.fengshuisystem.demo.dto.response.AutoConsultationResponseContainer;
+import com.fengshuisystem.demo.dto.response.CompatibilityResultResponse;
 import com.fengshuisystem.demo.service.impl.AutoConsultationServiceImpl;
+import com.fengshuisystem.demo.service.impl.CompatibilityResultResponseServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DestinyController {
 
    AutoConsultationServiceImpl autoConsultationService;
+   CompatibilityResultResponseServiceImpl compatibilityService;
 
     @GetMapping("/destiny/{yearOfBirth}")
     public ApiResponse<AutoConsultationResponseContainer> getElement(@PathVariable int yearOfBirth) {
@@ -27,4 +28,15 @@ public class DestinyController {
                 .result(autoConsultationService.autoConsultationResponseContainer(yearOfBirth))
                 .build();
     }
+
+    @GetMapping("/compatibility/{yearOfBirth}")
+    public ApiResponse<CompatibilityResultResponse> calculateCompatibility(
+            @PathVariable int yearOfBirth,
+            @RequestBody DestinyInputDTO destinyInput) {
+        CompatibilityResultResponse response = compatibilityService.calculateCompatibility(yearOfBirth, destinyInput);
+        return ApiResponse.<CompatibilityResultResponse>builder()
+                .result(response)
+                .build();
+    }
+
 }

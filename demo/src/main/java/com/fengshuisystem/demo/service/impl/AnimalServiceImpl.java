@@ -1,7 +1,6 @@
 package com.fengshuisystem.demo.service.impl;
 import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
-import com.fengshuisystem.demo.dto.ShapeDTO;
 import com.fengshuisystem.demo.entity.AnimalCategory;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
@@ -41,6 +40,7 @@ public class AnimalServiceImpl implements AnimalService {
         animalCategory.setCreatedBy(name);
         return animalMapper.toDto(animalRepository.save(animalCategory));
     }
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
    public PageResponse<AnimalCategoryDTO> getAnimalsBySearch(AnimalCategoryDTO search, int page, int size) {

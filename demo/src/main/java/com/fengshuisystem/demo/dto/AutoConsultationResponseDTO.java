@@ -12,7 +12,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AutoConsultationResponseDTO {
      String message;
-     String destiny;
      List<Integer> numbers;
      List<String> directions;
      List<String> colors;

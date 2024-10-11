@@ -1,18 +1,15 @@
-package com.fengshuisystem.demo.dto;
+package com.fengshuisystem.demo.dto.response;
+
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DestinyDTO {
-     Integer id;
-     String destiny;
-
+public class AnimalCompatibilityResponse {
+    double animalScore;
+    String animalExplanation;
 }
