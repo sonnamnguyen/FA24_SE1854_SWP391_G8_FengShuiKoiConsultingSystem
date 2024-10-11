@@ -12,4 +12,5 @@ public interface ColorService {
     public void deleteColor(Integer id);
     public ColorDTO updateColor(Integer id, ColorDTO colorDTO);
     List<ColorDTO> getColorsByDestiny(Integer destiny);
+    List<ColorDTO> getColorsByAnimalId(Integer animalId);
 }

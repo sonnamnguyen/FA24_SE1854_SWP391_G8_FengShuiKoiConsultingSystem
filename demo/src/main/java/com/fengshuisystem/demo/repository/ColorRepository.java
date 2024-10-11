@@ -19,4 +19,6 @@ public interface ColorRepository extends JpaRepository<Color, Integer> {
     Page<Color> findAllByColor(String color, Pageable pageable);
     @Query(value = "SELECT c FROM Color c JOIN c.destiny d WHERE d.id = :destiny AND c.status = 'ACTIVE'")
     List<Color> findAllByDestiny(@Param("destinyId")Integer destiny);
+    @Query(value = "SELECT c FROM Color c JOIN c.animalCategories ac WHERE ac.id = :animalId AND ac.status = 'ACTIVE'")
+    List<Color> findAllByAnimal(@Param("destinyId")Integer animalId);
 }

@@ -108,4 +108,17 @@ public class ColorServiceImpl implements ColorService {
         }
         return colors;
     }
+
+    @Override
+    @PreAuthorize("hasRole('USER')")
+    public List<ColorDTO> getColorsByAnimalId(Integer animalId) {
+        List<ColorDTO> colors = colorRepository.findAllByAnimal(animalId)
+                .stream()
+                .map(colorMapper::toDto)
+                .toList();
+        if (colors.isEmpty()) {
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+        }
+        return colors;
+    }
 }

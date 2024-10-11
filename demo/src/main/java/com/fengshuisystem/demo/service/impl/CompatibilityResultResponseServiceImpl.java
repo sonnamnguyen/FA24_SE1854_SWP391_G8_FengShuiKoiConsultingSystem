@@ -1,10 +1,8 @@
 package com.fengshuisystem.demo.service.impl;
 
-import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
-import com.fengshuisystem.demo.dto.AnimalInputDTO;
-import com.fengshuisystem.demo.dto.DestinyDTO;
-import com.fengshuisystem.demo.dto.DestinyInputDTO;
+import com.fengshuisystem.demo.dto.*;
 import com.fengshuisystem.demo.dto.response.AnimalCompatibilityResponse;
+import com.fengshuisystem.demo.dto.response.ColorCompatibilityResponse;
 import com.fengshuisystem.demo.dto.response.CompatibilityResultResponse;
 import com.fengshuisystem.demo.service.CompatibilityResultResponseService;
 import lombok.AccessLevel;
@@ -24,7 +22,7 @@ import java.util.List;
 public class CompatibilityResultResponseServiceImpl implements CompatibilityResultResponseService {
 
    DestinyServiceImpl destinyServiceImpl;
-
+   ColorServiceImpl colorService;
 
     @PreAuthorize("hasRole('USER')")
     @Override
@@ -80,7 +78,7 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
         DestinyDTO shapeDestiny = destinyServiceImpl.getDestinyByShape(destinyInput.getShapeId());
         String shapeResult = compareDestinyWithExplanation(userDestiny, shapeDestiny.getDestiny(), destinyInput.getShapeName());
 
-        DestinyDTO numberDestiny = destinyServiceImpl.getDestinyByNumber(destinyInput.getColorId());
+        DestinyDTO numberDestiny = destinyServiceImpl.getDestinyByNumber(destinyInput.getNumberId());
         String numberResult = compareDestinyWithExplanation(userDestiny, numberDestiny.getDestiny(), String.valueOf(destinyInput.getNumberName()));
 
         double totalAnimalScore = 0.0;
@@ -88,34 +86,29 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
         List<AnimalCompatibilityResponse> animalCompatibilityResponses = new ArrayList<>();
         List<AnimalInputDTO> animals = destinyInput.getAnimal();
 
-        // Calculate scores and explanations for each animal
         for (AnimalInputDTO animal : animals) {
-            List<DestinyDTO> animalDestinies = destinyServiceImpl.getAllDestinyByAnimal(animal.getAnimalId());
-
-             totalAnimalScore = 0.0;
-            StringBuilder animalExplanations = new StringBuilder();
-
-            for (DestinyDTO destiny : animalDestinies) {
-                String animalResult = compareDestinyWithExplanation(userDestiny, destiny.getDestiny(), animal.getAnimalName());
+            List<ColorDTO> animalColors = colorService.getColorsByAnimalId(animal.getAnimalId());
+            totalAnimalScore = 0.0;
+            List<ColorCompatibilityResponse> colorCompatibilityResponses = new ArrayList<>();
+            for (ColorDTO color : animalColors) {
+                String animalResult = compareDestinyWithExplanation(userDestiny, color.getDestiny().getDestiny(), color.getColor());
                 double score = Double.parseDouble(animalResult.split(";")[0]);
                 String explanation = animalResult.split(";")[1];
-
-                // Accumulate score and explanation
                 totalAnimalScore += score;
-                animalExplanations.append(explanation).append("\n");
+                colorCompatibilityResponses.add(ColorCompatibilityResponse.builder()
+                        .colorScore(score)
+                        .colorExplanation(explanation)
+                        .build());
             }
 
-            // Calculate the average score for the animal
-            double averageAnimalScore = !animalDestinies.isEmpty() ? totalAnimalScore / animalDestinies.size() : 0.0;
+            double averageAnimalScore = !animalColors.isEmpty() ? totalAnimalScore / animalColors.size() : 0.0;
 
-            // Add to the response list
             animalCompatibilityResponses.add(AnimalCompatibilityResponse.builder()
                     .animalScore(averageAnimalScore)
-                    .animalExplanation(animalExplanations.toString())
+                    .colorCompatibilityResponses(colorCompatibilityResponses)
                     .build());
         }
 
-        // Build and return the final response
         return CompatibilityResultResponse.builder()
                 .yourDestiny("Your element is " + userDestiny)
                 .directionScore(Double.parseDouble(directionResult.split(";")[0]))

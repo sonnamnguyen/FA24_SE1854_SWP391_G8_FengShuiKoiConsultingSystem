@@ -13,8 +13,6 @@ import java.util.List;
 public class DestinyInputDTO {
      Integer directionId;
      String directionName;
-     Integer colorId;
-     String colorName;
      Integer shapeId;
      String shapeName;
      Integer numberId;
