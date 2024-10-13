@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.dto.response;
 
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,12 +12,17 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompatibilityResultResponse {
-    String yourDestiny;
-    double directionScore;
-    String directionExplanation;
-    double shapeScore;
-    String shapeExplanation;
-    double numberScore;
-    String numberExplanation;
-    List<AnimalCompatibilityResponse> animalCompatibilityResponse;
+    private String yourDestiny;
+    private Double directionScore;
+    private List<String> directionsAdvice;
+    private String directionExplanation;
+    private Double shapeScore;
+    private List<String> shapesAdvice;
+    private String shapeExplanation;
+    private Double numberScore;
+    private List<Integer> numbersAdvice;
+    private String numberExplanation;
+    private Double animalScore;
+    private List<AnimalCompatibilityResponse> animalCompatibilityResponse;
+    private List<String> animalAdvice;
 }

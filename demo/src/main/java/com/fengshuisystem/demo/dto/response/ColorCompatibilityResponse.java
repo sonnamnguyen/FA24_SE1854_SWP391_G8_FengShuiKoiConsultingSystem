@@ -9,6 +9,5 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ColorCompatibilityResponse {
-    Double colorScore;
     String colorExplanation;
 }

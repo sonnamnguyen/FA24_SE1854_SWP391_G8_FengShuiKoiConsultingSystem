@@ -21,8 +21,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CompatibilityResultResponseServiceImpl implements CompatibilityResultResponseService {
 
-   DestinyServiceImpl destinyServiceImpl;
-   ColorServiceImpl colorService;
+    DestinyServiceImpl destinyServiceImpl;
+    AutoConsultationServiceImpl autoConsultationResponseContainer;
+    ColorServiceImpl colorService;
 
     @PreAuthorize("hasRole('USER')")
     @Override
@@ -34,30 +35,22 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
             score = 4;
             explanation = attributeName + " is of element " + attributeDestiny
                     + ", same as your element, bringing stability, harmony, and sustainability.";
-        }
-
-        else if (destinyServiceImpl.findTuongSinhSau(userDestiny).equals(attributeDestiny)) {
+        } else if (destinyServiceImpl.findTuongSinhSau(userDestiny).equals(attributeDestiny)) {
             score = 3;
             explanation = attributeName + " is of element " + attributeDestiny
                     + ". Your element " + userDestiny + " generates the attribute element, "
                     + "bringing development, support, and promotion for " + attributeName + ".";
-        }
-
-        else if (destinyServiceImpl.findTuongKhacSau(userDestiny).equals(attributeDestiny)) {
+        } else if (destinyServiceImpl.findTuongKhacSau(userDestiny).equals(attributeDestiny)) {
             score = 2;
             explanation = attributeName + " is of element " + attributeDestiny
                     + ". Your element " + userDestiny + " is countered by the attribute element, "
                     + "causing conflict and instability for " + attributeName + ".";
-        }
-
-        else if (destinyServiceImpl.findTuongKhacTruoc(userDestiny).equals(attributeDestiny)) {
+        } else if (destinyServiceImpl.findTuongKhacTruoc(userDestiny).equals(attributeDestiny)) {
             score = 1;
             explanation = attributeName + " is of element " + attributeDestiny
                     + ". The attribute element counters your element " + userDestiny + ", "
                     + "causing harm and obstacles for you.";
-        }
-
-        else if (destinyServiceImpl.findTuongSinhTruoc(userDestiny).equals(attributeDestiny)) {
+        } else if (destinyServiceImpl.findTuongSinhTruoc(userDestiny).equals(attributeDestiny)) {
             score = 5;
             explanation = attributeName + " is of element " + attributeDestiny
                     + ". The attribute element generates your element " + userDestiny + ", "
@@ -67,57 +60,142 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
         return score + ";" + explanation;
     }
 
-    @PreAuthorize("hasRole('USER')")
+
     @Override
+    @PreAuthorize("hasRole('USER')")
     public CompatibilityResultResponse calculateCompatibility(int yearOfBirth, DestinyInputDTO destinyInput) {
         String userDestiny = destinyServiceImpl.getDestinyFromYear(yearOfBirth);
 
-        DestinyDTO directionDestiny = destinyServiceImpl.getDestinyByDirecton(destinyInput.getDirectionId());
-        String directionResult = compareDestinyWithExplanation(userDestiny, directionDestiny.getDestiny(), destinyInput.getDirectionName());
-
-        DestinyDTO shapeDestiny = destinyServiceImpl.getDestinyByShape(destinyInput.getShapeId());
-        String shapeResult = compareDestinyWithExplanation(userDestiny, shapeDestiny.getDestiny(), destinyInput.getShapeName());
-
-        DestinyDTO numberDestiny = destinyServiceImpl.getDestinyByNumber(destinyInput.getNumberId());
-        String numberResult = compareDestinyWithExplanation(userDestiny, numberDestiny.getDestiny(), String.valueOf(destinyInput.getNumberName()));
-
-        double totalAnimalScore = 0.0;
-
-        List<AnimalCompatibilityResponse> animalCompatibilityResponses = new ArrayList<>();
-        List<AnimalInputDTO> animals = destinyInput.getAnimal();
-
-        for (AnimalInputDTO animal : animals) {
-            List<ColorDTO> animalColors = colorService.getColorsByAnimalId(animal.getAnimalId());
-            totalAnimalScore = 0.0;
-            List<ColorCompatibilityResponse> colorCompatibilityResponses = new ArrayList<>();
-            for (ColorDTO color : animalColors) {
-                String animalResult = compareDestinyWithExplanation(userDestiny, color.getDestiny().getDestiny(), color.getColor());
-                double score = Double.parseDouble(animalResult.split(";")[0]);
-                String explanation = animalResult.split(";")[1];
-                totalAnimalScore += score;
-                colorCompatibilityResponses.add(ColorCompatibilityResponse.builder()
-                        .colorScore(score)
-                        .colorExplanation(explanation)
-                        .build());
+        // Handle direction compatibility
+        DestinyDTO directionDestiny;
+        String directionResult;
+        double directionScore;
+        List<String> directionsAdvice = null;
+        boolean hasDirection = destinyInput.getDirectionId() != null;
+        if (hasDirection) {
+            directionDestiny = destinyServiceImpl.getDestinyByDirecton(destinyInput.getDirectionId());
+            directionResult = compareDestinyWithExplanation(userDestiny, directionDestiny.getDestiny(), destinyInput.getDirectionName());
+            directionScore = Double.parseDouble(directionResult.split(";")[0]);
+            if (directionScore < 3.0) {
+                directionsAdvice = autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getDirections();
             }
-
-            double averageAnimalScore = !animalColors.isEmpty() ? totalAnimalScore / animalColors.size() : 0.0;
-
-            animalCompatibilityResponses.add(AnimalCompatibilityResponse.builder()
-                    .animalScore(averageAnimalScore)
-                    .colorCompatibilityResponses(colorCompatibilityResponses)
-                    .build());
+        } else {
+            directionResult = "0; ";
+            directionScore = 0;
+            directionsAdvice = autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getDirections();
         }
 
-        return CompatibilityResultResponse.builder()
-                .yourDestiny("Your element is " + userDestiny)
-                .directionScore(Double.parseDouble(directionResult.split(";")[0]))
-                .directionExplanation(directionResult.split(";")[1])
-                .shapeScore(Double.parseDouble(shapeResult.split(";")[0]))
-                .shapeExplanation(shapeResult.split(";")[1])
-                .numberScore(Double.parseDouble(numberResult.split(";")[0]))
-                .numberExplanation(numberResult.split(";")[1])
-                .animalCompatibilityResponse(animalCompatibilityResponses)
-                .build();
+        // Handle shape compatibility
+        DestinyDTO shapeDestiny;
+        String shapeResult;
+        double shapeScore;
+        List<String> shapesAdvice = null;
+        boolean hasShape = destinyInput.getShapeId() != null;
+        if (hasShape) {
+            shapeDestiny = destinyServiceImpl.getDestinyByShape(destinyInput.getShapeId());
+            shapeResult = compareDestinyWithExplanation(userDestiny, shapeDestiny.getDestiny(), destinyInput.getShapeName());
+            shapeScore = Double.parseDouble(shapeResult.split(";")[0]);
+            if (shapeScore < 3.0) {
+                shapesAdvice = autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getShapes();
+            }
+        } else {
+            shapeResult = "0; ";
+            shapeScore = 0;
+            shapesAdvice = autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getShapes();
+        }
+
+        // Handle number compatibility
+        DestinyDTO numberDestiny;
+        String numberResult;
+        double numberScore;
+        List<Integer> numbersAdvice = null;
+        boolean hasNumber = destinyInput.getNumberId() != null;
+        if (hasNumber) {
+            numberDestiny = destinyServiceImpl.getDestinyByNumber(destinyInput.getNumberId());
+            numberResult = compareDestinyWithExplanation(userDestiny, numberDestiny.getDestiny(), String.valueOf(destinyInput.getNumberName()));
+            numberScore = Double.parseDouble(numberResult.split(";")[0]);
+            if (numberScore < 3.0) {
+                numbersAdvice = autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getNumbers();
+            }
+        } else {
+            numberResult = "0; ";
+            numberScore = 0;
+            numbersAdvice = autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getNumbers();
+        }
+
+        // Handle animal compatibility
+        List<AnimalCompatibilityResponse> animalCompatibilityResponses = new ArrayList<>();
+        List<String> animalAdvice = new ArrayList<>(); // List to collect animal advice
+        List<AnimalInputDTO> animals = destinyInput.getAnimal();
+        double animalListScore = 0.0;
+        double averageAnimalListScore = 0.0;
+        boolean hasAnimal = animals.isEmpty();
+        if (hasAnimal) {
+            animalAdvice = autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getAnimals();
+        } else {
+            for (AnimalInputDTO animal : animals) {
+                List<ColorDTO> animalColors = colorService.getColorsByAnimalId(animal.getAnimalId());
+                double animalTotalScore = 0.0;
+
+                List<ColorCompatibilityResponse> colorCompatibilityResponses = new ArrayList<>();
+                for (ColorDTO color : animalColors) {
+                    String animalResult = compareDestinyWithExplanation(userDestiny, color.getDestiny().getDestiny(), color.getColor());
+                    double score = Double.parseDouble(animalResult.split(";")[0]);
+                    String explanation = animalResult.split(";")[1];
+                    animalTotalScore += score;
+                    colorCompatibilityResponses.add(ColorCompatibilityResponse.builder()
+                            .colorExplanation(explanation)
+                            .build());
+
+                }
+                double averageAnimalScore = animalColors.isEmpty() ? 0.0 : animalTotalScore / animalColors.size();
+
+                animalListScore += averageAnimalScore;
+                animalCompatibilityResponses.add(AnimalCompatibilityResponse.builder()
+                        .animalScore(averageAnimalScore)
+                        .colorCompatibilityResponses(colorCompatibilityResponses)
+                        .build());
+            }
+             averageAnimalListScore = animalListScore / animals.size();
+            if(averageAnimalListScore < 3){
+                animalAdvice = autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getAnimals();
+            }
+        }
+
+        CompatibilityResultResponse.CompatibilityResultResponseBuilder responseBuilder = CompatibilityResultResponse.builder()
+                .yourDestiny("Your element is " + userDestiny);
+
+        if (hasAnimal) {
+            responseBuilder.animalAdvice(animalAdvice);
+        } else {
+            responseBuilder.animalCompatibilityResponse(animalCompatibilityResponses)
+                    .animalScore(averageAnimalListScore)
+                    .animalAdvice(animalAdvice);
+        }
+
+        if (hasDirection) {
+            responseBuilder.directionScore(directionScore)
+                    .directionExplanation(directionResult.split(";")[1])
+                    .directionsAdvice(directionsAdvice);
+        } else {
+            responseBuilder.directionsAdvice(directionsAdvice);
+        }
+
+        if (hasShape) {
+            responseBuilder.shapeScore(shapeScore)
+                    .shapeExplanation(shapeResult.split(";")[1])
+                    .shapesAdvice(shapesAdvice);
+        } else {
+            responseBuilder.shapesAdvice(shapesAdvice);
+        }
+
+        if (hasNumber) {
+            responseBuilder.numberScore(numberScore)
+                    .numberExplanation(numberResult.split(";")[1])
+                    .numbersAdvice(numbersAdvice);
+        } else {
+            responseBuilder.numbersAdvice(numbersAdvice);
+        }
+        return responseBuilder.build();
     }
 }
