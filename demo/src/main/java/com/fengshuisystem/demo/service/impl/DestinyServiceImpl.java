@@ -4,8 +4,7 @@ import com.fengshuisystem.demo.dto.*;
 import com.fengshuisystem.demo.mapper.DestinyMapper;
 import com.fengshuisystem.demo.mapper.ShapeMapper;
 import com.fengshuisystem.demo.repository.DestinyRepository;
-import com.fengshuisystem.demo.service.DestinyService;
-import com.fengshuisystem.demo.service.ShelterService;
+import com.fengshuisystem.demo.service.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,11 +25,11 @@ public class DestinyServiceImpl implements DestinyService {
 
     DestinyRepository destinyRepository;
     DestinyMapper destinyMapper;
-    NumberServiceImpl numberServiceImpl;
-    DirectionServiceImpl directionServiceImpl;
-    ShapeServiceImpl shapeServiceImpl;
-    ColorServiceImpl colorServiceImpl;
-    AnimalServiceImpl animalService;
+    NumberService numberService;
+    DirectionService directionService;
+    ShapeService shapeService;
+    ColorService colorService;
+    AnimalService animalService;
     ShelterService shelterService;
 
     // Bảng Can (0-9 tương ứng với Canh, Tân, Nhâm, Quý, Giáp, Ất, Bính, Đinh, Mậu, Kỷ)
@@ -42,7 +41,6 @@ public class DestinyServiceImpl implements DestinyService {
     List<String> tuongKhacList = Arrays.asList("KIM", "MỘC", "THỔ", "THỦY", "HỎA");
 
     String[] ELEMENTS = {"KIM", "THỦY", "HỎA", "THỔ", "MỘC"};
-    private final ShapeMapper shapeMapper;
 
     @Override
     @PreAuthorize("hasRole('USER')")
@@ -127,7 +125,7 @@ public class DestinyServiceImpl implements DestinyService {
     @Override
     @PreAuthorize("hasRole('USER')")
     public List<String> getShapeNames(Integer destinyId) {
-        return shapeServiceImpl.getShapesByDestiny(destinyId).stream()
+        return shapeService.getShapesByDestiny(destinyId).stream()
                 .map(ShapeDTO::getShape)
                 .collect(Collectors.toList());
     }
@@ -135,7 +133,7 @@ public class DestinyServiceImpl implements DestinyService {
     @Override
     @PreAuthorize("hasRole('USER')")
     public List<String> getColorNames(Integer destinyId) {
-        return colorServiceImpl.getColorsByDestiny(destinyId).stream()
+        return colorService.getColorsByDestiny(destinyId).stream()
                 .map(ColorDTO::getColor)
                 .collect(Collectors.toList());
     }
@@ -143,7 +141,7 @@ public class DestinyServiceImpl implements DestinyService {
     @Override
     @PreAuthorize("hasRole('USER')")
     public List<String> getDirectionNames(Integer destinyId) {
-        return directionServiceImpl.getDirections(destinyId).stream()
+        return directionService.getDirections(destinyId).stream()
                 .map(DirectionDTO::getDirection)
                 .collect(Collectors.toList());
     }
@@ -151,7 +149,7 @@ public class DestinyServiceImpl implements DestinyService {
     @Override
     @PreAuthorize("hasRole('USER')")
     public List<Integer> getNumberNames(Integer destinyId) {
-        return numberServiceImpl.getNumbers(destinyId).stream()
+        return numberService.getNumbers(destinyId).stream()
                 .map(NumberDTO::getNumber)
                 .collect(Collectors.toList());
     }
@@ -160,7 +158,7 @@ public class DestinyServiceImpl implements DestinyService {
     @Override
     @PreAuthorize("hasRole('USER')")
     public List<String> getAnimalNames(Integer destinyId, String tuongKhacTruoc, String tuongKhacSau) {
-        List<ColorDTO> colors = colorServiceImpl.getColorsByDestiny(destinyId);
+        List<ColorDTO> colors = colorService.getColorsByDestiny(destinyId);
         List<String> animalNames = new ArrayList<>();
         for (ColorDTO color : colors) {
             List<AnimalCategoryDTO> animalCategories = animalService.getAnimalCategoryByColorId(color.getId());
@@ -189,7 +187,7 @@ public class DestinyServiceImpl implements DestinyService {
     @Override
     @PreAuthorize("hasRole('USER')")
     public List<String> getShelterNames(Integer destinyId) {
-        List<ShapeDTO> shapes = shapeServiceImpl.getShapesByDestiny(destinyId);
+        List<ShapeDTO> shapes = shapeService.getShapesByDestiny(destinyId);
         List<String> shelterNames = new ArrayList<>();
         for (ShapeDTO shape : shapes) {
             List<ShelterCategoryDTO> shelters = shelterService.getAllSheltersByShape(shape.getId());
