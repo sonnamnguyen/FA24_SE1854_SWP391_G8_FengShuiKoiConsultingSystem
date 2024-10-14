@@ -1,9 +1,6 @@
 package com.fengshuisystem.demo.service;
 
 import com.fengshuisystem.demo.dto.DestinyDTO;
-import com.fengshuisystem.demo.dto.DirectionDTO;
-import com.fengshuisystem.demo.dto.NumberDTO;
-import com.fengshuisystem.demo.dto.ShapeDTO;
 
 import java.util.List;
 
