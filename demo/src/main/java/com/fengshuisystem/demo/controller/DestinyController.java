@@ -4,8 +4,10 @@ import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.DestinyInputDTO;
 import com.fengshuisystem.demo.dto.response.AutoConsultationResponseContainer;
 import com.fengshuisystem.demo.dto.response.CompatibilityResultResponse;
-import com.fengshuisystem.demo.service.impl.AutoConsultationServiceImpl;
-import com.fengshuisystem.demo.service.impl.CompatibilityResultResponseServiceImpl;
+import com.fengshuisystem.demo.service.AutoConsultationService;
+import com.fengshuisystem.demo.service.CompatibilityResultResponseService;
+
+import com.fengshuisystem.demo.service.DestinyService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,11 +21,20 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class DestinyController {
 
-   AutoConsultationServiceImpl autoConsultationService;
-   CompatibilityResultResponseServiceImpl compatibilityService;
+    DestinyService destinyService;
+   AutoConsultationService autoConsultationService;
+   CompatibilityResultResponseService compatibilityService;
+
 
     @GetMapping("/destiny/{yearOfBirth}")
-    public ApiResponse<AutoConsultationResponseContainer> getElement(@PathVariable int yearOfBirth) {
+    public ApiResponse<String> getElement(@PathVariable int yearOfBirth) {
+        return ApiResponse.<String>builder()
+                .result(destinyService.getDestinyFromYear(yearOfBirth))
+                .build();
+    }
+
+    @GetMapping("/autoConsultation/{yearOfBirth}")
+    public ApiResponse<AutoConsultationResponseContainer> autoConsultation(@PathVariable int yearOfBirth) {
         return ApiResponse.<AutoConsultationResponseContainer>builder()
                 .result(autoConsultationService.autoConsultationResponseContainer(yearOfBirth))
                 .build();
