@@ -28,11 +28,9 @@ public class AutoConsultationServiceImpl implements AutoConsultationService {
 
         String tuongKhacTruoc = destinyService.findTuongKhacTruoc(destiny);
         String tuongKhacSau = destinyService.findTuongKhacSau(destiny);
-
         DestinyDTO tuongHopId = destinyService.getDestinyId(destiny);
-
         return AutoConsultationResponseDTO.builder()
-                .message("Mang lại sự ổn định, hòa thuận và bền vững")
+                .message("Dựa trên mệnh của bạn, hồ cá Koi này sẽ mang lại sự hài hòa, ổn định và cân bằng lâu dài. Những yếu tố tương hợp được lựa chọn kỹ càng để đảm bảo phong thủy tốt nhất, giúp thu hút năng lượng tích cực, đồng thời giữ cho gia đình và sự nghiệp của bạn luôn vững vàng.")
                 .numbers(destinyService.getNumberNames(tuongHopId.getId()))
                 .directions(destinyService.getDirectionNames(tuongHopId.getId()))
                 .shapes(destinyService.getShapeNames(tuongHopId.getId()))
@@ -54,7 +52,7 @@ public class AutoConsultationServiceImpl implements AutoConsultationService {
         DestinyDTO tuongSinhId = destinyService.getDestinyId(tuongSinhruoc);
 
         return AutoConsultationResponseDTO.builder()
-                .message("Mang đến sự phát triển, hỗ trợ và thăng tiến")
+                .message("Với sự tương sinh từ yếu tố phong thủy, hồ cá Koi này sẽ mang đến sự phát triển vượt bậc cho bạn. Những yếu tố phong thủy tương sinh giúp tăng cường năng lượng, hỗ trợ thăng tiến sự nghiệp và thu hút tài lộc, đồng thời bảo vệ gia đình bạn trước những khó khăn và trở ngại. Với sự lựa chọn kỹ lưỡng, hồ Koi sẽ trở thành nguồn động lực mạnh mẽ, thúc đẩy mọi khía cạnh trong cuộc sống của bạn.")
                 .numbers(destinyService.getNumberNames(tuongSinhId.getId()))
                 .directions(destinyService.getDirectionNames(tuongSinhId.getId()))
                 .shapes(destinyService.getShapeNames(tuongSinhId.getId()))

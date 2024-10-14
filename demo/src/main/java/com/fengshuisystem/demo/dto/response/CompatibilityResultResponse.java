@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -14,15 +15,15 @@ import java.util.List;
 public class CompatibilityResultResponse {
     private String yourDestiny;
     private Double directionScore;
-    private List<String> directionsAdvice;
     private String directionExplanation;
+    private Set<String> directionsAdvice;
     private Double shapeScore;
-    private List<String> shapesAdvice;
     private String shapeExplanation;
+    private Set<String> shapesAdvice;
     private Double numberScore;
-    private List<Integer> numbersAdvice;
     private String numberExplanation;
+    private Set<Integer> numbersAdvice;
     private Double animalScore;
     private List<AnimalCompatibilityResponse> animalCompatibilityResponse;
-    private List<String> animalAdvice;
+    private Set<String> animalAdvice;
 }
