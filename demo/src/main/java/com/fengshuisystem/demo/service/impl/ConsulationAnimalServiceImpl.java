@@ -1,6 +1,7 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ConsultationAnimalDTO;
+import com.fengshuisystem.demo.dto.ConsultationAnimalRequestDTO;
 import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.Number;
 import com.fengshuisystem.demo.entity.enums.ConsulationAnimalStatus;
@@ -27,6 +28,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsulationAnimalServiceImpl implements ConsulationAnimalService {
+    private final ConsulationAnimalRepository consultationAnimalRepository;
     ConsultationAnimalMapper consultationAnimalMapper;
     ConsulationRequestDetailsRepository consulationRequestDetailsRepository;
     ConsulationResultRepository consulationResultRepository;
@@ -54,5 +56,16 @@ public class ConsulationAnimalServiceImpl implements ConsulationAnimalService {
             consultationAnimal.setNumbers(numbers);
             consultationAnimal.setConsultation(consultationResult);
            return consultationAnimalMapper.toDto(consulationAnimalRepository.save(consultationAnimal));
+    }
+
+    @Override
+    public ConsultationAnimal createAnimalConsultation(ConsultationAnimalRequestDTO requestDTO) {
+        ConsultationAnimal consultationAnimal = new ConsultationAnimal();
+        consultationAnimal.setCreatedDate(Instant.now());
+        consultationAnimal.setDescription(requestDTO.getDescription());
+        consultationAnimal.setStatus(Status.valueOf("PENDING")); // Trạng thái ban đầu
+
+        // Thêm logic thiết lập các thuộc tính khác từ DTO
+        return consultationAnimalRepository.save(consultationAnimal);
     }
 }

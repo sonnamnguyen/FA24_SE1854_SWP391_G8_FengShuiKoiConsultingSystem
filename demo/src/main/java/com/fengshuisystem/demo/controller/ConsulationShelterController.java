@@ -2,11 +2,14 @@ package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.ConsultationShelterDTO;
+import com.fengshuisystem.demo.dto.ConsultationShelterRequestDTO;
+import com.fengshuisystem.demo.entity.ConsultationShelter;
 import com.fengshuisystem.demo.service.ConsulationShelterService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,5 +30,11 @@ public class ConsulationShelterController {
         return ApiResponse.<ConsultationShelterDTO>builder()
                 .result(consulationShelterService.createConsulationShelter(id, ids, consultationShelterDTO))
                 .build();
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<ConsultationShelter> createShelterConsultation(@RequestBody ConsultationShelterRequestDTO requestDTO) {
+        ConsultationShelter consultation = consulationShelterService.createShelterConsultation(requestDTO);
+        return ResponseEntity.ok(consultation);
     }
 }

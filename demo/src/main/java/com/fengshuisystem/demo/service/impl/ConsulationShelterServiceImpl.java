@@ -1,6 +1,7 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ConsultationShelterDTO;
+import com.fengshuisystem.demo.dto.ConsultationShelterRequestDTO;
 import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
@@ -25,6 +26,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsulationShelterServiceImpl implements ConsulationShelterService {
+    private final ConsulationShelterRepository consultationShelterRepository;
     ConsultationShelterMapper consultationShelterMapper;
     ConsulationRequestDetailsRepository consulationRequestDetailsRepository;
     ConsulationResultRepository consulationResultRepository;
@@ -35,6 +37,7 @@ public class ConsulationShelterServiceImpl implements ConsulationShelterService 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ConsultationShelterDTO createConsulationShelter(Integer id, List<Integer> ids, ConsultationShelterDTO consultationShelterDTO) {
+
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         Set<Direction> directions = directionRepository.findAllByIdIn(ids);
@@ -53,6 +56,17 @@ public class ConsulationShelterServiceImpl implements ConsulationShelterService 
         consultationShelter.setConsultation(consultationResult);
         return consultationShelterMapper.toDto(consulationShelterRepository.save(consultationShelter));
 
+    }
+
+    @Override
+    public ConsultationShelter createShelterConsultation(ConsultationShelterRequestDTO requestDTO) {
+        ConsultationShelter consultationShelter = new ConsultationShelter();
+        consultationShelter.setCreatedDate(Instant.now());
+        consultationShelter.setDescription(requestDTO.getDescription());
+        consultationShelter.setStatus(Status.valueOf("PENDING")); // Trạng thái ban đầu
+
+        // Thêm logic thiết lập các thuộc tính khác từ DTO
+        return consultationShelterRepository.save(consultationShelter);
     }
 
 }

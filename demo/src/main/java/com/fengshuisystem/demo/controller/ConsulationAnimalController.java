@@ -2,11 +2,14 @@ package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.ConsultationAnimalDTO;
+import com.fengshuisystem.demo.dto.ConsultationAnimalRequestDTO;
+import com.fengshuisystem.demo.entity.ConsultationAnimal;
 import com.fengshuisystem.demo.service.ConsulationAnimalService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,5 +32,9 @@ public class ConsulationAnimalController {
                 .build();
     }
 
-
+    @PostMapping("/create")
+    public ResponseEntity<ConsultationAnimal> createAnimalConsultation(@RequestBody ConsultationAnimalRequestDTO requestDTO) {
+        ConsultationAnimal consultation = consulationAnimalService.createAnimalConsultation(requestDTO);
+        return ResponseEntity.ok(consultation);
+    }
 }
