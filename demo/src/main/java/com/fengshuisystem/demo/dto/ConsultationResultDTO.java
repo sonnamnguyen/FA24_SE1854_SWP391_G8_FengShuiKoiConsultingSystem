@@ -26,6 +26,5 @@ public class ConsultationResultDTO {
     String createdBy;
     Instant updatetedDate;
     String updatetedBy;
-    List<ConsultationAnimalDTO> consultationAnimals ;
     List<ConsultationShelterDTO> consultationShelters;
 }

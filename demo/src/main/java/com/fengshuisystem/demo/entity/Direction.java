@@ -28,7 +28,7 @@ public class Direction {
     @Column(name = "direction", length = 50)
     private String direction;
 
-    @OneToMany(mappedBy = "direction", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToMany(mappedBy = "directions", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationShelter> consultationShelters = new LinkedHashSet<>();
 
 }

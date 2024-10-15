@@ -8,7 +8,7 @@ public class EndPoint {
 
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
-                "/animals", "/shelters", "/colors", "/shapes"
+                "/animals", "/shelters", "/colors", "/shapes", "/consulation-animal", "/consulation-shelter"
 
         };
 

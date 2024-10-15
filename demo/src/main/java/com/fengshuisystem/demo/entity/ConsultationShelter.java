@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,9 +29,13 @@ public class ConsultationShelter {
     @JoinColumn
     private ShelterCategory shelterCategory;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn
-    private Direction direction;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(
+            name = "consultation_shelter_direction",
+            joinColumns = @JoinColumn(name = "consultation_shelter_id"),
+            inverseJoinColumns = @JoinColumn(name = "direction_id")
+    )
+    private Set<Direction> directions = new LinkedHashSet<>();
 
     @Size(max = 500)
     @Nationalized

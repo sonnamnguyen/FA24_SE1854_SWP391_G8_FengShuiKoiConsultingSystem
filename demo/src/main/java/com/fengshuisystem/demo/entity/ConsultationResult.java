@@ -53,24 +53,18 @@ public class ConsultationResult {
     @Enumerated(EnumType.STRING)
     private Status status = Status.INACTIVE;
 
-    @NotNull
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_date")
     private Instant createdDate = Instant.now();
 
     @Size(max = 300)
-    @NotNull
-    @Nationalized
-    @Column(name = "created_by", nullable = false, length = 300)
+    @Column(name = "created_by", length = 300)
     private String createdBy;
 
-    @NotNull
-    @Column(name = "updateted_date", nullable = false)
+    @Column(name = "updateted_date")
     private Instant updatetedDate = Instant.now();
 
     @Size(max = 300)
-    @NotNull
-    @Nationalized
-    @Column(name = "updateted_by", nullable = false, length = 300)
+    @Column(name = "updateted_by", length = 300)
     private String updatetedBy;
 
     @OneToMany(mappedBy = "consultation", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})

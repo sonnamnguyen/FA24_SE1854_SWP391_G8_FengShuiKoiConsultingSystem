@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,9 +15,9 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationShelterDTO {
   Integer id;
-  ConsultationResultDTO consultation;
-  ShelterCategoryDTO shelterCategory;
-  DirectionDTO direction;
+  Integer consultationId;
+  Integer shelterCategoryId;
+  List<DirectionDTO> direction;
   String description;
   String status;
   Instant createdDate;

@@ -27,7 +27,7 @@ public enum ErrorCode {
     DESTINY_NOT_EXISTED(1018, "Destiny not existed", HttpStatus.NOT_FOUND),
     ERROR_CODE(1019, "Activate Code not true", HttpStatus.BAD_REQUEST),
     USER_INACTIVE(1020, "User is inactive", HttpStatus.BAD_REQUEST),
-
+    CONSULATION_RESULT_NOT_EXISTED(1021, "Consulation result not existed", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

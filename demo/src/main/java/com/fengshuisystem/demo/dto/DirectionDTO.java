@@ -13,6 +13,5 @@ import java.util.List;
 public class DirectionDTO {
      Integer id;
      String direction;
-     DestinyDTO destinyDTO;
-     List<ConsultationShelterDTO> consultationShelters;
+     Integer destinyDTO;
 }

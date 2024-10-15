@@ -12,6 +12,5 @@ import org.mapstruct.Mapping;
 public interface ConsultationAnimalMapper extends EntityMapper<ConsultationAnimalDTO, ConsultationAnimal> {
     @Mapping(target = "consultation.id", source = "consultationResultId")
     @Mapping(target = "animalCategory.id", source = "animalCategoryId")
-    @Mapping(target = "number.id", source = "numberId")
     public ConsultationAnimal toEntity(ConsultationAnimalDTO dto);
 }

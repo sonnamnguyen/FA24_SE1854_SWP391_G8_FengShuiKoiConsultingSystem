@@ -56,7 +56,7 @@ public class ShapeServiceImpl implements ShapeService {
         Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
-        var pageData = shapeRepository.findAllByStatus(status, pageable);
+        var pageData = shapeRepository.findAlByShape(name, pageable);
         if(pageData.isEmpty()) {
             throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
         }

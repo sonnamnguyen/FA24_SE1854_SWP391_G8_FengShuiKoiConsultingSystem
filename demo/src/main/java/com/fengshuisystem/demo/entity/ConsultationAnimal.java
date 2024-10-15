@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fengshuisystem.demo.entity.enums.ConsulationAnimalStatus;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.Instant;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,33 +34,30 @@ public class ConsultationAnimal {
     @Column(name = "description", length = 500)
     private String description;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn
-    private Number number;
+    @ManyToMany
+    @JoinTable(
+            name = "consultation_animal_numbers",
+            joinColumns = @JoinColumn(name = "consultation_animal_id"),
+            inverseJoinColumns = @JoinColumn(name = "number_id")
+    )
+    private Set<Number> numbers;
 
-    @NotNull
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status = Status.INACTIVE;
 
-    @NotNull
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_date")
     private Instant createdDate = Instant.now();
 
     @Size(max = 300)
-    @NotNull
-    @Nationalized
-    @Column(name = "created_by", nullable = false, length = 300)
+    @Column(name = "created_by", length = 300)
     private String createdBy;
 
-    @NotNull
-    @Column(name = "updateted_date", nullable = false)
+    @Column(name = "updateted_date")
     private Instant updatetedDate = Instant.now();
 
     @Size(max = 300)
-    @NotNull
-    @Nationalized
-    @Column(name = "updateted_by", nullable = false, length = 300)
+    @Column(name = "updateted_by", length = 300)
     private String updatetedBy;
 
 }
