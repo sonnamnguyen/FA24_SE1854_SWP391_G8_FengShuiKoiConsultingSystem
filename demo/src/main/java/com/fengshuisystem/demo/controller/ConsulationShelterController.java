@@ -19,7 +19,6 @@ import java.util.List;
 public class ConsulationShelterController {
     ConsulationShelterService consulationShelterService;
 
-
     @PostMapping
     public ApiResponse<ConsultationShelterDTO> createConsulationShelter(
             @RequestParam Integer id,
