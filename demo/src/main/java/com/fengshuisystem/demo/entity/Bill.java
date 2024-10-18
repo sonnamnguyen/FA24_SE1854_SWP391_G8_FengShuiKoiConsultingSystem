@@ -2,8 +2,7 @@ package com.fengshuisystem.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -13,6 +12,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor // Thêm dòng này để tạo constructor không tham số
+@AllArgsConstructor // Nếu cần thêm constructor có tham số
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,5 +52,9 @@ public class Bill {
 
     @ManyToMany(mappedBy = "bills", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Package> packageFields = new LinkedHashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "consultation_request_id")
+    private ConsultationRequest consultationRequest;
 
 }

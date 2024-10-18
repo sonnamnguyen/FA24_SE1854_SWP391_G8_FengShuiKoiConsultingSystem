@@ -34,6 +34,15 @@ public class ConsultationRequestDetail {
     private AnimalCategory animalCategory;
 
     @NotNull
+    @Column(name = "price", nullable = false)
+    private Double price;
+
+    @Size(max = 1000)
+    @Nationalized
+    @Column(name = "description", length = 1000)
+    private String description;
+
+    @NotNull
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status = Status.INACTIVE;

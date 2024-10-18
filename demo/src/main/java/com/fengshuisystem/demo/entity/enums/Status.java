@@ -4,5 +4,6 @@ public enum Status {
     ACTIVE,
     INACTIVE,
     DELETED,
-    COMPLETED
+    COMPLETED,
+    PENDING;
 }

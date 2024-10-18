@@ -78,6 +78,11 @@ public class Account {
     @Column(name = "updated_by", length = 50)
     private String updatedBy;
 
+    public Account(String username, LocalDate dob) {
+        this.userName = username;
+        this.dob = dob;
+    }
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinTable(name = "account_role",
             joinColumns = @JoinColumn(name = "account_id"),

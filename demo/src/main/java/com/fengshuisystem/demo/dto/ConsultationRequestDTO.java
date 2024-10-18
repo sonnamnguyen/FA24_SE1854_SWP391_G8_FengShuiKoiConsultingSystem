@@ -16,8 +16,8 @@ public class ConsultationRequestDTO {
      Integer id;
      UserResponse account;
      Integer packageId;
-    String description;
      String status;
+     String description;
      Instant createdDate;
      String createdBy;
      Instant updatetedDate;

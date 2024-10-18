@@ -4,8 +4,7 @@ import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.Instant;
@@ -15,6 +14,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor // Thêm dòng này để tạo constructor không tham số
+@AllArgsConstructor // Nếu cần thêm constructor có tham số
 public class ConsultationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,6 +60,8 @@ public class ConsultationRequest {
     @Nationalized
     @Column(name = "updateted_by", nullable = false, length = 300)
     private String updatetedBy;
+
+
 
     @OneToMany(mappedBy = "requestDetail", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationRequestDetail> consultationRequestDetails = new LinkedHashSet<>();
