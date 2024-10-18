@@ -10,9 +10,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationDestinyCompatibilityResponse {
     String huong;
-    Integer huongScore;
+    String huongScore;
     String so;
-    Integer soScore;
+    String soScore;
     String mau;
-    Integer mauScore;
+    String mauScore;
 }

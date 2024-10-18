@@ -8,6 +8,8 @@ import com.fengshuisystem.demo.dto.response.ConsultationDestinyResponse;
 import com.fengshuisystem.demo.entity.ConsultationDestiny;
 import com.fengshuisystem.demo.entity.DestinyYear;
 import com.fengshuisystem.demo.entity.enums.Status;
+import com.fengshuisystem.demo.exception.AppException;
+import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.ConsultationDestinyMapper;
 import com.fengshuisystem.demo.repository.ConsultationDestinyRepository;
 import com.fengshuisystem.demo.repository.DestinyYearRepository;
@@ -16,9 +18,14 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -32,28 +39,59 @@ public class ConsultationDestinyServiceImpl implements ConsultationDestinyServic
     DestinyYearRepository destinyYearRepository;
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public ConsultationDestinyDTO createDestiny(ConsultationDestinyDTO request) {
-        return null;
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+        ConsultationDestiny destiny = consultationDestinyMapper.toEntity(request);
+        destiny.setCreatedBy(name);
+        destiny.setStatus(Status.ACTIVE);
+        destiny.setCreatedDate(Instant.now());
+        return consultationDestinyMapper.toDto(consultationDestinyRepository.save(destiny));
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<ConsultationDestinyDTO> getDestinies(int page, int size) {
-        return null;
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = consultationDestinyRepository.findAllByStatus(Status.ACTIVE, pageable);
+
+        if (pageData.isEmpty()) {
+            throw new AppException(ErrorCode.DESTINY_NOT_EXISTED);
+        }
+
+        return PageResponse.<ConsultationDestinyDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(consultationDestinyMapper::toDto).toList())
+                .build();
     }
 
-    @Override
-    public ConsultationDestinyDTO getDestinyById(Integer id) {
-        return null;
-    }
+
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public ConsultationDestinyDTO updateDestiny(Integer id, ConsultationDestinyDTO request) {
-        return null;
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+        ConsultationDestiny destiny = consultationDestinyRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
+        consultationDestinyMapper.update(request, destiny);
+        destiny.setUpdatedBy(name);
+        destiny.setUpdatedDate(Instant.now());
+        return consultationDestinyMapper.toDto(consultationDestinyRepository.save(destiny));
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteDestiny(Integer id) {
-
+        var destiny = consultationDestinyRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
+        destiny.setStatus(Status.DELETED);
+        consultationDestinyRepository.save(destiny);
     }
 
     @Override
@@ -97,21 +135,21 @@ public class ConsultationDestinyServiceImpl implements ConsultationDestinyServic
                 .so(request.getSoName().toString())
                 .mau(request.getMauName());
         if (destinyHuong != null ) {
-            responseBuilder.huongScore(destinyHuong.getMinValue());
+            responseBuilder.huongScore(destinyHuong.getMinValue()+"/"+destinyHuong.getMaxValue());
         }else{
-            responseBuilder.huongScore(0);
+            responseBuilder.huongScore("0");
         }
 
         if (destinySo != null) {
-            responseBuilder.soScore(destinySo.getMinValue());
+            responseBuilder.soScore(destinySo.getMinValue()+"/"+destinySo.getMaxValue());
         }else{
-            responseBuilder.soScore(0);
+            responseBuilder.soScore("0");
         }
 
         if (destinyMau != null) {
-            responseBuilder.mauScore(destinyMau.getMinValue());
+            responseBuilder.mauScore(destinyMau.getMinValue()+"/"+destinyMau.getMaxValue());
         }else{
-            responseBuilder.mauScore(0);
+            responseBuilder.mauScore("0");
         }
         return responseBuilder.build();
     }

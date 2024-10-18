@@ -48,7 +48,7 @@ public class DestinyYearServiceImpl implements DestinyYearService {
     public PageResponse<DestinyYearDTO> getDestinyYears(int page, int size) {
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
-        var pageData = destinyYearRepository.findAll(pageable);
+        var pageData = destinyYearRepository.findAllByStatus(Status.ACTIVE,pageable);
 
         if (pageData.isEmpty()) {
             throw new AppException(ErrorCode.DESTINY_YEAR_NOT_EXISTED);
@@ -82,5 +82,6 @@ public class DestinyYearServiceImpl implements DestinyYearService {
         var destinyYear = destinyYearRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.DESTINY_YEAR_NOT_EXISTED));
         destinyYear.setStatus(Status.DELETED);
+        destinyYearRepository.save(destinyYear);
     }
 }

@@ -9,7 +9,6 @@ import com.fengshuisystem.demo.dto.response.ConsultationDestinyResponse;
 public interface ConsultationDestinyService {
     ConsultationDestinyDTO createDestiny(ConsultationDestinyDTO request);
     PageResponse<ConsultationDestinyDTO> getDestinies(int page, int size);
-    ConsultationDestinyDTO getDestinyById(Integer id);
     ConsultationDestinyDTO updateDestiny(Integer id, ConsultationDestinyDTO request);
     void deleteDestiny(Integer id);
     ConsultationDestinyResponse getDestinyInfoByYear(int year);
