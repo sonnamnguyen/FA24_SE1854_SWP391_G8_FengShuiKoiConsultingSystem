@@ -30,6 +30,8 @@ public enum ErrorCode {
     CONSULATION_RESULT_NOT_EXISTED(1021, "Consulation result not existed", HttpStatus.NOT_FOUND),
     SHAPE_NOT_EXISTED(1022, "Shape not existed", HttpStatus.NOT_FOUND),
     CONSULATION_CATEGORY_NOT_EXISTED(1023, "Consulation Category not existed", HttpStatus.NOT_FOUND),
+    CONSULTATION_DESTINY_NOT_EXISTED(1024, "Destiny not existed", HttpStatus.NOT_FOUND),
+    DESTINY_YEAR_NOT_EXISTED(1025, "Destiny Year not existed", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
