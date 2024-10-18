@@ -1,7 +1,7 @@
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
-import com.fengshuisystem.demo.dto.DestinyInputDTO;
+import com.fengshuisystem.demo.dto.request.DestinyRequest;
 import com.fengshuisystem.demo.dto.response.AutoConsultationResponseContainer;
 import com.fengshuisystem.demo.dto.response.CompatibilityResultResponse;
 import com.fengshuisystem.demo.service.AutoConsultationService;
@@ -43,7 +43,7 @@ public class DestinyController {
     @GetMapping("/compatibility/{yearOfBirth}")
     public ApiResponse<CompatibilityResultResponse> calculateCompatibility(
             @PathVariable int yearOfBirth,
-            @RequestBody DestinyInputDTO destinyInput) {
+            @RequestBody DestinyRequest destinyInput) {
         CompatibilityResultResponse response = compatibilityService.calculateCompatibility(yearOfBirth, destinyInput);
         return ApiResponse.<CompatibilityResultResponse>builder()
                 .result(response)

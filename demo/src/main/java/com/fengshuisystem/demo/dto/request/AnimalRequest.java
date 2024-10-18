@@ -1,4 +1,4 @@
-package com.fengshuisystem.demo.dto;
+package com.fengshuisystem.demo.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AnimalInputDTO {
+public class AnimalRequest {
     Integer animalId;
     String animalName;
 }

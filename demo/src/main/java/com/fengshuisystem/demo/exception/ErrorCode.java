@@ -22,6 +22,10 @@ public enum ErrorCode {
     ANIMAL_NOT_EXISTED(1013, "Animal not existed", HttpStatus.NOT_FOUND),
     SHELTER_EXISTED(1014, "Shelter existed", HttpStatus.BAD_REQUEST),
     SHELTER_NOT_EXISTED(1015, "Shelters not existed", HttpStatus.NOT_FOUND),
+    DESTINY_NOT_EXISTED(1015, "Destiny not existed", HttpStatus.NOT_FOUND),
+    DESTINY_YEAR_NOT_EXISTED(1015, "Destiny Year not existed", HttpStatus.NOT_FOUND),
+
+    
 
     ;
 

@@ -4,11 +4,11 @@ public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
                 "/animals", "/animals/{search}", "/shelters", "/shelters/{search}",
-                "/colors", "shapes"
+                "/colors", "shapes", "/api/destiny-years", "/api/destinies"
 
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
-                "/animals", "/shelters", "/colors", "/shapes"
+                "/animals", "/shelters", "/colors", "/shapes", "/api/destiny-years", "/api/destiny2"
 
         };
 
@@ -27,7 +27,9 @@ public class EndPoint {
         };
 
         public static final String[] USER_ENDPOINTS = {
-                "/api/destiny/{yearOfBirth}", "api/compatibility/{yearOfBirth}"
+                "/api/destiny/{yearOfBirth}", "/api/compatibility/{yearOfBirth}", "/api/destiny2/{yearOfBirth}", "/api/compatibility2/{yearOfBirth}"
         };
+
+
     }
 

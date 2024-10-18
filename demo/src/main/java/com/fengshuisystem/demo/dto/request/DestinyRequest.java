@@ -1,4 +1,4 @@
-package com.fengshuisystem.demo.dto;
+package com.fengshuisystem.demo.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,12 +10,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DestinyInputDTO {
+public class DestinyRequest {
      Integer directionId;
      String directionName;
      Integer shapeId;
      String shapeName;
      Integer numberId;
      Integer numberName;
-     List<AnimalInputDTO> animal;
+     List<AnimalRequest> animal;
 }

@@ -1,6 +1,8 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.*;
+import com.fengshuisystem.demo.dto.request.AnimalRequest;
+import com.fengshuisystem.demo.dto.request.DestinyRequest;
 import com.fengshuisystem.demo.dto.response.AnimalCompatibilityResponse;
 import com.fengshuisystem.demo.dto.response.ColorCompatibilityResponse;
 import com.fengshuisystem.demo.dto.response.CompatibilityResultResponse;
@@ -71,7 +73,7 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
 
     @Override
     @PreAuthorize("hasRole('USER')")
-    public CompatibilityResultResponse calculateCompatibility(int yearOfBirth, DestinyInputDTO destinyInput) {
+    public CompatibilityResultResponse calculateCompatibility(int yearOfBirth, DestinyRequest destinyInput) {
         String userDestiny = destinyService.getDestinyFromYear(yearOfBirth);
 
         // Handle direction compatibility
@@ -140,7 +142,7 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
         // Handle animal compatibility
         List<AnimalCompatibilityResponse> animalCompatibilityResponses = new ArrayList<>();
         Set<String> animalAdvice = new HashSet<>();
-        List<AnimalInputDTO> animals = destinyInput.getAnimal();
+        List<AnimalRequest> animals = destinyInput.getAnimal();
         double animalListScore = 0.0;
         double averageAnimalListScore = 0.0;
         boolean hasAnimal = animals.isEmpty();
@@ -148,7 +150,7 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
             animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getAnimals());
             animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation2().getAnimals());
         } else {
-            for (AnimalInputDTO animal : animals) {
+            for (AnimalRequest animal : animals) {
                 List<ColorDTO> animalColors = colorService.getColorsByAnimalId(animal.getAnimalId());
                 double animalTotalScore = 0.0;
                 double maxScore = 0.0;
