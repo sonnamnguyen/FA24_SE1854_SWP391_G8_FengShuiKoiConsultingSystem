@@ -2,8 +2,10 @@ package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
+import com.fengshuisystem.demo.entity.AnimalImage;
 import com.fengshuisystem.demo.entity.Shape;
 import com.fengshuisystem.demo.entity.ShelterCategory;
+import com.fengshuisystem.demo.entity.ShelterImage;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
@@ -40,7 +42,7 @@ public class ShelterServiceImpl implements ShelterService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         if(shelterRepository.existsByShelterCategoryName(request.getShelterCategoryName())) throw new AppException(ErrorCode.SHELTER_EXISTED);
-        Shape shape = shapeRepository.findById(request.getShapeId()).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
+        Shape shape = shapeRepository.findById(request.getShapeId()).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
         ShelterCategory shelterCategory = shelterMapper.toEntity(request);
         shelterCategory.setStatus(Status.ACTIVE);
         shelterCategory.setCreatedDate(Instant.now());
@@ -48,6 +50,9 @@ public class ShelterServiceImpl implements ShelterService {
         shelterCategory.setUpdatedDate(Instant.now());
         shelterCategory.setUpdatedBy(name);
         shelterCategory.setShape(shape);
+        for (ShelterImage shelterImage : shelterCategory.getShelterImages()) {
+            shelterImage.setShelterCategory(shelterCategory);
+        }
         return shelterMapper.toDto(shelterRepository.save(shelterCategory));
     }
 
@@ -72,7 +77,7 @@ public class ShelterServiceImpl implements ShelterService {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<ShelterCategoryDTO> getAllShelters(int page, int size) {
-        String status = "ACTIVE";
+        Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = shelterRepository.findAllByStatus(status, pageable);
@@ -111,6 +116,9 @@ public class ShelterServiceImpl implements ShelterService {
         shelterCategory.setUpdatedDate(Instant.now());
         shelterCategory.setUpdatedBy(name);
         shelterCategory.setShape(shape);
+        for (ShelterImage shelterImage : shelterCategory.getShelterImages()) {
+            shelterImage.setShelterCategory(shelterCategory);
+        }
         return shelterMapper.toDto(shelterRepository.saveAndFlush(shelterCategory));
     }
 }

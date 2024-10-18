@@ -1,8 +1,10 @@
 package com.fengshuisystem.demo.service.impl;
 import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
+import com.fengshuisystem.demo.dto.AnimalImageDTO;
 import com.fengshuisystem.demo.dto.ColorDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.AnimalCategory;
+import com.fengshuisystem.demo.entity.AnimalImage;
 import com.fengshuisystem.demo.entity.Color;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
@@ -24,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -37,6 +41,7 @@ public class AnimalServiceImpl implements AnimalService {
     AnimalMapper animalMapper;
     ColorRepository colorRepository;
     @Override
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public AnimalCategoryDTO createAnimal(AnimalCategoryDTO request) {
         var context = SecurityContextHolder.getContext();
@@ -50,6 +55,7 @@ public class AnimalServiceImpl implements AnimalService {
                 colors.add(color);
             }
         }
+
         AnimalCategory animalCategory = animalMapper.toEntity(request);
         animalCategory.setStatus(Status.ACTIVE);
         animalCategory.setUpdatedDate(Instant.now());
@@ -57,6 +63,9 @@ public class AnimalServiceImpl implements AnimalService {
         animalCategory.setColors(colors);
         animalCategory.setCreatedBy(name);
         animalCategory.setUpdatedBy(name);
+        for (AnimalImage animalImage : animalCategory.getAnimalImages()) {
+            animalImage.setAnimalCategory(animalCategory);
+        }
         return animalMapper.toDto(animalRepository.save(animalCategory));
     }
     @Override
@@ -121,9 +130,21 @@ public class AnimalServiceImpl implements AnimalService {
                 colors.add(color);
             }
         }
+        for (AnimalImage animalImage : animalCategory.getAnimalImages()) {
+            animalImage.setAnimalCategory(animalCategory);
+        }
         animalCategory.setUpdatedBy(name);
         animalCategory.setColors(colors);
         animalCategory.setUpdatedDate(Instant.now());
         return animalMapper.toDto(animalRepository.saveAndFlush(animalCategory));
     }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public AnimalCategoryDTO getAnimalById(Integer id) {
+        AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
+        return animalMapper.toDto(animalCategory);
+    }
+
+
 }

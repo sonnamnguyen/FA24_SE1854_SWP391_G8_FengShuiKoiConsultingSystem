@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.Instant;
@@ -25,7 +26,9 @@ public class ShelterCategoryDTO {
      String createdBy;
      Instant updatedDate;
      String updatedBy;
+     @JsonIgnore
      List<ConsultationRequestDetailDTO> consultationRequestDetails;
+     @JsonIgnore
      List<ConsultationShelterDTO> consultationShelters;
      List<ShelterImageDTO> shelterImages;
 

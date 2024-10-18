@@ -8,4 +8,5 @@ public interface AnimalService {
      PageResponse<AnimalCategoryDTO> getAnimals(int page, int size);
      void deleteAnimal(Integer id);
      AnimalCategoryDTO updateAnimal(Integer id, AnimalCategoryDTO request);
+     AnimalCategoryDTO getAnimalById(Integer id);
     }

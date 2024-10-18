@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -110,5 +111,10 @@ public class ShapeServiceImpl implements ShapeService {
         shape.setUpdatedDate(Instant.now());
         shape.setDestiny(destiny);
         return shapeMapper.toDto(shapeRepository.saveAndFlush(shape));
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<ShapeDTO> getAllShapes() {
+        Status status = Status.ACTIVE;
+        return shapeRepository.findAllByStatus(status).stream().map(shapeMapper::toDto).toList();
     }
 }

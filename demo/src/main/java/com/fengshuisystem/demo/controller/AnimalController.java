@@ -21,6 +21,7 @@ public class AnimalController {
 
     @PostMapping
     public ApiResponse<AnimalCategoryDTO> createAnimal(@RequestBody AnimalCategoryDTO animalCreationRequest) {
+        System.out.println("Received request: " + animalCreationRequest); // Logging nội dung reques
         return ApiResponse.<AnimalCategoryDTO>builder()
                 .result(animalService.createAnimal(animalCreationRequest))
                 .build();
@@ -59,6 +60,12 @@ public class AnimalController {
         animalService.deleteAnimal(id);
         return ApiResponse.<String>builder()
                 .result("The animal has been deleted")
+                .build();
+    }
+    @GetMapping("/{id}")
+    public ApiResponse<AnimalCategoryDTO> getAnimalById(@PathVariable Integer id) {
+        return ApiResponse.<AnimalCategoryDTO>builder()
+                .result(animalService.getAnimalById(id))
                 .build();
     }
 }

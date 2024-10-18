@@ -2,6 +2,7 @@ package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ColorDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
+import com.fengshuisystem.demo.dto.ShapeDTO;
 import com.fengshuisystem.demo.entity.Color;
 import com.fengshuisystem.demo.entity.Destiny;
 import com.fengshuisystem.demo.entity.enums.Status;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -109,5 +111,11 @@ public class ColorServiceImpl implements ColorService {
         color.setUpdatedDate(Instant.now());
         color.setUpdatedBy(name);
         return colorMapper.toDto(colorRepository.saveAndFlush(color));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<ColorDTO> getAllColors() {
+        Status status = Status.ACTIVE;
+        return colorRepository.findAllByStatus(status).stream().map(colorMapper::toDto).toList();
     }
 }
