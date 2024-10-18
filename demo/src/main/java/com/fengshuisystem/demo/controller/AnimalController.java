@@ -17,32 +17,31 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class AnimalController {
-    AnimalService animalService;
+    final AnimalService animalService;
 
     @PostMapping
     public ApiResponse<AnimalCategoryDTO> createAnimal(@RequestBody AnimalCategoryDTO animalCreationRequest) {
-        System.out.println("Received request: " + animalCreationRequest); // Logging nội dung reques
+        log.info("Received request: {}", animalCreationRequest);
         return ApiResponse.<AnimalCategoryDTO>builder()
                 .result(animalService.createAnimal(animalCreationRequest))
                 .build();
     }
+
     @GetMapping
     public ApiResponse<PageResponse<AnimalCategoryDTO>> getAllAnimals(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
-
         return ApiResponse.<PageResponse<AnimalCategoryDTO>>builder()
                 .result(animalService.getAnimals(page, size))
                 .build();
     }
 
-    @GetMapping("/{search}")
+    @GetMapping("/search")
     public ApiResponse<PageResponse<AnimalCategoryDTO>> getAnimalBySearch(
             @ModelAttribute AnimalCategoryDTO search,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
-
     ) {
         return ApiResponse.<PageResponse<AnimalCategoryDTO>>builder()
                 .result(animalService.getAnimalsBySearch(search, page, size))
@@ -50,11 +49,12 @@ public class AnimalController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<AnimalCategoryDTO> updateAnimal(@PathVariable Integer id, @RequestBody @Valid AnimalCategoryDTO animalCreationRequest) {
+    public ApiResponse<AnimalCategoryDTO> updateAnimal(@PathVariable Integer id, @RequestBody @Valid AnimalCategoryDTO animalUpdateRequest) {
         return ApiResponse.<AnimalCategoryDTO>builder()
-                .result(animalService.updateAnimal(id, animalCreationRequest))
+                .result(animalService.updateAnimal(id, animalUpdateRequest))
                 .build();
     }
+
     @DeleteMapping("/{id}")
     public ApiResponse<String> deleteAnimal(@PathVariable Integer id) {
         animalService.deleteAnimal(id);
@@ -62,6 +62,7 @@ public class AnimalController {
                 .result("The animal has been deleted")
                 .build();
     }
+
     @GetMapping("/{id}")
     public ApiResponse<AnimalCategoryDTO> getAnimalById(@PathVariable Integer id) {
         return ApiResponse.<AnimalCategoryDTO>builder()

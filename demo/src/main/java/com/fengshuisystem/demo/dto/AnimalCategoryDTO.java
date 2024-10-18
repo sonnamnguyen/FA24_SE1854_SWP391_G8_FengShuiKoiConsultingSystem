@@ -26,9 +26,11 @@ public class AnimalCategoryDTO {
     Instant updatedDate;
     String updatedBy;
     List<AnimalImageDTO> animalImages;
+
     @JsonIgnore
     List<ConsultationAnimalDTO> consultationAnimals;
     @JsonIgnore
     List<ConsultationRequestDetailDTO> consultationRequestDetails;
+
     List<ColorDTO> colors;
 }
