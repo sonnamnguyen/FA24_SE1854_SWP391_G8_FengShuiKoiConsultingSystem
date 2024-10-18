@@ -1,5 +1,7 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -50,6 +52,9 @@ public class Payment {
     @Column(name = "updateted_by", nullable = false, length = 300)
     private String updatetedBy;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.INACTIVE;
     @OneToMany(mappedBy = "payment", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Bill> bills = new LinkedHashSet<>();
 
