@@ -22,6 +22,19 @@ public enum ErrorCode {
     ANIMAL_NOT_EXISTED(1013, "Animal not existed", HttpStatus.NOT_FOUND),
     SHELTER_EXISTED(1014, "Shelter existed", HttpStatus.BAD_REQUEST),
     SHELTER_NOT_EXISTED(1015, "Shelters not existed", HttpStatus.NOT_FOUND),
+    POST_NOT_EXISTED(2001, "Post not existed", HttpStatus.NOT_FOUND),
+    COMMENT_NOT_EXISTED(2002, "Comment not existed", HttpStatus.NOT_FOUND),
+    POST_IMAGE_NOT_EXISTED(2003, "Post image not existed", HttpStatus.NOT_FOUND),
+    COLOR_NOT_EXISTED(1016, "color not existed", HttpStatus.NOT_FOUND),
+    POST_CATEGORY_NOT_EXISTED(2004, "color not existed", HttpStatus.NOT_FOUND),
+    DESTINY_NOT_EXISTED(2005,"destination not existed", HttpStatus.NOT_FOUND),
+    PAYMENT_NOT_EXISTED(2006,"payment not existed", HttpStatus.NOT_FOUND),
+    BILL_NOT_EXISTED(2007,"bill not existed", HttpStatus.NOT_FOUND),
+    PACKAGE_NOT_EXISTED(2007,"package not existed", HttpStatus.NOT_FOUND),
+
+
+
+
 
     ;
 

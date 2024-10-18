@@ -1,5 +1,7 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -24,6 +26,10 @@ public class PostCategory {
     @Nationalized
     @Column(name = "post_category_name", nullable = false)
     private String postCategoryName;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.INACTIVE;
 
     @OneToMany(mappedBy = "postCategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Post> posts = new LinkedHashSet<>();

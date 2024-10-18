@@ -1,5 +1,7 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,19 +21,19 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
     private Integer id;
-
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn
     private Account account;
-
+    @JsonIgnore
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
     @JoinColumn(nullable = false)
     private PostCategory postCategory;
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Package packageField;
-
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn
     private Destiny destiny;
@@ -53,9 +55,9 @@ public class Post {
     @Column(name = "share_number", nullable = false)
     private Integer shareNumber;
 
-    @NotNull
-    @Column(name = "status", nullable = false)
-    private Boolean status = false;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.INACTIVE;
 
     @NotNull
     @Column(name = "created_date", nullable = false)
@@ -74,10 +76,8 @@ public class Post {
     @Nationalized
     @Column(name = "updated_by")
     private String updatedBy;
-
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Comment> comments = new LinkedHashSet<>();
-
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<PostImage> postImages = new LinkedHashSet<>();
 

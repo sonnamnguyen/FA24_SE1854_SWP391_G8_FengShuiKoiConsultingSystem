@@ -1,0 +1,115 @@
+package com.fengshuisystem.demo.service.impl;
+import com.fengshuisystem.demo.dto.*;
+import com.fengshuisystem.demo.entity.*;
+import com.fengshuisystem.demo.entity.Package;
+import com.fengshuisystem.demo.entity.enums.Status;
+import com.fengshuisystem.demo.exception.AppException;
+import com.fengshuisystem.demo.exception.ErrorCode;
+import com.fengshuisystem.demo.mapper.PostMapper;
+import com.fengshuisystem.demo.repository.*;
+import com.fengshuisystem.demo.service.PostService;
+
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import java.time.Instant;
+
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+@Service
+public class PostServiceImpl implements PostService {
+    PostMapper postMapper;
+    PostRepository postRepository;
+    PostCategoryRepository postCategoryRepository;
+    DestinyRepository destinyRepository;
+    UserRepository userRepository;
+    PackageRepository packageRepository;
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public PostDTO createPost(PostDTO request) {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+        PostCategory  postCategory = postCategoryRepository.findById(request.getPostCategory().getId()).orElseThrow(()->new AppException(ErrorCode.POST_CATEGORY_NOT_EXISTED));
+        Destiny destiny = destinyRepository.findById(request.getDestiny().getId()).orElseThrow(()->new AppException(ErrorCode.DESTINY_NOT_EXISTED));
+        Package pkg = packageRepository.findById(request.getPackageField().getId()).orElseThrow(()->new AppException(ErrorCode.PACKAGE_NOT_EXISTED));
+        Post post = postMapper.toEntity(request);
+        Account account = userRepository.findByUsername(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
+        post.setAccount(account);
+        post.setDestiny(destiny);
+        post.setPackageField(pkg);
+        post.setPostCategory(postCategory);
+        post.setStatus(Status.ACTIVE);
+        post.setCreatedBy(name);
+        return postMapper.toDto(postRepository.save(post));
+    }
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public PageResponse<PostDTO> getPostsByCategory(String postCategory, int page, int size) {
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = postRepository.findAllByPostCategory(postCategory, pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.POST_NOT_EXISTED);
+        }
+        return PageResponse.<PostDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(postMapper::toDto).toList())
+                .build();
+    }
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public PageResponse<PostDTO> getPosts(int page, int size) {
+        Status status = Status.ACTIVE;
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = postRepository.findAllByStatus(status, pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.POST_NOT_EXISTED);
+        }
+        return PageResponse.<PostDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(postMapper::toDto).toList())
+                .build();
+    }
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public void deletePost(Integer id) {
+        var post = postRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXISTED));
+        post.setStatus(Status.DELETED);
+        postRepository.save(post);
+    }
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public PostDTO updatePost(Integer id, PostDTO request) {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+        Account account = userRepository.findByUsername(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
+        Post post = postRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXISTED));
+        PostCategory  postCategory = postCategoryRepository.findById(request.getPostCategory().getId()).orElseThrow(()->new AppException(ErrorCode.POST_CATEGORY_NOT_EXISTED));
+        Destiny destiny = destinyRepository.findById(request.getDestiny().getId()).orElseThrow(()->new AppException(ErrorCode.DESTINY_NOT_EXISTED));
+        Package pkg = packageRepository.findById(request.getPackageField().getId()).orElseThrow(()->new AppException(ErrorCode.PACKAGE_NOT_EXISTED));
+        postMapper.update(request, post);
+        post.setAccount(account);
+        post.setPostCategory(postCategory);
+        post.setDestiny(destiny);
+        post.setPackageField(pkg);
+        post.setUpdatedBy(name);
+        post.setUpdatedDate(Instant.now());
+        return postMapper.toDto(postRepository.save(post));
+    }
+}

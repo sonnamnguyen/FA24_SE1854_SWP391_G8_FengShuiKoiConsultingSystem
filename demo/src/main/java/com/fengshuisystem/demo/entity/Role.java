@@ -1,5 +1,7 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,6 +19,7 @@ import java.util.Set;
 @Entity
 public class Role {
     @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
@@ -26,7 +29,6 @@ public class Role {
     @Nationalized
     @Column(name = "name")
     private String name;
-
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Account> accounts = new LinkedHashSet<>();
 
