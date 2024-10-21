@@ -2,6 +2,7 @@ package com.fengshuisystem.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,8 +46,10 @@ public class Bill {
     @Column(name = "created_date")
     private Instant createdDate = Instant.now();
 
-    @Column(name = "created_by")
-    private Instant createdBy;
+    // Fix lỗi: Instant -> String
+    @Size(max = 50)
+    @Column(name = "created_by",  length = 50)
+    private String createdBy;
 
     @ManyToMany(mappedBy = "bills", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Package> packageFields = new LinkedHashSet<>();

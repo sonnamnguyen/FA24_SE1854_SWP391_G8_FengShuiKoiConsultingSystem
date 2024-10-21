@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -52,6 +53,10 @@ public class Package {
     @Nationalized
     @Column(name = "updated_by")
     private String updatedBy;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ACTIVE;
 
     @OneToMany(mappedBy = "packageField", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationRequest> consultationRequests = new LinkedHashSet<>();

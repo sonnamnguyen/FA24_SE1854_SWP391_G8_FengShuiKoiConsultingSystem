@@ -59,6 +59,17 @@ public class ConsultationRequest {
     @Column(name = "updateted_by", nullable = false, length = 300)
     private String updatetedBy;
 
+    @PrePersist
+    public void onCreate() {
+        this.createdDate = Instant.now();
+        this.updatetedDate = Instant.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.updatetedDate = Instant.now();
+    }
+
     @OneToMany(mappedBy = "requestDetail", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationRequestDetail> consultationRequestDetails = new LinkedHashSet<>();
 
