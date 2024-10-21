@@ -8,7 +8,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.3</version>
+		<!--update version 3.3.4-->
+		<version>3.3.4</version>
 		<relativePath/> <!-- Lookup parent from repository -->
 	</parent>
 
@@ -20,13 +21,12 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<lombok.version>1.18.30</lombok.version> <!-- Hoặc phiên bản mới nhất -->
+		<lombok.version>1.18.34</lombok.version> <!-- 30 -> 34 -->
 		<mapstruct.version>1.5.5.Final</mapstruct.version> <!-- Hoặc phiên bản mới nhất -->
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
 		<spring-cloud.version>2023.0.1</spring-cloud.version>
 	</properties>
-
 
 	<dependencyManagement>
 		<dependencies>
@@ -51,8 +51,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-
-	
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
