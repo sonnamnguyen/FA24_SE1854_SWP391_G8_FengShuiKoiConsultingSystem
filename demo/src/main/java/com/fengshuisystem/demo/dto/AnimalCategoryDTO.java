@@ -1,12 +1,13 @@
 package com.fengshuisystem.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
 import java.util.List;
-
 
 @Data
 @NoArgsConstructor
@@ -25,4 +26,5 @@ public class AnimalCategoryDTO {
     String updatedBy;
     List<AnimalImageDTO> animalImages;
     List<ColorDTO> colors;
+
 }

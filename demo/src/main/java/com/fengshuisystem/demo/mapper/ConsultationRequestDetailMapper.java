@@ -3,11 +3,12 @@ package com.fengshuisystem.demo.mapper;
 import com.fengshuisystem.demo.dto.ConsultationRequestDetailDTO;
 import com.fengshuisystem.demo.entity.ConsultationRequestDetail;
 import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-@Mapper(
-        config = DefaultConfigMapper.class
+@Mapper(componentModel = "spring")
+public interface ConsultationRequestDetailMapper {
 
-)
-public interface ConsultationRequestDetailMapper extends EntityMapper<ConsultationRequestDetailDTO, ConsultationRequestDetail>{
+    ConsultationRequestDetail toEntity(ConsultationRequestDetailDTO dto);
 
+    ConsultationRequestDetailDTO toDTO(ConsultationRequestDetail entity);
 }

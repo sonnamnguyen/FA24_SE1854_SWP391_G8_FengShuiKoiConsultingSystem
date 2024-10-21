@@ -10,12 +10,14 @@ import org.hibernate.annotations.Nationalized;
 
 import java.time.Instant;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 public class ConsultationRequestDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "consultation_request_detail_id", nullable = false)
@@ -34,54 +36,61 @@ public class ConsultationRequestDetail {
     private AnimalCategory animalCategory;
 
     @NotNull
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Status status = Status.INACTIVE;  // Giá trị mặc định
 
     @NotNull
     @Column(name = "created_date", nullable = false)
-    private Instant createdDate = Instant.now();
+    private Instant createdDate = Instant.now();  // Giá trị mặc định
 
     @Size(max = 300)
     @NotNull
     @Nationalized
     @Column(name = "created_by", nullable = false, length = 300)
-    private String createdBy;
+    private String createdBy = "system";  // Giá trị mặc định
 
     @NotNull
-    @Column(name = "updateted_date", nullable = false)
-    private Instant updatetedDate = Instant.now();
+    @Column(name = "updated_date", nullable = false)
+    private Instant updatedDate = Instant.now();  // Giá trị mặc định
 
     @Size(max = 300)
     @NotNull
     @Nationalized
-    @Column(name = "updateted_by", nullable = false, length = 300)
-    private String updatetedBy;
+    @Column(name = "updated_by", nullable = false, length = 300)
+    private String updatedBy = "system";  // Giá trị mặc định
 
-    // add description and can not be null
     @Size(max = 1000)
     @NotNull
     @Nationalized
-    @Column(name = "description", length = 1000)
-    private String description;
+    @Column(name = "description", nullable = false, length = 1000)
+    private String description;  // Giá trị mặc định
 
     @OneToMany(mappedBy = "requestDetail", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationResult> consultationResults = new LinkedHashSet<>();
 
-    // Many-to-Many with AnimalCategory
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
-            name = "consultation_detail_animal_category",
-            joinColumns = @JoinColumn(name = "consultation_request_detail_id"),
-            inverseJoinColumns = @JoinColumn(name = "animal_category_id")
-    )
-    private Set<AnimalCategory> animalCategories = new LinkedHashSet<>();
-    // Many-to-Many with ShelterCategory
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinTable(
-            name = "consultation_detail_shelter_category",
-            joinColumns = @JoinColumn(name = "consultation_request_detail_id"),
+            name = "consultation_shelter_category",
+            joinColumns = @JoinColumn(name = "consultation_id"),
             inverseJoinColumns = @JoinColumn(name = "shelter_category_id")
     )
-    private Set<ShelterCategory> shelterCategories = new LinkedHashSet<>();
+    private List<ShelterCategory> shelterCategories;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "consultation_animal_category",
+            joinColumns = @JoinColumn(name = "consultation_id"),
+            inverseJoinColumns = @JoinColumn(name = "animal_category_id")
+    )
+    private List<AnimalCategory> animalCategories;
+
+    public List<ShelterCategory> getShelterCategories() {
+        return shelterCategories;
+    }
+
+    public List<AnimalCategory> getAnimalCategories() {
+        return animalCategories;
+    }
+
 }

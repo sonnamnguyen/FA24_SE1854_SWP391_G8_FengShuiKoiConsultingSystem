@@ -1,7 +1,6 @@
 package com.fengshuisystem.demo.dto;
 
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import java.time.Instant;
 import java.util.List;
 
@@ -9,24 +8,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationRequestDetailDTO {
-    Integer id;
-    ConsultationResultDTO requestDetail;
-    ShelterCategoryDTO shelterCategory;
-    AnimalCategoryDTO animalCategory;
-
-    // bo sung dang List
-    List<ShelterCategoryDTO> shelterCategoryies;
-    List<AnimalCategoryDTO> animalCategories;
-
-    // add description
-    String description;
-
-    String status;
-    Instant createdDate;
-    String createdBy;
-    Instant updatetedDate;
-    String updatetedBy;
-    List<ConsultationResultDTO> consultationResults;
+    private Integer id;
+    private String description;
+    private String status;
+    private List<Integer> shelterCategoryIds;
+    private List<Integer> animalCategoryIds;
+    private String createdBy;
+    private Instant createdDate;
+    private String updatedBy;
+    private Instant updatedDate;
 }
