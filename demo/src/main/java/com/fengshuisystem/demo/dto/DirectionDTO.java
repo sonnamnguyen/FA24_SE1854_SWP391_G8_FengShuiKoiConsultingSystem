@@ -13,5 +13,4 @@ import java.util.List;
 public class DirectionDTO {
      Integer id;
      String direction;
-     Integer destinyDTO;
 }
