@@ -15,6 +15,14 @@ public class ConsultationRequestDetailDTO {
     ConsultationResultDTO requestDetail;
     ShelterCategoryDTO shelterCategory;
     AnimalCategoryDTO animalCategory;
+
+    // bo sung dang List
+    List<ShelterCategoryDTO> shelterCategoryies;
+    List<AnimalCategoryDTO> animalCategories;
+
+    // add description
+    String description;
+
     String status;
     Instant createdDate;
     String createdBy;

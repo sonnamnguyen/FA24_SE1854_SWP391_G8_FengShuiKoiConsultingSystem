@@ -58,7 +58,8 @@ public class AnimalCategory {
     @OneToMany(mappedBy = "animalCategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationAnimal> consultationAnimals = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "animalCategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    // 1-N => N-N
+    @ManyToMany(mappedBy = "animalCategories", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationRequestDetail> consultationRequestDetails = new LinkedHashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
