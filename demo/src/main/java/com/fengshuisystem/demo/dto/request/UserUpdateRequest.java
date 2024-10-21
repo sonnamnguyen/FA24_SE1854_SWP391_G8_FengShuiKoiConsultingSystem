@@ -31,7 +31,6 @@ public class UserUpdateRequest {
     @Size(min = 10, message = "INVALID_PHONE_NUMBER")
     String phoneNumber;
 
-
     @Pattern(regexp = "male|female", message = "INVALID_GENDER")
     String gender;
 

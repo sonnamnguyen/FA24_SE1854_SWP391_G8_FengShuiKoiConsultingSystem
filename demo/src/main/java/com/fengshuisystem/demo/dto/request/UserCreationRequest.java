@@ -26,7 +26,8 @@ public class UserCreationRequest {
     String username;
     @Size(min = 6, message = "INVALID_PASSWORD")
     String password;
-    String fullName;
+    // fullName -> fullname
+    String fullname;
     @Email(message = "INVALID_EMAIL")
     String email;
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "INVALID_PHONE_NUMBER")
@@ -38,9 +39,13 @@ public class UserCreationRequest {
     LocalDate dob;
     String code;
     String status;
-    Instant createDate;
+
+    // create -> created
+    Instant createdDate;
     String createdBy;
-    Instant updateDate;
+
+    // update -> updated
+    Instant updatedDate;
     String updatedBy;
 
 }

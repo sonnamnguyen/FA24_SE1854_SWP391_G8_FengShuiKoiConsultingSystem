@@ -83,7 +83,7 @@ public UserResponse createUser(UserCreationRequest request) {
 }
 public void giveEmailForgotPassword(String email) {
     Account user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-   user.setCode(generateCode());
+    user.setCode(generateCode());
     sendForgotCodeToRestPassword(user.getEmail(), user.getCode());
 }
 //public UserResponse forgotPassword(String link) {

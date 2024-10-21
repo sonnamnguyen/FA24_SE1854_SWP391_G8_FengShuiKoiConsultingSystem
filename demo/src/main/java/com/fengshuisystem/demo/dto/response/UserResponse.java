@@ -18,7 +18,8 @@ public class UserResponse {
     String id;
     String username;
     String password;
-    String fullName;
+    // fullName -> fullname
+    String fullname;
     String email;
     String phoneNumber;
     String gender;
@@ -26,9 +27,11 @@ public class UserResponse {
     LocalDate dob;
     String code;
     String status;
-    Instant createDate;
+    // creat -> created
+    Instant createdDate;
     String createdBy;
-    Instant updateDate;
+    // update -> updated
+    Instant updatedDate;
     String updatedBy;
     Boolean noPassword;
     Set<RoleResponse> roles;
