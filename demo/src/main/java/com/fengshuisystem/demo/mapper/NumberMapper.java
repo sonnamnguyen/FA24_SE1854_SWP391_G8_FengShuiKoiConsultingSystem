@@ -10,6 +10,5 @@ import org.mapstruct.Mapping;
 
 )
 public interface NumberMapper extends EntityMapper<NumberDTO, Number>{
-    @Mapping(target = "destiny.id", source = "destinyId")
      Number toEntity(NumberDTO dto);
 }

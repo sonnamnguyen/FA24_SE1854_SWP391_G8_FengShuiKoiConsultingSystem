@@ -15,7 +15,5 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NumberDTO {
     Integer id;
-    @JsonIgnore
-    Integer destinyId;
     Integer number;
 }
