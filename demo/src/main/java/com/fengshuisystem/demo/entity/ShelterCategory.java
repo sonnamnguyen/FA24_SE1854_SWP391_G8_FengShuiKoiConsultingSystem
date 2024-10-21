@@ -81,7 +81,7 @@ public class ShelterCategory {
     @Column(name = "updated_by")
     private String updatedBy;
 
-    @OneToMany(mappedBy = "shelterCategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToMany(mappedBy = "shelterCategories", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationRequestDetail> consultationRequestDetails = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "shelterCategory", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
