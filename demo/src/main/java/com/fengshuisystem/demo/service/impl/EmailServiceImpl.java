@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.service.EmailService;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailServiceImpl implements EmailService {
-   JavaMailSender mailSender;
+    JavaMailSender mailSender;
     @Override
     public void sendEmail(String from, String to, String subject, String body) {
         MimeMessage message = mailSender.createMimeMessage();

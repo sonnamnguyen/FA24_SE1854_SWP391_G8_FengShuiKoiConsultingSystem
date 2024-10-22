@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.constant.PredefinedRole;
@@ -256,4 +257,3 @@ public class AuthenticationServiceImpl implements AuthenticateService {
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 }
-

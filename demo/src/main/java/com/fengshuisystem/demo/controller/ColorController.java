@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
@@ -40,7 +41,7 @@ public class ColorController {
 
     @GetMapping("/search-colors")
     public ApiResponse<PageResponse<ColorDTO>> getColorsBySearch(
-           @RequestParam String name,
+            @RequestParam String name,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
 

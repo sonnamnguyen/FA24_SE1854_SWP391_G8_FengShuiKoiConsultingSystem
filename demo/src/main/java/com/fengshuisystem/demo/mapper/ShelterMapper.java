@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.mapper;
 
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
@@ -12,6 +13,6 @@ import org.mapstruct.Mapping;
 )
 public interface ShelterMapper extends EntityMapper<ShelterCategoryDTO, ShelterCategory> {
 
-//    @Mapping(target = "shape.id", source = "shapeId")
+     //    @Mapping(target = "shape.id", source = "shapeId")
      ShelterCategory toEntity(ShelterCategoryDTO dto);
 }

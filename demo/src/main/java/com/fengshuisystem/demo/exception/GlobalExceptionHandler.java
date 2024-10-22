@@ -2,6 +2,7 @@ package com.fengshuisystem.demo.exception;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
 import jakarta.validation.ConstraintViolation;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

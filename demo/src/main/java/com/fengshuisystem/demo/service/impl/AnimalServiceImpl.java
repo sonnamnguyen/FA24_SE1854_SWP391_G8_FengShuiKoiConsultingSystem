@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.service.impl;
 import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
 import com.fengshuisystem.demo.dto.AnimalImageDTO;
@@ -70,14 +71,14 @@ public class AnimalServiceImpl implements AnimalService {
     }
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-   public PageResponse<AnimalCategoryDTO> getAnimalsBySearch(String search, int page, int size) {
+    public PageResponse<AnimalCategoryDTO> getAnimalsBySearch(String search, int page, int size) {
         Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
-      var pageData = animalRepository.findAllByAnimalCategoryNameContainingOriginContaining(search, status,pageable);
-      if(pageData.isEmpty()) {
-          throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
-      }
+        var pageData = animalRepository.findAllByAnimalCategoryNameContainingOriginContaining(search, status,pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+        }
 
         return PageResponse.<AnimalCategoryDTO>builder()
                 .currentPage(page)
@@ -86,7 +87,7 @@ public class AnimalServiceImpl implements AnimalService {
                 .totalElements(pageData.getTotalElements())
                 .data(pageData.getContent().stream().map(animalMapper::toDto).toList())
                 .build();
-   }
+    }
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")

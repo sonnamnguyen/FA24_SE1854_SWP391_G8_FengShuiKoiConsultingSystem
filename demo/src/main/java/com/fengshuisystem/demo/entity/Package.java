@@ -1,5 +1,8 @@
+
 package com.fengshuisystem.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -20,6 +23,10 @@ public class Package {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "package_id", nullable = false)
     private Integer id;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.INACTIVE;
 
     @Size(max = 100)
     @NotNull

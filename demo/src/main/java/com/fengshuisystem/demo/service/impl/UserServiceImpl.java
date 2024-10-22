@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.constant.PredefinedRole;
@@ -41,31 +42,31 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     EmailService emailService;
-@Override
+    @Override
     public UserResponse createUser(UserCreationRequest request) {
-    if (userRepository.existsByUserName(request.getUserName())) throw new AppException(ErrorCode.USER_EXISTED);
-    Account user = userMapper.toUser(request);
-    user.setPassword(passwordEncoder.encode(request.getPassword()));
-    user.setCreatedDate(Instant.now());
-    user.setCode(generateCode());
-    user.setStatus(Status.INACTIVE);
-    user.setUpdatedDate(Instant.now());
+        if (userRepository.existsByUserName(request.getUserName())) throw new AppException(ErrorCode.USER_EXISTED);
+        Account user = userMapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setCreatedDate(Instant.now());
+        user.setCode(generateCode());
+        user.setStatus(Status.INACTIVE);
+        user.setUpdatedDate(Instant.now());
         Set<Role> roles = new HashSet<>();
-    Role userRole = roleRepository.findByName(PredefinedRole.USER_ROLE)
-            .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-    roles.add(userRole);
-    user.setRoles(roles);
-    UserResponse userResponse = userMapper.toUserResponse(userRepository.saveAndFlush(user));
-    sendActivateCode(userResponse.getEmail(), userResponse.getCode());
-    return userResponse;
-}
+        Role userRole = roleRepository.findByName(PredefinedRole.USER_ROLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+        roles.add(userRole);
+        user.setRoles(roles);
+        UserResponse userResponse = userMapper.toUserResponse(userRepository.saveAndFlush(user));
+        sendActivateCode(userResponse.getEmail(), userResponse.getCode());
+        return userResponse;
+    }
 
 
-public String giveEmailForgotPassword(String email) {
-    Account user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-    sendForgotCodeToRestPassword(user.getEmail());
-    return "Reset Password Successfully";
-}
+    public String giveEmailForgotPassword(String email) {
+        Account user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        sendForgotCodeToRestPassword(user.getEmail());
+        return "Reset Password Successfully";
+    }
 
     public UserResponse createAdmin(UserCreationRequest request) {
         if (userRepository.existsByUserName(request.getUserName())) throw new AppException(ErrorCode.USER_EXISTED);
@@ -98,20 +99,20 @@ public String giveEmailForgotPassword(String email) {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
     }
-@Override
+    @Override
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
 
         Account user = userRepository.findByUserName(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-    log.info("Roles: {}", user.getRoles());
+        log.info("Roles: {}", user.getRoles());
 
-    var userResponse = userMapper.toUserResponse(user);
+        var userResponse = userMapper.toUserResponse(user);
         userResponse.setNoPassword(!StringUtils.hasText(user.getPassword()));
 
         return userResponse;
     }
-@Override
+    @Override
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse updateUser(String email, UserUpdateRequest request) {
         Account user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -127,20 +128,20 @@ public String giveEmailForgotPassword(String email) {
     public boolean existByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
-@Override
+    @Override
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse deleteUser(Integer userId) {
-    Account user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-    user.setStatus(Status.DELETED);
-    return userMapper.toUserResponse(userRepository.save(user));
-}
+        Account user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        user.setStatus(Status.DELETED);
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
         log.info("In method get Users");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
-@Override
+    @Override
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUser(Integer id) {
         return userMapper.toUserResponse(

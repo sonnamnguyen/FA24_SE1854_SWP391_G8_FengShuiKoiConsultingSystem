@@ -14,5 +14,5 @@ public class ShelterImageDTO {
     Integer id;
     @JsonIgnore
     Integer shelterCategoryId;
-  String imageUrl;
+    String imageUrl;
 }
