@@ -118,4 +118,15 @@ public class ShapeServiceImpl implements ShapeService {
         Status status = Status.ACTIVE;
         return shapeRepository.findAllByStatus(status).stream().map(shapeMapper::toDto).toList();
     }
+    @Override
+    public List<ShapeDTO> getShapesByDestiny(Integer destiny) {
+        List<ShapeDTO> shapes = shapeRepository.findAllByDestiny(destiny)
+                .stream()
+                .map(shapeMapper::toDto)
+                .toList();
+        if (shapes.isEmpty()) {
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+        }
+        return shapes;
+    }
 }

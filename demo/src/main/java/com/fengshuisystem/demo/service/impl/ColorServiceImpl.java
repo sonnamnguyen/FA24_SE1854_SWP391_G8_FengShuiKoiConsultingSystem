@@ -119,4 +119,27 @@ public class ColorServiceImpl implements ColorService {
         Status status = Status.ACTIVE;
         return colorRepository.findAllByStatus(status).stream().map(colorMapper::toDto).toList();
     }
+    @Override
+    public List<ColorDTO> getColorsByDestiny(Integer destiny) {
+        List<ColorDTO> colors = colorRepository.findAllByDestiny(destiny)
+                .stream()
+                .map(colorMapper::toDto)
+                .toList();
+        if (colors.isEmpty()) {
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+        }
+        return colors;
+    }
+
+    @Override
+    public List<ColorDTO> getColorsByAnimalId(Integer animalId) {
+        List<ColorDTO> colors = colorRepository.findAllByAnimal(animalId)
+                .stream()
+                .map(colorMapper::toDto)
+                .toList();
+        if (colors.isEmpty()) {
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+        }
+        return colors;
+    }
 }

@@ -26,6 +26,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.util.List;
 
 
 @Service
@@ -121,5 +122,13 @@ public class ShelterServiceImpl implements ShelterService {
             shelterImage.setShelterCategory(shelterCategory);
         }
         return shelterMapper.toDto(shelterRepository.saveAndFlush(shelterCategory));
+    }
+
+    @Override
+    public List<ShelterCategoryDTO> getAllSheltersByShape(Integer shape) {
+        return shelterRepository.findAllByShape(shape)
+                .stream()
+                .map(shelterMapper::toDto)
+                .toList();
     }
 }
