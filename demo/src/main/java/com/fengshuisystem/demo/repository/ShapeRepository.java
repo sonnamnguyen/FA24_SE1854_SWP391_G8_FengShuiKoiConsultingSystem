@@ -4,6 +4,7 @@ package com.fengshuisystem.demo.repository;
 import com.fengshuisystem.demo.dto.ShapeDTO;
 import com.fengshuisystem.demo.entity.Shape;
 import com.fengshuisystem.demo.entity.enums.Status;
+import feign.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,6 @@ public interface ShapeRepository extends JpaRepository<Shape, Integer> {
     Page<Shape> findAlByShape(String shape, Pageable pageable);
     @Query(value = "select s from Shape s where s.status = 'ACTIVE'")
     List<Shape> findAllByStatus(Status status);
+    @Query(value = "SELECT s FROM Shape s JOIN s.destiny d WHERE d.id = :destinyId AND s.status = 'ACTIVE'")
+    List<Shape> findAllByDestiny(@Param("destinyId")Integer destinyId);
 }

@@ -148,6 +148,12 @@ public class AnimalServiceImpl implements AnimalService {
         AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
         return animalMapper.toDto(animalCategory);
     }
+    @Override
+    public List<AnimalCategoryDTO> getAnimalCategoryByColorId(int color) {
 
-
+        return animalRepository.findAllByColorId(color)
+                .stream()
+                .map(animalMapper::toDto)
+                .toList();
+    }
 }
