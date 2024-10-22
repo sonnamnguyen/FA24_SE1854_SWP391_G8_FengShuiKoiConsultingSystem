@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.mapper;
 
 import com.fengshuisystem.demo.dto.ColorDTO;
@@ -10,6 +11,6 @@ import org.mapstruct.Mapping;
 
 )
 public interface ColorMapper extends EntityMapper<ColorDTO, Color> {
-//    @Mapping(target = "destiny.id", source = "destinyId")
-Color toEntity(ColorDTO dto);
+    //    @Mapping(target = "destiny.id", source = "destinyId")
+    Color toEntity(ColorDTO dto);
 }

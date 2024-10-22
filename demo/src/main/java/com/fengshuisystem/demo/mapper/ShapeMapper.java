@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.mapper;
 
 import com.fengshuisystem.demo.dto.ShapeDTO;
@@ -10,6 +11,6 @@ import org.mapstruct.Mapping;
 
 )
 public interface ShapeMapper extends EntityMapper<ShapeDTO, Shape> {
-//    @Mapping(target = "destiny.id", source = "destinyId")
+     //    @Mapping(target = "destiny.id", source = "destinyId")
      Shape toEntity(ShapeDTO dto);
 }

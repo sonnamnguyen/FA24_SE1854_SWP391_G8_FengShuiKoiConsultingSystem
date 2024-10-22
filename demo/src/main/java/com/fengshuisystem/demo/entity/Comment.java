@@ -1,5 +1,7 @@
+
 package com.fengshuisystem.demo.entity;
 
+import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,9 +31,9 @@ public class Comment {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @NotNull
-    @Column(name = "status", nullable = false)
-    private Boolean status = false;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.INACTIVE;
 
     @NotNull
     @Column(name = "created_date", nullable = false)

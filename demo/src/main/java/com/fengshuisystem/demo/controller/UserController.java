@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
@@ -38,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/create-password")
-   ApiResponse<Void> createPassword(@RequestBody @Valid PasswordCreationRequest request) {
+    ApiResponse<Void> createPassword(@RequestBody @Valid PasswordCreationRequest request) {
         userService.createPassword(request);
         return ApiResponse.<Void>builder()
                 .message("Password has been created, you could use it to log-in")
@@ -53,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-     ApiResponse<UserResponse> getUser(@PathVariable("userId") Integer userId) {
+    ApiResponse<UserResponse> getUser(@PathVariable("userId") Integer userId) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getUser(userId))
                 .build();
@@ -93,11 +94,11 @@ public class UserController {
                 .result(userService.existByEmail(email))
                 .build();
     }
-        @GetMapping("/activate")
+    @GetMapping("/activate")
     public ApiResponse<String> register(@RequestParam String email, @RequestParam String code) {
-            return ApiResponse.<String>builder()
-                    .result(userService.activeAccount(email, code))
-                    .build();
+        return ApiResponse.<String>builder()
+                .result(userService.activeAccount(email, code))
+                .build();
     }
     @PostMapping("/forgot-password")
     public ApiResponse<String> forgotPassword(@RequestParam String email) {

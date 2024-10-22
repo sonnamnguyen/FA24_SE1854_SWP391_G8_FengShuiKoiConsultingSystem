@@ -40,10 +40,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, EndPoint.ADMIN_PUT_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, EndPoint.ADMIN_DELETE_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, EndPoint.USER_POST_ENDPOINTS).hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.PUT, EndPoint.USER_PUT_ENDPOINTS).hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.DELETE, EndPoint.USER_DELETE_ENDPOINTS).hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.GET, EndPoint.BOTH_GET_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, EndPoint.BOTH_DELETE_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/*").authenticated()
 
+
                         .anyRequest()
-                .authenticated());
+                        .authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                         .decoder(customJwtDecoder)

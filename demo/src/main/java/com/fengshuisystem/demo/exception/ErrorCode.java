@@ -30,7 +30,15 @@ public enum ErrorCode {
     CONSULATION_RESULT_NOT_EXISTED(1021, "Consulation result not existed", HttpStatus.NOT_FOUND),
     SHAPE_NOT_EXISTED(1022, "Shape not existed", HttpStatus.NOT_FOUND),
     CONSULATION_CATEGORY_NOT_EXISTED(1023, "Consulation Category not existed", HttpStatus.NOT_FOUND),
-    ;
+    POST_NOT_EXISTED(2001, "Post not existed", HttpStatus.NOT_FOUND),
+    COMMENT_NOT_EXISTED(2002, "Comment not existed", HttpStatus.NOT_FOUND),
+    POST_IMAGE_NOT_EXISTED(2003, "Post image not existed", HttpStatus.NOT_FOUND),
+    POST_CATEGORY_NOT_EXISTED(2004, "post category not existed", HttpStatus.NOT_FOUND),
+    PAYMENT_NOT_EXISTED(2006,"payment not existed", HttpStatus.NOT_FOUND),
+    BILL_NOT_EXISTED(2007,"bill not existed", HttpStatus.NOT_FOUND),
+    PACKAGE_NOT_EXISTED(2007,"package not existed", HttpStatus.NOT_FOUND),;
+
+
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
