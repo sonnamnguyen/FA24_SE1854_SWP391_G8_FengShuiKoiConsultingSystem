@@ -14,9 +14,5 @@ import java.util.Set;
 public class DestinyDTO {
     private Integer id;
     private String destiny;
-    private List<ColorDTO> colors;
-    private List<DirectionDTO> directions;
-    private List<NumberDTO> numbers;
- //   private Set<PostDTO> posts;
-    private List<ShapeDTO> shapes;
+
 }

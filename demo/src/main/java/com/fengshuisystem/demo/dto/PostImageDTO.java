@@ -11,7 +11,7 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostImageDTO {
     private Integer id;
-    private Post post;
+    private PostDTO post;
     private String imageName;
     private String imageUrl;
     private String status;

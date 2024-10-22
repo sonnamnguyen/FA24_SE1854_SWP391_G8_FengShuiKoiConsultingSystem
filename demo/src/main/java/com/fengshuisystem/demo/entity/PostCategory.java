@@ -1,6 +1,5 @@
 package com.fengshuisystem.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

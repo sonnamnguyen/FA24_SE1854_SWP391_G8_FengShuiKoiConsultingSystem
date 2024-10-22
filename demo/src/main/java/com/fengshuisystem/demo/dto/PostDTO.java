@@ -1,7 +1,6 @@
 package com.fengshuisystem.demo.dto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fengshuisystem.demo.entity.*;
-import com.fengshuisystem.demo.entity.Package;
+
+import com.fengshuisystem.demo.dto.response.UserResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,10 +15,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostDTO {
     private Integer id;
-    private Account account;
-    private PostCategory postCategory;
-    private Package packageField;
-    private Destiny destiny;
+    private UserResponse userResponse;
+    private PostCategoryDTO postCategory;
+    private PackageDTO packageField;
+    private DestinyDTO destiny;
     private String content;
     private Integer likeNumber;
     private Integer dislikeNumber;
@@ -29,6 +28,5 @@ public class PostDTO {
     private String createdBy;
     private Instant updatedDate;
     private String updatedBy;
-    List<CommentDTO> comments;
-    List<PostImageDTO> postImages;
+
 }

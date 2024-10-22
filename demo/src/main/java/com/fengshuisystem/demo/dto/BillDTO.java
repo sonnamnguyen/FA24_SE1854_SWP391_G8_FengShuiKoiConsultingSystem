@@ -1,4 +1,6 @@
 package com.fengshuisystem.demo.dto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.Package;
 import com.fengshuisystem.demo.entity.Payment;
@@ -15,8 +17,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BillDTO {
     private Integer id;
-    private Account account;
-    private Payment payment;
+    private UserResponse userResponse;
+    private PaymentDTO payment;
     private Integer subAmount;
     private Integer vat;
     private String status;
