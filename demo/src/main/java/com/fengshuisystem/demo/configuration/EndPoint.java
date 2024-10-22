@@ -4,11 +4,11 @@ public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
                 "/animals", "/animals/{search}", "/shelters", "/shelters/{search}",
-                "/colors", "shapes","/bills","/bills/status"
+                "/colors", "shapes","/bills","/bills/status", "/animal-images", "/shelter-images", "/destinys"
 
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
-                "/animals", "/shelters", "/colors", "/shapes","/packages"
+                "/animals", "/shelters", "/colors", "/shapes","/packages","/consulation-animal", "/consulation-shelter"
 
         };
 
@@ -23,7 +23,10 @@ public class EndPoint {
 
         public static final String[] PUBLIC_ENDPOINTS = {
                 "/users", "/users/admin", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
-                , "/auth/outbound/authentication" , "/roles"
+                , "/auth/outbound/authentication" , "/roles", "auth/token-email"
+        };
+        public static final String[] PUBLIC_GET_ENDPOINTS = {
+                "users/existByUserName", "users/existByEmail", "users/activate"
         };
         public static final String[] USER_GET_ENDPOINTS = {
                 "/posts","/posts/search-posts","/post/comments","/post/images","/vn_pay/create_vn_pay"
@@ -31,7 +34,8 @@ public class EndPoint {
 
         };
         public static final String[] USER_POST_ENDPOINTS = {
-                "/posts","/post/comments","/post/images","/bills",
+                "users/reset-password","users/forgot-password","/posts","/post/comments","/post/images","/bills",
+
 
 
 

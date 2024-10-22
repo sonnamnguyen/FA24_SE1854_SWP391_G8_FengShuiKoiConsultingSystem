@@ -19,5 +19,4 @@ public class PaymentDTO {
     private String createdBy;
     private Instant updatedDate;
     private String updatedBy;
-    private List<Bill> bills;
 }

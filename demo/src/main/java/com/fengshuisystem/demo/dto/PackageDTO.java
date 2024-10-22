@@ -3,7 +3,7 @@ import com.fengshuisystem.demo.entity.Bill;
 import com.fengshuisystem.demo.entity.ConsultationRequest;
 import com.fengshuisystem.demo.entity.Post;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+        import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
@@ -23,7 +23,6 @@ public class PackageDTO {
     private String createdBy;
     private Instant updatedDate = Instant.now();
     private String updatedBy;
-    private List<ConsultationRequest> consultationRequests;
-    private List<Post> posts ;
-    private List<Bill> bills ;
+
+
 }

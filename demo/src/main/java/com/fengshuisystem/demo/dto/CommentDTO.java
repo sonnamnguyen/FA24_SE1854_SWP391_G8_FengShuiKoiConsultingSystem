@@ -13,7 +13,7 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDTO {
     private Integer id;
-    private Post post;
+    private PostDTO post;
     private String content;
     private String status;
     private Instant createdDate = Instant.now();

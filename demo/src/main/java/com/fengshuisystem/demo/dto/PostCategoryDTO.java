@@ -1,8 +1,5 @@
 package com.fengshuisystem.demo.dto;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fengshuisystem.demo.entity.Post;
-import com.fengshuisystem.demo.entity.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,5 +13,6 @@ public class PostCategoryDTO {
     private String status;
     private Integer id;
     private String postCategoryName;
-    private List<Post> posts ;
+
+
 }
