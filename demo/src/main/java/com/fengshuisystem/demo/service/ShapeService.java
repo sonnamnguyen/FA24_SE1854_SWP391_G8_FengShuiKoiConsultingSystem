@@ -12,5 +12,7 @@ public interface ShapeService {
     PageResponse<ShapeDTO> getShapes(int page, int size);
     void deleteShape(Integer id);
     ShapeDTO updateShape(Integer id, ShapeDTO shapeDTO);
-    public List<ShapeDTO> getAllShapes();
+    List<ShapeDTO> getAllShapes();
+    List<ShapeDTO> getShapesByDestiny(Integer destiny);
+
 }
