@@ -4,7 +4,8 @@ public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
                 "/animals", "/animals/animal-search", "/shelters", "/shelters/{search}",
-                "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys"
+                "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors",
+                "shapes/getAll-Shapes"
 
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
