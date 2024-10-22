@@ -1,5 +1,8 @@
 package com.fengshuisystem.demo.exception;
 
+
+
+
 public class AppException extends RuntimeException {
 
     public AppException(ErrorCode errorCode) {

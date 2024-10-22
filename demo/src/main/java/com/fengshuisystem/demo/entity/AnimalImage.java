@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.entity;
 
 import com.fengshuisystem.demo.entity.enums.Status;
@@ -25,27 +26,8 @@ public class AnimalImage {
     private AnimalCategory animalCategory;
 
     @Lob
-    @Size(max = 255)
     @Column(name = "image_url")
     private String imageUrl;
 
-    @NotNull
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
-
-    @Column(name = "created_date")
-    private Instant createdDate = Instant.now();
-
-    @Size(max = 50)
-    @Column(name = "created_by", length = 50)
-    private String createdBy;
-
-    @Column(name = "updated_date")
-    private Instant updatedDate = Instant.now();
-
-    @Size(max = 50)
-    @Column(name = "updated_by", length = 50)
-    private String updatedBy;
 
 }

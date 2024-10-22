@@ -2,10 +2,10 @@ package com.fengshuisystem.demo.dto;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -15,7 +15,5 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NumberDTO {
     Integer id;
- DestinyDTO destiny;
-     Integer number;
-     List<ConsultationAnimalDTO> consultationAnimals;
+    Integer number;
 }

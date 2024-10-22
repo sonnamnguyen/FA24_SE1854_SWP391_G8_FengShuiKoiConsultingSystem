@@ -48,7 +48,7 @@ public class BillServiceImpl implements BillService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         Payment payment = paymentRepository.findById(request.getPayment().getId()).orElseThrow(()->new AppException(ErrorCode.PAYMENT_NOT_EXISTED));
-        Account account = userRepository.findByUsername(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account account = userRepository.findByUserName(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
         Set<Package> packages = new HashSet<>();
         if (request.getPackageFields() != null) {
             for (PackageDTO packageDTO : request.getPackageFields()) {

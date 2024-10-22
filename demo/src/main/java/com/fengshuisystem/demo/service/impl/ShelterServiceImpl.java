@@ -1,14 +1,20 @@
+
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
+import com.fengshuisystem.demo.entity.AnimalImage;
+import com.fengshuisystem.demo.entity.Shape;
 import com.fengshuisystem.demo.entity.ShelterCategory;
+import com.fengshuisystem.demo.entity.ShelterImage;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.ShelterMapper;
+import com.fengshuisystem.demo.repository.ShapeRepository;
 import com.fengshuisystem.demo.repository.ShelterRepository;
 import com.fengshuisystem.demo.service.ShelterService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,16 +35,25 @@ import java.time.Instant;
 public class ShelterServiceImpl implements ShelterService {
     ShelterRepository shelterRepository;
     ShelterMapper shelterMapper;
+    ShapeRepository shapeRepository;
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ShelterCategoryDTO createShelter(ShelterCategoryDTO request) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         if(shelterRepository.existsByShelterCategoryName(request.getShelterCategoryName())) throw new AppException(ErrorCode.SHELTER_EXISTED);
+        Shape shape = shapeRepository.findById(request.getShape().getId()).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
         ShelterCategory shelterCategory = shelterMapper.toEntity(request);
         shelterCategory.setStatus(Status.ACTIVE);
         shelterCategory.setCreatedDate(Instant.now());
         shelterCategory.setCreatedBy(name);
+        shelterCategory.setUpdatedDate(Instant.now());
+        shelterCategory.setUpdatedBy(name);
+        shelterCategory.setShape(shape);
+        for (ShelterImage shelterImage : shelterCategory.getShelterImages()) {
+            shelterImage.setShelterCategory(shelterCategory);
+        }
         return shelterMapper.toDto(shelterRepository.save(shelterCategory));
     }
 
@@ -63,12 +78,12 @@ public class ShelterServiceImpl implements ShelterService {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<ShelterCategoryDTO> getAllShelters(int page, int size) {
-        String status = "ACTIVE";
+        Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = shelterRepository.findAllByStatus(status, pageable);
         if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+            throw new AppException(ErrorCode.SHELTER_NOT_EXISTED);
         }
         return PageResponse.<ShelterCategoryDTO>builder()
                 .currentPage(page)
@@ -89,13 +104,22 @@ public class ShelterServiceImpl implements ShelterService {
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     public ShelterCategoryDTO updateShelter(Integer id, ShelterCategoryDTO request) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         ShelterCategory shelterCategory = shelterRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
         shelterMapper.update(request, shelterCategory);
+        Shape shape = shapeRepository.findById(request.getShape().getId()).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
+        shelterCategory.setStatus(Status.ACTIVE);
+        shelterCategory.setCreatedDate(Instant.now());
+        shelterCategory.setCreatedBy(name);
         shelterCategory.setUpdatedDate(Instant.now());
         shelterCategory.setUpdatedBy(name);
-        return shelterMapper.toDto(shelterRepository.save(shelterCategory));
+        shelterCategory.setShape(shape);
+        for (ShelterImage shelterImage : shelterCategory.getShelterImages()) {
+            shelterImage.setShelterCategory(shelterCategory);
+        }
+        return shelterMapper.toDto(shelterRepository.saveAndFlush(shelterCategory));
     }
 }

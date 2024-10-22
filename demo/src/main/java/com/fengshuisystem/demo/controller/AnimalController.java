@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
@@ -21,6 +22,7 @@ public class AnimalController {
 
     @PostMapping
     public ApiResponse<AnimalCategoryDTO> createAnimal(@RequestBody AnimalCategoryDTO animalCreationRequest) {
+        System.out.println("Received request: " + animalCreationRequest); // Logging nội dung reques
         return ApiResponse.<AnimalCategoryDTO>builder()
                 .result(animalService.createAnimal(animalCreationRequest))
                 .build();
@@ -36,9 +38,9 @@ public class AnimalController {
                 .build();
     }
 
-    @GetMapping("/{search}")
+    @GetMapping("/animal-search")
     public ApiResponse<PageResponse<AnimalCategoryDTO>> getAnimalBySearch(
-            @ModelAttribute AnimalCategoryDTO search,
+            @RequestParam String search,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
 
@@ -55,10 +57,16 @@ public class AnimalController {
                 .build();
     }
     @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteAnimal(@PathVariable Integer id) {
+    public ApiResponse<Void> deleteAnimal(@PathVariable Integer id) {
         animalService.deleteAnimal(id);
-        return ApiResponse.<String>builder()
-                .result("The animal has been deleted")
+        return ApiResponse.<Void>builder()
+                .message("The animal has been deleted")
+                .build();
+    }
+    @GetMapping("/{id}")
+    public ApiResponse<AnimalCategoryDTO> getAnimalById(@PathVariable Integer id) {
+        return ApiResponse.<AnimalCategoryDTO>builder()
+                .result(animalService.getAnimalById(id))
                 .build();
     }
 }

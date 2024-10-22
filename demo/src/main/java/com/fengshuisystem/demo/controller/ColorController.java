@@ -1,8 +1,10 @@
+
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.ColorDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
+import com.fengshuisystem.demo.dto.ShapeDTO;
 import com.fengshuisystem.demo.service.ColorService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/colors")
@@ -37,7 +41,7 @@ public class ColorController {
 
     @GetMapping("/search-colors")
     public ApiResponse<PageResponse<ColorDTO>> getColorsBySearch(
-           @RequestParam String name,
+            @RequestParam String name,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
 
@@ -58,6 +62,13 @@ public class ColorController {
         colorService.deleteColor(id);
         return ApiResponse.<String>builder()
                 .result("The color has been deleted")
+                .build();
+    }
+
+    @GetMapping("/getAll-Colors")
+    public ApiResponse<List<ColorDTO>> getAllColors() {
+        return ApiResponse.<List<ColorDTO>>builder()
+                .result(colorService.getAllColors())
                 .build();
     }
 }

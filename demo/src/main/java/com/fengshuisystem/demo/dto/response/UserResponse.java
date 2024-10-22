@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.dto.response;
 
 
@@ -7,7 +6,6 @@ import java.time.LocalDate;
 import java.util.Set;
 
 
-import com.fengshuisystem.demo.dto.PostDTO;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
     String id;
-    String username;
+    String userName;
     String password;
     String fullName;
     String email;
