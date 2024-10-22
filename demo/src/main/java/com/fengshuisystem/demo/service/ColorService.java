@@ -12,6 +12,7 @@ public interface ColorService {
     PageResponse<ColorDTO> getColors(int page, int size);
     void deleteColor(Integer id);
     ColorDTO updateColor(Integer id, ColorDTO colorDTO);
-    public List<ColorDTO> getAllColors();
-
+    List<ColorDTO> getAllColors();
+    List<ColorDTO> getColorsByDestiny(Integer destiny);
+    List<ColorDTO> getColorsByAnimalId(Integer animalId);
 }

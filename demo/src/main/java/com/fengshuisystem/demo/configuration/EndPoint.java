@@ -28,7 +28,9 @@ public class EndPoint {
                 , "/auth/outbound/authentication" , "/roles", "auth/token-email"
         };
         public static final String[] PUBLIC_GET_ENDPOINTS = {
-                "users/existByUserName", "users/existByEmail", "users/activate"
+                "users/existByUserName", "users/existByEmail", "users/activate", "/destinys/destiny/{yearOfBirth}",
+                "/destinys/autoConsultation/{yearOfBirth}", "/destinys/compatibility/{yearOfBirth}"
+
         };
         public static final String[] USER_GET_ENDPOINTS = {
                 "/posts","/posts/search-posts","/post/comments","/post/images","/vn_pay/create_vn_pay"

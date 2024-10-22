@@ -4,6 +4,8 @@ package com.fengshuisystem.demo.service;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
 
+import java.util.List;
+
 
 public interface ShelterService {
     ShelterCategoryDTO createShelter(ShelterCategoryDTO request);
@@ -11,4 +13,5 @@ public interface ShelterService {
     PageResponse<ShelterCategoryDTO> getAllShelters(int page, int size);
     void deleteShelter(Integer id);
     ShelterCategoryDTO updateShelter(Integer id, ShelterCategoryDTO request);
+    List<ShelterCategoryDTO> getAllSheltersByShape(Integer shape);
 }
