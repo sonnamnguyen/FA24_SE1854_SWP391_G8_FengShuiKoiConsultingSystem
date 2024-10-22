@@ -1,14 +1,16 @@
+
 package com.fengshuisystem.demo.configuration;
 
 public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
-                "/animals", "/animals/{search}", "/shelters", "/shelters/{search}",
-                "/colors", "shapes","/bills","/bills/status", "/animal-images", "/shelter-images", "/destinys"
+                "/animals", "/animals/animal-search", "/shelters", "/shelters/{search}",
+                "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors",
+                "shapes/getAll-Shapes","/bills","/bills/status"
 
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
-                "/animals", "/shelters", "/colors", "/shapes","/packages","/consulation-animal", "/consulation-shelter"
+                "/animals", "/shelters", "/colors", "/shapes", "/consulation-animal", "/consulation-shelter","/packages"
 
         };
 
@@ -35,10 +37,6 @@ public class EndPoint {
         };
         public static final String[] USER_POST_ENDPOINTS = {
                 "users/reset-password","users/forgot-password","/posts","/post/comments","/post/images","/bills",
-
-
-
-
         };
         public static final String[] USER_PUT_ENDPOINTS = {
                 "/posts/{id}","/post/comments/{id}","/post/images/{id}","/bills/{id}",
@@ -57,5 +55,4 @@ public class EndPoint {
 
 
         };
-    }
-
+}

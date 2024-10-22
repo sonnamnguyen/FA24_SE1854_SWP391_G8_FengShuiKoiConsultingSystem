@@ -4,7 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.Set;
+
 
 @Data
 @NoArgsConstructor
@@ -12,7 +12,8 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DestinyDTO {
-    private Integer id;
-    private String destiny;
-
+    Integer id;
+    String destiny;
+    List<DirectionDTO> directions;
+    List<NumberDTO> numbers;
 }

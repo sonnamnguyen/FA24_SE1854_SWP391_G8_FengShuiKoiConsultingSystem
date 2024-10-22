@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.entity;
 
 import com.fengshuisystem.demo.entity.enums.Status;
@@ -9,7 +10,6 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

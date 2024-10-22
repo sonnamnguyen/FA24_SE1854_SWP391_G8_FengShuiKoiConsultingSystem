@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/shapes")
@@ -58,6 +61,12 @@ public class ShapeController {
         shapeService.deleteShape(id);
         return ApiResponse.<String>builder()
                 .result("The shape has been deleted")
+                .build();
+    }
+    @GetMapping("/getAll-Shapes")
+    public ApiResponse<List<ShapeDTO>> getAllShapes() {
+        return ApiResponse.<List<ShapeDTO>>builder()
+                .result(shapeService.getAllShapes())
                 .build();
     }
 }

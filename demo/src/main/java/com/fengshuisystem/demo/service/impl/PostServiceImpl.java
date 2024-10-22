@@ -42,7 +42,7 @@ public class PostServiceImpl implements PostService {
         PostCategory  postCategory = postCategoryRepository.findById(request.getPostCategory().getId()).orElseThrow(()->new AppException(ErrorCode.POST_CATEGORY_NOT_EXISTED));
         Destiny destiny = destinyRepository.findById(request.getDestiny().getId()).orElseThrow(()->new AppException(ErrorCode.DESTINY_NOT_EXISTED));
         Package pkg = packageRepository.findById(request.getPackageField().getId()).orElseThrow(()->new AppException(ErrorCode.PACKAGE_NOT_EXISTED));
-        Account account = userRepository.findByUsername(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account account = userRepository.findByUserName(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
         Post post = postMapper.toEntity(request);
         post.setAccount(account);
         post.setDestiny(destiny);
@@ -99,7 +99,7 @@ public class PostServiceImpl implements PostService {
     public PostDTO updatePost(Integer id, PostDTO request) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        Account account = userRepository.findByUsername(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account account = userRepository.findByUserName(name).orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
         Post post = postRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXISTED));
         PostCategory  postCategory = postCategoryRepository.findById(request.getPostCategory().getId()).orElseThrow(()->new AppException(ErrorCode.POST_CATEGORY_NOT_EXISTED));
         Destiny destiny = destinyRepository.findById(request.getDestiny().getId()).orElseThrow(()->new AppException(ErrorCode.DESTINY_NOT_EXISTED));

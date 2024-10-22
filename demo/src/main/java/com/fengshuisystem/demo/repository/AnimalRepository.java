@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.repository;
 
 import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
@@ -9,16 +10,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public interface AnimalRepository extends JpaRepository<AnimalCategory, Integer> {
     boolean existsByAnimalCategoryName(String name);
     Page<AnimalCategory> findAllByStatus(Status status, Pageable pageable);
     @Query("SELECT ac FROM AnimalCategory ac " +
-            "WHERE :#{#dto.animalCategoryName} = 'ACTIVE' " +
-            "OR ac.animalCategoryName LIKE %:#{#dto.animalCategoryName}% " +
-            "OR  ac.origin LIKE %:#{#dto.origin}%")
-    Page<AnimalCategory> findAllByAnimalCategoryNameContainingOriginContaining(AnimalCategoryDTO dto, Pageable pageable);
+            "WHERE ac.status = :status " +
+            "AND (:name IS NULL OR TRIM(:name) = '' OR ac.animalCategoryName LIKE %:name%)")
+    Page<AnimalCategory> findAllByAnimalCategoryNameContainingOriginContaining(String name, Status status, Pageable pageable);
+
 
 
 }

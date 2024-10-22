@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
@@ -21,14 +22,14 @@ public class RoleController {
     RoleServiceImpl roleService;
 
     @PostMapping
-     ApiResponse<RoleResponse> create(@RequestBody RoleRequest request) {
+    ApiResponse<RoleResponse> create(@RequestBody RoleRequest request) {
         return ApiResponse.<RoleResponse>builder()
                 .result(roleService.create(request))
                 .build();
     }
 
     @GetMapping
-     ApiResponse<List<RoleResponse>> getAll() {
+    ApiResponse<List<RoleResponse>> getAll() {
         return ApiResponse.<List<RoleResponse>>builder()
                 .result(roleService.getAll())
                 .build();

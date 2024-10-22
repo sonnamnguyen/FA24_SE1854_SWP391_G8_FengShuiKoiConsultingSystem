@@ -37,6 +37,9 @@ public enum ErrorCode {
     PAYMENT_NOT_EXISTED(2006,"payment not existed", HttpStatus.NOT_FOUND),
     BILL_NOT_EXISTED(2007,"bill not existed", HttpStatus.NOT_FOUND),
     PACKAGE_NOT_EXISTED(2007,"package not existed", HttpStatus.NOT_FOUND),;
+
+
+
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
         this.message = message;

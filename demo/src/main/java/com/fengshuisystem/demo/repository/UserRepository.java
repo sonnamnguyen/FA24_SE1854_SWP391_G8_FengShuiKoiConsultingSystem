@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.repository;
 
 
@@ -12,9 +13,9 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<Account, Integer> {
-    boolean existsByUsername(String username);
- //   boolean existsByEmail(String email);
-    Optional<Account> findByUsername(String username);
+    boolean existsByUserName(String username);
+    boolean existsByEmail(String email);
+    Optional<Account> findByUserName(String username);
     Optional<Account> findByEmail(String email);
     @Query(value = "SELECT r FROM Role r JOIN r.accounts u WHERE u.id = :userId")
     List<Role> findRolesByUserId(@Param("userId") Integer userId);

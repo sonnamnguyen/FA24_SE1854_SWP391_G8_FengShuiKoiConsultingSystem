@@ -13,15 +13,15 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationRequestDTO {
-     Integer id;
-     UserResponse account;
-     Integer packageId;
+    Integer id;
+    UserResponse account;
+    Integer packageId;
     String description;
-     String status;
-     Instant createdDate;
-     String createdBy;
-     Instant updatetedDate;
-     String updatetedBy;
-     List<ConsultationRequestDetailDTO> consultationRequestDetails;
-     List<ConsultationResultDTO> consultationResults;
+    String status;
+    Instant createdDate;
+    String createdBy;
+    Instant updatetedDate;
+    String updatetedBy;
+    List<ConsultationRequestDetailDTO> consultationRequestDetails;
+    List<ConsultationResultDTO> consultationResults;
 }

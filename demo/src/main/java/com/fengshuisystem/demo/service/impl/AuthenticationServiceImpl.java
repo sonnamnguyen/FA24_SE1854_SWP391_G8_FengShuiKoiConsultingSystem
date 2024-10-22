@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.constant.PredefinedRole;
@@ -8,6 +9,7 @@ import com.fengshuisystem.demo.dto.response.IntrospectResponse;
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.InvalidatedToken;
 import com.fengshuisystem.demo.entity.Role;
+import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.repository.InvalidatedTokenRepository;
@@ -49,7 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticateService {
     InvalidatedTokenRepository invalidatedTokenRepository;
     OutboundIdentityClient outboundIdentityClient;
     OutboundUserClient outboundUserClient;
- RoleRepository roleRepository;
+    RoleRepository roleRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -77,17 +79,15 @@ public class AuthenticationServiceImpl implements AuthenticateService {
 
     @NonFinal
     protected final String GRANT_TYPE = "authorization_code";
-@Override
+    @Override
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
         boolean isValid = true;
-
         try {
             verifyToken(token, false);
         } catch (AppException e) {
             isValid = false;
         }
-
         return IntrospectResponse.builder().valid(isValid).build();
     }
     public Role findOrCreateRole(String roleName) {
@@ -118,9 +118,10 @@ public class AuthenticationServiceImpl implements AuthenticateService {
         roles.add(userRole);
 
         // Onboard user
-        var user = userRepository.findByUsername(userInfo.getEmail()).orElseGet(
+        var user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(
                 () -> userRepository.save(Account.builder()
-                        .username(userInfo.getEmail())
+                        .email(userInfo.getEmail())
+                        .status(Status.ACTIVE)
                         .roles(roles)
                         .build()));
 
@@ -131,22 +132,19 @@ public class AuthenticationServiceImpl implements AuthenticateService {
                 .token(token)
                 .build();
     }
-@Override
+    @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository
-                .findByUsername(request.getUsername())
+                .findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_CREDENTIALS));
-
+        if (user.getStatus().equals(Status.INACTIVE)) throw new AppException(ErrorCode.USER_INACTIVE);
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
-
         if (!authenticated) throw new AppException(ErrorCode.INVALID_CREDENTIALS);
-
         var token = generateToken(user);
-
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
-@Override
+    @Override
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         try {
             var signToken = verifyToken(request.getToken(), true);
@@ -162,7 +160,7 @@ public class AuthenticationServiceImpl implements AuthenticateService {
             log.info("Token already expired");
         }
     }
-@Override
+    @Override
     public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         var signedJWT = verifyToken(request.getToken(), true);
 
@@ -174,10 +172,10 @@ public class AuthenticationServiceImpl implements AuthenticateService {
 
         invalidatedTokenRepository.save(invalidatedToken);
 
-        var username = signedJWT.getJWTClaimsSet().getSubject();
+        var email = signedJWT.getJWTClaimsSet().getSubject();
 
         var user =
-                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+                userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(user);
 
@@ -187,7 +185,7 @@ public class AuthenticationServiceImpl implements AuthenticateService {
     private String generateToken(Account account) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(account.getUsername())
+                .subject(account.getEmail())
                 .issuer("fengshuikoiconsultingsystem.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
@@ -249,6 +247,13 @@ public class AuthenticationServiceImpl implements AuthenticateService {
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName())) // Prefix roles with "ROLE_".
                 .collect(Collectors.toList());
     }
-
+    public AuthenticationResponse authenticateEmail(AuthenticationEmailRequest request) {
+        var user = userRepository
+                .findByEmail(request.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_CREDENTIALS));
+        if (user.getStatus().equals(Status.INACTIVE)) throw new AppException(ErrorCode.USER_INACTIVE);
+        if (!request.getEmail().equals(user.getEmail())) throw new AppException(ErrorCode.INVALID_CREDENTIALS);
+        var token = generateToken(user);
+        return AuthenticationResponse.builder().token(token).authenticated(true).build();
+    }
 }
-

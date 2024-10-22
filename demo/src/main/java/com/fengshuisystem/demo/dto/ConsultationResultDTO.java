@@ -1,6 +1,5 @@
 package com.fengshuisystem.demo.dto;
 
-import com.fengshuisystem.demo.dto.request.UserCreationRequest;
 import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.*;
 import lombok.*;
@@ -27,6 +26,5 @@ public class ConsultationResultDTO {
     String createdBy;
     Instant updatetedDate;
     String updatetedBy;
-    List<ConsultationAnimalDTO> consultationAnimals ;
     List<ConsultationShelterDTO> consultationShelters;
 }
