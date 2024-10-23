@@ -54,8 +54,10 @@ public class Bill {
     @Column(name = "created_date")
     private Instant createdDate = Instant.now();
 
-    @Column(name = "created_by")
+    @Size(max = 50)
+    @Column(name = "created_by",  length = 50)
     private String createdBy;
+
     @Column(name = "updated_date")
     private Instant updatedDate;
 
