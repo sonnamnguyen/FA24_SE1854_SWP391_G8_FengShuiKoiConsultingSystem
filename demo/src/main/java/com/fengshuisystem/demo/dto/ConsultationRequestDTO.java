@@ -1,6 +1,7 @@
 package com.fengshuisystem.demo.dto;
 
 import com.fengshuisystem.demo.dto.response.UserResponse;
+import com.fengshuisystem.demo.entity.Account;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,13 +16,15 @@ import java.util.List;
 public class ConsultationRequestDTO {
     Integer id;
     UserResponse account;
+//    Account account;
     Integer packageId;
     String description;
     String status;
     Instant createdDate;
     String createdBy;
-    Instant updatetedDate;
-    String updatetedBy;
+    // updateted -> updated
+    Instant updatedDate;
+    String updatedBy;
     List<ConsultationRequestDetailDTO> consultationRequestDetails;
     List<ConsultationResultDTO> consultationResults;
 }
