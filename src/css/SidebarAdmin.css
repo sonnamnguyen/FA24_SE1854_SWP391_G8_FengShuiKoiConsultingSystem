@@ -1,0 +1,15 @@
+/* Styling the DASHMIN header to match the font */
+h3.text-primary {
+    font-family: 'Arial', sans-serif; /* Or use the same font as the Ant Design menu */
+    font-weight: normal; /* Adjust this based on your preference */
+  }
+  
+  /* Remove underline from links */
+  .sidebar a {
+    text-decoration: none; /* Removes underline */
+  }
+  
+  /* Ensure underline doesn't appear on hover */
+  .sidebar a:hover {
+    text-decoration: none;
+  }
