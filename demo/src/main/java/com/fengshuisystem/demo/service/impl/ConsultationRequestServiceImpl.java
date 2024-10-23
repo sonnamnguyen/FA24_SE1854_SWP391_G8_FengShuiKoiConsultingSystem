@@ -7,16 +7,20 @@ import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.mapper.ConsultationRequestMapper;
 import com.fengshuisystem.demo.repository.ConsultationRequestRepository;
 import com.fengshuisystem.demo.repository.PackageRepository;
+import com.fengshuisystem.demo.service.ConsultationRequestService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ConsultationRequestServiceImpl {
+public class ConsultationRequestServiceImpl implements ConsultationRequestService {
     private final ConsultationRequestRepository requestRepository;
     private final PackageRepository packageRepository;
     private final ConsultationRequestMapper requestMapper;
 //    public ConsultationRequestDTO createRequest(Integer packageId, ConsultationRequestDTO requestDTO) {
+    @Override
+    @PreAuthorize("hasRole('USER')")
     public ConsultationRequestDTO createRequest(ConsultationRequestDTO requestDTO) {
         // Kiểm tra nếu package tồn tại
 //        Package packageField = packageRepository.findById(packageId)
