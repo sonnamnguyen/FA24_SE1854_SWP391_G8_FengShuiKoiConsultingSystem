@@ -49,16 +49,43 @@ public class ConsultationRequestDetail {
     private String createdBy;
 
     @NotNull
-    @Column(name = "updateted_date", nullable = false)
-    private Instant updatetedDate = Instant.now();
+    // updateted -> updated
+    @Column(name = "updated_date", nullable = false)
+    private Instant updatedDate = Instant.now();
 
     @Size(max = 300)
     @NotNull
     @Nationalized
-    @Column(name = "updateted_by", nullable = false, length = 300)
-    private String updatetedBy;
+    // updateted -> updated
+    @Column(name = "updated_by", nullable = false, length = 300)
+    private String updatedBy;
+
+    // add description and can not be null
+    @Size(max = 1000)
+    @NotNull
+    @Nationalized
+    @Column(name = "description", length = 1000)
+    private String description;
 
     @OneToMany(mappedBy = "requestDetail", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationResult> consultationResults = new LinkedHashSet<>();
+
+    // Many-to-Many with AnimalCategory
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(
+            name = "consultation_detail_animal_category",
+            joinColumns = @JoinColumn(name = "consultation_request_detail_id"),
+            inverseJoinColumns = @JoinColumn(name = "animal_category_id")
+    )
+    private Set<AnimalCategory> animalCategories = new LinkedHashSet<>();
+
+    // Many-to-Many with ShelterCategory
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(
+            name = "consultation_detail_shelter_category",
+            joinColumns = @JoinColumn(name = "consultation_request_detail_id"),
+            inverseJoinColumns = @JoinColumn(name = "shelter_category_id")
+    )
+    private Set<ShelterCategory> shelterCategories = new LinkedHashSet<>();
 
 }
