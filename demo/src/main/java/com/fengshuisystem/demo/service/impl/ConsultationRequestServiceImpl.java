@@ -21,16 +21,16 @@ public class ConsultationRequestServiceImpl {
         // Kiểm tra nếu package tồn tại
 //        Package packageField = packageRepository.findById(packageId)
 //                .orElseThrow(() -> new IllegalArgumentException("Package with ID " + packageId + " not found"));
-        Package packageField = packageRepository.findById(requestDTO.getPackageId())
+        Package packageId = packageRepository.findById(requestDTO.getPackageId())
                 .orElseThrow(() -> new IllegalArgumentException("Package with ID " + requestDTO.getPackageId() + " not found"));
 
         // Chuyển DTO sang Entity và thiết lập các trường
         ConsultationRequest request = requestMapper.toEntity(requestDTO);
 
         // Gán Package đã lấy từ repository cho request
-        request.setPackageField(packageField);
+        request.setPackageId(packageId);
 
-//        request.setAccount(requestDTO.getAccount());
+        request.setAccount(requestDTO.getAccount());
 
         request.setStatus(Status.COMPLETED);
         request.setCreatedBy("system");

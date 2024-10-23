@@ -15,8 +15,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationRequestDTO {
     Integer id;
-    UserResponse account;
-//    Account account;
+//    UserResponse account;
+    Account account;
     Integer packageId;
     String description;
     String status;

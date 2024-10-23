@@ -32,7 +32,7 @@ public class ConsultationRequest {
     @NotNull
     // thêm (name = "package_id")
     @JoinColumn(name = "package_id")
-    private Package packageField;
+    private Package packageId;
 
     @Size(max = 1000)
     @NotNull

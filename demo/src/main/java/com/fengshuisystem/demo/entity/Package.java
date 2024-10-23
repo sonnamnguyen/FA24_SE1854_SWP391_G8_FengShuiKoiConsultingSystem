@@ -22,7 +22,8 @@ public class Package {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "package_id", nullable = false)
-    private Integer id;
+    // id -> packageId
+    private Integer packageId;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -60,10 +61,10 @@ public class Package {
     @Column(name = "updated_by")
     private String updatedBy;
 
-    @OneToMany(mappedBy = "packageField", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @OneToMany(mappedBy = "packageId", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationRequest> consultationRequests = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "packageField", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @OneToMany(mappedBy = "packageId", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Post> posts = new LinkedHashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
