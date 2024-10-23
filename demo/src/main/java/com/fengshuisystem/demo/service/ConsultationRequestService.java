@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface ConsultationRequestService {
     ConsultationRequestDTO createRequest(ConsultationRequestDTO requestDTO);
-    List<ConsultationRequestDTO> getAllRequests();
+//    List<ConsultationRequestDTO> getAllRequests();
 }
