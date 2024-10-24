@@ -1,402 +1,194 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
-import { getToken, setToken } from "../service/localStorageService";
+import { Form, Input, Button, DatePicker, Upload, notification } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { getToken } from "../service/localStorageService";
 import { useNavigate } from "react-router-dom";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase/firebase"; // Ensure this is the correct path
 import { jwtDecode } from "jwt-decode";
+import api from "../axious/axious";
 
-function UpdateProfile() {
-  const [userName, setUserName] = useState("");
+const UpdateProfile: React.FC = () => {
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<File[]>([]);
   const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordAgain, setPasswordAgain] = useState("");
-  const [gender, setGender] = useState("");
-  const [dob, setDOB] = useState("");
-  const [avatar, setAvatar] = useState<File | null>(null);
-
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalNotification, setModalNotification] = useState("");
-  const [modalNotificationColor, setModalNotificationColor] = useState("red");
-
-  const [errorUserName, setErrorUserName] = useState("");
-  const [errorEmail, setErrorEmail] = useState("");
-  const [errorPhoneNumber, setErrorPhoneNumber] = useState("");
-  const [errorDOB, setErrorDOB] = useState("");
-  const [errorPassword, setErrorPassword] = useState("");
-  const [errorPasswordAgain, setErrorPasswordAgain] = useState("");
-
+  const [apii, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = getToken();
     if (token) {
-      const userData = jwtDecode(token);
+      const userData: any = jwtDecode(token); // Decode the token to get user info
       if (userData) {
-        setUserName(userData.sub || "");
+        setEmail(userData.sub || "");
       }
     }
   }, []);
 
-  const checkPassword = (password: string) => {
-    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,}$/;
-    if (!passwordRegex.test(password)) {
-      setErrorPassword(
-        "Password must be at least 4 characters and include at least 1 special character (!@#$%^&*)"
-      );
-      return false;
-    } else {
-      setErrorPassword("");
-      return true;
-    }
+  const handleUploadChange = (info: any) => {
+    const newFileList = info.fileList.slice(-1); // Keep only the last file
+    setFileList(newFileList.map((file: any) => file.originFileObj));
   };
 
-  const checkEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorEmail("Please enter a valid email address");
-      return false;
-    } else {
-      setErrorEmail("");
-      return true;
-    }
-  };
-
-  const checkPhoneNumber = (phoneNumber: string) => {
-    const phoneRegex = /^\d{10}$/;
-    if (!phoneRegex.test(phoneNumber)) {
-      setErrorPhoneNumber("Phone number must be 10 digits");
-      return false;
-    } else {
-      setErrorPhoneNumber("");
-      return true;
-    }
-  };
-
-  const checkDOB = (dob: string) => {
-    if (!dob) {
-      setErrorDOB("Date of birth is required");
-      return false;
-    }
-    const today = new Date();
-    const birthDate = new Date(dob);
-    const age = today.getFullYear() - birthDate.getFullYear();
-
-    if (age < 18) {
-      setErrorDOB("You must be at least 18 years old");
-      return false;
-    } else {
-      setErrorDOB("");
-      return true;
-    }
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPassword(value);
-    setErrorPassword("");
-    checkPassword(value);
-  };
-
-  const emailExits = async (email: string) => {
-    const endpoint = `http://localhost:9090/users/existByEmail?email=${email}`;
-    try {
-      const response = await fetch(endpoint);
-      const data = await response.text();
-      if (data === "true") {
-        setErrorEmail("Email already exists!");
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error("Error checking email:", error);
-      return false;
-    }
-  };
-
-  const handleEmail = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    setErrorEmail("");
-    return emailExits(e.target.value);
-  };
-
-  const userNameExits = async (name: string) => {
-    const endpoint = `http://localhost:9090/users/existByUserName?userName=${name}`;
-    try {
-      const response = await fetch(endpoint);
-      const data = await response.text();
-      if (data === "true") {
-        setErrorUserName("Username already exists!");
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error("Error checking username:", error);
-      return false;
-    }
-  };
-
-  const handleUserName = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserName(e.target.value);
-    setErrorUserName("");
-    return userNameExits(e.target.value);
-  };
-
-  const checkPasswordAgain = (password: string, passwordAgainValue: string) => {
-    if (passwordAgainValue !== password) {
-      setErrorPasswordAgain("Passwords do not match.");
-      return false;
-    } else {
-      setErrorPasswordAgain("");
-      return true;
-    }
-  };
-
-  const handlePasswordAgain = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPasswordAgain(value);
-    setErrorPasswordAgain("");
-    checkPasswordAgain(password, value);
-  };
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setAvatar(e.target.files[0]);
-    }
-  };
-
-  const getBase64 = (file: File): Promise<string | null> => {
+  // Convert file to base64
+  const getBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () =>
-        resolve(reader.result ? (reader.result as string) : null);
+      reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
   };
-  const handleHome = () => {
-    navigate("/");
+
+  // Upload image to Firebase
+  const uploadImagesToFirebase = async (files: File[]): Promise<string[]> => {
+    const uploadPromises = files.map(async (file) => {
+      const storageRef = ref(storage, `avatars/${file.name}`);
+      const base64Image = await getBase64(file);
+      await uploadString(storageRef, base64Image, 'data_url');
+      const downloadURL = await getDownloadURL(storageRef);
+      return downloadURL;
+    });
+    return Promise.all(uploadPromises);
   };
 
-  const handleRefreshToken = async () => {
-    const refreshToken = getToken(); // Get refresh token from local storage or cookie
-    if (!refreshToken) {
-      console.error("No refresh token found");
-      navigate("/login"); // Navigate to login if no token
-      return null;
-    }
+  const handleSubmit = async (values: any) => {
+    const { userName, password, fullName, dob, phoneNumber, gender, email } = values; // Destructured `email`
+  
     try {
-      const response = await fetch("http://localhost:9090/auth/refresh", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: refreshToken }),
+      const avatar = fileList.length > 0 ? await uploadImagesToFirebase(fileList) : null;
+  
+      const formattedDob = dob instanceof Date ? dob.toISOString().split('T')[0] : dob;
+  
+      const response = await api.put(`/users/${email}`, {
+        userName,
+        password,
+        email,
+        dob: formattedDob,
+        phoneNumber,
+        gender,
+        avatar: avatar ? avatar[0] : null,
       });
-      if (response.ok) {
-        const data = await response.json();
-        if (data.code === 1000) {
-          setToken(data.result.token); // Save new access token
-          return true; // Indicate success
-        } else {
-          console.error("Failed to refresh token");
-          navigate("/login");
-        }
+  
+      if (response.data.code !== 1000) {
+        apii.error({
+          message: "Error",
+          description: "Failed to update profile.",
+        });
       } else {
-        console.error("Failed to refresh token");
-        navigate("/login");
+        apii.success({
+          message: "Success",
+          description: "Profile has been successfully updated.",
+        });
+        navigate("/profile");
       }
     } catch (error) {
-      console.error("Error refreshing token:", error);
-      navigate("/login");
-    }
-    return null; // Indicate failure
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorUserName("");
-    setErrorEmail("");
-    setErrorPhoneNumber("");
-    setErrorPassword("");
-    setErrorPasswordAgain("");
-    setErrorDOB("");
-
-    const isUserNameValid = await userNameExits(userName);
-    const isEmailValid = await emailExits(email);
-    const isPasswordValid = checkPassword(password);
-    const isPasswordAgainValid = checkPasswordAgain(password, passwordAgain);
-    const isEmailCharacterValid = checkEmail(email);
-    const isPhoneNumberValid = checkPhoneNumber(phoneNumber);
-    const isDOBValid = checkDOB(dob);
-
-    if (
-      isUserNameValid &&
-      isEmailValid &&
-      isPasswordValid &&
-      isPasswordAgainValid &&
-      isEmailCharacterValid &&
-      isPhoneNumberValid &&
-      isDOBValid
-    ) {
-      // Convert avatar to Base64 before sending
-      const base64Avatar = avatar ? await getBase64(avatar) : null;
-
-      const tokenRefreshed = await handleRefreshToken(); // Call refresh token logic
-
-      if (tokenRefreshed) {
-        try {
-          const response = await fetch(
-            `http://localhost:9090/users/${userName}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getToken()}`,
-              },
-              body: JSON.stringify({
-                userName,
-                password,
-                email,
-                dob,
-                phoneNumber,
-                gender,
-                avatar: base64Avatar, // Pass avatar if available
-              }),
-            }
-          );
-
-          const data = await response.json();
-          if (data.code !== 1000) {
-            setModalMessage("An error occurred during the update.");
-            setModalNotification("Update failed");
-            setModalNotificationColor("red");
-            setShowModal(true);
-          } else {
-            setModalMessage("Profile updated successfully!");
-            setModalNotification("Success");
-            setModalNotificationColor("green");
-            setShowModal(true);
-          }
-        } catch (error) {
-          console.error("Error updating profile:", error);
-        }
-      }
+      apii.error({
+        message: "Error",
+        description: "Error updating profile.",
+      });
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        {/* Form Fields */}
-        <div>
-          <label>Username</label>
-          <input
-            type="text"
-            value={userName}
-            onChange={handleUserName}
-            required
-          />
-          {errorUserName && <p style={{ color: "red" }}>{errorUserName}</p>}
-        </div>
+    <div className="container">
+      {contextHolder}
+      <h1 className="mt-5 text-center">Update Profile</h1>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        className="col-md-6 col-12 mx-auto"
+        initialValues={{ email }} // Pre-fill email if available
+      >
+        <Form.Item
+          label="Username"
+          name="userName"
+          rules={[{ required: true, message: "Please input your username!" }]}
+        >
+          <Input />
+        </Form.Item>
 
-        <div>
-          <label>Email</label>
-          <input type="email" value={email} onChange={handleEmail} required />
-          {errorEmail && <p style={{ color: "red" }}>{errorEmail}</p>}
-        </div>
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[{ required: true, message: "Please input your password!" }]}
+        >
+          <Input.Password />
+        </Form.Item>
 
-        <div>
-          <label>Full Name</label>
-          <input
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-          />
-        </div>
+        <Form.Item
+          label="Confirm Password"
+          name="confirmPassword"
+          dependencies={["password"]}
+          rules={[
+            { required: true, message: "Please confirm your password!" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error("The two passwords do not match!"));
+              },
+            }),
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
 
-        <div>
-          <label>Phone Number</label>
-          <input
-            type="text"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            required
-          />
-          {errorPhoneNumber && (
-            <p style={{ color: "red" }}>{errorPhoneNumber}</p>
-          )}
-        </div>
+        <Form.Item
+          label="Full Name"
+          name="fullName"
+          rules={[{ required: true, message: "Please input your full name!" }]}
+        >
+          <Input />
+        </Form.Item>
 
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-          {errorPassword && <p style={{ color: "red" }}>{errorPassword}</p>}
-        </div>
+        <Form.Item
+          label="Date of Birth"
+          name="dob"
+          rules={[{ required: true, message: "Please select your date of birth!" }]}
+        >
+          <DatePicker style={{ width: "100%" }} />
+        </Form.Item>
 
-        <div>
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            value={passwordAgain}
-            onChange={handlePasswordAgain}
-            required
-          />
-          {errorPasswordAgain && (
-            <p style={{ color: "red" }}>{errorPasswordAgain}</p>
-          )}
-        </div>
+        <Form.Item
+          label="Phone Number"
+          name="phoneNumber"
+          rules={[
+            { required: true, message: "Please input your phone number!" },
+            { pattern: /^\d{10}$/, message: "Phone number must be 10 digits" },
+          ]}
+        >
+          <Input />
+        </Form.Item>
 
-        <div>
-          <label>Gender</label>
-          <select value={gender} onChange={(e) => setGender(e.target.value)}>
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
+        <Form.Item
+          label="Avatar"
+        >
+          <Upload
+            maxCount={1} // Only allow 1 image
+            accept="image/*"
+            showUploadList={true}
+            beforeUpload={() => false} // Prevent immediate upload
+            onChange={handleUploadChange}
+            listType="picture-card"
+          >
+            <div>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </div>
+          </Upload>
+        </Form.Item>
 
-        <div>
-          <label>Date of Birth</label>
-          <input
-            type="date"
-            value={dob}
-            onChange={(e) => setDOB(e.target.value)}
-            required
-          />
-          {errorDOB && <p style={{ color: "red" }}>{errorDOB}</p>}
-        </div>
-
-        {/* Avatar Upload */}
-        <div>
-          <label>Avatar</label>
-          <input type="file" onChange={handleAvatarChange} />
-        </div>
-
-        <button type="submit">Update Profile</button>
-      </form>
-
-      {/* Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{modalNotification}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p style={{ color: modalNotificationColor }}>{modalMessage}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setShowModal(false)}>Close</Button>
-          <Button onClick={handleHome}>Return to Home</Button>
-        </Modal.Footer>
-      </Modal>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
-}
+};
 
 export default UpdateProfile;

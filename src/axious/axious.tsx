@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
 import { getToken } from '../service/localStorageService';
+import { logOut } from '../service/authentication';
 
 // Định nghĩa interface cho cấu hình request tùy chỉnh
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
@@ -75,7 +76,9 @@ api.interceptors.response.use(
                     }
                     return api(originalRequest);
                 } catch (err) {
-                    // Xử lý lỗi khi refresh token không thành công
+                    // Nếu refresh token không thành công, điều hướng về trang đăng nhập
+                    logOut(); // Gọi hàm logOut để xử lý đăng xuất
+                    window.location.href = '/login'; // Điều hướng về trang đăng nhập
                     return Promise.reject(err);
                 } finally {
                     isRefreshing = false;
@@ -100,5 +103,4 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
-export default api;
+export default api

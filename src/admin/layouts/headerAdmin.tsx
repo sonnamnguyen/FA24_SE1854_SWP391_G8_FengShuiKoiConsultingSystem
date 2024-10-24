@@ -1,59 +1,74 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { logOut } from '../../service/authentication';
+import api from '../../axious/axious';
+import User from '../../models/User';
 
 const NavbarAdmin: React.FC = () => {
-    const handleLogout = (event: React.MouseEvent<HTMLAnchorElement>) => {
-        event.preventDefault();
-        logOut();
-        window.location.href = "/login";
-      };
+  const [userDetails, setUserDetails] = useState<User | null>(null);
 
-      
+  // Handle user logout
+  const handleLogout = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    logOut();
+    window.location.href = "/login"; // Redirect to login after logout
+  };
+
+  // Fetch user details on component mount
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await api.get("/users/my-info");
+        if (response.data.code !== 1000) {
+          throw new Error(`Error! Code: ${response.data.message}`);
+        }
+        setUserDetails(response.data.result); // Set user details if fetched successfully
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
   return (
     <nav className="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-      <a href="index.html" className="navbar-brand d-flex d-lg-none me-4">
+      <NavLink to="/" className="navbar-brand d-flex d-lg-none me-4">
         <h2 className="text-primary mb-0">
           <i className="fa fa-hashtag"></i>
         </h2>
-      </a>
-      {/* <a href="#" className="sidebar-toggler flex-shrink-0">
-        <i className="fa fa-bars"></i>
-      </a> */}
-      
+      </NavLink>
+
       <div className="navbar-nav align-items-center ms-auto">
-       
-       
-        
         <div className="nav-item dropdown">
           <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-            <img className="rounded-circle me-lg-2" src="img/user.jpg" alt="" style={{ width: "40px", height: "40px" }} />
-            <span className="d-none d-lg-inline-flex">John Doe</span>
+        
+            <img
+              className="rounded-circle me-lg-2"
+              src={userDetails?.avatar || "/path/to/default-avatar.png"} 
+              alt="Avatar"
+              style={{ width: "40px", height: "40px" }}
+            />
+            <span className="d-none d-lg-inline-flex">{userDetails?.username || "Guest"}</span>
           </a>
           <div className="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-            <li>
+            {userDetails ? (
+              <>
+                <NavLink className="dropdown-item" to="/view-profile">
+                  View Profile
+                </NavLink>
+                <NavLink className="dropdown-item" to="/update-profile">
+                  Update Profile
+                </NavLink>
+                <NavLink className="dropdown-item" to="/logout" onClick={handleLogout}>
+                  Logout
+                </NavLink>
+              </>
+            ) : (
               <NavLink className="dropdown-item" to="/login">
                 Login
               </NavLink>
-            </li>
-            <li>
-              <NavLink className="dropdown-item" to="/logout" onClick={handleLogout}>
-                Logout
-              </NavLink>
-            </li>
-            <li>
-              <hr className="dropdown-divider" />
-            </li>
-            <li>
-              <NavLink className="dropdown-item" to="/update-profile">
-                Update Profile
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className="dropdown-item" to="/view-profile">
-                View Profile
-              </NavLink>
-            </li>
+            )}
           </div>
         </div>
       </div>

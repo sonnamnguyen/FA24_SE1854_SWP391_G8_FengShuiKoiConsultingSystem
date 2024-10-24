@@ -1,16 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import { MailOutlined, SettingOutlined, AppstoreOutlined } from '@ant-design/icons';
 import '../../css/SidebarAdmin.css';  // Importing the CSS file
+import api from '../../axious/axious';
+import User from '../../models/User';
 
 const SidebarAdmin: React.FC = () => {
   const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const [userDetails, setUserDetails] = useState<User | null>(null); // Added userDetails state
 
   const handleOpenChange = (keys: string[]) => {
     setOpenKeys(keys);
   };
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await api.get("/users/my-info");
+        if (response.data.code !== 1000) {
+          throw new Error(`Error! Code: ${response.data.message}`);
+        }
+        setUserDetails(response.data.result); // Set user details if fetched successfully
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
 
+    fetchUserDetails();
+  }, []);
   return (
     <div className="sidebar pe-4 pb-3">
       <nav className="navbar bg-light navbar-light">
@@ -23,14 +40,14 @@ const SidebarAdmin: React.FC = () => {
           <div className="position-relative">
             <img
               className="rounded-circle"
-              src="img/user.jpg"
+              src={userDetails?.avatar}
               alt=""
               style={{ width: '40px', height: '40px' }}
             />
             <div className="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
           </div>
           <div className="ms-3">
-            <h6 className="mb-0">John Doe</h6>
+            <h6 className="mb-0">{userDetails?.username}</h6>
             <span>Admin</span>
           </div>
         </div>

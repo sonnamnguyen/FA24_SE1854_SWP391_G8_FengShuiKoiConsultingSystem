@@ -1,0 +1,103 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  justify-content: space-between; /* Spread form and image across the space */
+  align-items: center;
+  background-color: #f0f2f5;
+  padding: 0 20px;
+}
+
+.login-form {
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.login-image {
+  flex: 1; /* Take remaining space to the right */
+  height: 100vh;
+  display: flex;
+  justify-content: flex-end; /* Push the image to the right */
+  position: relative;
+}
+
+.login-image img {
+  width: 88%; /* Maintain image aspect ratio */
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 10px 10px 0; /* Rounded edge on the left side */
+}
+
+.login-form h2 {
+  font-size: 26px;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.login-form p {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.login-form-button {
+  width: 100%;
+  background-color: #1890ff;
+  border-color: #1890ff;
+  color: white;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login-divider {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+}
+
+.login-divider::after {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background-color: #e8e8e8;
+  position: absolute;
+  left: 0;
+  top: 50%;
+}
+
+.login-divider span {
+  background-color: #fff;
+  padding: 0 10px;
+  position: relative;
+  z-index: 1;
+  color: #555;
+}
+
+.social-login-button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-container a {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+.login-container a:hover {
+  text-decoration: underline;
+}

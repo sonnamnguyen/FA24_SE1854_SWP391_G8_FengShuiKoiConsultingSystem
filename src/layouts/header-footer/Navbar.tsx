@@ -1,6 +1,8 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { logOut } from "../../service/authentication";
+import api from "../../axious/axious";
+import User from "../../models/User";
 
 interface NavbarProps {
   searchData: string;
@@ -9,6 +11,24 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [userDetails, setUserDetails] = useState<User | null>(null); // Added userDetails state
+  
+  // Fetch user details on component mount
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await api.get("/users/my-info");
+        if (response.data.code !== 1000) {
+          throw new Error(`Error! Code: ${response.data.code}`);
+        }
+        setUserDetails(response.data.result);  // Assuming result contains user info
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -17,6 +37,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
   const handleLogout = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     logOut();
+    setUserDetails(null); // Clear user details on logout
     window.location.href = "/login";
   };
 
@@ -78,37 +99,51 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <img
-                src="https://via.placeholder.com/40" 
-                alt="Profile"
-                className="rounded-circle"
-                style={{ width: "40px", height: "40px" }}
-              />
+              {userDetails ? (
+                <div>
+                  <img
+                    src={userDetails.avatar || "https://via.placeholder.com/40"} 
+                    alt="Profile"
+                    className="rounded-circle"
+                    style={{ width: "40px", height: "40px" }}
+                  />
+                  <span className="ms-2">{userDetails.username}</span>
+                </div>
+              ) : (
+                <img
+                  src="https://via.placeholder.com/40" 
+                  alt="Profile"
+                  className="rounded-circle"
+                  style={{ width: "40px", height: "40px" }}
+                />
+              )}
             </a>
             <ul className="dropdown-menu dropdown-menu-end">
-              <li>
-                <NavLink className="dropdown-item" to="/login">
-                  Login
-                </NavLink>
-              </li>
-              <li>
-                <NavLink className="dropdown-item" to="/logout" onClick={handleLogout}>
-                  Logout
-                </NavLink>
-              </li>
-              <li>
-                <hr className="dropdown-divider" />
-              </li>
-              <li>
-                <NavLink className="dropdown-item" to="/update-profile">
-                  Update Profile
-                </NavLink>
-              </li>
-              <li>
-                <NavLink className="dropdown-item" to="/view-profile">
-                  View Profile
-                </NavLink>
-              </li>
+              {!userDetails ? (
+                <li>
+                  <NavLink className="dropdown-item" to="/login">
+                    Login
+                  </NavLink>
+                </li>
+              ) : (
+                <>
+                  <li>
+                    <NavLink className="dropdown-item" to="/update-profile">
+                      Update Profile
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="dropdown-item" to="/view-profile">
+                      View Profile
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="dropdown-item" to="/logout" onClick={handleLogout}>
+                      Logout
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </ul>
           </li>
         </div>
