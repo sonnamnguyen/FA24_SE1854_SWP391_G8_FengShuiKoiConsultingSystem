@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface ConsulationResultRepository extends JpaRepository<ConsultationResult, Integer> {
+public interface ConsultationResultRepository extends JpaRepository<ConsultationResult, Integer> {
 
     public Page<ConsultationResult> findAllByStatus(Status status, Pageable pageable);
 }

@@ -3,12 +3,13 @@ package com.fengshuisystem.demo.service.impl;
 import com.fengshuisystem.demo.constant.PredefinedConsulationCategory;
 import com.fengshuisystem.demo.dto.ConsultationResultDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
+import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.ConsulationResultMapper;
 import com.fengshuisystem.demo.repository.ConsulationCategoryRepository;
-import com.fengshuisystem.demo.repository.ConsulationResultRepository;
+import com.fengshuisystem.demo.repository.ConsultationResultRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +27,7 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsulationResultServiceImpl {
-    ConsulationResultRepository consulationResultRepository;
+    ConsultationResultRepository consultationResultRepository;
     ConsulationResultMapper consulationResultMapper;
     ConsulationCategoryRepository consulationCategoryRepository;
 
@@ -34,12 +35,12 @@ public class ConsulationResultServiceImpl {
     public ConsultationResultDTO createConsulationResult(Integer id) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        var consulationResult = consulationResultRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED));
-        consulationResult.setStatus(Status.COMPLETED);
+        var consulationResult = consultationResultRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED));
+        consulationResult.setStatus(Request.COMPLETED);
         consulationResult.setCreatedBy(name);
-        consulationResult.setUpdatetedBy(name);
+        consulationResult.setUpdatedBy(name);
         consulationResult.setCreatedDate(Instant.now());
-        consulationResult.setUpdatetedDate(Instant.now());
+        consulationResult.setUpdatedDate(Instant.now());
         if(consulationResult.getConsultationAnimals() != null && consulationResult.getConsultationShelters() == null) {
             var consulationCategory = consulationCategoryRepository.findById(PredefinedConsulationCategory.FISH_CATEGORY).orElseThrow(() -> new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED));
             consulationResult.setConsultationCategory(consulationCategory);
@@ -61,7 +62,7 @@ public class ConsulationResultServiceImpl {
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        var pageData = consulationResultRepository.findAllByStatus(status, pageable);
+        var pageData = consultationResultRepository.findAllByStatus(status, pageable);
         if(pageData.isEmpty()) {
             throw new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED);
         }
@@ -75,9 +76,9 @@ public class ConsulationResultServiceImpl {
     }
 
     public void deleteConsulationResult(Integer id) {
-        var consulationResult = consulationResultRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED));
-        consulationResult.setStatus(Status.DELETED);
-        consulationResultRepository.save(consulationResult);
+        var consulationResult = consultationResultRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED));
+        consulationResult.setStatus(Request.CANCELLED);
+        consultationResultRepository.save(consulationResult);
     }
 
 

@@ -7,7 +7,7 @@ import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.ConsultationShelterMapper;
 import com.fengshuisystem.demo.repository.*;
-import com.fengshuisystem.demo.service.ConsulationShelterService;
+import com.fengshuisystem.demo.service.ConsultationShelterService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,10 +24,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class ConsulationShelterServiceImpl implements ConsulationShelterService {
+public class ConsultationShelterServiceImpl implements ConsultationShelterService {
     ConsultationShelterMapper consultationShelterMapper;
-    ConsulationRequestDetailsRepository consulationRequestDetailsRepository;
-    ConsulationResultRepository consulationResultRepository;
+    ConsultationRequestDetailRepository consultationRequestDetailRepository;
+    ConsultationResultRepository consultationResultRepository;
     DirectionRepository directionRepository;
     ConsulationShelterRepository consulationShelterRepository;
     ShelterRepository shelterRepository;
@@ -38,19 +38,19 @@ public class ConsulationShelterServiceImpl implements ConsulationShelterService 
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         Set<Direction> directions = directionRepository.findAllByIdIn(ids);
-        ConsultationResult consultationResult = consulationResultRepository.findById(id)
+        ConsultationResult consultationResult = consultationResultRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED));
-        ConsultationRequestDetail consultationRequestDetails = consulationRequestDetailsRepository.findByRequestDetailId(consultationResult.getRequestDetail().getId());
+        ConsultationRequestDetail consultationRequestDetails = consultationRequestDetailRepository.findByRequestDetailId(consultationResult.getRequestDetail().getId());
         ShelterCategory shelterCategory = shelterRepository.findById(consultationRequestDetails.getAnimalCategory().getId()).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
         ConsultationShelter consultationShelter = consultationShelterMapper.toEntity(consultationShelterDTO);
         consultationShelter.setShelterCategory(shelterCategory);
         consultationShelter.setCreatedBy(name);
         consultationShelter.setCreatedDate(Instant.now());
         consultationShelter.setStatus(Status.COMPLETED);
-        consultationShelter.setUpdatetedDate(Instant.now());
-        consultationShelter.setUpdatetedBy(name);
+        consultationShelter.setUpdatedDate(Instant.now());
+        consultationShelter.setUpdatedBy(name);
         consultationShelter.setDirections(directions);
-        consultationShelter.setConsultation(consultationResult);
+        consultationShelter.setConsultationResult(consultationResult);
         return consultationShelterMapper.toDto(consulationShelterRepository.save(consultationShelter));
 
     }

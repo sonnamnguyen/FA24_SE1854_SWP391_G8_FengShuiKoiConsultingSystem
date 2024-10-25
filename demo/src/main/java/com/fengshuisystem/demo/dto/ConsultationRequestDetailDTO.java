@@ -11,23 +11,26 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationRequestDetailDTO {
+
+    // ID của chi tiết yêu cầu tư vấn
     Integer id;
-    ConsultationResultDTO requestDetail;
 
-//    ShelterCategoryDTO shelterCategory;
-//    AnimalCategoryDTO animalCategory;
+    // Danh sách các ID của ShelterCategory và AnimalCategory
+    private List<Integer> shelterCategoryIds;
+    private List<Integer> animalCategoryIds;
 
-    // bo sung dang List
-    List<ShelterCategoryDTO> shelterCategoryies;
-    List<AnimalCategoryDTO> animalCategories;
-
-    // add description
+    // Mô tả chi tiết yêu cầu tư vấn
     String description;
 
+    // Trạng thái của yêu cầu (nên là Enum)
     String status;
+
+    // Thông tin về thời gian tạo và cập nhật
     Instant createdDate;
     String createdBy;
-    Instant updatetedDate;
-    String updatetedBy;
+    Instant updatedDate;
+    String updatedBy;
+
+    // Danh sách kết quả tư vấn liên quan
     List<ConsultationResultDTO> consultationResults;
 }

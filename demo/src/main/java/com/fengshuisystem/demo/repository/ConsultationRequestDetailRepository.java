@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface ConsulationRequestDetailsRepository extends JpaRepository<ConsultationRequestDetail, Integer> {
+public interface ConsultationRequestDetailRepository extends JpaRepository<ConsultationRequestDetail, Integer> {
     @Query(value = "SELECT d.* " +
             "FROM consultation_result c " +
             "JOIN consultation_request_detail d " +

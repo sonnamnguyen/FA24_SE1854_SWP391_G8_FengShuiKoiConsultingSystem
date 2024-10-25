@@ -22,6 +22,7 @@ public class ConsultationShelterDTO {
   String status;
   Instant createdDate;
   String createdBy;
-  Instant updatetedDate;
-  String updatetedBy;
+  // updateted -> updated
+  Instant updatedDate;
+  String updatedBy;
 }

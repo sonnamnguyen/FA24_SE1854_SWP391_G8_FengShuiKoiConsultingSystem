@@ -3,7 +3,7 @@ package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.ConsultationShelterDTO;
-import com.fengshuisystem.demo.service.ConsulationShelterService;
+import com.fengshuisystem.demo.service.ConsultationShelterService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,8 +18,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsulationShelterController {
-    ConsulationShelterService consulationShelterService;
-
+    ConsultationShelterService consultationShelterService;
 
     @PostMapping
     public ApiResponse<ConsultationShelterDTO> createConsulationShelter(
@@ -27,7 +26,7 @@ public class ConsulationShelterController {
             @RequestParam List<Integer> ids,
             @RequestBody ConsultationShelterDTO consultationShelterDTO) {
         return ApiResponse.<ConsultationShelterDTO>builder()
-                .result(consulationShelterService.createConsulationShelter(id, ids, consultationShelterDTO))
+                .result(consultationShelterService.createConsulationShelter(id, ids, consultationShelterDTO))
                 .build();
     }
 }

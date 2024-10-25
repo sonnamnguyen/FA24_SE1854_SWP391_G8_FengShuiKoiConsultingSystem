@@ -22,6 +22,7 @@ public class Direction {
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
+    @JoinColumn(name = "destiny_id")
     private Destiny destiny;
 
     @Size(max = 50)

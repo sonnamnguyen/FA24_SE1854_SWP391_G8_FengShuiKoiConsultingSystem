@@ -22,7 +22,7 @@ public class Comment {
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     @Size(max = 255)
