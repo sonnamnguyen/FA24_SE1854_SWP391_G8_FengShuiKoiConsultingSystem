@@ -31,7 +31,7 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
     ConsultationRequestDetailRepository consultationRequestDetailRepository;
     ConsultationResultRepository consultationResultRepository;
     NumberRepository numberRepository;
-    ConsulationAnimalRepository consulationAnimalRepository;
+    ConsultationAnimalRepository consultationAnimalRepository;
     AnimalRepository animalRepository;
 
     @Override
@@ -53,6 +53,6 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
             consultationAnimal.setUpdatedBy(name);
             consultationAnimal.setNumbers(numbers);
             consultationAnimal.setConsultationResult(consultationResult);
-           return consultationAnimalMapper.toDto(consulationAnimalRepository.save(consultationAnimal));
+           return consultationAnimalMapper.toDto(consultationAnimalRepository.save(consultationAnimal));
     }
 }

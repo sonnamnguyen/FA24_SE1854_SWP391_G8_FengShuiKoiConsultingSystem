@@ -1,13 +1,13 @@
 package com.fengshuisystem.demo.dto;
 
-import com.fengshuisystem.demo.dto.response.UserResponse;
-import com.fengshuisystem.demo.entity.*;
+
+import com.fengshuisystem.demo.entity.enums.Request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-
 import java.time.Instant;
 import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,17 +15,24 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationResultDTO {
     Integer id;
-    ConsultationRequest request;
-    ConsultationRequestDetailDTO requestDetail;
-    UserResponse account;
-    ConsultationCategory consultationCategory;
+
+    // Sử dụng ID thay vì đối tượng để tránh vòng lặp
+    Integer consultationRequestId;
+    Integer consultationRequestDetailId;
+
+    Integer accountId;
+    Integer consultationCategoryId;
+
     Instant consultationDate;
     String consultantName;
-    String status ;
+    Request status;
+    String description;
+
     Instant createdDate;
     String createdBy;
-    // updateted -> updated
     Instant updatedDate;
     String updatedBy;
+
+    List<ConsultationAnimalDTO> consultationAnimals;
     List<ConsultationShelterDTO> consultationShelters;
 }

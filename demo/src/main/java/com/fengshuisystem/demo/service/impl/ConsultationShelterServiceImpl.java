@@ -30,7 +30,7 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
     ConsultationRequestDetailRepository consultationRequestDetailRepository;
     ConsultationResultRepository consultationResultRepository;
     DirectionRepository directionRepository;
-    ConsulationShelterRepository consulationShelterRepository;
+    ConsultationShelterRepository consultationShelterRepository;
     ShelterRepository shelterRepository;
 
     @Override
@@ -52,7 +52,7 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
         consultationShelter.setUpdatedBy(name);
         consultationShelter.setDirections(directions);
         consultationShelter.setConsultationResult(consultationResult);
-        return consultationShelterMapper.toDto(consulationShelterRepository.save(consultationShelter));
+        return consultationShelterMapper.toDto(consultationShelterRepository.save(consultationShelter));
 
     }
 
