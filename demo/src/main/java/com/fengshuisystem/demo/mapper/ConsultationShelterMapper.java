@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.mapper;
 
 import com.fengshuisystem.demo.dto.ConsultationAnimalDTO;
@@ -8,12 +7,14 @@ import com.fengshuisystem.demo.entity.ConsultationShelter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(
-        config = DefaultConfigMapper.class
-
-)
+@Mapper(config = DefaultConfigMapper.class)
 public interface ConsultationShelterMapper extends EntityMapper<ConsultationShelterDTO, ConsultationShelter> {
-    @Mapping(target = "consultation.id", source = "consultationId")
+
+    @Mapping(target = "consultationResult.id", source = "consultationId")
     @Mapping(target = "shelterCategory.id", source = "shelterCategoryId")
-    public ConsultationShelter toEntity(ConsultationShelterDTO dto);
+    ConsultationShelter toEntity(ConsultationShelterDTO dto);
+
+    @Mapping(target = "consultationId", source = "consultationResult.id")
+    @Mapping(target = "shelterCategoryId", source = "shelterCategory.id")
+    ConsultationShelterDTO toDto(ConsultationShelter entity);
 }

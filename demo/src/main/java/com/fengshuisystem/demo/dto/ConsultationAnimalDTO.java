@@ -1,6 +1,5 @@
 package com.fengshuisystem.demo.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -24,7 +23,6 @@ public class ConsultationAnimalDTO {
   String status;
   Instant createdDate;
   String createdBy;
-  // updateted -> updated
   Instant updatedDate;
   String updatedBy;
 }

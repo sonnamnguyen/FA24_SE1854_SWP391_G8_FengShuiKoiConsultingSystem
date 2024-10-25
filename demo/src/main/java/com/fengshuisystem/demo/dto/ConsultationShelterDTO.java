@@ -1,7 +1,5 @@
 package com.fengshuisystem.demo.dto;
 
-
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,7 +20,6 @@ public class ConsultationShelterDTO {
   String status;
   Instant createdDate;
   String createdBy;
-  // updateted -> updated
   Instant updatedDate;
   String updatedBy;
 }
