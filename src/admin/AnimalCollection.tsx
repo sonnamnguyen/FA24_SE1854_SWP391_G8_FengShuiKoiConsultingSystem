@@ -1,0 +1,427 @@
+import React, { ChangeEvent, useEffect, useState } from "react";
+import AnimalCategory from "../models/AnimalCategory";
+import Pagination from "../utils/Pagination";
+import { findByAnimalCategory, getAllAnimals } from "./api/AnimalCategoryAPI";
+import { Button, Form, Input, Popconfirm, Modal, Upload, Checkbox, Divider, Carousel, notification } from 'antd';
+import { Table, Tag, Space } from 'antd';
+
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import api from "../axious/axious";
+import { CheckboxProps } from 'antd';
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase/firebase";
+import Color from "../models/Color";
+
+interface Colors {
+  id: number;
+  color: string;
+}
+
+const AnimalCollection: React.FC = () => {
+  const [listAnimalCategory, setListAnimalCategory] = useState<AnimalCategory[]>([]);
+  const [reloadData, setReloadData] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [pageNow, setPageNow] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [name, setName] = useState("");
+  const [searchReload, setSearchReload] = useState("");
+  const [plainOptions, setPlainOptions] = useState<Colors[]>([]);
+  const [checkedList, setCheckedList] = useState<number[]>([]);
+  const [animalImages, setAnimalImages] = useState<File[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isUpdateMode, setIsUpdateMode] = useState(false);
+  const [selectedAnimal, setSelectedAnimal] = useState<AnimalCategory | null>(null);
+  const pageSize = 10;
+
+  const [apii, contextHolder] = notification.useNotification();
+
+  const reloadAnimalList = () => {
+    setReloadData(true);
+
+    if (name === "") {
+      getAllAnimals()
+        .then((animalData) => {
+          if (animalData) {
+            setListAnimalCategory(animalData.result);
+            setTotalPage(animalData.pageTotal);
+          } else {
+            setError("No data found.");
+          }
+          setReloadData(false);
+        })
+        .catch((error) => {
+          setError(error.message);
+          setReloadData(false);
+        });
+    } else {
+      findByAnimalCategory(name)
+        .then((animalData) => {
+          if (animalData) {
+            setListAnimalCategory(animalData.result);
+            setTotalPage(animalData.pageTotal);
+          } else {
+            setError("No data found.");
+          }
+          setReloadData(false);
+        })
+        .catch((error) => {
+          setError(error.message);
+          setReloadData(false);
+        });
+    }
+  };
+
+  useEffect(() => {
+    const fetchColors = async () => {
+      const colors = await getAllColors();
+      setPlainOptions(colors || []);
+    };
+    fetchColors();
+    reloadAnimalList();
+  }, [pageNow, name]);
+
+  const checkAll = plainOptions.length === checkedList.length;
+  const indeterminate = checkedList.length > 0 && checkedList.length < plainOptions.length;
+
+  const onChange = (list: number[]) => {
+    setCheckedList(list);
+  };
+
+  const onCheckAllChange: CheckboxProps['onChange'] = (e) => {
+    setCheckedList(e.target.checked ? plainOptions.map(option => option.id) : []);
+  };
+
+  const getAllColors = async (): Promise<Colors[] | null> => {
+    try {
+      const response = await api.get('/colors/getAll-Colors');
+      return response.data.code === 1000 ? response.data.result.map((color: any) => ({ id: color.id, color: color.color })) : null;
+    } catch (error) {
+      console.error("Error fetching colors: ", error);
+      return null;
+    }
+  };
+
+  const handleView = (id: number) => {
+    if (id === undefined) {
+      console.error("ID is undefined, cannot delete the animal.");
+      return;
+    }
+    const animal = listAnimalCategory.find(animal => animal.id === id);
+    if (animal) {
+      setSelectedAnimal(animal);
+      setIsModalVisible(true);
+      setIsUpdateMode(false);
+    }
+  };
+
+  const handleUpdate = (id: number) => {
+    const animal = listAnimalCategory.find(animal => animal.id === id);
+    if (animal) {
+      setSelectedAnimal(animal);
+      setIsModalVisible(true);
+      setIsUpdateMode(true);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await api.delete(`/animals/${id}`);
+      if (response.data.code === 1000) {
+        apii.success({ message: 'Success', description: 'Animal has been successfully deleted.' });
+        reloadAnimalList();
+      } else {
+        apii.error({ message: 'Error', description: 'Failed to delete animal.' });
+      }
+    } catch (error) {
+      apii.error({ message: 'Error', description: 'Error deleting animal.' });
+    }
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const uploadImagesToFirebase = async (files: File[]): Promise<string[]> => {
+    const uploadPromises = files.map(async (file) => {
+      const storageRef = ref(storage, `koi_images/${file.name}`);
+      const base64Image = await getBase64(file);
+      await uploadString(storageRef, base64Image, 'data_url');
+      return await getDownloadURL(storageRef);
+    });
+    return Promise.all(uploadPromises);
+  };
+
+  const getBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleUploadChange = (info: any) => {
+    setAnimalImages(info.fileList.map((file: any) => file.originFileObj));
+  };
+
+  const handleSubmit = async () => {
+    const base64Avatars = await uploadImagesToFirebase(animalImages);
+    try {
+      const response = await api.put(`/animals/${selectedAnimal?.id}`, {
+        animalCategoryName: selectedAnimal?.animalCategoryName,
+        description: selectedAnimal?.description,
+        origin: selectedAnimal?.origin,
+        animalImages: base64Avatars.map(url => ({ imageUrl: url })),
+        colors: checkedList.map(id => ({ id }))
+      });
+
+      if (response.data.code === 1000) {
+        apii.success({ message: 'Success', description: 'Animal has been successfully updated.' });
+        setIsModalVisible(false);
+        reloadAnimalList();
+      } else {
+        apii.error({ message: 'Error', description: 'Failed to update animal.' });
+      }
+    } catch (error) {
+      apii.error({ message: 'Error', description: 'Error updating animal.' });
+    }
+  };
+
+  const pagination = (page: number) => {
+    setPageNow(page);
+  };
+
+  const handleSearch = () => {
+    setName(searchReload);
+    setReloadData(true);
+    setPageNow(1);
+  };
+  const columns = [
+    {
+      title: 'STT',
+      dataIndex: 'index',
+      key: 'index',
+      render: (text: string, record: AnimalCategory, index: number) => index + 1 + (pageNow - 1) * pageSize,
+    },
+    {
+      title: 'Image',
+      dataIndex: 'animalImages',
+      key: 'animalImages',
+      render: (images: any) => (
+        <img
+          src={images && images.length > 0 ? images[0].imageUrl : "path_to_placeholder.jpg"}
+          alt="Koi"
+          style={{ width: "100px", height: "100px", objectFit: "cover" }}
+        />
+      ),
+    },
+    {
+      title: 'Koi Name',
+      dataIndex: 'animalCategoryName',
+      key: 'animalCategoryName',
+      render: (text: string) => (
+        <span
+          title={text}
+          style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}
+        >
+          {text}
+        </span>
+      ),
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text: string, record: AnimalCategory) => (
+        <Space size="middle">
+          <Button
+            type="primary"
+            onClick={() => {
+              if (record.id !== undefined) {
+                handleView(record.id);
+              } else {
+                console.error("Animal ID is undefined, cannot view.");
+              }
+            }}
+          >
+            View
+          </Button>
+          <Button
+            onClick={() => {
+              if (record.id !== undefined) {
+                handleUpdate(record.id);
+              } else {
+                console.error("Animal ID is undefined, cannot update.");
+              }
+            }}
+          >
+            Update
+          </Button>
+          <Popconfirm
+            title="Delete the animal"
+            okText="Yes"
+            cancelText="No"
+            onConfirm={() => {
+              if (record.id !== undefined) {
+                handleDelete(record.id);
+              } else {
+                console.error("Animal ID is undefined, cannot delete.");
+              }
+            }}
+          >
+            <Button type="primary" danger>
+              Delete
+            </Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchReload(e.target.value);
+  };
+
+  return (
+    <>
+      {contextHolder}
+      <div className="d-flex justify-content-between mb-3">
+        <div className="d-flex">
+          <Input
+            value={searchReload}
+            onChange={onSearchInputChange}
+            className="mr-2"
+            placeholder="Search by name"
+          />
+          <Button type="primary" icon={<SearchOutlined />} onClick={handleSearch}>
+            Search
+          </Button>
+        </div>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>
+          Add Animal
+        </Button>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={listAnimalCategory}
+        pagination={false}
+        rowKey="id"
+      />
+      <Pagination
+        currentPage={pageNow}
+        totalPages={totalPage}
+        pagination={pagination}
+      />
+      <Modal
+        title={isUpdateMode ? "Update Animal Details" : "Animal Details"}
+        open={isModalVisible}
+        onOk={isUpdateMode ? handleSubmit : handleModalCancel}
+        onCancel={handleModalCancel}
+        width={1000}
+        style={{ top: '15%' }}
+      >
+        {isUpdateMode ? (
+          <Form onFinish={handleSubmit}>
+            <Form.Item
+              label="Name"
+              required
+              rules={[{ required: true, message: 'Please input the animal name!' }]}
+            >
+              <Input
+                value={selectedAnimal?.animalCategoryName}
+                onChange={(e) => setSelectedAnimal((prev) => prev && { ...prev, animalCategoryName: e.target.value })}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Description"
+              required
+              rules={[{ required: true, message: 'Please input the description!' }]}
+            >
+              <Input
+                value={selectedAnimal?.description}
+                onChange={(e) => setSelectedAnimal((prev) => prev && { ...prev, description: e.target.value })}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Origin"
+              required
+              rules={[{ required: true, message: 'Please input the origin!' }]}
+            >
+              <Input
+                value={selectedAnimal?.origin}
+                onChange={(e) => setSelectedAnimal((prev) => prev && { ...prev, origin: e.target.value })}
+              />
+            </Form.Item>
+
+            <Form.Item label="Avatars">
+              <Upload
+                multiple
+                accept="image/*"
+                showUploadList={true}
+                beforeUpload={() => false}
+                listType="picture-card"
+                onChange={handleUploadChange}
+              >
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+              </Upload>
+            </Form.Item>
+
+            <Form.Item>
+              <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+                Check all
+              </Checkbox>
+              <Divider />
+              <Checkbox.Group
+                options={plainOptions.map(option => ({ label: option.color, value: option.id }))}
+                value={checkedList}
+                onChange={onChange}
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        ) : (
+          <div style={{ display: 'flex' }}>
+            <div style={{ flex: 1 }}> {/* Phần dành cho Carousel */}
+              <Carousel autoplay>
+                {selectedAnimal?.animalImages?.length ? (
+                  selectedAnimal.animalImages.map((image, index) => (
+                    <div key={index}>
+                      <img
+                        src={image.imageUrl}
+                        alt={`Image of ${selectedAnimal?.animalCategoryName}`}
+                        style={{ maxWidth: "100%", height: "auto", objectFit: "contain" }}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div>No images available</div>
+                )}
+              </Carousel>
+            </div>
+            <div style={{ flex: 1, padding: '0 20px' }}> {/* Phần dành cho thông tin */}
+              <p><strong>Koi Name:</strong> {selectedAnimal?.animalCategoryName}</p>
+              <p><strong>Description:</strong> {selectedAnimal?.description}</p>
+              <p><strong>Origin:</strong> {selectedAnimal?.origin}</p>
+              <p><strong>Created Date:</strong> {selectedAnimal?.createdDate?.toString()}</p>
+              <p><strong>Status:</strong> {selectedAnimal?.status}</p>
+              <p><strong>Colors:</strong> {selectedAnimal?.colors?.map((color: any) => color.color).join(', ')}</p>
+              <p><strong>Destiny:</strong> {selectedAnimal?.colors?.map((color: Color) =>
+                color.destiny ? color.destiny : 'No destiny available').join(', ')}</p>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </>
+  );
+};
+
+export default AnimalCollection;
