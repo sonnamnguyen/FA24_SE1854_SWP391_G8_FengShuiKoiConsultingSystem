@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.dto;
 
+import com.fengshuisystem.demo.entity.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,7 +14,7 @@ public class ShapeDTO {
     Integer id;
     DestinyDTO destiny;
     String shape;
-    String status;
+    Status status;
     Instant createdDate;
     String createdBy;
     Instant updatedDate;

@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -24,28 +25,28 @@ public class Bill {
     @Column(name = "bill_id", nullable = false)
     private Integer id;
 
-    @NotNull
+    @NotNull(message = "Account must not be null")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
     @JoinColumn(name = "account_id",nullable = false)
     private Account account;
 
-    @NotNull
+    @NotNull(message = "Payment must not be null")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
     @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 
     @Column(name = "sub_amount")
-    private Integer subAmount;
+    private BigDecimal subAmount;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private BillStatus status = BillStatus.PENDING;
 
     @Column(name = "VAT")
-    private Integer vat;
+    private BigDecimal vat;
 
     @Column(name = "VAT_amount")
-    private Integer vatAmount;
+    private BigDecimal vatAmount;
 
     @NotNull
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
@@ -69,4 +70,18 @@ public class Bill {
     @ManyToMany(mappedBy = "bills", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Package> packageFields = new LinkedHashSet<>();
 
+    @PrePersist
+    protected void onCreate() {
+        Instant now = Instant.now();
+        this.createdDate = now;
+        this.updatedDate = now;
+        this.createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.updatedBy = this.createdBy;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedDate = Instant.now();
+        this.updatedBy = SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 }

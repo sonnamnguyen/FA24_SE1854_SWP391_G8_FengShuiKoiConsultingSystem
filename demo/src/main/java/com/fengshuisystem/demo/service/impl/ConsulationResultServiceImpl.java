@@ -58,7 +58,7 @@ public class ConsulationResultServiceImpl {
     }
 
     public PageResponse<ConsultationResultDTO> getConsulationBySearch(int page, int size) {
-        Status status = Status.COMPLETED;
+        Request status = Request.COMPLETED;
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 

@@ -3,6 +3,7 @@ package com.fengshuisystem.demo.service.impl;
 import com.fengshuisystem.demo.dto.ConsultationAnimalDTO;
 import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.Number;
+import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
@@ -47,7 +48,7 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
             consultationAnimal.setAnimalCategory(animalCategory);
             consultationAnimal.setCreatedBy(name);
             consultationAnimal.setCreatedDate(Instant.now());
-            consultationAnimal.setStatus(Status.COMPLETED);
+            consultationAnimal.setStatus(Request.COMPLETED);
             consultationAnimal.setUpdatedDate(Instant.now());
             consultationAnimal.setUpdatedBy(name);
             consultationAnimal.setNumbers(numbers);

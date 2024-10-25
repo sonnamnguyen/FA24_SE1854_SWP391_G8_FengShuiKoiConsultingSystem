@@ -36,7 +36,7 @@ public class AnimalCategory {
     @NotNull
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Status status = Status.ACTIVE;
 
     @NotNull
     @Column(name = "created_date", nullable = false)

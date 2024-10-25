@@ -2,6 +2,7 @@ package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ConsultationShelterDTO;
 import com.fengshuisystem.demo.entity.*;
+import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
@@ -46,7 +47,7 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
         consultationShelter.setShelterCategory(shelterCategory);
         consultationShelter.setCreatedBy(name);
         consultationShelter.setCreatedDate(Instant.now());
-        consultationShelter.setStatus(Status.COMPLETED);
+        consultationShelter.setStatus(Request.COMPLETED);
         consultationShelter.setUpdatedDate(Instant.now());
         consultationShelter.setUpdatedBy(name);
         consultationShelter.setDirections(directions);

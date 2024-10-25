@@ -40,7 +40,7 @@ public class ConsultationRequest {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Request status;
+    private Request status = Request.PENDING;
 
     @NotNull
     @Column(name = "created_date", nullable = false)

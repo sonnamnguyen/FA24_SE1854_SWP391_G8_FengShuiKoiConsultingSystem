@@ -39,10 +39,11 @@ public class EndPoint {
         };
         public static final String[] USER_POST_ENDPOINTS = {
                 "users/reset-password","users/forgot-password","/posts","/post/comments","/post/images","/bills"
-                ,"/consultation-requests", "/consultation-request-details/package/{packageId}"
+                ,"/consultation-requests", "/consultation-request-details/package/{packageId}",
+                "/bills/packages/{packageId}/payments/{paymentId}"
         };
         public static final String[] USER_PUT_ENDPOINTS = {
-                "/posts/{id}","/post/comments/{id}","/post/images/{id}","/bills/{id}",
+                "/posts/{id}","/post/comments/{id}","/post/images/{id}","/bills/{id}"
         };
 
         public static final String[] USER_DELETE_ENDPOINTS = {
