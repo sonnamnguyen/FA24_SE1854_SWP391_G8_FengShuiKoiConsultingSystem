@@ -1,22 +1,25 @@
 package com.fengshuisystem.demo.mapper;
 
 import com.fengshuisystem.demo.dto.ConsultationRequestDTO;
-import com.fengshuisystem.demo.dto.ConsultationShelterDTO;
 import com.fengshuisystem.demo.entity.ConsultationRequest;
-import com.fengshuisystem.demo.entity.ConsultationShelter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
-public interface ConsultationRequestMapper{
+public interface ConsultationRequestMapper {
 
-    // xóa extends
-    // cẩn thận Conflict
-    // Ánh xạ từ DTO sang Entity
-    @Mapping(source = "packageId", target = "packageId.packageId")
-    ConsultationRequest toEntity(ConsultationRequestDTO requestDTO);
+    // Ánh xạ từ Entity sang DTO, sử dụng phương thức tùy chỉnh để lấy packageId
+    @Mapping(source = "packageId", target = "packageId", qualifiedByName = "packageToPackageId")
+    ConsultationRequestDTO toDTO(ConsultationRequest consultationRequest);
 
-    // Ánh xạ từ Entity sang DTO
-    @Mapping(source = "packageId.packageId", target = "packageId")
-    ConsultationRequestDTO toDTO(ConsultationRequest request);
+    // Ánh xạ từ DTO sang Entity, packageId sẽ được gán trong Service Layer
+    @Mapping(target = "packageId", ignore = true)
+    ConsultationRequest toEntity(ConsultationRequestDTO consultationRequestDTO);
+
+    // Phương thức ánh xạ tùy chỉnh: từ Package Entity sang packageId
+    @Named("packageToPackageId")
+    default Integer mapPackageToPackageId(com.fengshuisystem.demo.entity.Package packageEntity) {
+        return packageEntity != null ? packageEntity.getId() : null;
+    }
 }

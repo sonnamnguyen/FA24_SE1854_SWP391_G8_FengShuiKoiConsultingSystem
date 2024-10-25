@@ -33,29 +33,27 @@ public class EndPoint {
 
         };
         public static final String[] USER_GET_ENDPOINTS = {
-                "/posts","/posts/search-posts","/post/comments","/post/images","/vn_pay/create_vn_pay"
+                "/posts","/posts/search-posts","/post/comments","/post/images","/vn_pay/create_vn_pay", "/consultation-request-details/{id}", "/api/consultation-request-details/{requestDetailId}"
 
 
         };
         public static final String[] USER_POST_ENDPOINTS = {
                 "users/reset-password","users/forgot-password","/posts","/post/comments","/post/images","/bills"
-                ,"/consultation-requests",
+                ,"/consultation-requests", "/consultation-request-details/package/{packageId}"
         };
         public static final String[] USER_PUT_ENDPOINTS = {
                 "/posts/{id}","/post/comments/{id}","/post/images/{id}","/bills/{id}",
         };
 
         public static final String[] USER_DELETE_ENDPOINTS = {
-                "/posts/{id}","/post/comments/{id}","/post/images/{id}",
+                "/posts/{id}","/post/comments/{id}","/post/images/{id}", "/api/consultation-request-details/{requestDetailId}"
 
         };
         public static final String[] BOTH_GET_ENDPOINTS = {
-                "/bills/{accountId}/status"
+                "/bills/{accountId}/status", "/api/consultation-request-details/{requestDetailId}"
 
         };
         public static final String[] BOTH_DELETE_ENDPOINTS = {
                 "/posts/{id}"
-
-
         };
 }

@@ -1,37 +1,37 @@
 package com.fengshuisystem.demo.controller;
+
+import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.ConsultationRequestDetailDTO;
-import com.fengshuisystem.demo.entity.ConsultationRequestDetail;
-import com.fengshuisystem.demo.service.ConsultationRequestDetailService;
-import org.springframework.http.ResponseEntity;
+import com.fengshuisystem.demo.service.impl.ConsultationRequestDetailServiceImpl;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import com.fengshuisystem.demo.entity.ShelterCategory;
-import com.fengshuisystem.demo.entity.AnimalCategory;
+
 @RestController
 @RequestMapping("/api/consultation-request-details")
+@RequiredArgsConstructor
+@Slf4j
 public class ConsultationRequestDetailController {
-    private final ConsultationRequestDetailService service;
-    public ConsultationRequestDetailController(ConsultationRequestDetailService service) {
-        this.service = service;
-    }
-    @PostMapping("/packageId")
-    public ResponseEntity<ConsultationRequestDetailDTO> createRequestDetail(
-            @RequestBody ConsultationRequestDetailDTO requestDetailDTO,
-            @PathVariable("packageId") Integer packageId) {
-        ConsultationRequestDetail savedDetail = service.save(requestDetailDTO);
-        return ResponseEntity.ok(toDTO(savedDetail));
 
+    private final ConsultationRequestDetailServiceImpl consultationRequestDetailService;
+
+    @PostMapping("/{packageId}")
+    public ApiResponse<ConsultationRequestDetailDTO> createOrUpdateConsultationRequestDetail(
+            @Valid @RequestBody ConsultationRequestDetailDTO requestDTO, @PathVariable Integer packageId) {
+        ConsultationRequestDetailDTO result = consultationRequestDetailService.createOrUpdateDetail(requestDTO, packageId);
+        return ApiResponse.<ConsultationRequestDetailDTO>builder().result(result).build();
     }
-    private ConsultationRequestDetailDTO toDTO(ConsultationRequestDetail entity) {
-        return ConsultationRequestDetailDTO.builder()
-                .id(entity.getId())
-                .description(entity.getDescription())
-                .status("COMPLETED")
-                .shelterCategoryIds(entity.getShelterCategories().stream().map(ShelterCategory::getId).toList())
-                .animalCategoryIds(entity.getAnimalCategories().stream().map(AnimalCategory::getId).toList())
-                .createdBy(entity.getCreatedBy())
-                .createdDate(entity.getCreatedDate())
-                .updatedBy(entity.getUpdatedBy())
-                .updatedDate(entity.getUpdatedDate())
-                .build();
+
+    @GetMapping("/{requestDetailId}")
+    public ApiResponse<ConsultationRequestDetailDTO> getRequestDetailById(@PathVariable Integer requestDetailId) {
+        ConsultationRequestDetailDTO detail = consultationRequestDetailService.getRequestDetailById(requestDetailId);
+        return ApiResponse.<ConsultationRequestDetailDTO>builder().result(detail).build();
+    }
+
+    @DeleteMapping("cancel/{requestDetailId}")
+    public ApiResponse<Void> cancelRequestDetail(@PathVariable Integer requestDetailId) {
+        consultationRequestDetailService.cancelRequestDetailById(requestDetailId);
+        return ApiResponse.<Void>builder().result(null).build();
     }
 }
