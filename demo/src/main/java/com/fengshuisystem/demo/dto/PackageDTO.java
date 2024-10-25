@@ -2,6 +2,7 @@ package com.fengshuisystem.demo.dto;
 import com.fengshuisystem.demo.entity.Bill;
 import com.fengshuisystem.demo.entity.ConsultationRequest;
 import com.fengshuisystem.demo.entity.Post;
+import com.fengshuisystem.demo.entity.enums.Status;
 import lombok.*;
         import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ public class PackageDTO {
     private String packageName;
     private BigDecimal price;
     private String description;
-    private String status;
+    private Status status;
     private Instant createdDate = Instant.now();
     private String createdBy;
     private Instant updatedDate = Instant.now();

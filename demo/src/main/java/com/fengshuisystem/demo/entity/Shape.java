@@ -34,7 +34,7 @@ public class Shape {
     @NotNull
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Status status = Status.ACTIVE;
 
     @Column(name = "created_date")
     private Instant createdDate = Instant.now();

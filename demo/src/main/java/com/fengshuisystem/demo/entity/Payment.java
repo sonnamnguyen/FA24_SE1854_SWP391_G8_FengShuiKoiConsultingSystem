@@ -30,8 +30,9 @@ public class Payment {
 
     @Size(max = 20)
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false, length = 20)
-    private String paymentStatus;
+    private Status paymentStatus = Status.ACTIVE;
 
     @NotNull
     @Column(name = "created_date", nullable = false)
@@ -55,7 +56,8 @@ public class Payment {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Status status = Status.ACTIVE;
+
     @OneToMany(mappedBy = "payment", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Bill> bills = new LinkedHashSet<>();
 

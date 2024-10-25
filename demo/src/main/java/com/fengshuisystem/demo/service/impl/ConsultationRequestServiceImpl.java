@@ -48,7 +48,7 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
         ConsultationRequest consultationRequest = consultationRequestMapper.toEntity(requestDTO);
         consultationRequest.setAccount(account);
         consultationRequest.setPackageId(packageEntity);
-        consultationRequest.setStatus(Request.COMPLETED);
+        consultationRequest.setStatus(Request.PENDING);
 
         // 5. Lưu vào database
         ConsultationRequest savedRequest = consultationRequestRepository.save(consultationRequest);
@@ -65,4 +65,6 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
         log.info("Extracted email from JWT: {}", email);
         return email;
     }
+
+
 }

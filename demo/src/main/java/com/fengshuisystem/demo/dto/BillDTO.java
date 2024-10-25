@@ -1,9 +1,11 @@
 package com.fengshuisystem.demo.dto;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.Package;
 import com.fengshuisystem.demo.entity.Payment;
+import com.fengshuisystem.demo.entity.enums.BillStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
@@ -19,10 +21,10 @@ public class BillDTO {
     private Integer id;
     private UserResponse userResponse;
     private PaymentDTO payment;
-    private Integer subAmount;
-    private Integer vat;
-    private String status;
-    private Integer vatAmount;
+    private BigDecimal subAmount;
+    private BigDecimal vat;
+    private BillStatus status;
+    private BigDecimal vatAmount;
     private BigDecimal totalAmount;
     private Instant createdDate = Instant.now();
     private String createdBy;

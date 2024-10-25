@@ -94,23 +94,15 @@ public class ConsultationRequestDetail {
         Instant now = Instant.now();
         this.createdDate = now;
         this.updatedDate = now;
-
-        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        this.createdBy = currentUser != null ? currentUser : "SYSTEM"; // Đảm bảo có giá trị mặc định
+        this.createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
         this.updatedBy = this.createdBy;
-
-        if (this.status == null) {  // Đảm bảo không để status là null
-            this.status = Request.PENDING;
-        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedDate = Instant.now();
-
-        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        this.updatedBy = currentUser != null ? currentUser : "SYSTEM"; // Đảm bảo có giá trị mặc định
-
+        this.updatedBy = SecurityContextHolder.getContext().getAuthentication().getName();
     }
+
 
 }

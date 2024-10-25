@@ -27,7 +27,7 @@ public class Package {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Status status = Status.ACTIVE;
 
     @Size(max = 100)
     @NotNull

@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.dto;
 import com.fengshuisystem.demo.entity.Bill;
+import com.fengshuisystem.demo.entity.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.Instant;
@@ -14,7 +15,7 @@ public class PaymentDTO {
     private Integer id;
     private String status;
     private String paymentMethod;
-    private String paymentStatus;
+    private Status paymentStatus;
     private Instant createdDate;
     private String createdBy;
     private Instant updatedDate;

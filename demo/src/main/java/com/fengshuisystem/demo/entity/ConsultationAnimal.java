@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -46,7 +47,7 @@ public class ConsultationAnimal {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Request status = Request.CANCELLED;
 
     @Column(name = "created_date")
     private Instant createdDate;

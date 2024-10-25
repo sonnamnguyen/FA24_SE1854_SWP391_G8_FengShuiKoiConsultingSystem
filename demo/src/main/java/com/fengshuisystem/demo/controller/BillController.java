@@ -70,4 +70,16 @@ public class BillController {
                 .result("The post has been deleted")
                 .build();
     }
+
+    // Phần của Khôi
+    @PostMapping("/packages/{packageId}/payments/{paymentId}")
+    public ApiResponse<BillDTO> createBillByPaymentAndPackage(
+            @RequestBody @Valid BillDTO billRequest,
+            @PathVariable Integer packageId,
+            @PathVariable Integer paymentId) {
+        return ApiResponse.<BillDTO>builder()
+                .result(billService.createBillByPaymentAndPackage(billRequest, packageId, paymentId))
+                .build();
+    }
+
 }
