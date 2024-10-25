@@ -23,7 +23,7 @@ public class Package {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "package_id", nullable = false)
     // id -> packageId
-    private Integer packageId;
+    private Integer id;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -39,7 +40,7 @@ public class ConsultationRequestDetail {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private Status status = Status.INACTIVE;
+    private Request status = Request.PENDING; //
 
     @NotNull
     @Column(name = "created_date", nullable = false)
@@ -93,13 +94,23 @@ public class ConsultationRequestDetail {
         Instant now = Instant.now();
         this.createdDate = now;
         this.updatedDate = now;
-        this.createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.createdBy = currentUser != null ? currentUser : "SYSTEM"; // Đảm bảo có giá trị mặc định
         this.updatedBy = this.createdBy;
+
+        if (this.status == null) {  // Đảm bảo không để status là null
+            this.status = Request.PENDING;
+        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedDate = Instant.now();
-        this.updatedBy = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.updatedBy = currentUser != null ? currentUser : "SYSTEM"; // Đảm bảo có giá trị mặc định
+
     }
+
 }
