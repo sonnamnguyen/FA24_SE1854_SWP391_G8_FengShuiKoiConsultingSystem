@@ -38,7 +38,9 @@ public enum ErrorCode {
     BILL_NOT_EXISTED(2006,"bill not existed", HttpStatus.NOT_FOUND),
     PACKAGE_NOT_EXISTED(2007,"package not existed", HttpStatus.NOT_FOUND),
     INVALID_BILL_STATUS(2008,"invalid bill status", HttpStatus.BAD_REQUEST),
-    REQUEST_NOT_FOUND(2009, "request not found", HttpStatus.NOT_FOUND);
+    REQUEST_NOT_FOUND(2009, "request not found", HttpStatus.NOT_FOUND),
+    CONSULTATION_REQUEST_DETAIL_NOT_FOUND(2010, "consultation request detail not found", HttpStatus.NOT_FOUND),
+    CONSULTATION_REQUEST_DETAIL_NOT_COMPLETED(2011, "consultation request detail not completed", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

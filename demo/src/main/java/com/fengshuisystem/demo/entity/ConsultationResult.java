@@ -3,7 +3,6 @@ package com.fengshuisystem.demo.entity;
 import com.fengshuisystem.demo.entity.enums.Request;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,6 +54,12 @@ public class ConsultationResult {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Request status = Request.PENDING;
+
+    @Size(max = 1000)
+    @NotNull
+    @Nationalized
+    @Column(name = "description", nullable = false, length = 1000)
+    private String description;
 
     @Column(name = "created_date")
     private Instant createdDate;

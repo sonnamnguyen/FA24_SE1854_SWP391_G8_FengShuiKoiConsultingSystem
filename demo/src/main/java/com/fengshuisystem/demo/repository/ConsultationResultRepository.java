@@ -11,6 +11,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConsultationResultRepository extends JpaRepository<ConsultationResult, Integer> {
-
     public Page<ConsultationResult> findAllByStatus(Request status, Pageable pageable);
 }
