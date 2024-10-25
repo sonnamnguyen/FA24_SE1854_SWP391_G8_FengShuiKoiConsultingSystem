@@ -4,10 +4,9 @@ import com.fengshuisystem.demo.dto.ConsultationRequestDetailDTO;
 import com.fengshuisystem.demo.entity.ConsultationRequestDetail;
 import org.mapstruct.Mapper;
 
-@Mapper(
-        config = DefaultConfigMapper.class
+@Mapper(componentModel = "spring")
+public interface ConsultationRequestDetailMapper {
+    ConsultationRequestDetail toEntity(ConsultationRequestDetailDTO dto);
 
-)
-public interface ConsultationRequestDetailMapper extends EntityMapper<ConsultationRequestDetailDTO, ConsultationRequestDetail>{
-
+    ConsultationRequestDetailDTO toDTO(ConsultationRequestDetail entity);
 }

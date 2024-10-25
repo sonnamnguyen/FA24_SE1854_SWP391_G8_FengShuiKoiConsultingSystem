@@ -3,7 +3,7 @@ package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.ConsultationAnimalDTO;
-import com.fengshuisystem.demo.service.ConsulationAnimalService;
+import com.fengshuisystem.demo.service.ConsultationAnimalService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,7 +18,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsulationAnimalController {
-    ConsulationAnimalService consulationAnimalService;
+    ConsultationAnimalService consultationAnimalService;
 
     @PostMapping
     public ApiResponse<ConsultationAnimalDTO> createConsulationAnimal(
@@ -26,7 +26,7 @@ public class ConsulationAnimalController {
             @RequestParam List<Integer> ids,
             @RequestBody ConsultationAnimalDTO consultationAnimalDTO) {
         return ApiResponse.<ConsultationAnimalDTO>builder()
-                .result(consulationAnimalService.createConsulationAnimal(id, ids, consultationAnimalDTO))
+                .result(consultationAnimalService.createConsulationAnimal(id, ids, consultationAnimalDTO))
                 .build();
     }
 

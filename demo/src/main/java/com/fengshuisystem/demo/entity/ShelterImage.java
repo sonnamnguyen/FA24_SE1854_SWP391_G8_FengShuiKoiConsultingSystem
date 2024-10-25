@@ -22,13 +22,10 @@ public class ShelterImage {
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "shelter_category_id", nullable = false)
     private ShelterCategory shelterCategory;
 
     @Lob
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
-
-
-
 }

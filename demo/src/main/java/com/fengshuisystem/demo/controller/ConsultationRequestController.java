@@ -12,14 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/consultation-requests")
 @RequiredArgsConstructor
 public class ConsultationRequestController {
+
     private final ConsultationRequestServiceImpl consultationRequestService;
-//    @PostMapping("/{packageId}")
+
     @PostMapping
-    public ResponseEntity<ApiResponse<ConsultationRequestDTO>> createRequest(
-//            @PathVariable Integer packageId,
-            @Valid @RequestBody ConsultationRequestDTO requestDTO) {
+    public ResponseEntity<ApiResponse<ConsultationRequestDTO>> createRequest(@Valid @RequestBody ConsultationRequestDTO requestDTO) {
         try {
-//            ConsultationRequestDTO result = consultationRequestService.createRequest(packageId, requestDTO);
             ConsultationRequestDTO result = consultationRequestService.createRequest(requestDTO);
             return ResponseEntity.ok(
                     ApiResponse.<ConsultationRequestDTO>builder()

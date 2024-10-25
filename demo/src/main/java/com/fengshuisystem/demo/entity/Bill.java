@@ -26,12 +26,12 @@ public class Bill {
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "account_id",nullable = false)
     private Account account;
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 
     @Column(name = "sub_amount")

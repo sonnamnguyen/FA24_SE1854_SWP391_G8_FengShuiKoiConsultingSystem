@@ -24,7 +24,8 @@ public class ConsultationResultDTO {
     String status ;
     Instant createdDate;
     String createdBy;
-    Instant updatetedDate;
-    String updatetedBy;
+    // updateted -> updated
+    Instant updatedDate;
+    String updatedBy;
     List<ConsultationShelterDTO> consultationShelters;
 }

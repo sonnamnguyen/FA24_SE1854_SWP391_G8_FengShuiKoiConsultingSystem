@@ -22,7 +22,7 @@ public class Color {
     private Integer id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn
+    @JoinColumn(name = "destiny_id", nullable = false)
     private Destiny destiny;
 
     @Size(max = 50)

@@ -44,14 +44,14 @@ public class Payment {
     private String createdBy;
 
     @NotNull
-    @Column(name = "updateted_date", nullable = false)
-    private Instant updatetedDate;
+    @Column(name = "updated_date", nullable = false)
+    private Instant updatedDate;
 
     @Size(max = 300)
     @NotNull
     @Nationalized
-    @Column(name = "updateted_by", nullable = false, length = 300)
-    private String updatetedBy;
+    @Column(name = "updated_by", nullable = false, length = 300)
+    private String updatedBy;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
