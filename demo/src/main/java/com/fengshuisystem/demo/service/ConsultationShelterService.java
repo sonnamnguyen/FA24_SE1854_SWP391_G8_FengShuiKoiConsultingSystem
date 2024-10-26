@@ -5,5 +5,6 @@ import com.fengshuisystem.demo.dto.ConsultationShelterDTO;
 import java.util.List;
 
 public interface ConsultationShelterService {
-    public ConsultationShelterDTO createConsulationShelter(Integer id, List<Integer> ids, ConsultationShelterDTO consultationShelterDTO);
+    ConsultationShelterDTO createConsultationShelter(ConsultationShelterDTO dto, Integer requestDetailId, Integer shelterCategoryId);
+    List<ConsultationShelterDTO> getSheltersByRequestDetail(Integer requestDetailId);
 }
