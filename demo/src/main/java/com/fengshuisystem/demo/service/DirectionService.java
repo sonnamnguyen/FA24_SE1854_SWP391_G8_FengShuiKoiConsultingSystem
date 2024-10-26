@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface DirectionService {
     List<DirectionDTO> getDirections(Integer destiny);
+    List<DirectionDTO> getAllDirections();
 }

@@ -12,6 +12,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/animals")
 @RequiredArgsConstructor
@@ -67,6 +69,13 @@ public class AnimalController {
     public ApiResponse<AnimalCategoryDTO> getAnimalById(@PathVariable Integer id) {
         return ApiResponse.<AnimalCategoryDTO>builder()
                 .result(animalService.getAnimalById(id))
+                .build();
+    }
+
+    @GetMapping("/animalCategory")
+    public ApiResponse<List<AnimalCategoryDTO>> getAllAnimals() {
+        return ApiResponse.<List<AnimalCategoryDTO>>builder()
+                .result(animalService.getAllAnimalCategory())
                 .build();
     }
 }

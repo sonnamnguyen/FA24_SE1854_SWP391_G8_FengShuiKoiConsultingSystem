@@ -113,11 +113,13 @@ public class ShapeServiceImpl implements ShapeService {
         shape.setDestiny(destiny);
         return shapeMapper.toDto(shapeRepository.saveAndFlush(shape));
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+    @Override
     public List<ShapeDTO> getAllShapes() {
         Status status = Status.ACTIVE;
         return shapeRepository.findAllByStatus(status).stream().map(shapeMapper::toDto).toList();
     }
+
     @Override
     public List<ShapeDTO> getShapesByDestiny(Integer destiny) {
         List<ShapeDTO> shapes = shapeRepository.findAllByDestiny(destiny)
@@ -129,4 +131,5 @@ public class ShapeServiceImpl implements ShapeService {
         }
         return shapes;
     }
+
 }

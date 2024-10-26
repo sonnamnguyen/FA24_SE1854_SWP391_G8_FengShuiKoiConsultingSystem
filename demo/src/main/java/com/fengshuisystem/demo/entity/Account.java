@@ -25,11 +25,11 @@ public class Account {
     private Integer id;
 
     @Size(max = 50)
-    @Column(name = "username", length = 50)
+    @Column(name = "username", length = 50, nullable = false)
     private String userName;
 
     @Size(max = 255)
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Size(max = 255)

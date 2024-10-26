@@ -150,10 +150,21 @@ public class AnimalServiceImpl implements AnimalService {
     }
     @Override
     public List<AnimalCategoryDTO> getAnimalCategoryByColorId(int color) {
-
         return animalRepository.findAllByColorId(color)
                 .stream()
                 .map(animalMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public List<AnimalCategoryDTO> getAllAnimalCategory() {
+        List<AnimalCategoryDTO> animalCategoryDTOS = animalRepository.findAll()
+                .stream()
+                .map(animalMapper::toDto)
+                .toList();
+        if (animalCategoryDTOS.isEmpty()) {
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+        }
+        return animalCategoryDTOS;
     }
 }

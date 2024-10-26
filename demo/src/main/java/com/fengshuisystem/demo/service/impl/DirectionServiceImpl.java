@@ -35,4 +35,16 @@ public class DirectionServiceImpl implements DirectionService {
         }
         return directions;
     }
+
+    @Override
+    public List<DirectionDTO> getAllDirections() {
+        List<DirectionDTO> directions = directionRepository.findAll()
+                .stream()
+                .map(directionMapper::toDto)
+                .toList();
+        if (directions.isEmpty()) {
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+        }
+        return directions;
+    }
 }

@@ -99,7 +99,7 @@ public class DestinyServiceImpl implements DestinyService {
     }
 
     @Override
-    public DestinyDTO getDestinyByDirecton(int directionId) {
+    public DestinyDTO getDestinyByDirection(int directionId) {
         return destinyMapper.toDto(destinyRepository.findByDirectionId(directionId));
     }
 

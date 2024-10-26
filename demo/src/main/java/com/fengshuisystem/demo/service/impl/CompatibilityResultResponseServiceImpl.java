@@ -80,7 +80,7 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
         Set<String> directionsAdvice = new HashSet<>();
         boolean hasDirection = destinyInput.getDirectionId() != null;
         if (hasDirection) {
-            directionDestiny = destinyService.getDestinyByDirecton(destinyInput.getDirectionId());
+            directionDestiny = destinyService.getDestinyByDirection(destinyInput.getDirectionId());
             directionResult = compareDestinyWithExplanation(userDestiny, directionDestiny.getDestiny(), destinyInput.getDirectionName());
             directionScore = Double.parseDouble(directionResult.split(";")[0]);
             if (directionScore < 3.0) {

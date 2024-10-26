@@ -48,7 +48,7 @@ public class DestinyController {
                 .build();
     }
 
-    @GetMapping("/compatibility/{yearOfBirth}")
+    @PostMapping ("/compatibility/{yearOfBirth}")
     public ApiResponse<CompatibilityResultResponse> calculateCompatibility(
             @PathVariable int yearOfBirth,
             @RequestBody DestinyRequest destinyInput) {

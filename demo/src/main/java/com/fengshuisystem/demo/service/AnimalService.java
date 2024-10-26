@@ -14,4 +14,5 @@ public interface AnimalService {
     AnimalCategoryDTO updateAnimal(Integer id, AnimalCategoryDTO request);
     AnimalCategoryDTO getAnimalById(Integer id);
     List<AnimalCategoryDTO> getAnimalCategoryByColorId(int color);
+    List<AnimalCategoryDTO> getAllAnimalCategory();
 }

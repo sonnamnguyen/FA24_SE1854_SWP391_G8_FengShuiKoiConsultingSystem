@@ -13,7 +13,7 @@ public interface DestinyService {
     String findTuongKhacSau(String destiny);
     DestinyDTO getDestinyId(String destiny);
     List<DestinyDTO> getAllDestinyByAnimal(int animalId);
-    DestinyDTO getDestinyByDirecton(int directionId);
+    DestinyDTO getDestinyByDirection(int directionId);
     DestinyDTO getDestinyByShape(int shapeId);
     DestinyDTO getDestinyByNumber(int numberId);
     List<String> getAnimalNames(Integer destinyId, String tuongKhacTruoc, String tuongKhacSau);
