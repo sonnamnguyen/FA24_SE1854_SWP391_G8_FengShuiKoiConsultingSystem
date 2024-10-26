@@ -3,13 +3,14 @@ package com.fengshuisystem.demo.configuration;
 public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
-                "/animals", "/animals/animal-search", "/shelters", "/shelters/{search}",
+                "/animals", "/animals/animal-search", "/shelters", "/shelters/search-name",
                 "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors",
-                "shapes/getAll-Shapes"
+                "shapes/getAll-Shapes", "/users", "/users/search-name", "/roles"
 
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
-                "/animals", "/shelters", "/colors", "/shapes", "/consulation-animal", "/consulation-shelter"
+                "/animals", "/shelters", "/colors", "/shapes", "/consulation-animal", "/consulation-shelter",
+                "/users{userId}/set-roles"
 
         };
 

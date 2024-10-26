@@ -15,8 +15,10 @@ import java.util.List;
 public interface ShapeRepository extends JpaRepository<Shape, Integer> {
     boolean existsByShape(String shape);
     Page<Shape> findAllByStatus(Status status, Pageable pageable);
-    @Query(value = "select s from Shape s where s.status = 'ACTIVE'")
-    Page<Shape> findAlByShape(String shape, Pageable pageable);
+    @Query("SELECT ac FROM Shape ac " +
+            "WHERE ac.status = :status " +
+            "AND (:name IS NULL OR TRIM(:name) = '' OR ac.shape LIKE %:name%)")
+    Page<Shape> findAlByShapeNameContaining(String name, Status status, Pageable pageable);
     @Query(value = "select s from Shape s where s.status = 'ACTIVE'")
     List<Shape> findAllByStatus(Status status);
 }

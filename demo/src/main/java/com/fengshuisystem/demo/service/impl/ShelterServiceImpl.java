@@ -59,9 +59,10 @@ public class ShelterServiceImpl implements ShelterService {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<ShelterCategoryDTO> getSheltersBySearch(String name, int page, int size) {
+        Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
-        var pageData = shelterRepository.findAllByShelterCategoryName(name, pageable);
+        var pageData = shelterRepository.findAllByShelterCategoryNameAndStatusContaining(name, status, pageable);
         if(pageData.isEmpty()) {
             throw new AppException(ErrorCode.SHELTER_NOT_EXISTED);
         }

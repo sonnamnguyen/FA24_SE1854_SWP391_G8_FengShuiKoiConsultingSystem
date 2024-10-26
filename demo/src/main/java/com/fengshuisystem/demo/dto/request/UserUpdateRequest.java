@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
     @Size(min = 4, message = "USERNAME_INVALID")
-    String username;
+    String userName;
 
     @Size(min = 6, message = "INVALID_PASSWORD")
     String password;
@@ -33,5 +33,7 @@ public class UserUpdateRequest {
 
     @Pattern(regexp = "male|female", message = "INVALID_GENDER")
     String gender;
+    String avatar;
+
 
 }
