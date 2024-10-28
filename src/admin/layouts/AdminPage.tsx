@@ -5,10 +5,7 @@ import SidebarAdmin from "./slideBar";
 import NavbarAdmin from "./headerAdmin";
 import '../../css/boostrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AnimalCollection from "../AnimalCollection";
-import AddKoiFish from "../animal/AddKoiFish";
-import ShelterViewAdmin from "../ShelterCollection";
-import ShelterCollection from "../ShelterCollection";
+
 const AdminPage: React.FC = () => {
   return (
     <div className="container-fluid position-relative bg-white d-flex p-0">

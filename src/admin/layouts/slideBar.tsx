@@ -33,7 +33,7 @@ const SidebarAdmin: React.FC = () => {
       <nav className="navbar bg-light navbar-light">
         <Link to="/" className="navbar-brand mx-4 mb-3">
           <h3 className="text-primary">
-            <i className="fa me-2"></i>DASHMIN
+            <i className="fa me-2"></i>FENGSHUIKOI
           </h3>
         </Link>
         <div className="d-flex align-items-center ms-4 mb-4">
@@ -61,7 +61,11 @@ const SidebarAdmin: React.FC = () => {
           <Menu.Item key="1" icon={<AppstoreOutlined />}>
             <Link to="/">Dashboard</Link>
           </Menu.Item>
-
+          <Menu.SubMenu key="sub1" icon={<MailOutlined />} title="USER MANAGEMENT">
+            <Menu.Item key="4">
+              <Link to="/view-user">VIEW USER</Link>
+            </Menu.Item>
+          </Menu.SubMenu>
           <Menu.SubMenu key="sub1" icon={<MailOutlined />} title="KOI FISH ANIMAL">
             <Menu.Item key="2">
               <Link to="/add-koi">ADD KOI FISH</Link>

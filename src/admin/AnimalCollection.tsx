@@ -2,13 +2,13 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import AnimalCategory from "../models/AnimalCategory";
 import Pagination from "../utils/Pagination";
 import { findByAnimalCategory, getAllAnimals } from "./api/AnimalCategoryAPI";
-import { Button, Form, Input, Popconfirm, Modal, Upload, Checkbox, Divider, Carousel, notification } from 'antd';
+import { Button, Form, Input, Popconfirm, Modal, Upload, Checkbox, Divider, Carousel, notification, UploadFile } from 'antd';
 import { Table, Tag, Space } from 'antd';
 
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import api from "../axious/axious";
 import { CheckboxProps } from 'antd';
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from "../firebase/firebase";
 import Color from "../models/Color";
 
@@ -16,7 +16,10 @@ interface Colors {
   id: number;
   color: string;
 }
-
+interface AnimalImage {
+  id: string; // Sử dụng uid làm id
+  imageUrl?: string;
+}
 const AnimalCollection: React.FC = () => {
   const [listAnimalCategory, setListAnimalCategory] = useState<AnimalCategory[]>([]);
   const [reloadData, setReloadData] = useState(true);
@@ -32,6 +35,7 @@ const AnimalCollection: React.FC = () => {
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalCategory | null>(null);
   const pageSize = 10;
+  const [animalImageMetadata, setAnimalImageMetadata] = useState<{ uid: string; name: string; url: string; }[]>([]);
 
   const [apii, contextHolder] = notification.useNotification();
 
@@ -120,6 +124,15 @@ const AnimalCollection: React.FC = () => {
       setSelectedAnimal(animal);
       setIsModalVisible(true);
       setIsUpdateMode(true);
+      // Set existing color IDs for checkedList
+      setCheckedList(animal.colors.map(color => color.id).filter((id): id is number => id !== undefined));
+
+      // Set existing animal images, filtering out undefined image URLs
+      setAnimalImages(
+        animal.animalImages
+          .map((image) => (image.imageUrl ? new File([image.imageUrl], image.imageUrl) : null))
+          .filter((file): file is File => file !== null)
+      );
     }
   };
 
@@ -142,12 +155,14 @@ const AnimalCollection: React.FC = () => {
   };
 
   const uploadImagesToFirebase = async (files: File[]): Promise<string[]> => {
-    const uploadPromises = files.map(async (file) => {
-      const storageRef = ref(storage, `koi_images/${file.name}`);
-      const base64Image = await getBase64(file);
-      await uploadString(storageRef, base64Image, 'data_url');
-      return await getDownloadURL(storageRef);
-    });
+    const uploadPromises = files
+      .filter((file) => file && file.name) // Ensure only valid files with names are processed
+      .map(async (file) => {
+        const storageRef = ref(storage, `koi_images/${file.name}`);
+        const base64Image = await getBase64(file);
+        await uploadString(storageRef, base64Image, 'data_url');
+        return await getDownloadURL(storageRef);
+      });
     return Promise.all(uploadPromises);
   };
 
@@ -160,21 +175,86 @@ const AnimalCollection: React.FC = () => {
     });
   };
 
-  const handleUploadChange = (info: any) => {
-    setAnimalImages(info.fileList.map((file: any) => file.originFileObj));
+  const handleUploadChange = async (info: { fileList: UploadFile[] }) => {
+    const newFiles = info.fileList
+      .map((file: UploadFile) => file.originFileObj as File) // Cast originFileObj to File
+      .filter((file: File) => !!file); // Filter out invalid files
+
+    // Upload new files to Firebase and get the download URLs
+    const uploadedUrls = await uploadImagesToFirebase(newFiles);
+
+    // Update the File objects state
+    setAnimalImages((prevImages) => {
+      const updatedImages = prevImages.filter((prevFile) =>
+        info.fileList.some(
+          (file: UploadFile) =>
+            file.originFileObj &&
+            file.originFileObj.name === prevFile.name &&
+            file.originFileObj.size === prevFile.size
+        )
+      );
+      return [...updatedImages, ...newFiles]; // Keep old files and add new ones
+    });
+
+    // Update the image metadata state (for preview purposes)
+    setAnimalImageMetadata((prevMetadata) => {
+      const newMetadata = newFiles.map((file, index) => ({
+        uid: `${file.name}-${index}`, // Unique ID for the image
+        name: file.name,
+        url: uploadedUrls[index], // Firebase download URL
+      }));
+      return [...prevMetadata, ...newMetadata]; // Always return the array of metadata
+    });
   };
 
   const handleSubmit = async () => {
-    const base64Avatars = await uploadImagesToFirebase(animalImages);
     try {
+      // Upload new images to Firebase
+      const base64Avatars = await uploadImagesToFirebase(animalImages);
+
+      // Get the existing animal images and check which ones need deletion
+      const existingAnimalImages = selectedAnimal?.animalImages || [];
+      const imagesToDelete = existingAnimalImages
+        .filter(image => image.imageUrl !== undefined) // Process only images with URLs
+        .filter(image => {
+          const existingUrl = image.imageUrl;
+          if (!existingUrl) return false; // Skip if there's no URL
+          const existingImageName = existingUrl.split('/').pop(); // Get the filename from URL
+          // Mark images for deletion if not in the new images
+          return !base64Avatars
+            .map(url => url.split('/').pop())
+            .includes(existingImageName || '');
+        })
+        .map(image => image.imageUrl ?? '')
+        .filter(imageUrl => imageUrl !== ''); // Ensure no empty strings
+
+
+
+      // Delete old images from the database
+      if (imagesToDelete.length > 0) {
+        const deleteResponse = await api.post(`/animal-images/${selectedAnimal?.id}`, imagesToDelete);
+        if (deleteResponse.data.code !== 1000) {
+          apii.error({ message: 'Error', description: 'Failed to delete old images.' });
+          return;
+        }
+      }
+
+      // Build the updated image list
+      const updatedAnimalImages = [
+        ...existingAnimalImages.filter(image => !imagesToDelete.includes(image.imageUrl ?? '')),
+        ...base64Avatars.map(url => ({ imageUrl: url }))
+      ];
+
+      // Send update request
       const response = await api.put(`/animals/${selectedAnimal?.id}`, {
         animalCategoryName: selectedAnimal?.animalCategoryName,
         description: selectedAnimal?.description,
         origin: selectedAnimal?.origin,
-        animalImages: base64Avatars.map(url => ({ imageUrl: url })),
+        animalImages: updatedAnimalImages,
         colors: checkedList.map(id => ({ id }))
       });
 
+      // Handle response
       if (response.data.code === 1000) {
         apii.success({ message: 'Success', description: 'Animal has been successfully updated.' });
         setIsModalVisible(false);
@@ -183,9 +263,11 @@ const AnimalCollection: React.FC = () => {
         apii.error({ message: 'Error', description: 'Failed to update animal.' });
       }
     } catch (error) {
+      console.error('Error during update:', error);
       apii.error({ message: 'Error', description: 'Error updating animal.' });
     }
   };
+
 
   const pagination = (page: number) => {
     setPageNow(page);
@@ -359,9 +441,30 @@ const AnimalCollection: React.FC = () => {
                 multiple
                 accept="image/*"
                 showUploadList={true}
-                beforeUpload={() => false}
+                beforeUpload={() => false} // Prevent automatic upload
                 listType="picture-card"
+                fileList={animalImageMetadata.map((file) => ({
+                  uid: file.uid, // Use UID for identification
+                  name: file.name, // File name
+                  status: 'done', // Mark as done after upload
+                  url: file.url, // Firebase URL for preview
+                }))}
                 onChange={handleUploadChange}
+                onRemove={async (file: UploadFile) => {
+                  // Remove image from Firebase Storage
+                  const imageRef = ref(storage, `koi_images/${file.name}`);
+                  await deleteObject(imageRef);
+
+                  // Update the state with the filtered array
+                  setAnimalImageMetadata((prevMetadata) =>
+                    prevMetadata.filter((img) => img.name !== file.name)
+                  );
+
+                  // Also remove the file from animalImages state
+                  setAnimalImages((prevFiles) =>
+                    prevFiles.filter((img) => img.name !== file.name)
+                  );
+                }}
               >
                 <div>
                   <PlusOutlined />
@@ -377,7 +480,7 @@ const AnimalCollection: React.FC = () => {
               <Divider />
               <Checkbox.Group
                 options={plainOptions.map(option => ({ label: option.color, value: option.id }))}
-                value={checkedList}
+                value={checkedList} // Value from checkedList
                 onChange={onChange}
               />
             </Form.Item>
@@ -414,8 +517,26 @@ const AnimalCollection: React.FC = () => {
               <p><strong>Created Date:</strong> {selectedAnimal?.createdDate?.toString()}</p>
               <p><strong>Status:</strong> {selectedAnimal?.status}</p>
               <p><strong>Colors:</strong> {selectedAnimal?.colors?.map((color: any) => color.color).join(', ')}</p>
-              <p><strong>Destiny:</strong> {selectedAnimal?.colors?.map((color: Color) =>
-                color.destiny ? color.destiny : 'No destiny available').join(', ')}</p>
+              <p>
+                <strong>Destiny:</strong> {
+                  selectedAnimal?.colors
+                    ?.flatMap((color: Color) => color.destiny ? color.destiny.destiny : 'No destiny available')
+                    .filter((value, index, self) => self.indexOf(value) === index)
+                    .join(', ')
+                }
+              </p>
+
+              <p>
+                <strong>Numbers:</strong> {
+                  selectedAnimal?.colors
+                    ?.flatMap((color: Color) => color.destiny?.numbers ? color.destiny.numbers : [])
+                    .filter((value, index, self) => self.findIndex(num => num.id === value.id) === index)
+                    .map((number: any) => number.number) // Lấy giá trị number từ object
+                    .join(', ')
+                }
+              </p>
+
+
             </div>
           </div>
         )}

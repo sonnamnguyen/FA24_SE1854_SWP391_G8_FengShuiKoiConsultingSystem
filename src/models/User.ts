@@ -1,3 +1,5 @@
+import Role from "./Role";
+
 class User {
     id?: number;
     username?: string;
@@ -15,7 +17,7 @@ class User {
     createdBy?: string;
     updatedDate?: Date;
     updatedBy?: string;
-
+    roles?: Role[];
     constructor(
         id?: number,
         username?: string,
@@ -33,6 +35,8 @@ class User {
         createdBy?: string,
         updatedDate?: Date,
         updatedBy?: string,
+        roles?: Role[]
+
     ) {
         this.id = id;
         this.username = username;
@@ -50,6 +54,7 @@ class User {
         this.createdBy = createdBy;
         this.updatedDate = updatedDate;
         this.updatedBy = updatedBy;
+        this.roles = roles;
     }
 }
 

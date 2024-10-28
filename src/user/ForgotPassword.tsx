@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { getToken, setToken } from "../service/localStorageService";
+import api from "../axious/axious";
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState<string>("");
@@ -37,55 +38,28 @@ const ForgotPassword: React.FC = () => {
         if (!isEmailValid) {
             return;
         }
-
-
         const data = { email: email };
-        
-
         try {
-            const response = await fetch(`http://localhost:9090/auth/token-email`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+            const response = await api.post(`/auth/token-email`, {
                 body: JSON.stringify(data),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch token");
-            }
-
-            const result = await response.json();
-
-            if (result.code !== 1000) {
-                setAlert(result.message);
+            if (response.data.code !== 1000) {
+                setAlert(response.data.message);
                 return;
             }
-
-            setToken(result.result.token);
+            setToken(response.data.token);
         } catch (error) {
             setAlert("Error: ");
         }
         try {
-            const response = await fetch(`http://localhost:9090/users/forgot-password?email=${email}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${getToken()}`,
-                },
+            const response = await api.post(`/users/forgot-password?email=${email}`, {
                 body: JSON.stringify(data),
             });
-
-            if (response.ok) {
-                const result = await response.json();
-                if (result.code === 1000) {
+                if (response.data.code === 1000) {
                     setStatus("A reset password link has been sent to your email.");
                 } else {
-                    setAlert("Reset password failed: " + result.result);
+                    setAlert("Reset password failed: " + response.data.message);
                 }
-            } else {
-                setAlert("Invalid account.");
-            }
         } catch (error) {
             setAlert("An error occurred during the password reset process.");
         }

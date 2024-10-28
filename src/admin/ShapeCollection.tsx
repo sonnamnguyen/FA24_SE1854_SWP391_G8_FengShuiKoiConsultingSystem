@@ -106,7 +106,7 @@ const ShapeCollection: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await api.delete(`/colors/${id}`);
+      const response = await api.delete(`/shapes/${id}`);
       if (response.data.code === 1000) {
         apii.success({ message: 'Success', description: 'Shape has been successfully deleted.' });
         reloadShapeList();
@@ -126,7 +126,7 @@ const ShapeCollection: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await api.put(`/colors/${selectedShape?.id}`, {
+      const response = await api.put(`/shapes/${selectedShape?.id}`, {
         shape: selectedShape?.shape,
         destiny: { id: selectedDestiny },
       });
@@ -273,7 +273,7 @@ const ShapeCollection: React.FC = () => {
           >
             <Input
               value={selectedShape?.shape}
-              onChange={(e) => setSelectedShape((prev) => prev && { ...prev, color: e.target.value })}
+              onChange={(e) => setSelectedShape((prev) => prev && { ...prev, shape: e.target.value })}
             />
           </Form.Item>
           <Form.Item label="Destiny">

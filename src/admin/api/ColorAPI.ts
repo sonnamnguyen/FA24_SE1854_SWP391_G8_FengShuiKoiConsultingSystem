@@ -10,11 +10,10 @@ interface ResultInterface {
 export async function getAllColors(): Promise<ResultInterface | null> {
     const result: Color[] = [];
     try {
-        const response = await api(`/colors`);
-        const database = response.data;
+        const response = await api.get(`/colors`);
 
-        if (database.code === 1000) {
-            const responseData = database.result.data;
+        if (response.data.code === 1000) {
+            const responseData = response.data.result.data;
             console.log("API Response:", response.data);
             const colors = responseData.map((colorData: any) => ({
                 id: colorData.id,
@@ -41,8 +40,8 @@ export async function getAllColors(): Promise<ResultInterface | null> {
 
             result.push(...colors);
 
-            const pageTotal: number = database.result.totalPages || 1; // Default to 1 if not provided
-            const totalElements: number = database.result.totalElements || result.length; // Fallback to result length if not provided
+            const pageTotal: number = response.data.result.totalPages || 1; // Default to 1 if not provided
+            const totalElements: number = response.data.result.totalElements || result.length; // Fallback to result length if not provided
 
             return {
                 result: result,
@@ -63,10 +62,9 @@ export async function findByColor(name: string): Promise<ResultInterface | null>
     const result: Color[] = [];
 
     try {
-        const response = await api(`/colors/color-search?search=${name}`);
-        const database = response.data;  
-        if (database.code === 1000) {
-            const responseData = database.result.data;
+        const response = await api.get(`/colors/search-colors?name=${name}`);
+        if (response.data.code === 1000) {
+            const responseData = response.data.result.data;
 
                 responseData.forEach((colorData: any) => {
                     result.push({
@@ -91,8 +89,8 @@ export async function findByColor(name: string): Promise<ResultInterface | null>
                     });
                 });
 
-                const pageTotal: number = database.result.totalPages || 1;  // Fallback to 1 if not provided
-                const totalElements: number = database.result.totalElements || result.length;  // Fallback to result length
+                const pageTotal: number = response.data.result.totalPages || 1;  // Fallback to 1 if not provided
+                const totalElements: number = response.data.result.totalElements || result.length;  // Fallback to result length
 
                 return {
                     result: result,

@@ -34,7 +34,7 @@ const Login = () => {
     const { email, password } = values;
 
     try {
-      const response = await fetch(`http://localhost:9090/auth/token`, {
+      const response = await fetch(`http://localhost:7070/auth/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

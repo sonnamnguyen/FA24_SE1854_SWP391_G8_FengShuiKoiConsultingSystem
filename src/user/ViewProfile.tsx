@@ -43,7 +43,7 @@ const ViewProfile: React.FC = () => {
     const body = { password };
 
     try {
-      const response = await api.post("/create-password", body); // Body passed directly
+      const response = await api.post("/users/create-password", body); // Body passed directly
       if (response.data.code !== 1000) {
         throw new Error(response.data.message);
       }

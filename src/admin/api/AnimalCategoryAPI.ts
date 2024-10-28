@@ -1,3 +1,4 @@
+import api from "../../axious/axious";
 import AnimalCategory from "../../models/AnimalCategory";
 import { getToken } from "../../service/localStorageService";
 
@@ -8,114 +9,123 @@ interface ResultInterface {
 }
 
 export async function getAllAnimals(): Promise<ResultInterface | null> {
-    const endpoint: string = `http://localhost:9090/animals`;
     const result: AnimalCategory[] = [];
 
     try {
-        const response = await fetch(endpoint, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${getToken()}` 
-            },
-        });
+        const response = await api.get(`/animals`);
+        
+        if (response.data.code === 1000) {
+            const responseData = response.data.result.data || []; 
 
-        if (response.ok) {
-            const database = await response.json();
-            if (database.code === 1000) {
-                const responseData = database.result.data;
-                for (const key in responseData) {
-                    result.push({
-                        id: responseData[key].id,
-                        animalCategoryName: responseData[key].animalCategoryName,
-                        description: responseData[key].description,
-                        origin: responseData[key].origin,
-                        status: responseData[key].status,
-                        createdDate: responseData[key].createdDate,
-                        createdBy: responseData[key].createdBy,
-                        updatedBy: responseData[key].updatedBy,
-                        colors: responseData[key].colors.map((color: any) => ({
-                            id: color.id,
-                            color: color.color,
-                            destiny: color.destiny ? color.destiny.destiny : null
-                        })),
-                        
-                        animalImages: responseData[key].animalImages.map((image: any) => ({
-                            id: image.id,
-                            imageUrl: image.imageUrl,
-                        })),
-                    });
-                }
-                const pageTotal: number = database.result.totalPages;  
-                const totalElements: number = database.result.totalElements;
-
-                return {
-                    result: result,
-                    pageTotal: pageTotal,
-                    totalElements: totalElements
-                };
+            for (const item of responseData) {
+                result.push({
+                    id: item.id,
+                    animalCategoryName: item.animalCategoryName,
+                    description: item.description,
+                    origin: item.origin,
+                    status: item.status,
+                    createdDate: item.createdDate,
+                    createdBy: item.createdBy,
+                    updatedBy: item.updatedBy,
+                    colors: item.colors?.map((color: any) => ({
+                        id: color.id,
+                        color: color.color,
+                        destiny: color.destiny ? {
+                            id: color.destiny.id,
+                            destiny: color.destiny.destiny,
+                            directions: color.destiny.directions?.map((direction: any) => ({
+                                id: direction.id,
+                                direction: direction.direction
+                            })) || [],
+                            numbers: color.destiny.numbers?.map((number: any) => ({
+                                id: number.id,
+                                number: number.number
+                            })) || []
+                        } : null
+                    })) || [],
+                    animalImages: item.animalImages?.map((image: any) => ({
+                        id: image.id,
+                        imageUrl: image.imageUrl || ""
+                    })) || [],
+                });
             }
+
+            const pageTotal: number = response.data.result.totalPages || 0;
+            const totalElements: number = response.data.result.totalElements || 0;
+
+            return {
+                result: result,
+                pageTotal: pageTotal,
+                totalElements: totalElements,
+            };
         } else {
-            console.error("Failed to fetch data: ", response.status);
+            console.error("Failed to fetch data: ", response.data.message);
             return null;
         }
     } catch (error) {
         console.error("Error fetching animals: ", error);
-        return null; // Indicate failure
+        return null;
     }
-    return null;
-}
-
+}  
 // Hàm tìm kiếm động vật theo category
 export async function findByAnimalCategory(name: string): Promise<ResultInterface | null> {
-    const endpoint: string = `http://localhost:9090/animals/animal-search?search=${name}`;
     const result: AnimalCategory[] = [];
 
     try {
-        const response = await fetch(endpoint, {
-            method: "GET", 
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${getToken()}`
-            },
-        });
+        const response = await api.get(`/animals/animal-search?search=${name}`);
 
-        if (response.ok) {
-            const database = await response.json();
-            if (database.code === 1000) {
-                const responseData = database.result.data;
-                for (const key in responseData) {
-                    result.push({
-                        id: responseData[key].id,
-                        animalCategoryName: responseData[key].animalCategoryName,
-                        description: responseData[key].description,
-                        origin: responseData[key].origin,
-                        status: responseData[key].status,
-                        createdDate: responseData[key].createdDate,
-                        createdBy: responseData[key].createdBy,
-                        updatedDate: responseData[key].updatedDate,
-                        updatedBy: responseData[key].updatedBy,
-                        colors: responseData[key].colors.color,
-                        animalImages: responseData[key].animalImages.imageUrl
-                    });
-                }
-                const pageTotal: number = database.result.totalPages;
-                const totalElements: number = database.result.totalElements;
+        if (response.data.code === 1000) {
+            const responseData = response.data.result.data;
 
-                return {
-                    result: result,
-                    pageTotal: pageTotal,
-                    totalElements: totalElements
-                };
+            for (const item of responseData) {
+                result.push({
+                    id: item.id,
+                    animalCategoryName: item.animalCategoryName,
+                    description: item.description,
+                    origin: item.origin,
+                    status: item.status,
+                    createdDate: item.createdDate,
+                    createdBy: item.createdBy,
+                    updatedDate: item.updatedDate,
+                    updatedBy: item.updatedBy,
+                    colors: item.colors.map((color: any) => ({
+                        id: color.id,
+                        color: color.color,
+                        destiny: color.destiny ? {
+                            id: color.destiny.id,
+                            destiny: color.destiny.destiny,
+                            directions: color.destiny.directions?.map((direction: any) => ({
+                                id: direction.id,
+                                direction: direction.direction
+                            })) || [],
+                            numbers: color.destiny.numbers?.map((number: any) => ({
+                                id: number.id,
+                                number: number.number
+                            })) || []
+                        } : null
+                    })) || [],
+                    animalImages: item.animalImages.map((image: any) => ({
+                        id: image.id,
+                        imageUrl: image.imageUrl,
+                    })),
+                });
             }
+
+            const pageTotal: number = response.data.result.totalPages;
+            const totalElements: number = response.data.result.totalElements;
+
+            return {
+                result: result,
+                pageTotal: pageTotal,
+                totalElements: totalElements,
+            };
         } else {
-            console.error("Failed to fetch data: ", response.status);
+            console.error("Failed to fetch data: ", response.data.message || response.status);
             return null;
         }
     } catch (error) {
         console.error("Error fetching animals: ", error);
-        return null; 
+        return null;
     }
-
-    return null;
 }
+
