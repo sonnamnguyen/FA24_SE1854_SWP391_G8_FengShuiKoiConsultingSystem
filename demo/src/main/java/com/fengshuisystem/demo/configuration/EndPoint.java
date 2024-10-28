@@ -4,13 +4,13 @@ public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
                 "/animals", "/animals/animal-search", "/shelters", "/shelters/search-name",
-                "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors",
-                "shapes/getAll-Shapes", "/users", "/users/search-name", "/roles"
+                "/colors", "shapes",  "/shelter-images", "/destinys", "colors/getAll-Colors",
+                "shapes/getAll-Shapes", "shapes/shape-search", "/users", "/users/search-name", "/roles", "colors/search-colors"
 
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
                 "/animals", "/shelters", "/colors", "/shapes", "/consulation-animal", "/consulation-shelter",
-                "/users{userId}/set-roles"
+                "/users{userId}/set-roles", "/animal-images/{id}", "/shelter-images/{id}"
 
         };
 
