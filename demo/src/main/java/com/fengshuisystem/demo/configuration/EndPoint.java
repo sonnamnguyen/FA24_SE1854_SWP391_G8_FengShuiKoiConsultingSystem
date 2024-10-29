@@ -25,11 +25,11 @@ public class EndPoint {
 
         public static final String[] PUBLIC_ENDPOINTS = {
                 "/users", "/users/admin", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
-                , "/auth/outbound/authentication" , "/roles", "auth/token-email"
+                , "/auth/outbound/authentication" , "/roles", "auth/token-email","api/compatibility/{yearOfBirth}"
         };
         public static final String[] PUBLIC_GET_ENDPOINTS = {
                 "users/existByUserName", "users/existByEmail", "users/activate", "/destinys/destiny/{yearOfBirth}",
-                "/destinys/autoConsultation/{yearOfBirth}", "/destinys/compatibility/{yearOfBirth}"
+                "/destinys/autoConsultation/{yearOfBirth}", "/destinys/compatibility/{yearOfBirth}", "api/consultationDestiny/{yearOfBirth}"
 
         };
         public static final String[] USER_GET_ENDPOINTS = {
