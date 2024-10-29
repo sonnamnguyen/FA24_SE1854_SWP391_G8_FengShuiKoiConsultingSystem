@@ -16,22 +16,11 @@ public class ConsultationRequestDetailController {
 
     private final ConsultationRequestDetailServiceImpl consultationRequestDetailService;
 
-    @PostMapping("/{packageId}")
-    public ApiResponse<ConsultationRequestDetailDTO> createOrUpdateConsultationRequestDetail(
-            @Valid @RequestBody ConsultationRequestDetailDTO requestDTO, @PathVariable Integer packageId) {
-        ConsultationRequestDetailDTO result = consultationRequestDetailService.createOrUpdateDetail(requestDTO, packageId);
+    @PostMapping("/request-id/{requestId}/bill-id/{billId}")
+    public ApiResponse<ConsultationRequestDetailDTO> createConsultationRequestDetail(
+            @Valid @RequestBody ConsultationRequestDetailDTO requestDTO, @PathVariable Integer requestId) {
+        ConsultationRequestDetailDTO result =
+                consultationRequestDetailService.createConsultationRequestDetail(requestDTO, requestId);
         return ApiResponse.<ConsultationRequestDetailDTO>builder().result(result).build();
-    }
-
-    @GetMapping("/{requestDetailId}")
-    public ApiResponse<ConsultationRequestDetailDTO> getRequestDetailById(@PathVariable Integer requestDetailId) {
-        ConsultationRequestDetailDTO detail = consultationRequestDetailService.getRequestDetailById(requestDetailId);
-        return ApiResponse.<ConsultationRequestDetailDTO>builder().result(detail).build();
-    }
-
-    @DeleteMapping("cancel/{requestDetailId}")
-    public ApiResponse<Void> cancelRequestDetail(@PathVariable Integer requestDetailId) {
-        consultationRequestDetailService.cancelRequestDetailById(requestDetailId);
-        return ApiResponse.<Void>builder().result(null).build();
     }
 }

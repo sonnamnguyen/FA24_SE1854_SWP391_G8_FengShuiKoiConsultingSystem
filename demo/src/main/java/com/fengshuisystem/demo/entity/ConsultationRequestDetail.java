@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
@@ -27,6 +28,7 @@ public class ConsultationRequestDetail {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "consultation_request_id", nullable = false)
+    @JsonIgnore
     private ConsultationRequest consultationRequest;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)

@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/bills")
+@RequestMapping("api/bills")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -72,14 +72,14 @@ public class BillController {
     }
 
     // Phần của Khôi
-    @PostMapping("/packages/{packageId}/payments/{paymentId}")
-    public ApiResponse<BillDTO> createBillByPaymentAndPackage(
-            @RequestBody @Valid BillDTO billRequest,
-            @PathVariable Integer packageId,
+    @PostMapping("/request/{requestId}/payments/{paymentId}")
+    public ApiResponse<BillDTO> createBill(
+            @RequestBody @Valid BillDTO billDTO,
+            @PathVariable Integer requestId,
             @PathVariable Integer paymentId) {
-        return ApiResponse.<BillDTO>builder()
-                .result(billService.createBillByPaymentAndPackage(billRequest, packageId, paymentId))
-                .build();
+        BillDTO result = billService.createBillByRequestAndPayment(billDTO, requestId, paymentId);
+        return ApiResponse.<BillDTO>builder().result(result).build();
     }
+
 
 }

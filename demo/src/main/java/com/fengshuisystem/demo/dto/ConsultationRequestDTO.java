@@ -1,6 +1,10 @@
 package com.fengshuisystem.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fengshuisystem.demo.dto.response.UserResponse;
+import com.fengshuisystem.demo.entity.Account;
+import com.fengshuisystem.demo.entity.Bill;
+import com.fengshuisystem.demo.entity.enums.Request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,7 +22,8 @@ public class ConsultationRequestDTO {
     Integer id;
 
     // Thông tin cơ bản về tài khoản người dùng đã đăng nhập (UserResponse thay vì Account)
-    UserResponse account;
+    @JsonIgnore
+    Account account;
 
     // ID của gói dịch vụ được chọn
     Integer packageId;
@@ -27,7 +32,7 @@ public class ConsultationRequestDTO {
     String description;
 
     // Trạng thái của yêu cầu (nên chuyển thành Enum)
-    String status;
+    Request status;
 
     // Thông tin ngày tạo và người tạo
     Instant createdDate;
@@ -42,4 +47,6 @@ public class ConsultationRequestDTO {
 
     // Danh sách kết quả tư vấn liên quan
     List<ConsultationResultDTO> consultationResults;
+
+    List<Bill> bills;
 }

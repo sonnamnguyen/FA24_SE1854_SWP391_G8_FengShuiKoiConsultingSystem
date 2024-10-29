@@ -59,6 +59,7 @@ public class Payment {
     private Status status = Status.ACTIVE;
 
     @OneToMany(mappedBy = "payment", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JsonIgnore
     private Set<Bill> bills = new LinkedHashSet<>();
 
 }
