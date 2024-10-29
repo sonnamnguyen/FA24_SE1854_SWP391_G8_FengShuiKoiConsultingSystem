@@ -31,9 +31,20 @@ public class ConsultationRequestDetailServiceImpl implements ConsultationRequest
     @PreAuthorize("hasRole('USER')")
     @Transactional
     public ConsultationRequestDetailDTO createConsultationRequestDetail(ConsultationRequestDetailDTO detailDTO, Integer requestId) {
-        // Lấy ConsultationRequest dựa trên requestId
+        // Kiểm tra xem ConsultationRequest có tồn tại không
         ConsultationRequest consultationRequest = requestRepository.findById(requestId)
-                .orElseThrow(() -> new RuntimeException("ConsultationRequest không tìm thấy với ID: " + requestId));
+                .orElseThrow(() -> {
+                    String errorMessage = "ConsultationRequest không tìm thấy với ID: " + requestId;
+                    log.error(errorMessage); // Ghi log lỗi
+                    throw new RuntimeException(errorMessage);
+                });
+
+        // Kiểm tra xem chi tiết yêu cầu đã tồn tại cho requestId chưa
+        if (detailRepository.existsByConsultationRequestId(requestId)) {
+            String errorMessage = "Chi tiết yêu cầu đã tồn tại cho ConsultationRequest ID: " + requestId;
+            log.error(errorMessage); // Ghi log lỗi
+            throw new RuntimeException(errorMessage); // Gửi phản hồi lỗi cho FE
+        }
 
         // Khởi tạo đối tượng detail (mới hoặc đã tồn tại)
         ConsultationRequestDetail detail = detailDTO.getId() != null

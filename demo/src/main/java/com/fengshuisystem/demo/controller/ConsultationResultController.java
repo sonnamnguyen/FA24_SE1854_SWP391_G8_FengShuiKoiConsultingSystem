@@ -18,15 +18,26 @@ public class ConsultationResultController {
 
     ConsultationResultService consultationResultService;
 
-    @PostMapping("/{consultationRequestId}")
+    @PostMapping("/requestId/{requestId}")
     public ApiResponse<ConsultationResultDTO> createConsultationResult(
-            @PathVariable Integer consultationRequestId,
+            @PathVariable Integer requestId,
             @RequestBody ConsultationResultDTO consultationResultDTO) {
-        ConsultationResultDTO result = consultationResultService.createConsultationResult(consultationRequestId, consultationResultDTO);
+        ConsultationResultDTO result = consultationResultService.createConsultationResult(requestId, consultationResultDTO);
         return ApiResponse.<ConsultationResultDTO>builder()
                 .result(result)
                 .code(1000)
                 .message("Consultation Result created successfully")
                 .build();
     }
+
+    @PutMapping("/send-email/{resultId}")
+    public ApiResponse<ConsultationResultDTO> updateConsultationResult(@PathVariable Integer resultId) {
+        ConsultationResultDTO result = consultationResultService.updateConsultationResult(resultId);
+        return ApiResponse.<ConsultationResultDTO>builder()
+                .result(result)
+                .code(1000)
+                .message("Consultation Result updated and email sent successfully")
+                .build();
+    }
+
 }

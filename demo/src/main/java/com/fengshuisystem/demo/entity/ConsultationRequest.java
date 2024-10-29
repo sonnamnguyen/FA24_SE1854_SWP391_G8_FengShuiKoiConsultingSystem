@@ -85,8 +85,8 @@ public class ConsultationRequest {
     private Set<ConsultationRequestDetail> consultationRequestDetails = new HashSet<>();
 
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<ConsultationResult> consultationResults = new HashSet<>();
-
 
     @OneToMany(mappedBy = "consultationRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Bill> bills = new HashSet<>();

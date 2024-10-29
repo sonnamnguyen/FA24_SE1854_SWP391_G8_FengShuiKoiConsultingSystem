@@ -18,18 +18,14 @@ public class AnimalCategoryDTO {
     String description;
     String origin;
 
-    // Đổi status sang Enum nếu có tập giá trị cố định
     Status status;
 
-    // Thông tin ngày tạo và cập nhật
     Instant createdDate;
     String createdBy;
     Instant updatedDate;
     String updatedBy;
 
-    // Danh sách ảnh liên quan
     List<AnimalImageDTO> animalImages;
 
-    // Danh sách màu sắc liên quan
     List<ColorDTO> colors;
 }
