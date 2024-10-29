@@ -16,8 +16,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationAnimalDTO {
   Integer id;
-  //  ConsultationResultDTO consultationResult;
-  // Thay đổi từ ConsultationResultDTO sang ID để tránh vòng lặp
   Integer consultationResultId;
   Integer animalCategoryId;
   String description;

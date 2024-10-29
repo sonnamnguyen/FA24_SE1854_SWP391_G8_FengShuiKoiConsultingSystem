@@ -19,8 +19,7 @@ public class ConsultationShelterDTO {
 
   Integer id;
 
-  @JsonIgnore  // Tránh vòng lặp vô hạn trong JSON
-  ConsultationResultDTO consultationResult;
+  Integer consultationResultId;
 
   Integer shelterCategoryId;
 

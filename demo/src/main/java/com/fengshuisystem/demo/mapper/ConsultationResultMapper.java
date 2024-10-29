@@ -14,9 +14,9 @@ public interface ConsultationResultMapper {
     @Mapping(target = "consultationCategoryId", source = "consultationCategory.id")
     ConsultationResultDTO toDto(ConsultationResult entity);
 
-    @Mapping(target = "request.id", source = "consultationRequestId")
-    @Mapping(target = "requestDetail.id", source = "consultationRequestDetailId")
-    @Mapping(target = "account.id", source = "accountId")
-    @Mapping(target = "consultationCategory.id", source = "consultationCategoryId")
+    @Mapping(target = "request", ignore = true)
+    @Mapping(target = "requestDetail", ignore = true)
+    @Mapping(target = "account", ignore = true)
+    @Mapping(target = "consultationCategory", ignore = true)
     ConsultationResult toEntity(ConsultationResultDTO dto);
 }

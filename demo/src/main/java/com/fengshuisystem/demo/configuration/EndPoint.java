@@ -12,12 +12,15 @@ public class EndPoint {
 
         public static final String[] ADMIN_POST_ENDPOINTS = {
                 "/animals", "/shelters", "/colors", "/shapes", "/consulation-animal", "/consulation-shelter","/packages",
-                "/api/consultation-results/{consultationRequestId}"
+                "/api/consultation-results/requestId/{requestId}",
+                "/api/consultation-animals/resultId/{resultId}/animal-category-id/{animalCategoryId}",
+                "/api/consultation-shelters/resultId/{resultId}/shelter-category-id/{shelterCategoryId}",
 
         };
 
         public static final String[] ADMIN_PUT_ENDPOINTS = {
-                "/animals/{id}", "/shelters/{id}", "/colors/{id}",  "/shapes/{id}","api/bills/{id}","/packages/{id}"
+                "/animals/{id}", "/shelters/{id}", "/colors/{id}",  "/shapes/{id}","api/bills/{id}","/packages/{id}",
+                "/api/consultation-results/send-email/{resultId}",
         };
 
         public static final String[] ADMIN_DELETE_ENDPOINTS = {
@@ -44,7 +47,6 @@ public class EndPoint {
                 "users/reset-password","users/forgot-password","/posts","/post/comments","/post/images","api/bills"
                 ,"/api/consultation-requests", "/api/consultation-request-details/request-id/{requestId}/bill-id/{billId}",
                 "api/bills/request/{requestId}/payments/{paymentId}",
-                "/api/consultation-results/{consultationRequestDetailId}"
         };
 
         public static final String[] USER_PUT_ENDPOINTS = {

@@ -20,4 +20,5 @@ public interface ConsultationRequestDetailRepository extends JpaRepository<Consu
     @Query("SELECT crd FROM ConsultationRequestDetail crd WHERE crd.consultationRequest.id = :requestId")
     Optional<ConsultationRequestDetail> findByConsultationRequestId(@Param("requestId") Integer requestId);
 
+    boolean existsByConsultationRequestId(Integer requestId);
 }
