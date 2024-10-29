@@ -1,5 +1,4 @@
 package com.fengshuisystem.demo.dto;
-import com.fengshuisystem.demo.entity.Post;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
