@@ -24,6 +24,11 @@ import ViewAddShape from "../admin/shape/layoutShape/ViewAddShape";
 import ViewColorManagement from "../admin/color/layoutCokor/ViewColorManagement";
 import ViewShapeManagement from "../admin/shape/layoutShape/ViewManagementShape";
 import ViewUserManagement from "../admin/user/UserManagement";
+import ConsultationRequest from "../components/ConsultationRequest"; // Consultation Request
+import PaymentPage from "../components/PaymentPage"; // Thanh toán
+import BillPage from "../components/BillPage"; // In Bill
+
+
 
 
 const AppRoutes = () => {
@@ -63,6 +68,16 @@ const AppRoutes = () => {
         <Route path="/view-color" element={<PageViewColor />} />
         <Route path="/view-shape" element={<PageViewShape />} />
         <Route path="/view-user" element={<PageViewUser />} />
+        {/* Consultation Request */}
+        <Route path="/consultation-request" element={<ConsultationRequest />} />
+        {/* Thanh toán Consultation Request */}
+        <Route path="/consultation-request/:requestId/payment" element={<PaymentPage />} />
+        {/* In Bill */}
+        <Route path="/bill/:billId" element={<BillPage />} />
+
+
+
+
 
 
         
