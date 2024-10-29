@@ -6,7 +6,7 @@ public class EndPoint {
         public static final String[] ADMIN_GET_ENDPOINTS = {
                 "/animals", "/animals/animal-search", "/shelters", "/shelters/{search}",
                 "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors",
-                "shapes/getAll-Shapes","/bills","/bills/status"
+                "shapes/getAll-Shapes","api/bills","api/bills/status"
 
         };
 
@@ -17,7 +17,7 @@ public class EndPoint {
         };
 
         public static final String[] ADMIN_PUT_ENDPOINTS = {
-                "/animals/{id}", "/shelters/{id}", "/colors/{id}",  "/shapes/{id}","/bills/{id}","/packages/{id}"
+                "/animals/{id}", "/shelters/{id}", "/colors/{id}",  "/shapes/{id}","api/bills/{id}","/packages/{id}"
         };
 
         public static final String[] ADMIN_DELETE_ENDPOINTS = {
@@ -41,14 +41,14 @@ public class EndPoint {
         };
 
         public static final String[] USER_POST_ENDPOINTS = {
-                "users/reset-password","users/forgot-password","/posts","/post/comments","/post/images","/bills"
-                ,"/consultation-requests", "/consultation-request-details/package/{packageId}",
-                "/bills/packages/{packageId}/payments/{paymentId}",
+                "users/reset-password","users/forgot-password","/posts","/post/comments","/post/images","api/bills"
+                ,"/api/consultation-requests", "/api/consultation-request-details/request-id/{requestId}/bill-id/{billId}",
+                "api/bills/request/{requestId}/payments/{paymentId}",
                 "/api/consultation-results/{consultationRequestDetailId}"
         };
 
         public static final String[] USER_PUT_ENDPOINTS = {
-                "/posts/{id}","/post/comments/{id}","/post/images/{id}","/bills/{id}"
+                "/posts/{id}","/post/comments/{id}","/post/images/{id}","api/bills/{id}"
         };
 
         public static final String[] USER_DELETE_ENDPOINTS = {
@@ -57,7 +57,7 @@ public class EndPoint {
         };
 
         public static final String[] BOTH_GET_ENDPOINTS = {
-                "/bills/{accountId}/status", "/api/consultation-request-details/{requestDetailId}"
+                "api/bills/{accountId}/status", "/api/consultation-request-details/{requestDetailId}"
 
         };
 

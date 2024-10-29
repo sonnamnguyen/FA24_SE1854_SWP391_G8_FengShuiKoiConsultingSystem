@@ -62,6 +62,7 @@ public class Package {
     private String updatedBy;
 
     @OneToMany(mappedBy = "packageId", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JsonIgnore
     private Set<ConsultationRequest> consultationRequests = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "packageId", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})

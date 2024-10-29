@@ -1,6 +1,7 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.*;
+import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.Package;
 import com.fengshuisystem.demo.entity.enums.BillStatus;
@@ -145,32 +146,36 @@ public class BillServiceImpl implements BillService {
     // Phần của Khôi
     @Override
     @PreAuthorize("hasRole('USER')")
-    public BillDTO createBillByPaymentAndPackage(BillDTO billRequest, Integer packageId, Integer paymentId) {
-        // 1. Lấy email từ JWT principal
+    public BillDTO createBillByRequestAndPayment(
+            BillDTO billRequest, Integer requestId, Integer paymentId) {
+
+        // 1. Lấy email từ JWT
         String email = getCurrentUserEmailFromJwt();
         log.info("Fetched email from JWT: {}", email);
 
-        // 2. Lấy tài khoản từ UserRepository bằng email
+        // 2. Tìm Account dựa trên email
         Account account = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Account not found for email: " + email));
         log.info("Account found: {}", account.getEmail());
 
-
-        // Tìm Payment theo ID
+        // 3. Tìm Payment theo ID
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_EXISTED));
 
-        // Tìm Package theo ID và lấy giá
-        Package packageEntity = packageRepository.findById(packageId)
-                .orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_EXISTED));
+        // 4. Tìm ConsultationRequest theo requestId
+        ConsultationRequest consultationRequest = consultationRequestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("ConsultationRequest not found with ID: " + requestId));
+
+        // 5. Lấy Package và giá từ ConsultationRequest
+        Package packageEntity = consultationRequest.getPackageId();
         BigDecimal subAmount = packageEntity.getPrice();  // Lấy giá từ package
 
-        // Tính toán VAT và tổng tiền
-        BigDecimal vat = BigDecimal.valueOf(0.1); // VAT mặc định 10%
+        // 6. Tính VAT và tổng tiền
+        BigDecimal vat = BigDecimal.valueOf(0.1);  // VAT mặc định là 10%
         BigDecimal vatAmount = subAmount.multiply(vat);
         BigDecimal totalAmount = subAmount.add(vatAmount);
 
-        // Tạo entity từ BillDTO và gán giá trị liên quan
+        // 7. Tạo Bill entity từ DTO và gán các giá trị cần thiết
         Bill bill = billMapper.toEntity(billRequest);
         bill.setAccount(account);
         bill.setPayment(payment);
@@ -178,11 +183,12 @@ public class BillServiceImpl implements BillService {
         bill.setVat(vat);
         bill.setVatAmount(vatAmount);
         bill.setTotalAmount(totalAmount);
+        bill.setConsultationRequest(consultationRequest);
         bill.setStatus(BillStatus.PENDING);
         bill.setCreatedBy(account.getUserName());
         bill.setCreatedDate(Instant.now());
 
-        // Lưu vào cơ sở dữ liệu và trả về DTO
+        // 8. Lưu Bill vào cơ sở dữ liệu và trả về DTO
         Bill savedBill = billRepository.save(bill);
         return billMapper.toDto(savedBill);
     }

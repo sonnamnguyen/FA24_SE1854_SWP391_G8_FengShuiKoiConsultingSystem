@@ -16,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -27,49 +29,19 @@ public class ConsultationRequestDetailServiceImpl implements ConsultationRequest
 
     @Override
     @PreAuthorize("hasRole('USER')")
-    public ConsultationRequestDetailDTO getRequestDetailById(Integer requestDetailId) {
-        ConsultationRequestDetail detail = detailRepository.findById(requestDetailId)
-                .orElseThrow(() -> new RuntimeException("Request detail not found for ID: " + requestDetailId));
-        log.info("ConsultationRequestDetail found for ID: {}", requestDetailId);
-        return detailMapper.toDTO(detail);
-    }
-
-    @Override
-    @PreAuthorize("hasRole('USER')")
     @Transactional
-    public ConsultationRequestDetailDTO createOrUpdateDetail(ConsultationRequestDetailDTO detailDTO, Integer packageId) {
-        // Kiểm tra Package có tồn tại và có trạng thái COMPLETED không
-        ConsultationRequest consultationRequest = requestRepository.findById(packageId)
-                .filter(request -> request.getStatus() == Request.COMPLETED)
-                .orElseThrow(() -> new RuntimeException("Package không tìm thấy hoặc chưa hoàn thành, ID: " + packageId));
+    public ConsultationRequestDetailDTO createConsultationRequestDetail(ConsultationRequestDetailDTO detailDTO, Integer requestId) {
+        // Lấy ConsultationRequest dựa trên requestId
+        ConsultationRequest consultationRequest = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("ConsultationRequest không tìm thấy với ID: " + requestId));
 
-        ConsultationRequestDetail detail;
+        // Khởi tạo đối tượng detail (mới hoặc đã tồn tại)
+        ConsultationRequestDetail detail = detailDTO.getId() != null
+                ? updateExistingDetail(detailDTO)
+                : createNewDetail(detailDTO, consultationRequest);
 
-        if (detailDTO.getId() != null) {
-            // Nếu có ID, tìm và cập nhật chi tiết yêu cầu
-            detail = detailRepository.findById(detailDTO.getId())
-                    .orElseThrow(() -> new RuntimeException("Chi tiết yêu cầu không tìm thấy với ID: " + detailDTO.getId()));
-            detailMapper.updateEntityFromDTO(detailDTO, detail);
-        } else {
-            // Nếu không có ID, tạo mới chi tiết yêu cầu
-            detail = detailMapper.toEntity(detailDTO);
-            detail.setConsultationRequest(consultationRequest);
-        }
-
-        // Xử lý danh sách animalCategoryIds và shelterCategoryIds từ DTO
-        detail.getAnimalCategories().clear(); // Xóa danh mục cũ nếu có
-        detailDTO.getAnimalCategoryIds().forEach(animalCategoryId -> {
-            AnimalCategory animalCategory = new AnimalCategory();  // Tạo đối tượng AnimalCategory
-            animalCategory.setId(animalCategoryId); // Gán ID
-            detail.getAnimalCategories().add(animalCategory); // Thêm vào Set
-        });
-
-        detail.getShelterCategories().clear(); // Xóa danh mục cũ nếu có
-        detailDTO.getShelterCategoryIds().forEach(shelterCategoryId -> {
-            ShelterCategory shelterCategory = new ShelterCategory();  // Tạo đối tượng ShelterCategory
-            shelterCategory.setId(shelterCategoryId); // Gán ID
-            detail.getShelterCategories().add(shelterCategory); // Thêm vào Set
-        });
+        // Xử lý danh mục động vật và nơi trú ẩn từ DTO
+        updateCategories(detail, detailDTO);
 
         // Lưu chi tiết yêu cầu
         ConsultationRequestDetail savedDetail = detailRepository.save(detail);
@@ -78,16 +50,49 @@ public class ConsultationRequestDetailServiceImpl implements ConsultationRequest
         return detailMapper.toDTO(savedDetail);
     }
 
+    /**
+     * Cập nhật một chi tiết yêu cầu đã tồn tại.
+     */
+    private ConsultationRequestDetail updateExistingDetail(ConsultationRequestDetailDTO detailDTO) {
+        return detailRepository.findById(detailDTO.getId())
+                .map(existingDetail -> {
+                    detailMapper.updateEntityFromDTO(detailDTO, existingDetail);
+                    return existingDetail;
+                })
+                .orElseThrow(() -> new RuntimeException("Chi tiết yêu cầu không tìm thấy với ID: " + detailDTO.getId()));
+    }
 
-    @Override
-    @PreAuthorize("hasRole('USER')")
-    @Transactional
-    public void cancelRequestDetailById(Integer requestDetailId) {
-        ConsultationRequestDetail detail = detailRepository.findById(requestDetailId)
-                .orElseThrow(() -> new RuntimeException("Request detail not found for ID: " + requestDetailId));
+    /**
+     * Tạo mới một chi tiết yêu cầu.
+     */
+    private ConsultationRequestDetail createNewDetail(ConsultationRequestDetailDTO detailDTO, ConsultationRequest consultationRequest) {
+        ConsultationRequestDetail newDetail = detailMapper.toEntity(detailDTO);
+        newDetail.setConsultationRequest(consultationRequest);
+        return newDetail;
+    }
 
-        detail.setStatus(Request.CANCELLED);  // Cập nhật trạng thái thành CANCELLED
-        detailRepository.save(detail);  // Lưu lại thay đổi
-        log.info("Cancelled ConsultationRequestDetail with ID: {}", requestDetailId);
+    /**
+     * Cập nhật danh mục động vật và nơi trú ẩn từ DTO.
+     */
+    private void updateCategories(ConsultationRequestDetail detail, ConsultationRequestDetailDTO detailDTO) {
+        detail.setAnimalCategories(
+                detailDTO.getAnimalCategoryIds().stream()
+                        .map(id -> {
+                            AnimalCategory category = new AnimalCategory();
+                            category.setId(id);
+                            return category;
+                        })
+                        .collect(Collectors.toSet())
+        );
+
+        detail.setShelterCategories(
+                detailDTO.getShelterCategoryIds().stream()
+                        .map(id -> {
+                            ShelterCategory category = new ShelterCategory();
+                            category.setId(id);
+                            return category;
+                        })
+                        .collect(Collectors.toSet())
+        );
     }
 }

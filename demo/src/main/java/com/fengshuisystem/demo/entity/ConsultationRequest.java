@@ -1,5 +1,8 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
@@ -26,6 +29,7 @@ public class ConsultationRequest {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "account_id", nullable = false)
+    @JsonIgnore
     private Account account;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
@@ -82,4 +86,8 @@ public class ConsultationRequest {
 
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ConsultationResult> consultationResults = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "consultationRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Bill> bills = new HashSet<>();
 }

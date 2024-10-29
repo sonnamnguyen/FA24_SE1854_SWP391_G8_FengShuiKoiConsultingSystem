@@ -8,4 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface ConsultationRequestRepository extends JpaRepository<ConsultationRequest, Integer> {
+    @Query("SELECT cr FROM ConsultationRequest cr LEFT JOIN FETCH cr.bills WHERE cr.id = :id")
+    Optional<ConsultationRequest> findByIdWithBills(@Param("id") Integer id);
 }
