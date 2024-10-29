@@ -13,5 +13,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnimalCompatibilityResponse {
     double animalScore;
+    String animalName;
+    List<String> animalColors;
     List<String> colorCompatibilityResponses;
 }
