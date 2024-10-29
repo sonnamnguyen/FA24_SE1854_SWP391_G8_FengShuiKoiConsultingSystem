@@ -36,6 +36,10 @@ public class ConsultationRequest {
     @JoinColumn(name = "package_id", nullable = false)
     private Package packageId;
 
+    @NotNull
+    @Column(name = "yob", nullable = false)
+    private Integer yob;
+
     @Size(max = 1000)
     @Nationalized
     @Column(name = "description", length = 1000)

@@ -1,6 +1,7 @@
 package com.fengshuisystem.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.Bill;
@@ -20,6 +21,9 @@ public class ConsultationRequestDTO {
 
     // ID của yêu cầu tư vấn
     Integer id;
+
+    @JsonProperty("yob")  // Đảm bảo JSON có thể ánh xạ vào đúng trường này
+    Integer yob;
 
     // Thông tin cơ bản về tài khoản người dùng đã đăng nhập (UserResponse thay vì Account)
     @JsonIgnore
