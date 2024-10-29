@@ -169,20 +169,23 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
 
                 }
                 if(minCount > 0) {
-                    averageAnimalScore = animalColors.isEmpty() ? 0.0 : animalTotalScore / animalColors.size();
+                    averageAnimalScore = animalColors.isEmpty() ? 0.0 : Math.round(animalTotalScore / animalColors.size()* 100.0) / 100.0;
                 }else{
                     averageAnimalScore = maxScore;
                 }
-                animalListScore += averageAnimalScore;
+                animalListScore +=  averageAnimalScore;
                 animalCompatibilityResponses.add(AnimalCompatibilityResponse.builder()
+                        .animalName(animal.getAnimalName())
                         .animalScore(averageAnimalScore)
+                        .animalColors(animalColors.stream().map(ColorDTO::getColor).toList())
                         .colorCompatibilityResponses(colorCompatibilityResponses)
                         .build());
             }
-            averageAnimalListScore = animalListScore / animals.size();
+            averageAnimalListScore = Math.round(animalListScore / animals.size()* 100.0) / 100.0;;
             if(averageAnimalListScore < 3){
                 animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getAnimals());
-                animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation2().getAnimals());            }
+                animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation2().getAnimals());
+            }
         }
 
         CompatibilityResultResponse.CompatibilityResultResponseBuilder responseBuilder = CompatibilityResultResponse.builder()
@@ -192,12 +195,13 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
             responseBuilder.animalAdvice(animalAdvice);
         } else {
             responseBuilder.animalCompatibilityResponse(animalCompatibilityResponses)
-                    .animalScore(averageAnimalListScore)
+                    .animalAverageScore(averageAnimalListScore)
                     .animalAdvice(animalAdvice);
         }
 
         if (hasDirection) {
             responseBuilder.directionScore(directionScore)
+                    .directionName(destinyInput.getDirectionName())
                     .directionExplanation(directionResult.split(";")[1])
                     .directionsAdvice(directionsAdvice);
         } else {
@@ -206,6 +210,7 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
 
         if (hasShape) {
             responseBuilder.shapeScore(shapeScore)
+                    .shapeName(destinyInput.getShapeName())
                     .shapeExplanation(shapeResult.split(";")[1])
                     .shapesAdvice(shapesAdvice);
         } else {
@@ -213,6 +218,7 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
         }
         if (hasNumber) {
             responseBuilder.numberScore(numberScore)
+                    .number(destinyInput.getNumberName())
                     .numberExplanation(numberResult.split(";")[1])
                     .numbersAdvice(numbersAdvice);
         } else {

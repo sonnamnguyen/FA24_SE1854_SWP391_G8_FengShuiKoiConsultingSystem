@@ -114,7 +114,6 @@ public class ColorServiceImpl implements ColorService {
         return colorMapper.toDto(colorRepository.saveAndFlush(color));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<ColorDTO> getAllColors() {
         Status status = Status.ACTIVE;
         return colorRepository.findAllByStatus(status).stream().map(colorMapper::toDto).toList();

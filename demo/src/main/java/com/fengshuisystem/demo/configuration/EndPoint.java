@@ -5,7 +5,7 @@ public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
                 "/animals", "/animals/animal-search", "/shelters", "/shelters/{search}",
-                "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors","/bills","/bills/status"
+                "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys","/bills","/bills/status"
 
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
@@ -24,12 +24,12 @@ public class EndPoint {
 
         public static final String[] PUBLIC_ENDPOINTS = {
                 "/users", "/users/admin", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
-                , "/auth/outbound/authentication" , "/roles", "auth/token-email", "/destinys/compatibility/{yearOfBirth}"
+                , "/auth/outbound/authentication" , "/roles", "auth/token-email", "/destinys/compatibility/{yearOfBirth}", "api/compatibility/{yearOfBirth}"
         };
         public static final String[] PUBLIC_GET_ENDPOINTS = {
                 "users/existByUserName", "users/existByEmail", "users/activate", "/destinys/destiny/{yearOfBirth}",
                 "/destinys/autoConsultation/{yearOfBirth}", "/api/direction",
-                "shapes/getAll-Shapes", "/api/number", "animals/animalCategory"
+                "shapes/getAll-Shapes", "/api/number", "animals/animalCategory", "api/year" ,"/api/consultationDestiny/{yearOfBirth}", "colors/getAll-Colors"
 
         };
         public static final String[] USER_GET_ENDPOINTS = {

@@ -1,6 +1,5 @@
 package com.fengshuisystem.demo.dto.response;
 
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,9 +10,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AnimalCompatibilityResponse {
-    String animalName;
-    double animalScore;
-    List<String> animalColors;
-    List<String> colorCompatibilityResponses;
+public class ConsultationDestinyResponse {
+    String destiny;
+    List<String> direction;
+    List<String> color;
+    List<String> quantity;
 }
