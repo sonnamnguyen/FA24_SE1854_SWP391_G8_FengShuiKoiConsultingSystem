@@ -12,12 +12,16 @@ import java.util.*;
 
 public class VnPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "https://www.google.com/webhp?hl=vi&sa=X&ved=0ahUKEwi-vp2Sg5OJAxVes1YBHdz9HhEQPAgI";
+//    public static String vnp_ReturnUrl = "https://www.google.com/webhp?hl=vi&sa=X&ved=0ahUKEwi-vp2Sg5OJAxVes1YBHdz9HhEQPAgI";
+    public static String vnp_ReturnUrl = "http://localhost:3000/payment-success"; // Khôi
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
     public static String orderType = "other";
-    public static String vnp_TmnCode = "0CARK38C";
-    public static String secretKey = "VZ25W2N00VUCE83URJ926UBISPXL4OHH";
+//    public static String vnp_TmnCode = "0CARK38C"; // Minh
+    public static String vnp_TmnCode = "UHTFO8F0"; // Khôi
+    // public static String secretKey = "VZ25W2N00VUCE83URJ926UBISPXL4OHH"; // Minh
+    public static String secretKey = "QU0MUEANS34P3OC5ZIIBCYAY1VKK0MGX"; // Khôi
+
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
 //    public static String md5(String message) {

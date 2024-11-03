@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.Bill;
+import com.fengshuisystem.demo.entity.enums.Gender;
 import com.fengshuisystem.demo.entity.enums.Request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,38 +20,33 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationRequestDTO {
 
-    // ID của yêu cầu tư vấn
     Integer id;
 
-    @JsonProperty("yob")  // Đảm bảo JSON có thể ánh xạ vào đúng trường này
+    String fullName;
     Integer yob;
+    Gender gender;
+    String email;
+    String phone;
 
-    // Thông tin cơ bản về tài khoản người dùng đã đăng nhập (UserResponse thay vì Account)
     @JsonIgnore
     Account account;
 
-    // ID của gói dịch vụ được chọn
     Integer packageId;
 
-    // Mô tả yêu cầu tư vấn
     String description;
 
-    // Trạng thái của yêu cầu (nên chuyển thành Enum)
     Request status;
 
-    // Thông tin ngày tạo và người tạo
     Instant createdDate;
     String createdBy;
-
-    // Thông tin ngày cập nhật và người cập nhật
     Instant updatedDate;
     String updatedBy;
 
-    // Danh sách chi tiết yêu cầu tư vấn
+    @JsonIgnore
     List<ConsultationRequestDetailDTO> consultationRequestDetails;
-
-    // Danh sách kết quả tư vấn liên quan
+    @JsonIgnore
     List<ConsultationResultDTO> consultationResults;
 
+    @JsonIgnore
     List<Bill> bills;
 }
