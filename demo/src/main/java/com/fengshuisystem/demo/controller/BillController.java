@@ -82,7 +82,8 @@ public class BillController {
     public ApiResponse<BillDTO> createBill(
             @RequestBody @Valid BillDTO billDTO,
             @PathVariable Integer requestId,
-            @PathVariable Integer paymentId) {
+            @PathVariable Integer paymentId
+    ) {
         BillDTO result = billService.createBillByRequestAndPayment(billDTO, requestId, paymentId);
         return ApiResponse.<BillDTO>builder().result(result).build();
     }

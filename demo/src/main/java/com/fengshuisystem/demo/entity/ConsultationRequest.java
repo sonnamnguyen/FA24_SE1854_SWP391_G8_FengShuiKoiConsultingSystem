@@ -35,6 +35,7 @@ public class ConsultationRequest {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "package_id", nullable = false)
+    @JsonIgnore
     private Package packageId;
 
     @NotNull
@@ -104,12 +105,14 @@ public class ConsultationRequest {
     }
 
     @OneToMany(mappedBy = "consultationRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<ConsultationRequestDetail> consultationRequestDetails = new HashSet<>();
 
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonIgnore
     private Set<ConsultationResult> consultationResults = new HashSet<>();
 
     @OneToMany(mappedBy = "consultationRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Bill> bills = new HashSet<>();
 }

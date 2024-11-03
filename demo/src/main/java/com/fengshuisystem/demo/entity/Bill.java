@@ -30,7 +30,6 @@ public class Bill {
     @NotNull(message = "Account must not be null")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
     @JoinColumn(name = "account_id",nullable = false)
-    @JsonIgnore
     private Account account;
 
     @NotNull(message = "Payment must not be null")
@@ -73,7 +72,7 @@ public class Bill {
     @ManyToMany(mappedBy = "bills", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Package> packageFields = new LinkedHashSet<>();
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "consultation_request_id", nullable = false)
     private ConsultationRequest consultationRequest;
 

@@ -30,7 +30,6 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
     @Override
     @PreAuthorize("hasRole('USER')")
     public ConsultationRequestDTO createConsultationRequest(ConsultationRequestDTO requestDTO) {
-        // 1. Lấy email từ JWT principal
         String email = getCurrentUserEmailFromJwt();
         log.info("Fetched email from JWT: {}", email);
 

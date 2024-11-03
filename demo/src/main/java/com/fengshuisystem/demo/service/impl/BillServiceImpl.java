@@ -150,33 +150,27 @@ public class BillServiceImpl implements BillService {
     public BillDTO createBillByRequestAndPayment(
             BillDTO billRequest, Integer requestId, Integer paymentId) {
 
-        // 1. Lấy email từ JWT
         String email = getCurrentUserEmailFromJwt();
         log.info("Fetched email from JWT: {}", email);
 
-        // 2. Tìm Account dựa trên email
         Account account = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Account not found for email: " + email));
         log.info("Account found: {}", account.getEmail());
 
-        // 3. Tìm Payment theo ID
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_EXISTED));
 
-        // 4. Tìm ConsultationRequest theo requestId
+
         ConsultationRequest consultationRequest = consultationRequestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("ConsultationRequest not found with ID: " + requestId));
 
-        // 5. Lấy Package và giá từ ConsultationRequest
         Package packageEntity = consultationRequest.getPackageId();
-        BigDecimal subAmount = packageEntity.getPrice();  // Lấy giá từ package
+        BigDecimal subAmount = packageEntity.getPrice();
 
-        // 6. Tính VAT và tổng tiền
-        BigDecimal vat = BigDecimal.valueOf(0.1);  // VAT mặc định là 10%
+        BigDecimal vat = BigDecimal.valueOf(0.1);
         BigDecimal vatAmount = subAmount.multiply(vat);
         BigDecimal totalAmount = subAmount.add(vatAmount);
 
-        // 7. Tạo Bill entity từ DTO và gán các giá trị cần thiết
         Bill bill = billMapper.toEntity(billRequest);
         bill.setAccount(account);
         bill.setPayment(payment);
@@ -189,7 +183,6 @@ public class BillServiceImpl implements BillService {
         bill.setCreatedBy(account.getUserName());
         bill.setCreatedDate(Instant.now());
 
-        // 8. Lưu Bill vào cơ sở dữ liệu và trả về DTO
         Bill savedBill = billRepository.save(bill);
         return billMapper.toDto(savedBill);
     }
