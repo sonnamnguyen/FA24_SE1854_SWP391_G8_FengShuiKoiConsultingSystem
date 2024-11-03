@@ -17,7 +17,7 @@ public interface BillService {
     public BillDTO updateBill(Integer id, BillDTO billDTO);
 
     // Khôi
-    public BillDTO createBillByRequestAndPayment(BillDTO billRequest, Integer requestId, Integer paymentId);
+    public BillDTO createBillByRequestAndPayment(Integer requestId, Integer paymentId);
     public BillDTO getBillById(Integer billId);
     public void updateStatusAfterPayment(Integer billId, BillStatus billStatus, Request requestStatus);
 

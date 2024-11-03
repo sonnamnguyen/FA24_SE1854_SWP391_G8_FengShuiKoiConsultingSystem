@@ -147,8 +147,7 @@ public class BillServiceImpl implements BillService {
     // Phần của Khôi
     @Override
     @PreAuthorize("hasRole('USER')")
-    public BillDTO createBillByRequestAndPayment(
-            BillDTO billRequest, Integer requestId, Integer paymentId) {
+    public BillDTO createBillByRequestAndPayment(Integer requestId, Integer paymentId) {
 
         String email = getCurrentUserEmailFromJwt();
         log.info("Fetched email from JWT: {}", email);
@@ -171,7 +170,7 @@ public class BillServiceImpl implements BillService {
         BigDecimal vatAmount = subAmount.multiply(vat);
         BigDecimal totalAmount = subAmount.add(vatAmount);
 
-        Bill bill = billMapper.toEntity(billRequest);
+        Bill bill = new Bill();
         bill.setAccount(account);
         bill.setPayment(payment);
         bill.setSubAmount(subAmount);
