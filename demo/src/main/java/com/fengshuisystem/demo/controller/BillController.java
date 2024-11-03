@@ -80,11 +80,10 @@ public class BillController {
     // Phần của Khôi
     @PostMapping("/request/{requestId}/payments/{paymentId}")
     public ApiResponse<BillDTO> createBill(
-            @RequestBody @Valid BillDTO billDTO,
             @PathVariable Integer requestId,
             @PathVariable Integer paymentId
     ) {
-        BillDTO result = billService.createBillByRequestAndPayment(billDTO, requestId, paymentId);
+        BillDTO result = billService.createBillByRequestAndPayment(requestId, paymentId);
         return ApiResponse.<BillDTO>builder().result(result).build();
     }
 
