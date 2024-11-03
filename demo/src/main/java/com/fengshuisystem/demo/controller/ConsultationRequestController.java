@@ -17,7 +17,6 @@ public class ConsultationRequestController {
 
     private final ConsultationRequestServiceImpl consultationRequestService;
 
-    // Create
     @PostMapping
     public ApiResponse<ConsultationRequestDTO> createConsultationRequest(@Valid @RequestBody ConsultationRequestDTO requestDTO) {
         return ApiResponse.<ConsultationRequestDTO>builder()
