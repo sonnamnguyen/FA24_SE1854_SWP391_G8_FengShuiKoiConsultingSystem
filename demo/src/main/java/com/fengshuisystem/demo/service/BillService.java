@@ -3,6 +3,7 @@ import com.fengshuisystem.demo.dto.BillDTO;
 import com.fengshuisystem.demo.dto.ConsultationRequestDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.enums.BillStatus;
+import com.fengshuisystem.demo.entity.enums.Request;
 
 import java.util.List;
 
@@ -17,4 +18,8 @@ public interface BillService {
 
     // Khôi
     public BillDTO createBillByRequestAndPayment(BillDTO billRequest, Integer requestId, Integer paymentId);
+    public BillDTO getBillById(Integer billId);
+    public void updateStatusAfterPayment(Integer billId, BillStatus billStatus, Request requestStatus);
+
+    Integer getRequestIdByBillId(Integer billId);
 }

@@ -40,7 +40,9 @@ public class EndPoint {
         };
 
         public static final String[] USER_GET_ENDPOINTS = {
-                "/posts","/posts/search-posts","/post/comments","/post/images","/vn_pay/create_vn_pay", "/consultation-request-details/{id}", "/api/consultation-request-details/{requestDetailId}"
+                "/posts","/posts/search-posts","/post/comments","/post/images", "/consultation-request-details/{id}", "/api/consultation-request-details/{requestDetailId}",
+                "api/bills/{billId}",
+//                "/vn_pay/create_vn_pay"
         };
 
         public static final String[] USER_POST_ENDPOINTS = {
@@ -59,7 +61,8 @@ public class EndPoint {
         };
 
         public static final String[] BOTH_GET_ENDPOINTS = {
-                "api/bills/{accountId}/status", "/api/consultation-request-details/{requestDetailId}"
+                "api/bills/{accountId}/status", "/api/consultation-request-details/{requestDetailId}",
+                "api/bills/{billId}"
 
         };
 

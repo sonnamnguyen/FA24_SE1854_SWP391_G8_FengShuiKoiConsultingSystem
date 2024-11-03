@@ -5,6 +5,7 @@ import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.Package;
 import com.fengshuisystem.demo.entity.enums.BillStatus;
+import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.BillMapper;
@@ -193,12 +194,56 @@ public class BillServiceImpl implements BillService {
         return billMapper.toDto(savedBill);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public BillDTO getBillById(Integer billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Bill not found with ID: " + billId));
+
+        return billMapper.toDto(bill);
+    }
+
     // Phương thức lấy email từ JWT
     private String getCurrentUserEmailFromJwt() {
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = jwt.getClaimAsString("sub");  // Lấy email từ claim "email"
         log.info("Extracted email from JWT: {}", email);
         return email;
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public void updateStatusAfterPayment(Integer billId, BillStatus billStatus, Request requestStatus) {
+        // 1. Lấy Bill từ cơ sở dữ liệu
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Bill not found with ID: " + billId));
+
+        // 2. Lấy ConsultationRequest từ Bill
+        ConsultationRequest consultationRequest = bill.getConsultationRequest();
+        if (consultationRequest == null) {
+            throw new RuntimeException("ConsultationRequest not found for Bill ID: " + billId);
+        }
+
+        // 3. Cập nhật trạng thái của Bill và ConsultationRequest
+        bill.setStatus(BillStatus.PAID);
+        consultationRequest.setStatus(Request.COMPLETED);
+
+        // 4. Lưu các thay đổi vào cơ sở dữ liệu
+        billRepository.save(bill);
+        consultationRequestRepository.save(consultationRequest);
+
+        log.info("Updated status for Bill ID: {} to {}, and ConsultationRequest ID: {} to {}",
+                billId, billStatus, consultationRequest.getId(), requestStatus);
+    }
+
+    @Override
+    public Integer getRequestIdByBillId(Integer billId) {
+        // Lấy Bill từ database
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Bill với ID: " + billId));
+
+        // Lấy requestId từ Bill
+        return bill.getConsultationRequest().getId();
     }
 
 }

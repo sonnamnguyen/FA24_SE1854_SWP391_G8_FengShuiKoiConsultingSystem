@@ -3,6 +3,7 @@ package com.fengshuisystem.demo.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fengshuisystem.demo.dto.response.UserResponse;
+import com.fengshuisystem.demo.entity.enums.Gender;
 import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
@@ -37,8 +38,25 @@ public class ConsultationRequest {
     private Package packageId;
 
     @NotNull
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
+    @NotNull
     @Column(name = "yob", nullable = false)
     private Integer yob;
+
+    @NotNull
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @NotNull
+    @Column(name = "phone", nullable = false)
+    private String phone;
 
     @Size(max = 1000)
     @Nationalized

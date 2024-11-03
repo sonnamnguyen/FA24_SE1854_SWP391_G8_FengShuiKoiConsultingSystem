@@ -34,34 +34,32 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
         String email = getCurrentUserEmailFromJwt();
         log.info("Fetched email from JWT: {}", email);
 
-        // 2. Lấy tài khoản từ UserRepository bằng email
         Account account = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Account not found for email: " + email));
         log.info("Account found: {}", account.getEmail());
 
-        // 3. Lấy gói dịch vụ từ PackageRepository
         Package packageEntity = packageRepository.findById(requestDTO.getPackageId())
                 .orElseThrow(() -> new RuntimeException("Package not found for ID: " + requestDTO.getPackageId()));
         log.info("Package found: {}", packageEntity.getPackageName());
 
-        // 4. Ánh xạ từ DTO sang Entity và gán tài khoản + gói dịch vụ
         ConsultationRequest consultationRequest = consultationRequestMapper.toEntity(requestDTO);
         consultationRequest.setAccount(account);
         consultationRequest.setPackageId(packageEntity);
         consultationRequest.setStatus(Request.PENDING);
+        consultationRequest.setFullName(requestDTO.getFullName());
+        consultationRequest.setGender(requestDTO.getGender()); // combo box
+        consultationRequest.setEmail(requestDTO.getEmail());
+        consultationRequest.setPhone(requestDTO.getPhone());
 
-        // 5. Lưu vào database
         ConsultationRequest savedRequest = consultationRequestRepository.save(consultationRequest);
         log.info("Consultation request saved with ID: {}", savedRequest.getId());
 
-        // 6. Trả về DTO sau khi lưu thành công
         return consultationRequestMapper.toDTO(savedRequest);
     }
 
-    // Phương thức lấy email từ JWT
     private String getCurrentUserEmailFromJwt() {
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = jwt.getClaimAsString("sub");  // Lấy email từ claim "email"
+        String email = jwt.getClaimAsString("sub");
         log.info("Extracted email from JWT: {}", email);
         return email;
     }

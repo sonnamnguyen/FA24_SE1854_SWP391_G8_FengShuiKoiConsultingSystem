@@ -2,6 +2,7 @@ package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.ConsultationRequestDTO;
+import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.service.impl.ConsultationRequestServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +17,12 @@ public class ConsultationRequestController {
 
     private final ConsultationRequestServiceImpl consultationRequestService;
 
+    // Create
     @PostMapping
     public ApiResponse<ConsultationRequestDTO> createConsultationRequest(@Valid @RequestBody ConsultationRequestDTO requestDTO) {
         return ApiResponse.<ConsultationRequestDTO>builder()
                 .result(consultationRequestService.createConsultationRequest(requestDTO))
                 .build();
     }
+
 }
