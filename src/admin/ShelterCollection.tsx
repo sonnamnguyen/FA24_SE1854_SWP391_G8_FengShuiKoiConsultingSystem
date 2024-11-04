@@ -1,19 +1,20 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import AnimalCategory from "../models/AnimalCategory";
-import Pagination from "../utils/Pagination";
-import { Button, Form, Input, Popconfirm, Modal, Upload, Checkbox, Divider, Carousel, notification } from 'antd';
+import { Button, Form, Input, Popconfirm, Modal, Upload, Checkbox, Divider, Carousel, notification, UploadFile, Pagination } from 'antd';
 import { Table, Tag, Space } from 'antd';
 import { Radio } from 'antd';
 
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import api from "../axious/axious";
 import { CheckboxProps } from 'antd';
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from "../firebase/firebase";
 import Color from "../models/Color";
 import ShelterCategory from "../models/ShelterCategory";
 import { findByShelterCategory, getAllShelters } from "./api/ShelterCategoryAPI";
 import Shape from "../models/Shape";
+import DestinyTuongSinh from "../models/DestinyTuongSinh";
+import DestinyTuongKhac from "../models/DestinyTuongKhac";
 
 interface Shapes {
   id: number;
@@ -25,7 +26,7 @@ const ShelterCollection: React.FC = () => {
   const [reloadData, setReloadData] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pageNow, setPageNow] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [name, setName] = useState("");
   const [searchReload, setSearchReload] = useState("");
   const [plainOptions, setPlainOptions] = useState<Shapes[]>([]);
@@ -35,20 +36,23 @@ const ShelterCollection: React.FC = () => {
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [selectedShelter, setSelectedShelter] = useState<ShelterCategory | null>(null);
   const [selectedShape, setSelectedShape] = useState<number | null>(null);
-
+  const [animalImageMetadata, setAnimalImageMetadata] = useState<{ uid: string; name: string; url: string; }[]>([]);
+  const [destinyToTuongSinhMap, setDestinyToTuongSinhMap] = useState<{ [key: string]: DestinyTuongSinh[] }>({});
+  const [destinyToTuongKhacMap, setDestinyToTuongKhacMap] = useState<{ [key: string]: DestinyTuongKhac[] }>({});
   const pageSize = 10;
 
   const [apii, contextHolder] = notification.useNotification();
 
-  const reloadShelterList = () => {
+  const reloadShelterList = (page: number = 1) => {
     setReloadData(true);
 
     if (name === "") {
-      getAllShelters()
+      getAllShelters(page, pageSize)
         .then((shelterData) => {
           if (shelterData) {
             setListShelterCategory(shelterData.result);
-            setTotalPage(shelterData.pageTotal);
+            setTotalElements(shelterData.totalElements);
+            setPageNow(page);
           } else {
             setError("No data found.");
           }
@@ -59,11 +63,12 @@ const ShelterCollection: React.FC = () => {
           setReloadData(false);
         });
     } else {
-      findByShelterCategory(name)
+      findByShelterCategory(name, page, pageSize)
         .then((shelterData) => {
           if (shelterData) {
             setListShelterCategory(shelterData.result);
-            setTotalPage(shelterData.pageTotal);
+            setTotalElements(shelterData.totalElements);
+            setPageNow(page);
           } else {
             setError("No data found.");
           }
@@ -82,11 +87,14 @@ const ShelterCollection: React.FC = () => {
       setPlainOptions(colors || []);
     };
     fetchShapes();
-    reloadShelterList();
+    reloadShelterList(pageNow);
   }, [pageNow, name]);
 
 
-
+  const onPaginationChange = (page: number) => {
+    setPageNow(page); // Cập nhật trạng thái để hiển thị trang mới
+    reloadShelterList(page); // Gọi lại API với trang mới
+  };
 
   const getAllShapes = async (): Promise<Shapes[] | null> => {
     try {
@@ -111,12 +119,49 @@ const ShelterCollection: React.FC = () => {
     }
   };
 
-  const handleUpdate = (id: number) => {
+  const handleUpdate = async (id: number) => {
     const shelter = listShelterCategory.find(shelter => shelter.id === id);
     if (shelter) {
       setSelectedShelter(shelter);
       setIsModalVisible(true);
       setIsUpdateMode(true);
+      setSelectedShape(shelter.shape?.id || null)
+      // Check if shelterImages exists and is an array
+      if (shelter.shelterImages && Array.isArray(shelter.shelterImages)) {
+        const validImageMetadata = await Promise.all(
+          shelter.shelterImages.map(async (image, index) => {
+            if (image.imageUrl) {
+              try {
+                // Parse and extract the actual storage path from full Firebase URLs
+                const imagePath = image.imageUrl.startsWith("https://")
+                  ? decodeURIComponent(image.imageUrl.split("/o/")[1].split("?")[0])
+                  : image.imageUrl; // If already a storage path, use directly
+
+                // Attempt to retrieve download URL for the parsed path
+                await getDownloadURL(ref(storage, imagePath));
+
+                return {
+                  uid: `${image.imageUrl}-${index}`,
+                  name: `Image-${index + 1}`,
+                  url: image.imageUrl,
+                };
+              } catch (error) {
+                console.warn(`Image not found: ${image.imageUrl}`, error);
+                return null; // Skip if image doesn't exist
+              }
+            }
+            return null;
+          })
+        );
+
+        setAnimalImageMetadata(
+          validImageMetadata.filter((img): img is { uid: string; name: string; url: string } => img !== null)
+        );
+      } else {
+        console.warn('No images found for this shelter.');
+        // Optionally, handle the case where shelterImages is undefined or not an array
+        setAnimalImageMetadata([]); // or any other fallback
+      }
     }
   };
 
@@ -157,14 +202,75 @@ const ShelterCollection: React.FC = () => {
     });
   };
 
-  const handleUploadChange = (info: any) => {
-    setShelterImages(info.fileList.map((file: any) => file.originFileObj));
+
+  const handleUploadChange = async (info: { fileList: UploadFile[] }) => {
+    const newFiles = info.fileList
+      .map((file: UploadFile) => file.originFileObj as File) // Cast originFileObj to File
+      .filter((file: File) => !!file); // Filter out invalid files
+
+    // Upload new files to Firebase and get the download URLs
+    const uploadedUrls = await uploadImagesToFirebase(newFiles);
+
+    // Update the File objects state
+    setShelterImages((prevImages) => {
+      const updatedImages = prevImages.filter((prevFile) =>
+        info.fileList.some(
+          (file: UploadFile) =>
+            file.originFileObj &&
+            file.originFileObj.name === prevFile.name &&
+            file.originFileObj.size === prevFile.size
+        )
+      );
+      return [...updatedImages, ...newFiles]; // Keep old files and add new ones
+    });
+
+    // Update the image metadata state (for preview purposes)
+    setAnimalImageMetadata((prevMetadata) => {
+      const newMetadata = newFiles.map((file, index) => ({
+        uid: `${file.name}-${index}`, // Unique ID for the image
+        name: file.name,
+        url: uploadedUrls[index], // Firebase download URL
+      }));
+      return [...prevMetadata, ...newMetadata]; // Always return the array of metadata
+    });
   };
 
   const handleSubmit = async () => {
     const base64Avatars = await uploadImagesToFirebase(shelterImages);
+    const existingAnimalImages = selectedShelter?.shelterImages || [];
+    const imagesToDelete = existingAnimalImages
+      .filter(image => image.imageUrl !== undefined) // Process only images with URLs
+      .filter(image => {
+        const existingUrl = image.imageUrl;
+        if (!existingUrl) return false; // Skip if there's no URL
+        const existingImageName = existingUrl.split('/').pop(); // Get the filename from URL
+        // Mark images for deletion if not in the new images
+        return !base64Avatars
+          .map(url => url.split('/').pop())
+          .includes(existingImageName || '');
+      })
+      .map(image => image.imageUrl ?? '')
+      .filter(imageUrl => imageUrl !== ''); // Ensure no empty strings
+
+
+
+    // Delete old images from the database
+    if (imagesToDelete.length > 0) {
+      const deleteResponse = await api.post(`/shelter-images/${selectedShelter?.id}`, imagesToDelete);
+      if (deleteResponse.data.code !== 1000) {
+        apii.error({ message: 'Error', description: 'Failed to delete old images.' });
+        return;
+      }
+    }
+
+    // Build the updated image list
+    const updatedShelterImages = [
+      ...existingAnimalImages.filter(image => !imagesToDelete.includes(image.imageUrl ?? '')),
+      ...base64Avatars.map(url => ({ imageUrl: url }))
+    ];
+
     try {
-      const response = await api.put(`/animals/${selectedShelter?.id}`, {
+      const response = await api.put(`/shelters/${selectedShelter?.id}`, {
         shelterCategoryName: selectedShelter?.shelterCategoryName,
         description: selectedShelter?.description,
         shape: { id: selectedShape },
@@ -174,7 +280,7 @@ const ShelterCollection: React.FC = () => {
         diameter: selectedShelter?.diameter,
         waterVolume: selectedShelter?.waterVolume,
         waterFiltrationSystem: selectedShelter?.waterFiltrationSystem,
-        shelterImages: base64Avatars.map(url => ({ imageUrl: url })),
+        shelterImages: updatedShelterImages,
       });
 
       if (response.data.code === 1000) {
@@ -189,9 +295,6 @@ const ShelterCollection: React.FC = () => {
     }
   };
 
-  const pagination = (page: number) => {
-    setPageNow(page);
-  };
 
   const handleSearch = () => {
     setName(searchReload);
@@ -282,7 +385,39 @@ const ShelterCollection: React.FC = () => {
   const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchReload(e.target.value);
   };
+  const fetchDestinyTuongSinh = async (destinyName: string) => {
+    try {
+      const response = await api.get(`/destinys/${destinyName}`);
+      if (response.data.code === 1000) {
+        const tuongSinhData = response.data.result.destinyTuongSinhs;
+        const tuongKhacData = response.data.result.destinyTuongKhacs;
 
+        const newDestinyTuongSinhs = tuongSinhData.map((item: any) => new DestinyTuongSinh(item.name));
+        const newDestinyTuongKhac = tuongKhacData.map((item: any) => new DestinyTuongKhac(item.name));
+
+        // Update the map with the new data for the specific destiny
+        setDestinyToTuongSinhMap((prev) => ({
+          ...prev,
+          [destinyName]: newDestinyTuongSinhs,
+        }));
+        setDestinyToTuongKhacMap((prev) => ({
+          ...prev,
+          [destinyName]: newDestinyTuongKhac,
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching DestinyTuongSinh:", error);
+    }
+  };
+
+
+
+  useEffect(() => {
+    const destinyName = selectedShelter?.shape?.destiny?.destiny;
+    if (destinyName) {
+      fetchDestinyTuongSinh(destinyName);
+    }
+  }, [selectedShelter?.shape?.destiny?.destiny]);
   return (
     <>
       {contextHolder}
@@ -309,10 +444,13 @@ const ShelterCollection: React.FC = () => {
         rowKey="id"
       />
       <Pagination
-        currentPage={pageNow}
-        totalPages={totalPage}
-        pagination={pagination}
+        current={pageNow}
+        total={totalElements}
+        pageSize={pageSize}
+        onChange={onPaginationChange}
+        style={{ textAlign: 'end', marginTop: '20px' }}
       />
+
       <Modal
         title={isUpdateMode ? "Update Shelter Details" : "Shelter Details"}
         open={isModalVisible}
@@ -421,9 +559,30 @@ const ShelterCollection: React.FC = () => {
                 multiple
                 accept="image/*"
                 showUploadList={true}
-                beforeUpload={() => false}
+                beforeUpload={() => false} // Prevent automatic upload
                 listType="picture-card"
+                fileList={animalImageMetadata.map((file) => ({
+                  uid: file.uid, // Use UID for identification
+                  name: file.name, // File name
+                  status: 'done', // Mark as done after upload
+                  url: file.url, // Firebase URL for preview
+                }))}
                 onChange={handleUploadChange}
+                onRemove={async (file: UploadFile) => {
+                  // Remove image from Firebase Storage
+                  const imageRef = ref(storage, `shelter_images/${file.name}`);
+                  await deleteObject(imageRef);
+
+                  // Update the state with the filtered array
+                  setAnimalImageMetadata((prevMetadata) =>
+                    prevMetadata.filter((img) => img.name !== file.name)
+                  );
+
+                  // Also remove the file from animalImages state
+                  setShelterImages((prevFiles) =>
+                    prevFiles.filter((img) => img.name !== file.name)
+                  );
+                }}
               >
                 <div>
                   <PlusOutlined />
@@ -486,8 +645,23 @@ const ShelterCollection: React.FC = () => {
               <p><strong>Status:</strong> {selectedShelter?.status}</p>
 
               {/* Destiny Section */}
-              <p><strong>Destiny:</strong> {selectedShelter?.shape?.destiny?.destiny || 'No destiny available'}</p>
-
+              <p><strong>Mutual Accord:</strong> {selectedShelter?.shape?.destiny?.destiny || 'No destiny available'}</p>
+              <p><strong>Mutual Generation:</strong>
+                {(() => {
+                  const destinyName = selectedShelter?.shape?.destiny?.destiny;
+                  const tuongSinhList = destinyName ? destinyToTuongSinhMap[destinyName] || [] : [];
+                  const tuongSinhNames = tuongSinhList.map((tuongSinh) => tuongSinh.name).join(', ');
+                  return tuongSinhNames || "No data available";
+                })()}
+              </p>
+              <p><strong>Mutual Overcoming:</strong>
+                {(() => {
+                  const destinyName = selectedShelter?.shape?.destiny?.destiny;
+                  const tuongKhacList = destinyName ? destinyToTuongKhacMap[destinyName] || [] : [];
+                  const tuongKhacNames = tuongKhacList.map((tuongKhac) => tuongKhac.name).join(', ');
+                  return tuongKhacNames || "No data available";
+                })()}
+              </p>
               {/* Direction of Destiny */}
               <p><strong>Directions:</strong>
                 {selectedShelter?.shape?.destiny?.directions && selectedShelter.shape.destiny.directions.length > 0

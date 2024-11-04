@@ -9,7 +9,7 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 }
 
 // Địa chỉ API Base
-const baseUrl: string = 'http://localhost:7070'; // Địa chỉ API của bạn
+const baseUrl: string = 'http://localhost:9090'; // Địa chỉ API của bạn
 
 // Tạo một instance Axios với cấu hình mặc định
 const api = axios.create({

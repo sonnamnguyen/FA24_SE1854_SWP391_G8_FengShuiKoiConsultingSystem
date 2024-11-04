@@ -7,11 +7,11 @@ interface ResultInterface {
     totalElements: number;
 }
 
-export async function getAllUsers(): Promise<ResultInterface | null> {
+export async function getAllUsers(page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: User[] = [];
 
     try {
-        const response = await api.get(`/users`);
+        const response = await api.get(`/users?page=${page}&size=${pageSize}`);
         if (response.data.code === 1000) {
             const responseData = response.data.result.data;
             result.push(...responseData.map((user: any) => ({
@@ -44,8 +44,8 @@ export async function getAllUsers(): Promise<ResultInterface | null> {
     }
 }
 
-export async function findByUserName(name: string): Promise<ResultInterface | null> {
-    const endpoint: string = `/users/search-name?name=${encodeURIComponent(name)}`;
+export async function findByUserName(name: string, page: number, pageSize: number): Promise<ResultInterface | null> {
+    const endpoint: string = `/users/search-name?name=${encodeURIComponent(name)}&page=${page}&size=${pageSize}`;
     const result: User[] = [];
 
     try {

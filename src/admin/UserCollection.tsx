@@ -11,7 +11,7 @@ const UserCollection: React.FC = () => {
   const [reloadData, setReloadData] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pageNow, setPageNow] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [name, setName] = useState("");
   const [searchReload, setSearchReload] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -22,15 +22,16 @@ const UserCollection: React.FC = () => {
 
   const [apii, contextHolder] = notification.useNotification();
 
-  const reloadUserList = () => {
+  const reloadUserList = (page: number = 1) => {
     setReloadData(true);
 
     if (name === "") {
-      getAllUsers()
+      getAllUsers(page, pageSize)
         .then((userData) => {
           if (userData) {
             setListUser(userData.result);
-            setTotalPage(userData.pageTotal);
+            setTotalElements(userData.totalElements);
+            setPageNow(page);
           } else {
             setError("No data found.");
           }
@@ -41,11 +42,12 @@ const UserCollection: React.FC = () => {
           setReloadData(false);
         });
     } else {
-      findByUserName(name)
+      findByUserName(name, page, pageSize)
         .then((userData) => {
           if (userData) {
             setListUser(userData.result);
-            setTotalPage(userData.pageTotal);
+            setTotalElements(userData.totalElements);
+            setPageNow(page);
           } else {
             setError("No data found.");
           }
@@ -75,9 +77,12 @@ const UserCollection: React.FC = () => {
       setPlainOptions(roles || []);
     };
     fetchRoles();
-    reloadUserList();
+    reloadUserList(pageNow);
   }, [pageNow, name]);
-
+  const onPaginationChange = (page: number) => {
+    setPageNow(page); // Cập nhật trạng thái để hiển thị trang mới
+    reloadUserList(page); // Gọi lại API với trang mới
+};
   const handleDelete = async (id: number) => {
     try {
       const response = await api.delete(`/users/${id}`);
@@ -95,7 +100,8 @@ const UserCollection: React.FC = () => {
   const handleSubmit = async () => {
     if (selectedUserId === null) return;
     try {
-      const response = await api.post(`/users/${selectedUserId}/set-roles`, { roles: checkedList });
+      const response = await api.post(`/users/${selectedUserId}/set-roles`, { roles: checkedList.map(id => ({id})) 
+    });
       if (response.data.code === 1000) {
         apii.success({ message: "Success", description: "Roles updated successfully." });
         setIsModalVisible(false);
@@ -247,8 +253,13 @@ const UserCollection: React.FC = () => {
 
       
       <Table columns={columns} dataSource={listUser} pagination={false} rowKey="id" />
-      <Pagination current={pageNow} total={totalPage * pageSize} onChange={pagination} />
-
+      <Pagination
+        current={pageNow}
+        total={totalElements}
+        pageSize={pageSize}
+        onChange={onPaginationChange}
+        style={{ textAlign: 'end', marginTop: '20px' }}
+      />
       <Modal title="Update Roles" visible={isModalVisible} onCancel={handleModalCancel} footer={null}>
         <Form onFinish={handleSubmit}>
           <Form.Item>

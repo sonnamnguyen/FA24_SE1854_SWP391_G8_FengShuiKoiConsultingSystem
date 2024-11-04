@@ -7,10 +7,10 @@ interface ResultInterface {
     totalElements: number;
 }
 
-export async function getAllColors(): Promise<ResultInterface | null> {
+export async function getAllColors(page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: Color[] = [];
     try {
-        const response = await api.get(`/colors`);
+        const response = await api.get(`/colors?page=${page}&size=${pageSize}`);
 
         if (response.data.code === 1000) {
             const responseData = response.data.result.data;
@@ -58,11 +58,11 @@ export async function getAllColors(): Promise<ResultInterface | null> {
     }
 }
 
-export async function findByColor(name: string): Promise<ResultInterface | null> {
+export async function findByColor(name: string, page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: Color[] = [];
 
     try {
-        const response = await api.get(`/colors/search-colors?name=${name}`);
+        const response = await api.get(`/colors/search-colors?name=${name}&page=${page}&size=${pageSize}`);
         if (response.data.code === 1000) {
             const responseData = response.data.result.data;
 

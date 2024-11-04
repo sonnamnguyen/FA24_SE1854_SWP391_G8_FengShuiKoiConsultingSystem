@@ -8,11 +8,11 @@ interface ResultInterface {
     totalElements: number;
 }
 
-export async function getAllAnimals(): Promise<ResultInterface | null> {
+export async function getAllAnimals(page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: AnimalCategory[] = [];
 
     try {
-        const response = await api.get(`/animals`);
+        const response = await api.get(`/animals?page=${page}&size=${pageSize}`);
         
         if (response.data.code === 1000) {
             const responseData = response.data.result.data || []; 
@@ -68,11 +68,11 @@ export async function getAllAnimals(): Promise<ResultInterface | null> {
     }
 }  
 // Hàm tìm kiếm động vật theo category
-export async function findByAnimalCategory(name: string): Promise<ResultInterface | null> {
+export async function findByAnimalCategory(name: string, page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: AnimalCategory[] = [];
 
     try {
-        const response = await api.get(`/animals/animal-search?search=${name}`);
+        const response = await api.get(`/animals/animal-search?search=${name}&page=${page}&size=${pageSize}`);
 
         if (response.data.code === 1000) {
             const responseData = response.data.result.data;

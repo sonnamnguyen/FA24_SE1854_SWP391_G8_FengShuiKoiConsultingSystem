@@ -8,10 +8,10 @@ interface ResultInterface {
     totalElements: number;
 }
 
-export async function getAllShapes(): Promise<ResultInterface | null> {
+export async function getAllShapes(page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: Shape[] = [];
     try {
-        const response = await api.get(`/shapes`);
+        const response = await api.get(`/shapes?page=${page}&size=${pageSize}`);
 
         if (response.data.code === 1000) {
             const responseData = response.data.result.data;
@@ -59,11 +59,11 @@ export async function getAllShapes(): Promise<ResultInterface | null> {
     }
 }
 
-export async function findByShape(name: string): Promise<ResultInterface | null> {
+export async function findByShape(name: string, page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: Shape[] = [];
 
     try {
-        const response = await api.get(`/shapes/shape-search?name=${name}`);       
+        const response = await api.get(`/shapes/shape-search?name=${name}&page=${page}&size=${pageSize}`);       
             if (response.data.code === 1000) {
                 const responseData = response.data.result.data;
                 const colors = responseData.map((shapeData: any) => ({

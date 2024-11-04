@@ -9,11 +9,11 @@ interface ResultInterface {
     totalElements: number;
 }
 
-export async function getAllShelters(): Promise<ResultInterface | null> {
+export async function getAllShelters(page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: ShelterCategory[] = [];
 
     try {
-        const response = await api.get(`/shelters`);
+        const response = await api.get(`/shelters?page=${page}&size=${pageSize}`);
         if (response.data.code === 1000) {
             const responseData = response.data.result.data;
             result.push(...responseData.map((shelter: any) => ({
@@ -71,8 +71,8 @@ export async function getAllShelters(): Promise<ResultInterface | null> {
     }
 }
 
-export async function findByShelterCategory(name: string): Promise<ResultInterface | null> {
-    const endpoint: string = `/shelters?name=${encodeURIComponent(name)}`;
+export async function findByShelterCategory(name: string, page: number, pageSize: number): Promise<ResultInterface | null> {
+    const endpoint: string = `/shelters/search-name?name=${encodeURIComponent(name)}&page=${page}&size=${pageSize}`;
     const result: ShelterCategory[] = [];
 
     try {

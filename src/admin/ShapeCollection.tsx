@@ -1,12 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Button, Form, Input, Popconfirm, Modal, Space, Table, Radio, notification } from 'antd';
+import { Button, Form, Input, Popconfirm, Modal, Space, Table, Radio, notification, Pagination } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import api from "../axious/axious";
-import Pagination from "../utils/Pagination";
-import Color from "../models/Color";
-import { findByColor, getAllColors } from "./api/ColorAPI";
 import Shape from "../models/Shape";
 import { findByShape, getAllShapes } from "./api/ShapeAPI";
+import DestinyTuongSinh from "../models/DestinyTuongSinh";
+import DestinyTuongKhac from "../models/DestinyTuongKhac";
 
 interface Destinys {
   id: number;
@@ -18,7 +17,7 @@ const ShapeCollection: React.FC = () => {
   const [reloadData, setReloadData] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pageNow, setPageNow] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [name, setColor] = useState("");
   const [searchReload, setSearchReload] = useState("");
   const [destinyOptions, setDestinyOptions] = useState<Destinys[]>([]);
@@ -26,19 +25,22 @@ const ShapeCollection: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [selectedShape, setSelectedShape] = useState<Shape | null>(null);
+  const [destinyToTuongSinhMap, setDestinyToTuongSinhMap] = useState<{ [key: string]: DestinyTuongSinh[] }>({});
+  const [destinyToTuongKhacMap, setDestinyToTuongKhacMap] = useState<{ [key: string]: DestinyTuongKhac[] }>({});
   const pageSize = 10;
 
   const [apii, contextHolder] = notification.useNotification();
 
-  const reloadShapeList = () => {
+  const reloadShapeList = (page: number = 1) => {
     setReloadData(true);
 
     if (name === "") {
-      getAllShapes()
+      getAllShapes(page, pageSize)
         .then((shapeData) => {
           if (shapeData) {
             setListShape(shapeData.result);
-            setTotalPage(shapeData.pageTotal);
+            setTotalElements(shapeData.totalElements);
+            setPageNow(page);
           } else {
             setError("No data found.");
           }
@@ -49,11 +51,12 @@ const ShapeCollection: React.FC = () => {
           setReloadData(false);
         });
     } else {
-      findByShape(name)
+      findByShape(name, page, pageSize)
         .then((shapeData) => {
           if (shapeData) {
             setListShape(shapeData.result);
-            setTotalPage(shapeData.pageTotal);
+            setTotalElements(shapeData.totalElements);
+            setPageNow(page);
           } else {
             setError("No data found.");
           }
@@ -65,7 +68,6 @@ const ShapeCollection: React.FC = () => {
         });
     }
   };
-
   useEffect(() => {
     const fetchDestinies = async () => {
       const destinies = await getAllDestinies();
@@ -73,10 +75,14 @@ const ShapeCollection: React.FC = () => {
         setDestinyOptions(destinies);
       }
     };
+   
     fetchDestinies();
-    reloadShapeList();
+    reloadShapeList(pageNow);
   }, [pageNow, name]);
-
+  const onPaginationChange = (page: number) => {
+    setPageNow(page); // Cập nhật trạng thái để hiển thị trang mới
+    reloadShapeList(page); // Gọi lại API với trang mới
+};
   const getAllDestinies = async (): Promise<Destinys[] | null> => {
     try {
       const response = await api.get(`/destinys`);
@@ -143,16 +149,46 @@ const ShapeCollection: React.FC = () => {
     }
   };
 
-  const pagination = (page: number) => {
-    setPageNow(page);
-  };
-
   const handleSearch = () => {
     setColor(searchReload);
     setReloadData(true);
     setPageNow(1);
   };
+  const fetchDestinyTuongSinh = async (destinyName: string) => {
+    try {
+      const response = await api.get(`/destinys/${destinyName}`);
+      if (response.data.code === 1000) {
+        const tuongSinhData = response.data.result.destinyTuongSinhs;
+        const tuongKhacData = response.data.result.destinyTuongKhacs;
 
+        const newDestinyTuongSinhs = tuongSinhData.map((item: any) => new DestinyTuongSinh(item.name));
+        const newDestinyTuongKhac = tuongKhacData.map((item: any) => new DestinyTuongKhac(item.name));
+
+        // Update the map with the new data for the specific destiny
+        setDestinyToTuongSinhMap((prev) => ({
+          ...prev,
+          [destinyName]: newDestinyTuongSinhs,
+        }));
+        setDestinyToTuongKhacMap((prev) => ({
+          ...prev,
+          [destinyName]: newDestinyTuongKhac,
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching DestinyTuongSinh:", error);
+    }
+  };
+
+
+
+  useEffect(() => {
+    listShape.forEach((shape) => {
+      const destinyName = shape.destiny?.destiny;
+      if (destinyName && !destinyToTuongSinhMap[destinyName]) {
+        fetchDestinyTuongSinh(destinyName);
+      }
+    });
+  }, [listShape]);
   const columns = [
     {
       title: 'STT',
@@ -174,17 +210,40 @@ const ShapeCollection: React.FC = () => {
       ),
     },
     {
-      title: 'Destiny',
+      title: 'Mutual Accord',
       dataIndex: 'destiny',
       key: 'destiny',
       render: (destiny: { id: number; destiny: string }) => (
-        <span
-          title={destiny?.destiny} // Accessing the destiny property
-          style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}
-        >
-          {destiny?.destiny} {/* Display the specific property */}
+        <span title={destiny?.destiny} style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
+          {destiny?.destiny}
         </span>
       ),
+    },
+    {
+      title: 'Mutual Generation',
+      key: 'destinyTuongSinh',
+      render: (text: string, record: Shape) => {
+        const destinyName = record.destiny?.destiny;
+        const tuongSinhList = destinyName ? destinyToTuongSinhMap[destinyName] || [] : [];
+    
+        // Join the names with commas
+        const tuongSinhNames = tuongSinhList.map((tuongSinh) => tuongSinh.name).join(', ');
+    
+        return tuongSinhNames || "No data available";
+      },
+    },
+    {
+      title: 'Mutual Overcoming',
+      key: 'destinyTuongSinh',
+      render: (text: string, record: Shape) => {
+        const destinyName = record.destiny?.destiny;
+        const tuongKhacList = destinyName ? destinyToTuongKhacMap[destinyName] || [] : [];
+    
+        // Join the names with commas
+        const tuongKhacNames = tuongKhacList.map((tuongKhac) => tuongKhac.name).join(', ');
+    
+        return tuongKhacNames || "No data available";
+      },
     },
     {
       title: 'Action',
@@ -253,9 +312,11 @@ const ShapeCollection: React.FC = () => {
         rowKey="id"
       />
       <Pagination
-        currentPage={pageNow}
-        totalPages={totalPage}
-        pagination={pagination}
+        current={pageNow}
+        total={totalElements}
+        pageSize={pageSize}
+        onChange={onPaginationChange}
+        style={{ textAlign: 'end', marginTop: '20px' }}
       />
       <Modal
         title={isUpdateMode ? "Update Shape" : "Add Shape"}

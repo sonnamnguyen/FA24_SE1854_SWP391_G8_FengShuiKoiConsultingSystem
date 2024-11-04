@@ -75,7 +75,6 @@ const AddShelter: React.FC = () => {
     const base64Images = shelterImages.length > 0 ? await uploadImagesToFirebase(shelterImages) : [];
     try {
       const response = await api.post("/shelters", {
-        body: JSON.stringify({
           shelterCategoryName,
           description,
           shape: { id: selectedShape },
@@ -86,7 +85,7 @@ const AddShelter: React.FC = () => {
           waterVolume,
           waterFiltrationSystem,
           shelterImages: base64Images.map(url => ({ imageUrl: url })),
-        }),
+    
       });
 
       if (response.data.code === 1000) {
@@ -97,7 +96,7 @@ const AddShelter: React.FC = () => {
       }
     } catch (error) {
       console.error(error); // Log error for debugging
-      apii.error({ message: 'Error', description: 'Error adding shelter. Please try again later.' });
+      apii.error({ message: 'Error', description: `Error adding shelter. Please try again later.` });
     }
   };
 
