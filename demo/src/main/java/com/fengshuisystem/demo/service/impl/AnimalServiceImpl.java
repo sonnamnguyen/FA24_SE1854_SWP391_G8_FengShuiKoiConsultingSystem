@@ -39,7 +39,6 @@ public class AnimalServiceImpl implements AnimalService {
     AnimalRepository animalRepository;
     AnimalMapper animalMapper;
     ColorRepository colorRepository;
-    DestinyRepository destinyRepository;
     @Override
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
@@ -147,6 +146,5 @@ public class AnimalServiceImpl implements AnimalService {
         AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
         return animalMapper.toDto(animalCategory);
     }
-
 
 }

@@ -1,5 +1,7 @@
 package com.fengshuisystem.demo.dto;
 
+import com.fengshuisystem.demo.dto.request.DestinyTuongKhac;
+import com.fengshuisystem.demo.dto.request.DestinyTuongSinh;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,4 +18,6 @@ public class DestinyDTO {
     String destiny;
     List<DirectionDTO> directions;
     List<NumberDTO> numbers;
+    List<DestinyTuongSinh> destinyTuongSinhs;
+    List<DestinyTuongKhac> destinyTuongKhacs;
 }

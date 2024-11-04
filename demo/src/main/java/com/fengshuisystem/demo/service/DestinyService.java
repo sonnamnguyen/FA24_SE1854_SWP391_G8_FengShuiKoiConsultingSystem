@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface DestinyService {
     public List<DestinyDTO> getAllDestiny();
-}
+    public DestinyDTO getAllDestinyTuongSinhAndTuongKhac(String destinyName);
+    }

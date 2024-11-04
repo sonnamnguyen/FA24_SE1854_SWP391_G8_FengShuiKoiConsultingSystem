@@ -11,6 +11,7 @@ import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.ShelterMapper;
 import com.fengshuisystem.demo.repository.ShapeRepository;
+import com.fengshuisystem.demo.repository.ShelterImageRepository;
 import com.fengshuisystem.demo.repository.ShelterRepository;
 import com.fengshuisystem.demo.service.ShelterService;
 import jakarta.transaction.Transactional;
@@ -35,7 +36,6 @@ public class ShelterServiceImpl implements ShelterService {
     ShelterRepository shelterRepository;
     ShelterMapper shelterMapper;
     ShapeRepository shapeRepository;
-
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ShelterCategoryDTO createShelter(ShelterCategoryDTO request) {
@@ -104,22 +104,21 @@ public class ShelterServiceImpl implements ShelterService {
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    @Transactional
     public ShelterCategoryDTO updateShelter(Integer id, ShelterCategoryDTO request) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         ShelterCategory shelterCategory = shelterRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
+        Shape shape = shapeRepository.findById(request.getShape().getId()).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
         shelterMapper.update(request, shelterCategory);
-        Shape shape = shapeRepository.findById(request.getShape().getId()).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
+        shelterCategory.setShape(shape);
         shelterCategory.setStatus(Status.ACTIVE);
         shelterCategory.setCreatedDate(Instant.now());
         shelterCategory.setCreatedBy(name);
         shelterCategory.setUpdatedDate(Instant.now());
         shelterCategory.setUpdatedBy(name);
-        shelterCategory.setShape(shape);
         for (ShelterImage shelterImage : shelterCategory.getShelterImages()) {
             shelterImage.setShelterCategory(shelterCategory);
         }
-        return shelterMapper.toDto(shelterRepository.saveAndFlush(shelterCategory));
+        return shelterMapper.toDto(shelterRepository.save(shelterCategory));
     }
 }

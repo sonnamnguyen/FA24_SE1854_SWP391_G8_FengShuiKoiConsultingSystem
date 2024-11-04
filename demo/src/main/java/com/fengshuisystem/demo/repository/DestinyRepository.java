@@ -7,8 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DestinyRepository extends JpaRepository<Destiny,Integer> {
-//    public List<Destiny> findAll();
+    Optional<Destiny> findByDestiny(String destiny);
 }

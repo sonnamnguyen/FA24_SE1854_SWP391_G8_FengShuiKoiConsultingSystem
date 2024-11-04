@@ -108,7 +108,6 @@ public class ColorServiceImpl implements ColorService {
         Color color = colorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
         color.setDestiny(destiny);
         colorMapper.update(colorDTO, color);
-        color.setDestiny(destiny);
         color.setStatus(Status.ACTIVE);
         color.setUpdatedDate(Instant.now());
         color.setUpdatedBy(name);
