@@ -29,6 +29,7 @@ public enum ErrorCode {
     USER_INACTIVE(1020, "User is inactive", HttpStatus.BAD_REQUEST),
     CONSULATION_RESULT_NOT_EXISTED(1021, "Consulation result not existed", HttpStatus.NOT_FOUND),
     SHAPE_NOT_EXISTED(1022, "Shape not existed", HttpStatus.NOT_FOUND),
+    SHAPE_EXISTED(1022, "Shape  existed", HttpStatus.BAD_REQUEST),
     CONSULATION_CATEGORY_NOT_EXISTED(1023, "Consulation Category not existed", HttpStatus.NOT_FOUND),
     ;
 
