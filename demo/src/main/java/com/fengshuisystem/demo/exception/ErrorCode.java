@@ -36,7 +36,8 @@ public enum ErrorCode {
     POST_CATEGORY_NOT_EXISTED(2004, "post category not existed", HttpStatus.NOT_FOUND),
     PAYMENT_NOT_EXISTED(2006,"payment not existed", HttpStatus.NOT_FOUND),
     BILL_NOT_EXISTED(2007,"bill not existed", HttpStatus.NOT_FOUND),
-    PACKAGE_NOT_EXISTED(2007,"package not existed", HttpStatus.NOT_FOUND),;
+    PACKAGE_NOT_EXISTED(2007,"package not existed", HttpStatus.NOT_FOUND),
+    SHAPE_EXISTED(1022, "Shape  existed", HttpStatus.BAD_REQUEST);
 
 
 
