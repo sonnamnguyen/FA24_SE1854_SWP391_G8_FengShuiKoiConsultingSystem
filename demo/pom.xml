@@ -42,28 +42,17 @@
 
 	<dependencies>
 		<!-- Spring Boot Starters -->
-<<<<<<< HEAD
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<version>3.3.3</version> <!-- Chỉ định phiên bản mong muốn -->
-		</dependency>
-
-
-=======
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
->>>>>>> huypqseee
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-	
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
