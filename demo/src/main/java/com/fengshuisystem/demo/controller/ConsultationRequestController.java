@@ -23,4 +23,16 @@ public class ConsultationRequestController {
                 .build();
     }
 
+    // Sau khi thanh toán VNPay thành công, trả về thông tin thành công của Consultation Request bao gồm cả Bill.
+    // update BillStatus.PENDING -> PAID, và Request.PENDING -> COMPLETED
+    @PutMapping("/{requestId}")
+    public ApiResponse<ConsultationRequestDTO> updateStatusConsultationRequest(
+            @PathVariable Integer requestId
+    ) {
+        return ApiResponse.<ConsultationRequestDTO>builder()
+                .result(consultationRequestService.updateStatusConsultationRequest(requestId))
+                .build();
+    }
+
+
 }
