@@ -23,6 +23,7 @@ public class ConsultationShelterDTO {
 
   Integer shelterCategoryId;
 
+  @JsonIgnore
   List<DirectionDTO> direction;
   String description;
   Request status;

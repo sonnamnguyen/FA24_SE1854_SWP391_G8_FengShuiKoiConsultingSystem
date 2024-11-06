@@ -40,6 +40,10 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
                     throw new RuntimeException(errorMessage);
                 });
 
+        if (!consultationResult.getStatus().equals(Request.PENDING)) {
+            throw new RuntimeException("Result có Status khác PENDING");
+        }
+
         // Kiểm tra sự tồn tại của AnimalCategory
         AnimalCategory animalCategory = animalCategoryRepository.findById(animalCategoryId)
                 .orElseThrow(() -> {
@@ -47,6 +51,12 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
                     log.error(errorMessage);
                     throw new RuntimeException(errorMessage);
                 });
+
+        // Kiểm tra sự trùng lặp của cặp (resultId, animalCategoryId)
+        Optional<ConsultationAnimal> existingAnimal = consultationAnimalRepository.findByConsultationResultIdAndAnimalCategoryId(resultId, animalCategoryId);
+        if (existingAnimal.isPresent()) {
+            throw new RuntimeException("Cặp (resultId, animalCategoryId) đã tồn tại. Không được phép trùng lặp.");
+        }
 
         // Tạo mới ConsultationAnimal từ DTO
         ConsultationAnimal consultationAnimal = consultationAnimalMapper.toEntity(dto);
@@ -61,4 +71,5 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
         // Trả về DTO sau khi lưu
         return consultationAnimalMapper.toDto(savedAnimal);
     }
+
 }

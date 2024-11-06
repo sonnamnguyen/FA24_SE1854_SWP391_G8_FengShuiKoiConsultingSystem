@@ -25,12 +25,8 @@ public class ConsultationAnimalController {
             @RequestBody ConsultationAnimalDTO consultationAnimalDTO,
             @PathVariable Integer resultId,
             @PathVariable Integer animalCategoryId) {
-        ConsultationAnimalDTO result = consultationAnimalService.createConsultationAnimal(
-                consultationAnimalDTO, resultId, animalCategoryId);
         return ApiResponse.<ConsultationAnimalDTO>builder()
-                .result(result)
-                .code(1000)
-                .message("Consultation Animal created successfully")
+                .result(consultationAnimalService.createConsultationAnimal(consultationAnimalDTO, resultId, animalCategoryId))
                 .build();
     }
 }
