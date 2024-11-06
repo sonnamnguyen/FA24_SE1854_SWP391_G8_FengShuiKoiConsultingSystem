@@ -1,25 +1,12 @@
 package com.fengshuisystem.demo.service;
+
 import com.fengshuisystem.demo.dto.BillDTO;
-import com.fengshuisystem.demo.dto.ConsultationRequestDTO;
-import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.enums.BillStatus;
 import com.fengshuisystem.demo.entity.enums.Request;
 
-import java.util.List;
-
-
 public interface BillService {
-    public BillDTO createBill(BillDTO billDTO);
-    public PageResponse<BillDTO> getBills(int page, int size);
-    public PageResponse<BillDTO> getAllBillsByStatus(BillStatus status, int page, int size);
-    public PageResponse<BillDTO> getBillsByAccountIdAndStatus(int accountId, BillStatus status,int page, int size);
-    public void deleteBill(Integer id);
-    public BillDTO updateBill(Integer id, BillDTO billDTO);
-
-    // Khôi
-    public BillDTO createBillByRequestAndPayment(Integer requestId, Integer paymentId);
-    public BillDTO getBillById(Integer billId);
-    public void updateStatusAfterPayment(Integer billId, BillStatus billStatus, Request requestStatus);
-
+    BillDTO createBillByRequestAndPayment(Integer requestId, Integer paymentId);
+    BillDTO getBillById(Integer billId);
+    void updateStatusAfterPayment(Integer billId, BillStatus billStatus, Request requestStatus);
     Integer getRequestIdByBillId(Integer billId);
 }

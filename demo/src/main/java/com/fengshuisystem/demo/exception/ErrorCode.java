@@ -40,7 +40,8 @@ public enum ErrorCode {
     INVALID_BILL_STATUS(2008,"invalid bill status", HttpStatus.BAD_REQUEST),
     REQUEST_NOT_FOUND(2009, "request not found", HttpStatus.NOT_FOUND),
     CONSULTATION_REQUEST_DETAIL_NOT_FOUND(2010, "consultation request detail not found", HttpStatus.NOT_FOUND),
-    CONSULTATION_REQUEST_DETAIL_NOT_COMPLETED(2011, "consultation request detail not completed", HttpStatus.BAD_REQUEST);
+    CONSULTATION_REQUEST_DETAIL_NOT_COMPLETED(2011, "consultation request detail not completed", HttpStatus.BAD_REQUEST),
+    PAYMENT_NOT_FOUND(2011, "payment not found", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

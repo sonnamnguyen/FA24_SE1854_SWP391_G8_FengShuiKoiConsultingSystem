@@ -35,7 +35,8 @@ public class EndPoint {
 
         public static final String[] PUBLIC_GET_ENDPOINTS = {
                 "users/existByUserName", "users/existByEmail", "users/activate", "/destinys/destiny/{yearOfBirth}",
-                "/destinys/autoConsultation/{yearOfBirth}", "/destinys/compatibility/{yearOfBirth}"
+                "/destinys/autoConsultation/{yearOfBirth}", "/destinys/compatibility/{yearOfBirth}",
+                "api/vn_pay/create_vn_pay"
 
         };
 
