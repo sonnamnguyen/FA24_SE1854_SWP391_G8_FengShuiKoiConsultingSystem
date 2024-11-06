@@ -54,6 +54,8 @@ public class ConsultationRequestDetailServiceImpl implements ConsultationRequest
         // Xử lý danh mục động vật và nơi trú ẩn từ DTO
         updateCategories(detail, detailDTO);
 
+        detail.setStatus(Request.PENDING);
+
         // Lưu chi tiết yêu cầu
         ConsultationRequestDetail savedDetail = detailRepository.save(detail);
         log.info("Đã lưu ConsultationRequestDetail với ID: {}", savedDetail.getId());

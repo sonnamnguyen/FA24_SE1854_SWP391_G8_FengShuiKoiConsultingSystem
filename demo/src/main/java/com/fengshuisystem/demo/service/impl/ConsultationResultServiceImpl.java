@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,60 +24,76 @@ import java.util.List;
 public class ConsultationResultServiceImpl implements ConsultationResultService {
 
     private final ConsultationResultRepository consultationResultRepository;
-    private final ConsultationRequestDetailRepository requestDetailRepository;
     private final ConsultationResultMapper consultationResultMapper;
     private final ConsultationAnimalRepository consultationAnimalRepository;
     private final ConsultationShelterRepository consultationShelterRepository;
     private final EmailService emailService;
+    private final UserRepository userRepository;
+    private final ConsultationRequestRepository consultationRequestRepository;
+    private final ConsultationCategoryRepository consultationCategoryRepository;
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
+    @Transactional
     public ConsultationResultDTO createConsultationResult(Integer requestId, ConsultationResultDTO dto) {
-        // 1. Lấy ConsultationRequestDetail từ consultationRequestId
-        ConsultationRequestDetail requestDetail = requestDetailRepository
-                .findByConsultationRequestId(requestId)
-                .orElseThrow(() -> new RuntimeException("Request Detail not found for ID: " + requestId));
+        // Lấy email từ admin
+        String email = getCurrentUserEmailFromJwt();
+        log.info("Fetched email from JWT: {}", email);
 
-        // 2. Lấy ConsultationRequest từ requestDetail
-        ConsultationRequest request = requestDetail.getConsultationRequest();
+        // Tìm kiếm tài khoản từ email
+        Account account = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Account not found for email: " + email));
+        log.info("Account found: {}", account.getEmail());
 
-        // **Kiểm tra trạng thái của ConsultationRequest**
+        // Lấy ConsultationRequest bằng ID
+        ConsultationRequest request = consultationRequestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("ConsultationRequest not found for ID: " + requestId));
+
+        // Lấy ConsultationRequestDetail từ request (giả định mỗi request chỉ có một detail)
+        ConsultationRequestDetail requestDetail = request.getConsultationRequestDetails()
+                .stream().findFirst() // lấy detail đầu tiên (1 req - 1 detail)
+                .orElseThrow(() -> new RuntimeException("No ConsultationRequestDetail found for request ID: " + requestId));
+
+        // Kiểm tra trạng thái của ConsultationRequest
         if (request.getStatus() != Request.COMPLETED) {
             throw new IllegalStateException("ConsultationRequest is not 'COMPLETED'. Cannot create result.");
         }
 
-        // **Kiểm tra trạng thái của ConsultationRequestDetail nếu cần**
-        if (requestDetail.getStatus() != Request.COMPLETED) {
-            throw new IllegalStateException("Request detail is not 'COMPLETED'. Cannot create result.");
+        // Kiểm tra trạng thái của ConsultationRequestDetail
+        if (requestDetail.getStatus() != Request.PENDING) {
+            throw new IllegalStateException("ConsultationRequestDetail is not 'PENDING'. Cannot create result.");
         }
 
-        // 3. Tạo ConsultationCategory từ ID trong DTO
-        ConsultationCategory category = new ConsultationCategory();
-        category.setId(dto.getConsultationCategoryId());
+        // Lấy ConsultationCategory từ ID trong DTO (giả định categoryRepository tồn tại)
+        ConsultationCategory category = consultationCategoryRepository.findById(dto.getConsultationCategoryId())
+                .orElseThrow(() -> new RuntimeException("ConsultationCategory not found for ID: " + dto.getConsultationCategoryId()));
 
-        // 4. Khởi tạo đối tượng ConsultationResult
+        // Khởi tạo đối tượng ConsultationResult
         ConsultationResult consultationResult = consultationResultMapper.toEntity(dto);
-
+        consultationResult.setAccount(request.getAccount());
         consultationResult.setRequestDetail(requestDetail);
         consultationResult.setRequest(request);
         consultationResult.setConsultationCategory(category);
 
-        // 5. Thiết lập thông tin thời gian và người dùng
+        // Thiết lập thông tin thời gian và người dùng
         consultationResult.setConsultationDate(Instant.now());
+        if (consultationResult.getStatus() != Request.COMPLETED) {
+            throw new IllegalStateException("ConsultationRequestDetail is not 'COMPLETED'. Cannot create result.");
+        }
         consultationResult.setStatus(Request.PENDING);
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        consultationResult.setCreatedBy(username);
-        consultationResult.setUpdatedBy(username);
+        consultationResult.setCreatedBy(account.getFullName());
+        consultationResult.setUpdatedBy(account.getFullName());
         consultationResult.setCreatedDate(Instant.now());
         consultationResult.setUpdatedDate(Instant.now());
 
-        // 6. Lưu ConsultationResult vào database
+        // Lưu ConsultationResult vào database
         ConsultationResult savedResult = consultationResultRepository.save(consultationResult);
 
-        // 7. Trả về DTO
+        // Trả về DTO
         return consultationResultMapper.toDto(savedResult);
     }
+
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
@@ -96,8 +113,7 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         consultationResultRepository.save(consultationResult);
 
         // 4. Lấy email từ account liên quan đến request
-        String email = consultationResult.getRequestDetail().getConsultationRequest()
-                .getAccount().getEmail();
+        String email = consultationResult.getRequest().getAccount().getEmail();
 
         // 5. Gửi email với nội dung chi tiết
         sendConsultationDetailsEmail(email, consultationResult);
@@ -147,6 +163,13 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
 
         // 5. Gửi email
         emailService.sendEmail("support@fengshuiconsultingsystem.com", email, subject, text.toString());
+    }
+
+    private String getCurrentUserEmailFromJwt() {
+        Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = jwt.getClaimAsString("sub");
+        log.info("Extracted email from JWT: {}", email);
+        return email;
     }
 }
 
