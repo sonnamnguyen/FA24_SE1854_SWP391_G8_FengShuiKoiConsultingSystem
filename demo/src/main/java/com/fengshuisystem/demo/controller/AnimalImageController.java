@@ -8,10 +8,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,10 +20,13 @@ import java.util.List;
 public class AnimalImageController {
     AnimalImageService animalImageService;
 
-    @GetMapping
-    public ApiResponse<List<AnimalImageDTO>> getAllShelterImages(@RequestParam Integer id) {
+    @PostMapping("/{id}")
+    public ApiResponse<List<AnimalImageDTO>> deleteAllAnimalImages(
+            @PathVariable Integer id,
+            @RequestBody List<String> imageUrls) {
+
         return ApiResponse.<List<AnimalImageDTO>>builder()
-                .result(animalImageService.getAllAnimalImage(id))
+                .result(animalImageService.getAllAnimalImage(id, imageUrls))
                 .build();
     }
 }

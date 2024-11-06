@@ -1,8 +1,9 @@
-
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.constant.PredefinedRole;
 
+import com.fengshuisystem.demo.dto.PageResponse;
+import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
 import com.fengshuisystem.demo.dto.request.PasswordCreationRequest;
 import com.fengshuisystem.demo.dto.request.UserCreationRequest;
 import com.fengshuisystem.demo.dto.request.UserUpdateRequest;
@@ -21,6 +22,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -90,7 +94,7 @@ public class UserServiceImpl implements UserService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
 
-        Account user = userRepository.findByUserName(name).orElseThrow(
+        Account user = userRepository.findByEmail(name).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         if (StringUtils.hasText(user.getPassword()))
@@ -104,7 +108,7 @@ public class UserServiceImpl implements UserService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
 
-        Account user = userRepository.findByUserName(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Account user = userRepository.findByEmail(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         log.info("Roles: {}", user.getRoles());
 
         var userResponse = userMapper.toUserResponse(user);
@@ -113,10 +117,10 @@ public class UserServiceImpl implements UserService {
         return userResponse;
     }
     @Override
-    @PostAuthorize("returnObject.username == authentication.name")
+    @PostAuthorize("returnObject.email == authentication.principal.claims['sub']")
     public UserResponse updateUser(String email, UserUpdateRequest request) {
-        Account user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
+        Account user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userMapper.updateUser(user, request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
@@ -194,7 +198,6 @@ public class UserServiceImpl implements UserService {
 
         emailService.sendEmail("phuy61371@gmail.com", email, subject, text);
     }
-
     public String activeAccount(String email, String code) {
         Account account = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -226,5 +229,52 @@ public class UserServiceImpl implements UserService {
         return "Could not reset password. Account status not recognized.";
     }
 
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<UserResponse> getAllUsers(int page, int size) {
+        Status status = Status.ACTIVE;
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = userRepository.findAllByStatus(status, pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+        return PageResponse.<UserResponse>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(userMapper::toUserResponse).toList())
+                .build();
+    }
 
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<UserResponse> getUsersBySearch(String name, int page, int size) {
+        Status status = Status.ACTIVE;
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = userRepository.findAllByUserNameContainingOriginContaining(name, status, pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+        return PageResponse.<UserResponse>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(userMapper::toUserResponse).toList())
+                .build();
+    }
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponse setRole(Integer userId, List<Integer> ids) {
+        Account user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Set<Role> roles = new HashSet<>();
+        var userRole = roleRepository.findByIdIn(ids)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+        roles.add(userRole);
+        user.setRoles(roles);
+        return userMapper.toUserResponse(userRepository.saveAndFlush(user));
+    }
 }

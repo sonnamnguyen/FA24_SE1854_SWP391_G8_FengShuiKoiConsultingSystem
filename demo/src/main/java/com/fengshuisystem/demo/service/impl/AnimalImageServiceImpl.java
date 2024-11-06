@@ -1,6 +1,10 @@
 package com.fengshuisystem.demo.service.impl;
-
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
 import com.fengshuisystem.demo.dto.AnimalImageDTO;
+import com.fengshuisystem.demo.entity.AnimalImage;
 import com.fengshuisystem.demo.mapper.AnimalImageMapper;
 import com.fengshuisystem.demo.repository.AnimalImageRepository;
 import com.fengshuisystem.demo.service.AnimalImageService;
@@ -22,7 +26,11 @@ public class AnimalImageServiceImpl implements AnimalImageService {
     AnimalImageMapper animalImageMapper;
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public List<AnimalImageDTO> getAllAnimalImage(Integer animalId) {
-        return animalImageMapper.toDto(animalImageRepository.findByAnimalCategory(animalId));
+    public List<AnimalImageDTO> getAllAnimalImage(Integer animalId, List<String> imgUrl) {
+        List<AnimalImage> animalImages = animalImageRepository.findByAnimalCategoryAndImgUrls(animalId, imgUrl);
+        if (!animalImages.isEmpty()) {
+            animalImageRepository.deleteAll(animalImages);
+        }
+        return animalImageMapper.toDto(animalImages);
     }
 }

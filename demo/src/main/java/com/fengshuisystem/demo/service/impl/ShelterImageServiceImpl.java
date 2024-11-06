@@ -1,6 +1,7 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ShelterImageDTO;
+import com.fengshuisystem.demo.entity.ShelterImage;
 import com.fengshuisystem.demo.mapper.ShelterImageMapper;
 import com.fengshuisystem.demo.repository.ShelterImageRepository;
 import com.fengshuisystem.demo.service.ShelterImageService;
@@ -23,7 +24,11 @@ public class ShelterImageServiceImpl implements ShelterImageService {
     ShelterImageMapper shelterImageMapper;
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public List<ShelterImageDTO> getAllShelterImage(Integer id) {
-        return shelterImageMapper.toDto(shelterImageRepository.findByShelterCategory(id));
+    public List<ShelterImageDTO> getAllShelterImage(Integer id, List<String> imgUrl) {
+        List<ShelterImage> shelterImages = shelterImageRepository.findByShelterCategoryAndImgUrls(id, imgUrl);
+        if(!shelterImages.isEmpty()){
+            shelterImageRepository.deleteAll(shelterImages);
+        }
+        return shelterImageMapper.toDto(shelterImages);
     }
 }
