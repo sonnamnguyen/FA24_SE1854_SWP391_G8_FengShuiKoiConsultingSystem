@@ -38,7 +38,7 @@ public class ShapeController {
                 .build();
     }
 
-    @GetMapping("/search-shapes")
+    @GetMapping("/shape-search")
     public ApiResponse<PageResponse<ShapeDTO>> getShapesBySearch(
             @RequestParam String name,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,

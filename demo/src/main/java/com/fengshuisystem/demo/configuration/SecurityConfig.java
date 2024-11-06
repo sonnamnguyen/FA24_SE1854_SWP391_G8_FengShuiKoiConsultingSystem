@@ -45,8 +45,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, EndPoint.BOTH_GET_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, EndPoint.BOTH_DELETE_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/*").authenticated()
-
-
                         .anyRequest()
                         .authenticated());
 

@@ -1,3 +1,4 @@
+
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.*;
@@ -80,7 +81,7 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
         Set<String> directionsAdvice = new HashSet<>();
         boolean hasDirection = destinyInput.getDirectionId() != null;
         if (hasDirection) {
-            directionDestiny = destinyService.getDestinyByDirecton(destinyInput.getDirectionId());
+            directionDestiny = destinyService.getDestinyByDirection(destinyInput.getDirectionId());
             directionResult = compareDestinyWithExplanation(userDestiny, directionDestiny.getDestiny(), destinyInput.getDirectionName());
             directionScore = Double.parseDouble(directionResult.split(";")[0]);
             if (directionScore < 3.0) {
@@ -169,22 +170,23 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
 
                 }
                 if(minCount > 0) {
-                    averageAnimalScore = animalColors.isEmpty() ? 0.0 : Math.round( animalTotalScore / animalColors.size() * 100.0) / 100.0;;
+                    averageAnimalScore = animalColors.isEmpty() ? 0.0 : Math.round(animalTotalScore / animalColors.size()* 100.0) / 100.0;
                 }else{
                     averageAnimalScore = maxScore;
                 }
-                animalListScore += averageAnimalScore;
+                animalListScore +=  averageAnimalScore;
                 animalCompatibilityResponses.add(AnimalCompatibilityResponse.builder()
                         .animalName(animal.getAnimalName())
-                        .animalColors(animalColors.stream().map(ColorDTO::getColor).toList())
                         .animalScore(averageAnimalScore)
+                        .animalColors(animalColors.stream().map(ColorDTO::getColor).toList())
                         .colorCompatibilityResponses(colorCompatibilityResponses)
                         .build());
             }
-            averageAnimalListScore = Math.round(animalListScore / animals.size() * 100.0) / 100.0;
+            averageAnimalListScore = Math.round(animalListScore / animals.size()* 100.0) / 100.0;;
             if(averageAnimalListScore < 3){
                 animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getAnimals());
-                animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation2().getAnimals());            }
+                animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation2().getAnimals());
+            }
         }
 
         CompatibilityResultResponse.CompatibilityResultResponseBuilder responseBuilder = CompatibilityResultResponse.builder()

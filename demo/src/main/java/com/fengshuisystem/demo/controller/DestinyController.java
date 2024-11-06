@@ -48,13 +48,21 @@ public class DestinyController {
                 .build();
     }
 
-    @GetMapping("/compatibility/{yearOfBirth}")
+    @PostMapping ("/compatibility/{yearOfBirth}")
     public ApiResponse<CompatibilityResultResponse> calculateCompatibility(
             @PathVariable int yearOfBirth,
             @RequestBody DestinyRequest destinyInput) {
         CompatibilityResultResponse response = compatibilityService.calculateCompatibility(yearOfBirth, destinyInput);
         return ApiResponse.<CompatibilityResultResponse>builder()
                 .result(response)
+                .build();
+    }
+
+    @GetMapping("/{destiny}")
+    public ApiResponse<DestinyDTO> getAllDestinysTuongSinhAndTuongKhac(@PathVariable String destiny
+    ) {
+        return ApiResponse.<DestinyDTO>builder()
+                .result(destinyService.getAllDestinyTuongSinhAndTuongKhac(destiny))
                 .build();
     }
 }

@@ -36,6 +36,18 @@ public class NumberServiceImpl implements NumberService {
         }
         return numbers;
     }
+
+    @Override
+    public List<NumberDTO> getAllNumbers() {
+        List<NumberDTO> numbers = numberRepository.findAll()
+                .stream()
+                .map(numberMapper::toDto)
+                .toList();
+        if (numbers.isEmpty()) {
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+        }
+        return numbers;
+    }
 }
 
 
