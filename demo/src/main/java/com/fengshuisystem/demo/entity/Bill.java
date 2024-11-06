@@ -74,6 +74,7 @@ public class Bill {
 
     @ManyToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "consultation_request_id", nullable = false)
+    @JsonBackReference
     private ConsultationRequest consultationRequest;
 
     @PrePersist
@@ -85,7 +86,6 @@ public class Bill {
         this.updatedBy = this.createdBy;
     }
 
-    @PreUpdate
     protected void onUpdate() {
         this.updatedDate = Instant.now();
         this.updatedBy = SecurityContextHolder.getContext().getAuthentication().getName();

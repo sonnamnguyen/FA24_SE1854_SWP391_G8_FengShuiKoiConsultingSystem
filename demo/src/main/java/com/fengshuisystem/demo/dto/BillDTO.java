@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.Account;
@@ -35,8 +36,7 @@ public class BillDTO {
     private String updatedBy;
     private Instant updatedDate;
 
-    private ConsultationRequest consultationRequest;
+    private Integer consultationRequestId;
 
-    @JsonIgnore
     private List<PackageDTO> packageFields;
 }

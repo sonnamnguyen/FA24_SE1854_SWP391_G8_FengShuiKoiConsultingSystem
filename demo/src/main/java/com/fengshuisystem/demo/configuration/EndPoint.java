@@ -20,7 +20,7 @@ public class EndPoint {
 
         public static final String[] ADMIN_PUT_ENDPOINTS = {
                 "/animals/{id}", "/shelters/{id}", "/colors/{id}",  "/shapes/{id}","api/bills/{id}","/packages/{id}",
-                "/api/consultation-results/send-email/{resultId}",
+                "/api/consultation-results/send-email/{resultId}"
         };
 
         public static final String[] ADMIN_DELETE_ENDPOINTS = {
@@ -43,7 +43,6 @@ public class EndPoint {
         public static final String[] USER_GET_ENDPOINTS = {
                 "/posts","/posts/search-posts","/post/comments","/post/images", "/consultation-request-details/{id}", "/api/consultation-request-details/{requestDetailId}",
                 "api/bills/{billId}",
-//                "/vn_pay/create_vn_pay"
         };
 
         public static final String[] USER_POST_ENDPOINTS = {
@@ -53,7 +52,8 @@ public class EndPoint {
         };
 
         public static final String[] USER_PUT_ENDPOINTS = {
-                "/posts/{id}","/post/comments/{id}","/post/images/{id}","api/bills/{id}"
+                "/posts/{id}","/post/comments/{id}","/post/images/{id}","api/bills/{id}",
+                "/api/consultation-requests/{requestId}"
         };
 
         public static final String[] USER_DELETE_ENDPOINTS = {

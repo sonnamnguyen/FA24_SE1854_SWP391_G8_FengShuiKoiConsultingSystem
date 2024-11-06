@@ -113,6 +113,5 @@ public class ConsultationRequest {
     private Set<ConsultationResult> consultationResults = new HashSet<>();
 
     @OneToMany(mappedBy = "consultationRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
     private Set<Bill> bills = new HashSet<>();
 }
