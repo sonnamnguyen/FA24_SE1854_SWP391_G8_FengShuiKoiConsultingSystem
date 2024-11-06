@@ -77,11 +77,10 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
 
         // Thiết lập thông tin thời gian và người dùng
         consultationResult.setConsultationDate(Instant.now());
-        if (consultationResult.getStatus() != Request.COMPLETED) {
-            throw new IllegalStateException("ConsultationRequestDetail is not 'COMPLETED'. Cannot create result.");
-        }
+
         consultationResult.setStatus(Request.PENDING);
 
+        consultationResult.setConsultantName(dto.getConsultantName());
         consultationResult.setCreatedBy(account.getFullName());
         consultationResult.setUpdatedBy(account.getFullName());
         consultationResult.setCreatedDate(Instant.now());
