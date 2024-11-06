@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.controller;
 
 
@@ -40,9 +39,9 @@ public class ShelterController {
             .build();
   }
 
-  @GetMapping("/{name}")
+  @GetMapping("/search-name")
   public ApiResponse<PageResponse<ShelterCategoryDTO>> getShelterBySearch(
-          @PathVariable String name,
+          @RequestParam String name,
           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
           @RequestParam(value = "size", required = false, defaultValue = "10") int size
 

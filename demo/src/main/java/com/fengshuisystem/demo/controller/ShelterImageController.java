@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
@@ -20,10 +19,10 @@ import java.util.List;
 public class ShelterImageController {
     ShelterImageService shelterImageService;
 
-    @GetMapping
-    public ApiResponse<List<ShelterImageDTO>> getAllShelterImages(@RequestParam Integer id) {
+    @PostMapping("/{id}")
+    public ApiResponse<List<ShelterImageDTO>> getAllShelterImages(@PathVariable Integer id, @RequestBody List<String> imageUrls) {
         return ApiResponse.<List<ShelterImageDTO>>builder()
-                .result(shelterImageService.getAllShelterImage(id))
+                .result(shelterImageService.getAllShelterImage(id, imageUrls))
                 .build();
     }
 }

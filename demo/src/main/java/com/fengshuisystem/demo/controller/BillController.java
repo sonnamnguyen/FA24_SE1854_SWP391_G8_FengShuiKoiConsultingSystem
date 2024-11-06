@@ -53,7 +53,7 @@ public class BillController {
             @RequestParam(defaultValue = "10") int size) {
 
         return ApiResponse.<PageResponse<BillDTO>>builder()
-                .result(billService.getAllBillsByStatus(                  status,page,size))
+                .result(billService.getAllBillsByStatus(status,page,size))
                 .build();
     }
 

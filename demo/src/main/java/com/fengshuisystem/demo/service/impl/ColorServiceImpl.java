@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ColorDTO;
@@ -32,7 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class ColorServiceImpl implements ColorService {
+public class    ColorServiceImpl implements ColorService {
     ColorMapper colorMapper;
     ColorRepository colorRepository;
     DestinyRepository destinyRepository;
@@ -56,9 +55,10 @@ public class ColorServiceImpl implements ColorService {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<ColorDTO> getColorByName(String name, int page, int size) {
+        Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
-        var pageData = colorRepository.findAllByColor(name, pageable);
+        var pageData = colorRepository.findAllByColorAndStatusContaining(name, status, pageable);
         if(pageData.isEmpty()) {
             throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
         }
@@ -104,20 +104,22 @@ public class ColorServiceImpl implements ColorService {
     public ColorDTO updateColor(Integer id, ColorDTO colorDTO) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        Color color = colorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
-        colorMapper.update(colorDTO, color);
         Destiny destiny = destinyRepository.findById(colorDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
-        color.setStatus(Status.ACTIVE);
+        Color color = colorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
         color.setDestiny(destiny);
+        colorMapper.update(colorDTO, color);
+        color.setStatus(Status.ACTIVE);
         color.setUpdatedDate(Instant.now());
         color.setUpdatedBy(name);
         return colorMapper.toDto(colorRepository.saveAndFlush(color));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ColorDTO> getAllColors() {
         Status status = Status.ACTIVE;
         return colorRepository.findAllByStatus(status).stream().map(colorMapper::toDto).toList();
     }
+
     @Override
     public List<ColorDTO> getColorsByDestiny(Integer destiny) {
         List<ColorDTO> colors = colorRepository.findAllByDestiny(destiny)
@@ -141,4 +143,5 @@ public class ColorServiceImpl implements ColorService {
         }
         return colors;
     }
+
 }

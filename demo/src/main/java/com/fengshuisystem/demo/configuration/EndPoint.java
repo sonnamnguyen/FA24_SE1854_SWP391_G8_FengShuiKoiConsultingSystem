@@ -1,15 +1,16 @@
-
 package com.fengshuisystem.demo.configuration;
 
 public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
-                "/animals", "/animals/animal-search", "/shelters", "/shelters/{search}",
-                "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys","/bills","/bills/status"
-
+                "/animals", "/animals/animal-search", "/shelters", "/shelters/search-name",
+                "/colors", "shapes",  "/shelter-images", "/destinys", "/destinys/{destiny}", "colors/getAll-Colors",
+                "shapes/getAll-Shapes", "shapes/shape-search", "/users", "/users/search-name", "/roles", "colors/search-colors",
+                "/bills","/bills/status"
         };
         public static final String[] ADMIN_POST_ENDPOINTS = {
-                "/animals", "/shelters", "/colors", "/shapes", "/consulation-animal", "/consulation-shelter","/packages"
+                "/animals", "/shelters", "/colors", "/shapes", "/consulation-animal", "/consulation-shelter",
+                "/users{userId}/set-roles", "/animal-images/{id}", "/shelter-images/{id}", "/packages"
 
         };
 
@@ -30,16 +31,19 @@ public class EndPoint {
                 "users/existByUserName", "users/existByEmail", "users/activate", "/destinys/destiny/{yearOfBirth}",
                 "/destinys/autoConsultation/{yearOfBirth}", "/api/direction",
                 "shapes/getAll-Shapes", "/api/number", "animals/animalCategory" , "colors/getAll-Colors"
+        };
+
+        public static final String[] USER_POST_ENDPOINTS = {
+                "users/reset-password","users/forgot-password","/posts","/post/comments","/post/images","/bills",
 
         };
+
         public static final String[] USER_GET_ENDPOINTS = {
                 "/posts","/posts/search-posts","/post/comments","/post/images","/vn_pay/create_vn_pay"
 
 
         };
-        public static final String[] USER_POST_ENDPOINTS = {
-                "users/reset-password","users/forgot-password","/posts","/post/comments","/post/images","/bills",
-        };
+
         public static final String[] USER_PUT_ENDPOINTS = {
                 "/posts/{id}","/post/comments/{id}","/post/images/{id}","/bills/{id}",
         };

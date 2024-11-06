@@ -1,5 +1,4 @@
-
-package com.fengshuisystem.demo.dto.response;
+package com.fengshuisystem.demo.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,6 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntrospectResponse {
-    boolean valid;
+public class DestinyTuongSinh {
+    String name;
 }

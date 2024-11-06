@@ -27,5 +27,4 @@ public class ShelterCategoryDTO {
  Instant updatedDate;
  String updatedBy;
  List<ShelterImageDTO> shelterImages;
-
 }

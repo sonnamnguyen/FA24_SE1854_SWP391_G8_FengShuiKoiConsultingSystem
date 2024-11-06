@@ -40,7 +40,7 @@ public class ShapeServiceImpl implements ShapeService {
     public ShapeDTO createShape(ShapeDTO shapeDTO) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        if(shapeRepository.existsByShape((shapeDTO.getShape()))) throw new AppException(ErrorCode.SHAPE_EXISTED);
+        if(shapeRepository.existsByShape((shapeDTO.getShape()))) throw new AppException(ErrorCode.ANIMAL_EXISTED);
         Destiny destiny = destinyRepository.findById(shapeDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
         Shape shape = shapeMapper.toEntity(shapeDTO);
         shape.setStatus(Status.ACTIVE);
@@ -60,7 +60,7 @@ public class ShapeServiceImpl implements ShapeService {
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = shapeRepository.findAlByShape(name, pageable);
         if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.SHAPE_NOT_EXISTED);
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
         }
         return PageResponse.<ShapeDTO>builder()
                 .currentPage(page)
@@ -79,7 +79,7 @@ public class ShapeServiceImpl implements ShapeService {
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = shapeRepository.findAllByStatus(status, pageable);
         if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.SHAPE_NOT_EXISTED);
+            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
         }
         return PageResponse.<ShapeDTO>builder()
                 .currentPage(page)
@@ -94,7 +94,7 @@ public class ShapeServiceImpl implements ShapeService {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteShape(Integer id) {
-        var shape = shapeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
+        var shape = shapeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
         shape.setStatus(Status.DELETED);
         shapeRepository.save(shape);
     }
@@ -105,10 +105,9 @@ public class ShapeServiceImpl implements ShapeService {
     public ShapeDTO updateShape(Integer id, ShapeDTO shapeDTO) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        Destiny destiny = destinyRepository.findById(shapeDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
-        Shape shape = shapeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
-        shape.setDestiny(destiny);
+        Shape shape = shapeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
         shapeMapper.update(shapeDTO, shape);
+        Destiny destiny = destinyRepository.findById(shapeDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
         shape.setUpdatedBy(name);
         shape.setUpdatedDate(Instant.now());
         shape.setDestiny(destiny);

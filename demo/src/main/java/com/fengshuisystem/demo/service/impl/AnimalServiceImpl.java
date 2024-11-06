@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.service.impl;
 import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
 import com.fengshuisystem.demo.dto.AnimalImageDTO;
@@ -7,12 +6,14 @@ import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.AnimalCategory;
 import com.fengshuisystem.demo.entity.AnimalImage;
 import com.fengshuisystem.demo.entity.Color;
+import com.fengshuisystem.demo.entity.Destiny;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.AnimalMapper;
 import com.fengshuisystem.demo.repository.AnimalRepository;
 import com.fengshuisystem.demo.repository.ColorRepository;
+import com.fengshuisystem.demo.repository.DestinyRepository;
 import com.fengshuisystem.demo.service.AnimalService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
@@ -148,6 +146,7 @@ public class AnimalServiceImpl implements AnimalService {
         AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
         return animalMapper.toDto(animalCategory);
     }
+
     @Override
     public List<AnimalCategoryDTO> getAnimalCategoryByColorId(int color) {
         return animalRepository.findAllByColorId(color)
