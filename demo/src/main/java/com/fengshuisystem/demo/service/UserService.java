@@ -1,6 +1,6 @@
-
 package com.fengshuisystem.demo.service;
 
+import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.request.PasswordCreationRequest;
 import com.fengshuisystem.demo.dto.request.UserCreationRequest;
 import com.fengshuisystem.demo.dto.request.UserUpdateRequest;
@@ -19,4 +19,10 @@ public interface UserService {
     UserResponse deleteUser(Integer userId);
     List<UserResponse> getUsers();
     UserResponse getUser(Integer id);
+     PageResponse<UserResponse> getAllUsers(int page, int size);
+     PageResponse<UserResponse> getUsersBySearch(String name, int page, int size);
+     UserResponse setRole(Integer userId, List<Integer> ids);
+
+
+
 }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface NumberService {
     List<NumberDTO> getNumbers(Integer destiny);
+    List<NumberDTO> getAllNumbers();
+
 }

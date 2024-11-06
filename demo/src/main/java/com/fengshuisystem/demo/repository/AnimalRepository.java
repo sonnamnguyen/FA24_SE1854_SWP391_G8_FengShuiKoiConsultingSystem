@@ -1,7 +1,6 @@
 
 package com.fengshuisystem.demo.repository;
 
-import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
 import com.fengshuisystem.demo.entity.AnimalCategory;
 import com.fengshuisystem.demo.entity.enums.Status;
 import feign.Param;
@@ -12,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Repository

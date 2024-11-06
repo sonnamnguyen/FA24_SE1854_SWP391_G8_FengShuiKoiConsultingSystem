@@ -1,6 +1,11 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.*;
+import com.fengshuisystem.demo.dto.request.DestinyTuongKhac;
+import com.fengshuisystem.demo.dto.request.DestinyTuongSinh;
+import com.fengshuisystem.demo.entity.Destiny;
+import com.fengshuisystem.demo.exception.AppException;
+import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.DestinyMapper;
 import com.fengshuisystem.demo.repository.DestinyRepository;
 import com.fengshuisystem.demo.service.*;
@@ -87,7 +92,9 @@ public class DestinyServiceImpl implements DestinyService {
 
     @Override
     public DestinyDTO getDestinyId(String destinyName) {
-        return destinyMapper.toDto(destinyRepository.findByDestiny(destinyName));
+        Destiny destiny = destinyRepository.findByDestiny(destinyName)
+                .orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
+        return destinyMapper.toDto(destiny);
     }
 
     @Override
@@ -99,7 +106,7 @@ public class DestinyServiceImpl implements DestinyService {
     }
 
     @Override
-    public DestinyDTO getDestinyByDirecton(int directionId) {
+    public DestinyDTO getDestinyByDirection(int directionId) {
         return destinyMapper.toDto(destinyRepository.findByDirectionId(directionId));
     }
 
@@ -153,6 +160,34 @@ public class DestinyServiceImpl implements DestinyService {
             }
         }
         return shelterNames;
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public DestinyDTO getAllDestinyTuongSinhAndTuongKhac(String destinyName) {
+        Destiny destiny = destinyRepository.findByDestiny(destinyName)
+                .orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
+
+        // Map Destiny thành DestinyDTO
+        DestinyDTO dto = destinyMapper.toDto(destiny);
+
+        // Tìm danh sách tương sinh
+        String tuongSinhTruoc = findTuongSinhTruoc(dto.getDestiny());
+        String tuongSinhSau = findTuongSinhSau(dto.getDestiny());
+        dto.setDestinyTuongSinhs(Arrays.asList(
+                new DestinyTuongSinh(tuongSinhTruoc),
+                new DestinyTuongSinh(tuongSinhSau)
+        ));
+
+        // Tìm danh sách tương khắc
+        String tuongKhacTruoc = findTuongKhacTruoc(dto.getDestiny());
+        String tuongKhacSau = findTuongKhacSau(dto.getDestiny());
+        dto.setDestinyTuongKhacs(Arrays.asList(
+                new DestinyTuongKhac(tuongKhacTruoc),
+                new DestinyTuongKhac(tuongKhacSau)
+        ));
+
+        return dto;
     }
 
     @Override

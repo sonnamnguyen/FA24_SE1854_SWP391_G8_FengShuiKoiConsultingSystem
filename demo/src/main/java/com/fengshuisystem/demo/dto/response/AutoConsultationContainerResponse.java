@@ -9,6 +9,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AutoConsultationContainerResponse {
+    String destiny;
+    String destinyTuongSinh;
     AutoConsultationResponse consultation1;
     AutoConsultationResponse consultation2;
 }
