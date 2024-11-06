@@ -2,6 +2,8 @@ package com.fengshuisystem.demo.dto;
 
 
 import com.fengshuisystem.demo.entity.enums.Request;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,16 +18,19 @@ import java.util.List;
 public class ConsultationResultDTO {
     Integer id;
 
-    // Sử dụng ID thay vì đối tượng để tránh vòng lặp
     Integer consultationRequestId;
     Integer consultationRequestDetailId;
 
     Integer accountId;
+
+    @NotNull
     Integer consultationCategoryId;
 
     Instant consultationDate;
     String consultantName;
     Request status;
+
+    @NotBlank
     String description;
 
     Instant createdDate;

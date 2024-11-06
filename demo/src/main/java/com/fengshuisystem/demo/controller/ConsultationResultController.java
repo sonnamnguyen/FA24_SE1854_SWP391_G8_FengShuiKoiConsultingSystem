@@ -1,8 +1,10 @@
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
+import com.fengshuisystem.demo.dto.ConsultationRequestDTO;
 import com.fengshuisystem.demo.dto.ConsultationResultDTO;
-import com.fengshuisystem.demo.service.ConsultationResultService;
+import com.fengshuisystem.demo.service.impl.ConsultationResultServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,27 +18,22 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class ConsultationResultController {
 
-    ConsultationResultService consultationResultService;
+    private final ConsultationResultServiceImpl consultationResultService;
 
     @PostMapping("/requestId/{requestId}")
     public ApiResponse<ConsultationResultDTO> createConsultationResult(
-            @PathVariable Integer requestId,
+            @Valid @PathVariable Integer requestId,
             @RequestBody ConsultationResultDTO consultationResultDTO) {
-        ConsultationResultDTO result = consultationResultService.createConsultationResult(requestId, consultationResultDTO);
         return ApiResponse.<ConsultationResultDTO>builder()
-                .result(result)
-                .code(1000)
-                .message("Consultation Result created successfully")
+                .result(consultationResultService.createConsultationResult(requestId, consultationResultDTO))
                 .build();
     }
 
     @PutMapping("/send-email/{resultId}")
     public ApiResponse<ConsultationResultDTO> updateConsultationResult(@PathVariable Integer resultId) {
-        ConsultationResultDTO result = consultationResultService.updateConsultationResult(resultId);
+
         return ApiResponse.<ConsultationResultDTO>builder()
-                .result(result)
-                .code(1000)
-                .message("Consultation Result updated and email sent successfully")
+                .result(consultationResultService.updateConsultationResult(resultId))
                 .build();
     }
 

@@ -29,14 +29,6 @@ public class ConsultationRequestDetail {
     @JsonIgnore
     private ConsultationRequest consultationRequest;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "shelter_category_id")
-    private ShelterCategory shelterCategory;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "animal_category_id")
-    private AnimalCategory animalCategory;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
