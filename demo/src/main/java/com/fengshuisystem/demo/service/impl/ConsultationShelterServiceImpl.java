@@ -34,11 +34,15 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
 
         // Lấy ConsultationResult dựa trên resultId
         ConsultationResult consultationResult = consultationResultRepository.findById(resultId)
-                .orElseThrow(() -> new RuntimeException("ConsultationResult not found with ID: " + resultId));
+                .orElseThrow(() -> new RuntimeException("ConsultationResult không tìm thấy với ID: " + resultId));
+
+        if (!consultationResult.getStatus().equals(Request.PENDING)) {
+            throw new RuntimeException("Result có Status khác PENDING");
+        }
 
         // Lấy ShelterCategory dựa trên shelterCategoryId
         ShelterCategory shelterCategory = shelterCategoryRepository.findById(shelterCategoryId)
-                .orElseThrow(() -> new RuntimeException("ShelterCategory not found with ID: " + shelterCategoryId));
+                .orElseThrow(() -> new RuntimeException("ShelterCategory không tìm thấy với ID: " + shelterCategoryId));
 
         // Tạo ConsultationShelter từ DTO và thiết lập các quan hệ
         ConsultationShelter shelter = consultationShelterMapper.toEntity(dto);
@@ -50,4 +54,5 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
         ConsultationShelter savedShelter = consultationShelterRepository.save(shelter);
         return consultationShelterMapper.toDto(savedShelter);
     }
+
 }

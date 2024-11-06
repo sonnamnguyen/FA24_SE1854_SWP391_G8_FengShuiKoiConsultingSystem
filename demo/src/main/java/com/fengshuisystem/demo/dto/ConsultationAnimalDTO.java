@@ -19,6 +19,8 @@ public class ConsultationAnimalDTO {
   Integer consultationResultId;
   Integer animalCategoryId;
   String description;
+
+  @JsonIgnore
   List<NumberDTO> numbers;
   Request status;
   Instant createdDate;
