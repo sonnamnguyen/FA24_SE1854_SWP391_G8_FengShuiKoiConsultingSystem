@@ -1,4 +1,5 @@
 package com.fengshuisystem.demo.dto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fengshuisystem.demo.entity.Post;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,12 +12,9 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostImageDTO {
     private Integer id;
-    private PostDTO post;
-    private String imageName;
+//    @JsonIgnore
+//    private Integer postId;
+//    private PostDTO post;
     private String imageUrl;
-    private String status;
-    private Instant createdDate;
-    private String createdBy;
-    private Instant updatedDate;
-    private String updatedBy;
+
 }

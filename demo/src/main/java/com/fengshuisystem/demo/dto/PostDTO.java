@@ -20,6 +20,7 @@ public class PostDTO {
     private PackageDTO packageId;
     private DestinyDTO destiny;
     private String content;
+    private String title;
     private Integer likeNumber;
     private Integer dislikeNumber;
     private Integer shareNumber;
@@ -28,5 +29,7 @@ public class PostDTO {
     private String createdBy;
     private Instant updatedDate;
     private String updatedBy;
+    List<CommentDTO> comments;
+    List<PostImageDTO> images;
 
 }

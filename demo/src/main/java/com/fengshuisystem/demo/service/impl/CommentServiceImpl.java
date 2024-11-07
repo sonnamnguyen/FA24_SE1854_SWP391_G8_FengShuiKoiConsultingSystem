@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDTO createComment(CommentDTO commentDTO) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        Post post = postRepository.findById(commentDTO.getPost().getId()).orElseThrow(()->new AppException(ErrorCode.POST_NOT_EXISTED));
+        Post post = postRepository.findById(commentDTO.getPostId()).orElseThrow(()->new AppException(ErrorCode.POST_NOT_EXISTED));
         Comment comment = commentMapper.toEntity(commentDTO);
         comment.setPost(post);
         comment.setStatus(Status.ACTIVE);
@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXISTED));
-        Post post = postRepository.findById(commentDTO.getPost().getId()).orElseThrow(()->new AppException(ErrorCode.POST_NOT_EXISTED));
+        Post post = postRepository.findById(commentDTO.getPostId()).orElseThrow(()->new AppException(ErrorCode.POST_NOT_EXISTED));
         commentMapper.update(commentDTO, comment);
         comment.setPost(post);
         comment.setUpdatedBy(name);
