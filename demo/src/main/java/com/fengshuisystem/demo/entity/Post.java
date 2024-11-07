@@ -29,14 +29,14 @@ public class Post {
     @JsonIgnore
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "post_category_id", nullable = false)
     private PostCategory postCategory;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    private Package packageField;
+    private Package packageId;
     @JsonIgnore
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn
+    @JoinColumn(name = "destiny_id")
     private Destiny destiny;
 
     @NotNull

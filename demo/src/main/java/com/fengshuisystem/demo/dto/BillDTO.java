@@ -1,9 +1,13 @@
 package com.fengshuisystem.demo.dto;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.Account;
+import com.fengshuisystem.demo.entity.ConsultationRequest;
 import com.fengshuisystem.demo.entity.Package;
 import com.fengshuisystem.demo.entity.Payment;
+import com.fengshuisystem.demo.entity.enums.BillStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
@@ -17,16 +21,22 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BillDTO {
     private Integer id;
-    private UserResponse userResponse;
+
+    @JsonIgnore
+    private Account account;
+
     private PaymentDTO payment;
-    private Integer subAmount;
-    private Integer vat;
-    private String status;
-    private Integer vatAmount;
+    private BigDecimal subAmount;
+    private BigDecimal vat;
+    private BillStatus status;
+    private BigDecimal vatAmount;
     private BigDecimal totalAmount;
     private Instant createdDate = Instant.now();
     private String createdBy;
     private String updatedBy;
     private Instant updatedDate;
+
+    private Integer consultationRequestId;
+
     private List<PackageDTO> packageFields;
 }

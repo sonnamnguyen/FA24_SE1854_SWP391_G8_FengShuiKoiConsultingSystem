@@ -17,7 +17,7 @@ public class PostDTO {
     private Integer id;
     private UserResponse userResponse;
     private PostCategoryDTO postCategory;
-    private PackageDTO packageField;
+    private PackageDTO packageId;
     private DestinyDTO destiny;
     private String content;
     private Integer likeNumber;

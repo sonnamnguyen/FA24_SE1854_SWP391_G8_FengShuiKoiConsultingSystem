@@ -1,14 +1,10 @@
 package com.fengshuisystem.demo.dto;
 
-
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fengshuisystem.demo.entity.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import java.time.Instant;
 import java.util.List;
-
 
 @Data
 @NoArgsConstructor
@@ -16,15 +12,20 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnimalCategoryDTO {
+
     Integer id;
     String animalCategoryName;
     String description;
     String origin;
-    String status;
+
+    Status status;
+
     Instant createdDate;
     String createdBy;
     Instant updatedDate;
     String updatedBy;
+
     List<AnimalImageDTO> animalImages;
+
     List<ColorDTO> colors;
 }

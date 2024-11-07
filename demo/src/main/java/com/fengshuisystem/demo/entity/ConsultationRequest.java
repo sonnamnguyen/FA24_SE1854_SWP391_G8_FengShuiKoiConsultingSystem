@@ -1,5 +1,10 @@
 package com.fengshuisystem.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fengshuisystem.demo.dto.response.UserResponse;
+import com.fengshuisystem.demo.entity.enums.Gender;
+import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,27 +12,52 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Instant;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 public class ConsultationRequest {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "account_id", nullable = false)
+    @JsonIgnore
     private Account account;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn
-    private Package packageField;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "package_id", nullable = false)
+    @JsonIgnore
+    private Package packageId;
+
+    @NotNull
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
+    @NotNull
+    @Column(name = "yob", nullable = false)
+    private Integer yob;
+
+    @NotNull
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @NotNull
+    @Column(name = "phone", nullable = false)
+    private String phone;
 
     @Size(max = 1000)
     @Nationalized
@@ -35,13 +65,17 @@ public class ConsultationRequest {
     private String description;
 
     @NotNull
-    @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    @Column(name = "status", nullable = false)
+    private Request status = Request.PENDING;
 
     @NotNull
     @Column(name = "created_date", nullable = false)
     private Instant createdDate = Instant.now();
+
+    @NotNull
+    @Column(name = "updated_date", nullable = false)
+    private Instant updatedDate = Instant.now();
 
     @Size(max = 300)
     @NotNull
@@ -49,20 +83,35 @@ public class ConsultationRequest {
     @Column(name = "created_by", nullable = false, length = 300)
     private String createdBy;
 
-    @NotNull
-    @Column(name = "updateted_date", nullable = false)
-    private Instant updatetedDate = Instant.now();
-
     @Size(max = 300)
     @NotNull
     @Nationalized
-    @Column(name = "updateted_by", nullable = false, length = 300)
-    private String updatetedBy;
+    @Column(name = "updated_by", nullable = false, length = 300)
+    private String updatedBy;
 
-    @OneToMany(mappedBy = "requestDetail", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    private Set<ConsultationRequestDetail> consultationRequestDetails = new LinkedHashSet<>();
+    @PrePersist
+    protected void onCreate() {
+        Instant now = Instant.now();
+        this.createdDate = now;
+        this.updatedDate = now;
+        this.createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.updatedBy = this.createdBy;
+    }
 
-    @OneToMany(mappedBy = "request", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    private Set<ConsultationResult> consultationResults = new LinkedHashSet<>();
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedDate = Instant.now();
+        this.updatedBy = SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
+    @OneToMany(mappedBy = "consultationRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<ConsultationRequestDetail> consultationRequestDetails = new HashSet<>();
+
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<ConsultationResult> consultationResults = new HashSet<>();
+
+    @OneToMany(mappedBy = "consultationRequest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Bill> bills = new HashSet<>();
 }

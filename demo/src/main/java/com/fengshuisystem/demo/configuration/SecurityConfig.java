@@ -22,17 +22,16 @@ import org.springframework.web.filter.CorsFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-
-
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // Cho phép truy cập Swagger UI và API Docs công khai
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, EndPoint.PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, EndPoint.PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, EndPoint.ADMIN_GET_ENDPOINTS).hasAuthority("ROLE_ADMIN")

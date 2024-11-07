@@ -1,6 +1,8 @@
 
 package com.fengshuisystem.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,6 +31,7 @@ public class Role {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JsonIgnore
     private Set<Account> accounts = new LinkedHashSet<>();
 
 }

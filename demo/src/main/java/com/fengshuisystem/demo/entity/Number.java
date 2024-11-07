@@ -20,6 +20,7 @@ public class Number {
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
+    @JoinColumn(name = "destiny_id")
     private Destiny destiny;
 
     @Column(name = "number")
