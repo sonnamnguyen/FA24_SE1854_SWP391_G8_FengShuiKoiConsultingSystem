@@ -77,6 +77,11 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                 KoiFish
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/consultation-request">
+                Book a consultation
+              </NavLink>
+            </li>
           </ul>
           <form className="d-flex" role="search" onSubmit={(e) => e.preventDefault()}>
             <input

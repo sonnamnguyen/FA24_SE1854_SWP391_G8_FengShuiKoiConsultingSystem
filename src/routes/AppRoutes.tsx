@@ -24,6 +24,7 @@ import ViewAddShape from "../admin/shape/layoutShape/ViewAddShape";
 import ViewColorManagement from "../admin/color/layoutCokor/ViewColorManagement";
 import ViewShapeManagement from "../admin/shape/layoutShape/ViewManagementShape";
 import ViewUserManagement from "../admin/user/UserManagement";
+import ConsultationRequest from "../consultation/request/ConsultationRequest";
 
 
 const AppRoutes = () => {
@@ -63,6 +64,10 @@ const AppRoutes = () => {
         <Route path="/view-color" element={<PageViewColor />} />
         <Route path="/view-shape" element={<PageViewShape />} />
         <Route path="/view-user" element={<PageViewUser />} />
+
+        {/* Consultation */}
+        {/* Consultation Request */}
+        <Route path="/consultation-request" element={<ConsultationRequest />} />
 
 
         
