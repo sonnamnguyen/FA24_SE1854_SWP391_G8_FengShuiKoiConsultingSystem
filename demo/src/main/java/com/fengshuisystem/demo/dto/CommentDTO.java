@@ -1,4 +1,5 @@
 package com.fengshuisystem.demo.dto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fengshuisystem.demo.entity.Post;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,7 +14,7 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDTO {
     private Integer id;
-    private PostDTO post;
+    private Integer postId;
     private String content;
     private String status;
     private Instant createdDate = Instant.now();

@@ -31,7 +31,7 @@ public class EndPoint {
                 "users/existByUserName", "users/existByEmail", "users/activate"
         };
         public static final String[] USER_GET_ENDPOINTS = {
-                "/posts","/posts/search-posts","/post/comments","/post/images","/vn_pay/create_vn_pay"
+                "/posts","/posts/search-posts","/post/comments","/post/images","/vn_pay/create_vn_pay","/search-posts/email","/search-posts/title"
 
 
         };
