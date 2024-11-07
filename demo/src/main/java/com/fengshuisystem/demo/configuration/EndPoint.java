@@ -6,7 +6,7 @@ public class EndPoint {
                 "/animals", "/animals/animal-search", "/shelters", "/shelters/search-name", "/shelters/{search}",
                 "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors",
                 "shapes/getAll-Shapes", "shapes/shape-search", "/users", "/users/search-name", "/roles",
-                "colors/search-colors", "/bills", "/bills/status", "api/bills", "api/bills/status", "/api/consultation-requests/{requestId}",
+                "colors/search-colors", "/bills", "/bills/status", "api/bills", "api/bills/status"
         };
 
         public static final String[] ADMIN_POST_ENDPOINTS = {
@@ -29,27 +29,26 @@ public class EndPoint {
         public static final String[] PUBLIC_ENDPOINTS = {
                 "/users", "/users/admin", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh",
                 "/auth/outbound/authentication", "/roles", "auth/token-email",
-                "/destinys/compatibility/{yearOfBirth}", "/shapes/{id}"
+                "/destinys/compatibility/{yearOfBirth}"
         };
 
         public static final String[] PUBLIC_GET_ENDPOINTS = {
                 "users/existByUserName", "users/existByEmail", "users/activate",
                 "/destinys/destiny/{yearOfBirth}", "/destinys/autoConsultation/{yearOfBirth}",
                 "api/vn_pay/create_vn_pay", "shapes/getAll-Shapes", "/api/number",
-                "animals/animalCategory", "colors/getAll-Colors", "/shelters/shelterCategory", "/animals/animalCategory",
-                "/animals/{id}", "/shelters/{id}",
+                "animals/animalCategory", "colors/getAll-Colors"
         };
 
         public static final String[] USER_GET_ENDPOINTS = {
                 "/posts", "/posts/search-posts", "/post/comments", "/post/images",
-                "api/bills/{billId}","/search-posts/title","/search-posts/email",
-                "/packages/{id}", "/packages", "/api/consultation-requests/{requestId}",
+                "/consultation-request-details/{id}", "/api/consultation-request-details/{requestDetailId}",
+                "api/bills/{billId}", "/vn_pay/create_vn_pay","/search-posts/title","/search-posts/email"
         };
 
         public static final String[] USER_POST_ENDPOINTS = {
                 "users/reset-password", "users/forgot-password", "/posts", "/post/comments", "/post/images",
                 "api/bills", "/api/consultation-requests",
-                "/api/consultation-request-details/request-id/{requestId}",
+                "/api/consultation-request-details/request-id/{requestId}/bill-id/{billId}",
                 "api/bills/request/{requestId}/payments/{paymentId}"
         };
 
@@ -65,7 +64,7 @@ public class EndPoint {
 
         public static final String[] BOTH_GET_ENDPOINTS = {
                 "api/bills/{accountId}/status", "/api/consultation-request-details/{requestDetailId}",
-                "api/bills/{billId}", "/api/consultation-requests/{requestId}"
+                "api/bills/{billId}"
         };
 
         public static final String[] BOTH_DELETE_ENDPOINTS = {
