@@ -30,8 +30,9 @@ public class Payment {
 
     @Size(max = 20)
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false, length = 20)
-    private String paymentStatus;
+    private Status paymentStatus = Status.ACTIVE;
 
     @NotNull
     @Column(name = "created_date", nullable = false)
@@ -44,19 +45,21 @@ public class Payment {
     private String createdBy;
 
     @NotNull
-    @Column(name = "updateted_date", nullable = false)
-    private Instant updatetedDate;
+    @Column(name = "updated_date", nullable = false)
+    private Instant updatedDate;
 
     @Size(max = 300)
     @NotNull
     @Nationalized
-    @Column(name = "updateted_by", nullable = false, length = 300)
-    private String updatetedBy;
+    @Column(name = "updated_by", nullable = false, length = 300)
+    private String updatedBy;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Status status = Status.ACTIVE;
+
     @OneToMany(mappedBy = "payment", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JsonIgnore
     private Set<Bill> bills = new LinkedHashSet<>();
 
 }

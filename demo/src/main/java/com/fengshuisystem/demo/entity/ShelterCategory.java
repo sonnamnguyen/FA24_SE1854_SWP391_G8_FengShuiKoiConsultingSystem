@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.entity;
 
 import com.fengshuisystem.demo.entity.enums.Status;
@@ -17,11 +16,11 @@ import java.util.Set;
 @Setter
 @Entity
 public class ShelterCategory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "shelter_category_id", nullable = false)
     private Integer id;
-
 
     @Size(max = 255)
     @NotNull
@@ -30,7 +29,7 @@ public class ShelterCategory {
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "shape_id", nullable = false)
     private Shape shape;
 
     @Column(name = "width")
@@ -61,7 +60,7 @@ public class ShelterCategory {
     @NotNull
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Status status = Status.ACTIVE;
 
     @NotNull
     @Column(name = "created_date", nullable = false)
@@ -81,7 +80,13 @@ public class ShelterCategory {
     @Column(name = "updated_by")
     private String updatedBy;
 
-    @OneToMany(mappedBy = "shelterCategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    // Chuyển từ OneToMany sang ManyToMany với ConsultationRequestDetail
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "consultation_shelter_category",
+            joinColumns = @JoinColumn(name = "shelter_category_id"),
+            inverseJoinColumns = @JoinColumn(name = "consultation_request_detail_id")
+    )
     private Set<ConsultationRequestDetail> consultationRequestDetails = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "shelterCategory", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
@@ -89,5 +94,4 @@ public class ShelterCategory {
 
     @OneToMany(mappedBy = "shelterCategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ShelterImage> shelterImages = new LinkedHashSet<>();
-
 }

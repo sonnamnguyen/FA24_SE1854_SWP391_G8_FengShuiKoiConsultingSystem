@@ -23,6 +23,7 @@ public class Shape {
 
     @NotNull
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, optional = false)
+    @JoinColumn(name = "destiny_id", nullable = false)
     private Destiny destiny;
 
     @Size(max = 50)
@@ -33,7 +34,7 @@ public class Shape {
     @NotNull
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Status status = Status.ACTIVE;
 
     @Column(name = "created_date")
     private Instant createdDate = Instant.now();

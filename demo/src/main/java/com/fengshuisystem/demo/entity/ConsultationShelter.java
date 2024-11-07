@@ -1,6 +1,6 @@
-
 package com.fengshuisystem.demo.entity;
 
+import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Instant;
 import java.util.LinkedHashSet;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Table(name = "consultation_shelter")
 public class ConsultationShelter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +25,11 @@ public class ConsultationShelter {
     private Integer id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn
-    private ConsultationResult consultation;
+    @JoinColumn(name = "consultation_result_id")
+    private ConsultationResult consultationResult;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinColumn
+    @JoinColumn(name = "shelter_category_id")
     private ShelterCategory shelterCategory;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
@@ -45,23 +47,38 @@ public class ConsultationShelter {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Request status = Request.CANCELLED;
 
     @NotNull
     @Column(name = "created_date", nullable = false)
-    private Instant createdDate = Instant.now();
+    private Instant createdDate;
 
     @Size(max = 300)
+    @NotNull
     @Nationalized
     @Column(name = "created_by", nullable = false, length = 300)
     private String createdBy;
 
-    @Column(name = "updateted_date", nullable = false)
-    private Instant updatetedDate = Instant.now();
+    @Column(name = "updated_date", nullable = false)
+    private Instant updatedDate;
 
     @Size(max = 300)
     @Nationalized
-    @Column(name = "updateted_by", nullable = false, length = 300)
-    private String updatetedBy;
+    @Column(name = "updated_by", nullable = false, length = 300)
+    private String updatedBy;
 
+    @PrePersist
+    protected void onCreate() {
+        Instant now = Instant.now();
+        this.createdDate = now;
+        this.updatedDate = now;
+        this.createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
+        this.updatedBy = this.createdBy;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedDate = Instant.now();
+        this.updatedBy = SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 }

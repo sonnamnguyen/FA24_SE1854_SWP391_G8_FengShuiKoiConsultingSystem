@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.entity;
 
 import com.fengshuisystem.demo.entity.enums.Status;
@@ -16,6 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 public class AnimalCategory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "animal_category_id", nullable = false)
@@ -36,7 +36,7 @@ public class AnimalCategory {
     @NotNull
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status = Status.INACTIVE;
+    private Status status = Status.ACTIVE;
 
     @NotNull
     @Column(name = "created_date", nullable = false)
@@ -59,13 +59,20 @@ public class AnimalCategory {
     @OneToMany(mappedBy = "animalCategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<ConsultationAnimal> consultationAnimals = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "animalCategory", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    // Chuyển từ OneToMany sang ManyToMany với ConsultationRequestDetail
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "consultation_animal_category",
+            joinColumns = @JoinColumn(name = "animal_category_id"),
+            inverseJoinColumns = @JoinColumn(name = "consultation_request_detail_id")
+    )
     private Set<ConsultationRequestDetail> consultationRequestDetails = new LinkedHashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinTable(name = "animal_color",
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "animal_color",
             joinColumns = @JoinColumn(name = "animal_category_id"),
-            inverseJoinColumns = @JoinColumn(name = "color_id"))
+            inverseJoinColumns = @JoinColumn(name = "color_id")
+    )
     private Set<Color> colors = new LinkedHashSet<>();
-
 }
