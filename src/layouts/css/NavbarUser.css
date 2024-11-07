@@ -1,0 +1,69 @@
+.navbar {
+  position: fixed;
+  height: 17%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: transparent;
+  border-bottom: solid #f5f5f5;
+  transition: all 0.5s;
+}
+.sticky {
+  background-color: #f5f5f5;
+  opacity: 0.9;
+  height: 12%;
+}
+li {
+  list-style-type: none;
+}
+
+.navbar-brand img {
+  width: 50px; /* Kích thước logo */
+  height: auto;
+}
+.nav-item .nav-link {
+  font-weight: bold;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.nav-link {
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: rgba(18, 18, 18, 0.2); /* Nền sáng khi hover */
+  color: #ffffff; /* Giữ màu trắng */
+}
+
+.dropdown-menu {
+  background-color: #ff4d4d; /* Nền đỏ cho dropdown */
+}
+
+.dropdown-item {
+  color: #ffffff; /* Trắng cho text dropdown */
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Nền sáng khi hover */
+}
+
+.btn-danger {
+  background-color: #ff4d4d; /* Nền đỏ cho nút */
+  border: none; /* Bỏ viền */
+}
+
+.btn-danger:hover {
+  background-color: #ec0808; /* Nền trắng khi hover */
+  color: #f5f5f5; /* Chữ đỏ khi hover */
+}
+
+.rounded-circle {
+  border: 2px solid #ff4d4d; /* Viền đỏ cho ảnh profile */
+}
+.d-flex {
+  margin-right: 20px;
+}
+.d-flex input {
+  box-shadow: 0 5px 5px rgba(216, 45, 45, 0.5);
+}

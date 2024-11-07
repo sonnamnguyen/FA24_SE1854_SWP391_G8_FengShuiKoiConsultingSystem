@@ -1,0 +1,94 @@
+/* General Footer Styles */
+.footer-container {
+  background-color: #222; /* Dark background for the footer */
+  color: #fff;
+  padding: 20px 0;
+}
+
+.social-media-section {
+  background-color: #333; /* Slightly lighter for the social media section */
+  padding: 15px;
+}
+
+.social-media-section a {
+  color: #fff; /* White icons */
+  margin-right: 15px;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.social-media-section a:hover {
+  color: #ff6b6b; /* Highlight color on hover */
+}
+
+.links-section {
+  background-color: #222; /* Consistent background color */
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.links-section h6 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.links-section p {
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+}
+
+.links-section .text-reset {
+  color: #bbb; /* Lighter text color */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.links-section .text-reset:hover {
+  color: #ff6b6b; /* Highlight on hover */
+}
+
+.footer-container .container {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.text-center p {
+  margin: 10px 0;
+}
+
+.footer-container .fa-home,
+.footer-container .fa-envelope,
+.footer-container .fa-phone,
+.footer-container .fa-print {
+  color: #ff6b6b; /* Red accents for icons */
+  margin-right: 10px;
+}
+
+/* Footer copyright */
+footer .text-center p {
+  font-size: 1rem;
+  color: #888;
+}
+
+footer .text-center a {
+  font-weight: bold;
+  color: #ff6b6b;
+  text-decoration: none;
+}
+
+footer .text-center a:hover {
+  color: #fff;
+}
+
+/* Small screens */
+@media (max-width: 768px) {
+  .social-media-section {
+    text-align: center;
+  }
+
+  .links-section .container {
+    text-align: center;
+  }
+}

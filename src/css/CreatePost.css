@@ -1,0 +1,109 @@
+/* CreatePost.css */
+
+.create-post-container {
+  max-width: 600px;
+  margin: 150px auto;
+  padding: 20px;
+  margin-bottom: 50px;
+  box-shadow: 15px 15px 15px 15px rgba(223, 76, 76, 0.2);
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.create-post-title {
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.create-post-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-color: rgb(215, 158, 83);
+  outline: none;
+}
+
+textarea.input-field {
+  resize: vertical; /* Cho phép thay đổi kích thước chiều cao */
+}
+
+.submit-button {
+  padding: 10px;
+  background-color: rgb(240, 110, 84);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: rgb(212, 69, 41);
+}
+
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  gap: 10px; /* Khoảng cách giữa các ảnh */
+}
+
+.image-preview {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover; /* Cắt ảnh nếu cần */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.success-message {
+  color: green;
+  text-align: center;
+  margin-top: 10px;
+}
+.create-post-title {
+  font-size: 3rem; /* Kích thước chữ lớn */
+  font-weight: bold; /* Chữ in đậm */
+  background: linear-gradient(
+    45deg,
+    rgb(212, 69, 41),
+    rgb(240, 110, 84)
+  ); /* Gradient màu sắc */
+  -webkit-background-clip: text; /* Cắt nền theo chữ */
+  -webkit-text-fill-color: transparent; /* Làm cho màu chữ trong suốt */
+  text-align: center; /* Canh giữa */
+  margin: 40px 0; /* Khoảng cách trên và dưới */
+  text-transform: uppercase; /* Viết hoa toàn bộ */
+  letter-spacing: 2px; /* Khoảng cách giữa các chữ cái */
+  border-bottom: 3px solid rgb(215, 183, 141); /* Đường viền dưới */
+  padding-bottom: 10px; /* Khoảng cách dưới */
+  font-family: "Georgia", serif; /* Phông chữ nghệ thuật */
+  text-shadow: 3px 3px 6px rgba(249, 245, 245, 0.3); /* Đổ bóng cho chữ */
+  transition: transform 0.3s, color 0.3s; /* Hiệu ứng chuyển động */
+}
+
+.create-post-title:hover {
+  transform: scale(1.05); /* Phóng to khi hover */
+  color: rgb(219, 186, 143); /* Thay đổi màu khi hover */
+}

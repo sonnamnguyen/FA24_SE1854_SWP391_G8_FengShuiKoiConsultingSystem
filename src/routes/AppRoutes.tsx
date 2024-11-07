@@ -24,7 +24,11 @@ import ViewAddColor from "../admin/color/layoutCokor/ViewAddColor";
 import ViewAddShape from "../admin/shape/layoutShape/ViewAddShape";
 import ViewColorManagement from "../admin/color/layoutCokor/ViewColorManagement";
 import ViewShapeManagement from "../admin/shape/layoutShape/ViewManagementShape";
-
+import ViewPost from "../user/ViewPost";
+import CreatePost from "../user/CreatePost";
+import ViewMyPost from "../user/ViewMyPost";
+import VNPAY from "../user/VNPAY";
+import AboutUs from "../user/AboutUs";
 
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
@@ -40,6 +44,11 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/vnpay-success" element={<VNPAY />} />
+        <Route path="/my-post" element={<ViewMyPost />} />
+        <Route path="/create-post" element={<CreatePost />} />
+        <Route path="/posts" element={<ViewPost />} />
         <Route path="/login" element={<Login />} />
         <Route path="/view-profile" element={<ViewProfile />} />
         <Route path="/register" element={<Register />} />
@@ -60,12 +69,7 @@ const AppRoutes = () => {
         <Route path="/add-shape" element={<PageViewAddShape />} />
         <Route path="/view-color" element={<PageViewColor />} />
         <Route path="/view-shape" element={<PageViewShape />} />
-
-
-        
         <Route path="/view-ponds" element={<ShelterViewAdmin />} />
-
-        
       </Routes>
     </Router>
   );
