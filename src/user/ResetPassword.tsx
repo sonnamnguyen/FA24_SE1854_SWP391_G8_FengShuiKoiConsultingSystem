@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getToken, removeToken, setToken } from "../service/localStorageService";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
+import api from "../axious/axious";
 
 function ResetPassword() {
     const [password, setPassword] = useState("");
@@ -49,91 +50,43 @@ function ResetPassword() {
         checkPassword(value);
     };
 
-    const handleRefreshToken = async () => {
-        const refreshToken = getToken(); // Get refresh token from local storage or cookie
-        if (!refreshToken) {
-            console.error("No refresh token found");
-            navigate("/login"); // Navigate to login if no token
-            return null;
-        }
-        try {
-            const response = await fetch("http://localhost:9090/auth/refresh", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: refreshToken }),
-            });
-            if (response.ok) {
-                const data = await response.json();
-                if (data.code === 1000) {
-                    setToken(data.result.token); // Save new access token
-                    return true; // Indicate success
-                } else {
-                    console.error("Failed to refresh token");
-                    navigate("/login");
-                }
-            } else {
-                console.error("Failed to refresh token");
-                navigate("/login");
-            }
-        } catch (error) {
-            console.error("Error refreshing token:", error);
-            navigate("/login");
-        }
-        return null; // Indicate failure
-    };
+   
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true); // Start loading
-
+    
         const isPasswordValid = checkPassword(password);
         const isPasswordAgainValid = checkPasswordAgain(password, passwordAgain);
-
+    
         // Early return if validation fails
         if (!isPasswordValid || !isPasswordAgainValid) {
             setIsLoading(false); // Stop loading
             return;
         }
-
-        const tokenRefreshed = await handleRefreshToken(); // Call refresh token logic
-
-        if (tokenRefreshed) {
-            try {
-                const url = `http://localhost:9090/users/reset-password?email=${email}`;
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${getToken()}`,
-                    },
-                    body: JSON.stringify({ password }),
-                });
-                const data = await response.json();
-
-                if (response.ok) {
-                    if (data.code === 1000) {
-                        removeToken(); // Remove the token
-                        setStatus(1); // Success
-                        setTimeout(() => navigate("/login"), 3000); // Redirect after 3 seconds
-                    } else {
-                        setStatus(0);
-                        setAlert("Reset password failed: " + data.result);
-                    }
+    
+        try {
+            const response = await api.post(`/users/reset-password?email=${email}`, {
+                password
+            });
+    
+                if (response.data.code === 1000) {
+                    removeToken(); 
+                    setStatus(1);
+                    setTimeout(() => navigate("/login"), 3000); 
                 } else {
                     setStatus(0);
-                    setAlert("Error: " + (data.message || "An unexpected error occurred."));
+                    setAlert("Reset password failed: " + response.data.message);
                 }
-            } catch (error) {
-                console.error("Error occurred during password reset:", error);
-                setAlert("An error occurred during password reset.");
-            } finally {
-                setIsLoading(false); // Stop loading
-            }
-        } else {
-            setIsLoading(false); // Stop loading if refresh token failed
+           
+        } catch (error) {
+            console.error("Error occurred during password reset:", error);
+            setAlert("An error occurred during password reset.");
+        } finally {
+            setIsLoading(false); // Stop loading
         }
     };
-
+    
     const handleGoToLogin = () => {
         navigate("/login"); // Navigate to login page
     };

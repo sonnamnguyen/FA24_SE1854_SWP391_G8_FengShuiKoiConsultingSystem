@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "../components/Login";
-import Home from "../components/Home";
 import Authenticate from "../components/Authenticate";
 import Blog from "../homepage/Blog";
 import ActivateAccount from "../user/ActivateAccount";
@@ -29,6 +28,7 @@ import CreatePost from "../user/CreatePost";
 import ViewMyPost from "../user/ViewMyPost";
 import VNPAY from "../user/VNPAY";
 import AboutUs from "../user/AboutUs";
+import ViewUserManagement from "../admin/user/UserManagement";
 
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
@@ -40,6 +40,7 @@ const AppRoutes = () => {
   const PageViewAddShape = AdminRoute(ViewAddShape);
   const PageViewColor = AdminRoute(ViewColorManagement);
   const PageViewShape = AdminRoute(ViewShapeManagement);
+  const PageViewUser = AdminRoute(ViewUserManagement);
 
   return (
     <Router>
@@ -69,6 +70,9 @@ const AppRoutes = () => {
         <Route path="/add-shape" element={<PageViewAddShape />} />
         <Route path="/view-color" element={<PageViewColor />} />
         <Route path="/view-shape" element={<PageViewShape />} />
+
+        <Route path="/view-user" element={<PageViewUser />} />
+
         <Route path="/view-ponds" element={<ShelterViewAdmin />} />
       </Routes>
     </Router>

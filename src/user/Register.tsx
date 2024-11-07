@@ -1,60 +1,88 @@
 import React, { useState } from "react";
 import { Form, Input, Button, DatePicker, Upload, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../src/firebase/firebase"; // Adjust the path based on your structure
-import type { UploadChangeParam, UploadFile } from "antd/es/upload/interface";
 import api from "../axious/axious";
+import { storage } from "../firebase/firebase";
 
-function Register() {
+const Register: React.FC = () => {
   const [form] = Form.useForm();
-  const [avatar, setAvatar] = useState<File | null>(null);
+  const [fileList, setFileList] = useState<File[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalNotification, setModalNotification] = useState("");
   const [modalNotificationColor, setModalNotificationColor] = useState("red");
   const navigate = useNavigate();
 
-  const handleAvatarChange = ({ file }: UploadChangeParam<UploadFile<any>>) => {
-    // Save the file to the state for later upload
-    if (file && file.originFileObj) {
-      setAvatar(file.originFileObj); // Ensure you are storing the correct file object
-    }
+  const handleUploadChange = (info: any) => {
+    const newFileList = info.fileList.slice(-1); // Keep only the last file
+    setFileList(newFileList.map((file: any) => file.originFileObj));
+  };
+
+  // Convert file to base64
+  const getBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  // Upload image to Firebase
+  const uploadImagesToFirebase = async (files: File[]): Promise<string[]> => {
+    const uploadPromises = files.map(async (file) => {
+      const storageRef = ref(storage, `avatars/${file.name}`);
+      const base64Image = await getBase64(file);
+      await uploadString(storageRef, base64Image, 'data_url');
+      const downloadURL = await getDownloadURL(storageRef);
+      return downloadURL;
+    });
+    return Promise.all(uploadPromises);
   };
 
   const handleSubmit = async (values: any) => {
     const { userName, password, fullName, email, dob, phoneNumber, gender } = values;
-
+  
     try {
-      let avatarURL = "";
-      if (avatar) {
-        const storageRef = ref(storage, `avatars/${avatar.name}`);
-        const snapshot = await uploadBytes(storageRef, avatar);
-        avatarURL = await getDownloadURL(snapshot.ref); 
-      }
-
-      const response = await api.post("/users", {
+      // Upload avatar image to Firebase if the fileList is not empty
+      const avatar = fileList.length > 0 ? await uploadImagesToFirebase(fileList) : null;
+  
+      // Prepare data to be sent in the POST request
+      const data = {
         userName,
         password,
         fullName,
         email,
-        dob: dob.format("YYYY-MM-DD"), // Ensure dob is formatted correctly
+        dob: dob.format("YYYY-MM-DD"), // Format the date of birth
         phoneNumber,
         gender,
-        avatar: avatarURL, // Save the avatar URL
+        avatar: avatar ? avatar[0] : null, // Use the first uploaded image as avatar
+      };
+  
+      // Send the POST request to create a new user
+      const response = await fetch(`http://localhost:9090/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
-
-     
-      if (response.data.code !== 1000) {
-        throw new Error(response.data.message);
-      } else {
-        setModalMessage("Profile registered successfully");
-        setModalNotification("Success");
-        setModalNotificationColor("green");
-        setShowModal(true);
+  
+      // Parse the JSON response
+      const result = await response.json();
+  
+      // Check if the request was successful
+      if (result.code !== 1000) {
+        throw new Error(result.message); // Throw an error if the code is not 1000
       }
+  
+      // Show success message
+      setModalMessage("Profile registered successfully. Please check your email for the authentication code.");
+      setModalNotification("Success");
+      setModalNotificationColor("green");
+      setShowModal(true);
     } catch (error) {
+      // Show error message in case of failure
       setModalMessage("An error occurred while registering your profile");
       setModalNotification("Failed");
       setModalNotificationColor("red");
@@ -157,28 +185,33 @@ function Register() {
           <Input />
         </Form.Item>
 
-        <Form.Item label="Avatar" name="avatar">
+        <Form.Item
+          label="Avatar"
+        >
           <Upload
+            maxCount={1} // Only allow 1 image
             accept="image/*"
-            showUploadList={false}
-            beforeUpload={() => false} // Prevent automatic upload
-            onChange={handleAvatarChange}
+            showUploadList={true}
+            beforeUpload={() => false} // Prevent immediate upload
+            onChange={handleUploadChange}
             listType="picture-card"
-
           >
-            <Button icon={<PlusOutlined />}>Upload Avatar</Button>
+            <div>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </div>
           </Upload>
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="btn btn-primary">
+          <Button type="primary" htmlType="submit">
             Submit
           </Button>
         </Form.Item>
       </Form>
 
       <Modal
-        visible={showModal}
+        open={showModal}
         onCancel={() => setShowModal(false)}
         footer={
           <Button type="primary" onClick={handleGoToLogin}>
@@ -186,12 +219,12 @@ function Register() {
           </Button>
         }
         title={modalNotification}
-        bodyStyle={{ color: modalNotificationColor }}
+        style={{ color: modalNotificationColor }}
       >
         {modalMessage}
       </Modal>
     </div>
   );
-}
+};
 
 export default Register;

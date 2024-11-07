@@ -9,15 +9,13 @@ interface ResultInterface {
     totalElements: number;
 }
 
-export async function getAllShelters(): Promise<ResultInterface | null> {
+export async function getAllShelters(page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: ShelterCategory[] = [];
 
     try {
-        const response = await api(`/shelters`);
-
-        const database = response.data;  
-        if (database.code === 1000) {
-            const responseData = database.result.data;
+        const response = await api.get(`/shelters?page=${page}&size=${pageSize}`);
+        if (response.data.code === 1000) {
+            const responseData = response.data.result.data;
             result.push(...responseData.map((shelter: any) => ({
                 id: shelter.id,
                 shelterCategoryName: shelter.shelterCategoryName,
@@ -55,8 +53,8 @@ export async function getAllShelters(): Promise<ResultInterface | null> {
                 })),
             })));
 
-            const pageTotal: number = database.result.totalPages || 1;
-            const totalElements: number = database.result.totalElements || result.length;
+            const pageTotal: number = response.data.result.totalPages || 1;
+            const totalElements: number = response.data.result.totalElements || result.length;
 
             return {
                 result: result,
@@ -64,7 +62,7 @@ export async function getAllShelters(): Promise<ResultInterface | null> {
                 totalElements: totalElements
             };
         } else {
-            console.error("Error in response: ", database.message);
+            console.error("Error in response: ", response.data.message);
             return null;
         }
     } catch (error) {
@@ -73,18 +71,15 @@ export async function getAllShelters(): Promise<ResultInterface | null> {
     }
 }
 
-export async function findByShelterCategory(name: string): Promise<ResultInterface | null> {
-    const endpoint: string = `/shelters?name=${encodeURIComponent(name)}`;
+export async function findByShelterCategory(name: string, page: number, pageSize: number): Promise<ResultInterface | null> {
+    const endpoint: string = `/shelters/search-name?name=${encodeURIComponent(name)}&page=${page}&size=${pageSize}`;
     const result: ShelterCategory[] = [];
 
     try {
-        const response = await api(endpoint);  // Use endpoint here for consistency
-        const database = response.data;
+        const response = await api.get(endpoint);  // Use endpoint here for consistency
 
-        if (database.code === 1000) {
-            const responseData = database.result.data;
-
-            // Use map to construct the result array
+        if (response.data.code === 1000) {
+            const responseData = response.data.result.data;
             result.push(...responseData.map((shelter: any) => ({
                 id: shelter.id,
                 shelterCategoryName: shelter.shelterCategoryName,
@@ -122,8 +117,8 @@ export async function findByShelterCategory(name: string): Promise<ResultInterfa
                 })),
             })));
 
-            const pageTotal: number = database.result.totalPages || 1;  // Fallback to 1 if not provided
-            const totalElements: number = database.result.totalElements || result.length;  // Fallback to result length
+            const pageTotal: number = response.data.result.totalPages || 1;  
+            const totalElements: number = response.data.result.totalElements || result.length;  
 
             return {
                 result: result,
@@ -131,12 +126,12 @@ export async function findByShelterCategory(name: string): Promise<ResultInterfa
                 totalElements: totalElements
             };
         } else {
-            console.error("Error in response: ", database.message);
+            console.error("Error in response: ", response.data.message);
             return null;
         }
     } catch (error) {
         console.error("Error fetching shelters: ", error);
-        return null;  // Indicate failure
+        return null;  
     }
 }
 

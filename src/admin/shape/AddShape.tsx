@@ -32,7 +32,7 @@ function AddShape() {
           destiny: destiny.destiny, 
         })) as Destinys[]; 
       }
-      console.error("Failed to fetch destinies: ", response.status);
+      console.error("Failed to fetch destinies: ", response.data.message);
       return null;
     } catch (error) {
       console.error("Error fetching destinies: ", error);

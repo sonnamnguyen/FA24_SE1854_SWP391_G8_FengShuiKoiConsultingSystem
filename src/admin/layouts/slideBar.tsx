@@ -1,36 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import { MailOutlined, SettingOutlined, AppstoreOutlined } from '@ant-design/icons';
 import '../../css/SidebarAdmin.css';  // Importing the CSS file
+import api from '../../axious/axious';
+import User from '../../models/User';
 
 const SidebarAdmin: React.FC = () => {
   const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const [userDetails, setUserDetails] = useState<User | null>(null); // Added userDetails state
 
   const handleOpenChange = (keys: string[]) => {
     setOpenKeys(keys);
   };
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await api.get("/users/my-info");
+        if (response.data.code !== 1000) {
+          throw new Error(`Error! Code: ${response.data.message}`);
+        }
+        setUserDetails(response.data.result); // Set user details if fetched successfully
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
 
+    fetchUserDetails();
+  }, []);
   return (
     <div className="sidebar pe-4 pb-3">
       <nav className="navbar bg-light navbar-light">
         <Link to="/" className="navbar-brand mx-4 mb-3">
           <h3 className="text-primary">
-            <i className="fa me-2"></i>DASHMIN
+            <i className="fa me-2"></i>FENGSHUIKOI
           </h3>
         </Link>
         <div className="d-flex align-items-center ms-4 mb-4">
           <div className="position-relative">
             <img
               className="rounded-circle"
-              src="img/user.jpg"
+              src={userDetails?.avatar}
               alt=""
               style={{ width: '40px', height: '40px' }}
             />
             <div className="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
           </div>
           <div className="ms-3">
-            <h6 className="mb-0">John Doe</h6>
+            <h6 className="mb-0">{userDetails?.username}</h6>
             <span>Admin</span>
           </div>
         </div>
@@ -44,7 +61,11 @@ const SidebarAdmin: React.FC = () => {
           <Menu.Item key="1" icon={<AppstoreOutlined />}>
             <Link to="/">Dashboard</Link>
           </Menu.Item>
-
+          <Menu.SubMenu key="sub1" icon={<MailOutlined />} title="USER MANAGEMENT">
+            <Menu.Item key="4">
+              <Link to="/view-user">VIEW USER</Link>
+            </Menu.Item>
+          </Menu.SubMenu>
           <Menu.SubMenu key="sub1" icon={<MailOutlined />} title="KOI FISH ANIMAL">
             <Menu.Item key="2">
               <Link to="/add-koi">ADD KOI FISH</Link>

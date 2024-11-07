@@ -8,14 +8,13 @@ interface ResultInterface {
     totalElements: number;
 }
 
-export async function getAllShapes(): Promise<ResultInterface | null> {
+export async function getAllShapes(page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: Shape[] = [];
     try {
-        const response = await api(`/shapes`);
-        const database = response.data;
+        const response = await api.get(`/shapes?page=${page}&size=${pageSize}`);
 
-        if (database.code === 1000) {
-            const responseData = database.result.data;
+        if (response.data.code === 1000) {
+            const responseData = response.data.result.data;
             console.log("API Response:", response.data);
             const colors = responseData.map((shapeData: any) => ({
                 id: shapeData.id,
@@ -42,8 +41,8 @@ export async function getAllShapes(): Promise<ResultInterface | null> {
 
             result.push(...colors);
 
-            const pageTotal: number = database.result.totalPages || 1; // Default to 1 if not provided
-            const totalElements: number = database.result.totalElements || result.length; // Fallback to result length if not provided
+            const pageTotal: number = response.data.result.totalPages || 1; // Default to 1 if not provided
+            const totalElements: number = response.data.result.totalElements || result.length; // Fallback to result length if not provided
 
             return {
                 result: result,
@@ -51,7 +50,7 @@ export async function getAllShapes(): Promise<ResultInterface | null> {
                 totalElements: totalElements
             };
         } else {
-            console.error("Unexpected response code: ", response.data.code);
+            console.error("Unexpected response code: ", response.data.message);
             return null;
         }
     } catch (error) {
@@ -60,17 +59,13 @@ export async function getAllShapes(): Promise<ResultInterface | null> {
     }
 }
 
-export async function findByShape(name: string): Promise<ResultInterface | null> {
+export async function findByShape(name: string, page: number, pageSize: number): Promise<ResultInterface | null> {
     const result: Shape[] = [];
 
     try {
-        const response = await api(`/shapes/shape-search?search=${name}`);
-        const database = response.data;  
-       
-
-            if (database.code === 1000) {
-                const responseData = database.result.data;
-                console.log("API Response:", response.data);
+        const response = await api.get(`/shapes/shape-search?name=${name}&page=${page}&size=${pageSize}`);       
+            if (response.data.code === 1000) {
+                const responseData = response.data.result.data;
                 const colors = responseData.map((shapeData: any) => ({
                     id: shapeData.id,
                     shape: shapeData.shape,
@@ -96,11 +91,8 @@ export async function findByShape(name: string): Promise<ResultInterface | null>
     
                 result.push(...colors);
     
-
-                result.push(...colors);
-
-                const pageTotal: number = database.result.totalPages || 1; // Default to 1 if not provided
-                const totalElements: number = database.result.totalElements || result.length; // Fallback to result length if not provided
+                const pageTotal: number = response.data.result.totalPages || 1; // Default to 1 if not provided
+                const totalElements: number = response.data.result.totalElements || result.length; // Fallback to result length if not provided
     
                 return {
                     result: result,

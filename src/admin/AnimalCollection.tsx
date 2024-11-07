@@ -1,28 +1,32 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import AnimalCategory from "../models/AnimalCategory";
-import Pagination from "../utils/Pagination";
 import { findByAnimalCategory, getAllAnimals } from "./api/AnimalCategoryAPI";
-import { Button, Form, Input, Popconfirm, Modal, Upload, Checkbox, Divider, Carousel, notification } from 'antd';
+import { Button, Form, Input, Popconfirm, Modal, Upload, Checkbox, Divider, Carousel, notification, UploadFile, Pagination } from 'antd';
 import { Table, Tag, Space } from 'antd';
 
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import api from "../axious/axious";
 import { CheckboxProps } from 'antd';
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from "../firebase/firebase";
 import Color from "../models/Color";
+import DestinyTuongSinh from "../models/DestinyTuongSinh";
+import DestinyTuongKhac from "../models/DestinyTuongKhac";
 
 interface Colors {
   id: number;
   color: string;
 }
-
+interface AnimalImage {
+  id: string; // Sử dụng uid làm id
+  imageUrl?: string;
+}
 const AnimalCollection: React.FC = () => {
   const [listAnimalCategory, setListAnimalCategory] = useState<AnimalCategory[]>([]);
   const [reloadData, setReloadData] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pageNow, setPageNow] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [name, setName] = useState("");
   const [searchReload, setSearchReload] = useState("");
   const [plainOptions, setPlainOptions] = useState<Colors[]>([]);
@@ -32,18 +36,21 @@ const AnimalCollection: React.FC = () => {
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalCategory | null>(null);
   const pageSize = 10;
-
+  const [animalImageMetadata, setAnimalImageMetadata] = useState<{ uid: string; name: string; url: string; }[]>([]);
+  const [destinyToTuongSinhMap, setDestinyToTuongSinhMap] = useState<{ [key: string]: DestinyTuongSinh[] }>({});
+  const [destinyToTuongKhacMap, setDestinyToTuongKhacMap] = useState<{ [key: string]: DestinyTuongKhac[] }>({});
   const [apii, contextHolder] = notification.useNotification();
 
-  const reloadAnimalList = () => {
+  const reloadAnimalList = (page: number = 1) => {
     setReloadData(true);
 
     if (name === "") {
-      getAllAnimals()
+      getAllAnimals(page, pageSize)
         .then((animalData) => {
           if (animalData) {
             setListAnimalCategory(animalData.result);
-            setTotalPage(animalData.pageTotal);
+            setTotalElements(animalData.totalElements);
+            setPageNow(page);
           } else {
             setError("No data found.");
           }
@@ -54,11 +61,12 @@ const AnimalCollection: React.FC = () => {
           setReloadData(false);
         });
     } else {
-      findByAnimalCategory(name)
+      findByAnimalCategory(name, page, pageSize)
         .then((animalData) => {
           if (animalData) {
             setListAnimalCategory(animalData.result);
-            setTotalPage(animalData.pageTotal);
+            setTotalElements(animalData.totalElements);
+            setPageNow(page);
           } else {
             setError("No data found.");
           }
@@ -77,9 +85,12 @@ const AnimalCollection: React.FC = () => {
       setPlainOptions(colors || []);
     };
     fetchColors();
-    reloadAnimalList();
+    reloadAnimalList(pageNow);
   }, [pageNow, name]);
-
+  const onPaginationChange = (page: number) => {
+    setPageNow(page); // Cập nhật trạng thái để hiển thị trang mới
+    reloadAnimalList(page); // Gọi lại API với trang mới
+  };
   const checkAll = plainOptions.length === checkedList.length;
   const indeterminate = checkedList.length > 0 && checkedList.length < plainOptions.length;
 
@@ -114,15 +125,68 @@ const AnimalCollection: React.FC = () => {
     }
   };
 
-  const handleUpdate = (id: number) => {
-    const animal = listAnimalCategory.find(animal => animal.id === id);
+  // const handleUpdate = (id: number) => {
+  //   const animal = listAnimalCategory.find((animal) => animal.id === id);
+  //   if (animal) {
+  //     setSelectedAnimal(animal);
+  //     setIsModalVisible(true);
+  //     setIsUpdateMode(true);
+  //     setCheckedList(animal.colors.map((color) => color.id).filter((id): id is number => id !== undefined));
+
+  //     // Set animal images, populating animalImageMetadata for preview
+  //     setAnimalImageMetadata(
+  //       animal.animalImages
+  //         .filter((image) => image.imageUrl) // Filter out images without a URL
+  //         .map((image, index) => ({
+  //           uid: `${image.imageUrl}-${index}`, // Unique identifier
+  //           name: `Image-${index + 1}`, // Set a display name for each image
+  //           url: image.imageUrl || "", // Use an empty string as a fallback if undefined
+  //         }))
+  //     );
+
+  //   };
+  // }
+
+  const handleUpdate = async (id: number) => {
+    const animal = listAnimalCategory.find((animal) => animal.id === id);
     if (animal) {
       setSelectedAnimal(animal);
       setIsModalVisible(true);
       setIsUpdateMode(true);
+
+      setCheckedList(animal.colors.map((color) => color.id).filter((id): id is number => id !== undefined));
+
+      const validImageMetadata = await Promise.all(
+        animal.animalImages.map(async (image, index) => {
+          if (image.imageUrl) {
+            try {
+              // Parse and extract the actual storage path from full Firebase URLs
+              const imagePath = image.imageUrl.startsWith("https://")
+                ? decodeURIComponent(image.imageUrl.split("/o/")[1].split("?")[0])
+                : image.imageUrl; // If already a storage path, use directly
+
+              // Attempt to retrieve download URL for the parsed path
+              await getDownloadURL(ref(storage, imagePath));
+
+              return {
+                uid: `${image.imageUrl}-${index}`,
+                name: `Image-${index + 1}`,
+                url: image.imageUrl,
+              };
+            } catch (error) {
+              console.warn(`Image not found: ${image.imageUrl}`, error);
+              return null; // Skip if image doesn't exist
+            }
+          }
+          return null;
+        })
+      );
+
+      setAnimalImageMetadata(
+        validImageMetadata.filter((img): img is { uid: string; name: string; url: string } => img !== null)
+      );
     }
   };
-
   const handleDelete = async (id: number) => {
     try {
       const response = await api.delete(`/animals/${id}`);
@@ -142,12 +206,14 @@ const AnimalCollection: React.FC = () => {
   };
 
   const uploadImagesToFirebase = async (files: File[]): Promise<string[]> => {
-    const uploadPromises = files.map(async (file) => {
-      const storageRef = ref(storage, `koi_images/${file.name}`);
-      const base64Image = await getBase64(file);
-      await uploadString(storageRef, base64Image, 'data_url');
-      return await getDownloadURL(storageRef);
-    });
+    const uploadPromises = files
+      .filter((file) => file && file.name) // Ensure only valid files with names are processed
+      .map(async (file) => {
+        const storageRef = ref(storage, `koi_images/${file.name}`);
+        const base64Image = await getBase64(file);
+        await uploadString(storageRef, base64Image, 'data_url');
+        return await getDownloadURL(storageRef);
+      });
     return Promise.all(uploadPromises);
   };
 
@@ -160,21 +226,86 @@ const AnimalCollection: React.FC = () => {
     });
   };
 
-  const handleUploadChange = (info: any) => {
-    setAnimalImages(info.fileList.map((file: any) => file.originFileObj));
+  const handleUploadChange = async (info: { fileList: UploadFile[] }) => {
+    const newFiles = info.fileList
+      .map((file: UploadFile) => file.originFileObj as File) // Cast originFileObj to File
+      .filter((file: File) => !!file); // Filter out invalid files
+
+    // Upload new files to Firebase and get the download URLs
+    const uploadedUrls = await uploadImagesToFirebase(newFiles);
+
+    // Update the File objects state
+    setAnimalImages((prevImages) => {
+      const updatedImages = prevImages.filter((prevFile) =>
+        info.fileList.some(
+          (file: UploadFile) =>
+            file.originFileObj &&
+            file.originFileObj.name === prevFile.name &&
+            file.originFileObj.size === prevFile.size
+        )
+      );
+      return [...updatedImages, ...newFiles]; // Keep old files and add new ones
+    });
+
+    // Update the image metadata state (for preview purposes)
+    setAnimalImageMetadata((prevMetadata) => {
+      const newMetadata = newFiles.map((file, index) => ({
+        uid: `${file.name}-${index}`, // Unique ID for the image
+        name: file.name,
+        url: uploadedUrls[index], // Firebase download URL
+      }));
+      return [...prevMetadata, ...newMetadata]; // Always return the array of metadata
+    });
   };
 
   const handleSubmit = async () => {
-    const base64Avatars = await uploadImagesToFirebase(animalImages);
     try {
+      // Upload new images to Firebase
+      const base64Avatars = await uploadImagesToFirebase(animalImages);
+
+      // Get the existing animal images and check which ones need deletion
+      const existingAnimalImages = selectedAnimal?.animalImages || [];
+      const imagesToDelete = existingAnimalImages
+        .filter(image => image.imageUrl !== undefined) // Process only images with URLs
+        .filter(image => {
+          const existingUrl = image.imageUrl;
+          if (!existingUrl) return false; // Skip if there's no URL
+          const existingImageName = existingUrl.split('/').pop(); // Get the filename from URL
+          // Mark images for deletion if not in the new images
+          return !base64Avatars
+            .map(url => url.split('/').pop())
+            .includes(existingImageName || '');
+        })
+        .map(image => image.imageUrl ?? '')
+        .filter(imageUrl => imageUrl !== ''); // Ensure no empty strings
+
+
+
+      // Delete old images from the database
+      if (imagesToDelete.length > 0) {
+        const deleteResponse = await api.post(`/animal-images/${selectedAnimal?.id}`, imagesToDelete);
+        if (deleteResponse.data.code !== 1000) {
+          apii.error({ message: 'Error', description: 'Failed to delete old images.' });
+          return;
+        }
+      }
+
+      // Build the updated image list
+      const updatedAnimalImages = [
+        ...existingAnimalImages.filter(image => !imagesToDelete.includes(image.imageUrl ?? '')),
+        ...base64Avatars.map(url => ({ imageUrl: url }))
+      ];
+
+      // Send update request
       const response = await api.put(`/animals/${selectedAnimal?.id}`, {
         animalCategoryName: selectedAnimal?.animalCategoryName,
         description: selectedAnimal?.description,
         origin: selectedAnimal?.origin,
-        animalImages: base64Avatars.map(url => ({ imageUrl: url })),
+        animalImages: updatedAnimalImages,
         colors: checkedList.map(id => ({ id }))
       });
 
+      // Handle response
       if (response.data.code === 1000) {
         apii.success({ message: 'Success', description: 'Animal has been successfully updated.' });
         setIsModalVisible(false);
@@ -183,12 +314,9 @@ const AnimalCollection: React.FC = () => {
         apii.error({ message: 'Error', description: 'Failed to update animal.' });
       }
     } catch (error) {
+      console.error('Error during update:', error);
       apii.error({ message: 'Error', description: 'Error updating animal.' });
     }
-  };
-
-  const pagination = (page: number) => {
-    setPageNow(page);
   };
 
   const handleSearch = () => {
@@ -280,7 +408,53 @@ const AnimalCollection: React.FC = () => {
   const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchReload(e.target.value);
   };
+  const fetchDestinyTuongSinh = async (destinyName: string) => {
+    try {
+      const response = await api.get(`/destinys/${destinyName}`);
+      if (response.data.code === 1000) {
+        const tuongSinhData = response.data.result.destinyTuongSinhs;
+        const tuongKhacData = response.data.result.destinyTuongKhacs;
 
+        const newDestinyTuongSinhs = tuongSinhData.map((item: any) => new DestinyTuongSinh(item.name));
+        const newDestinyTuongKhac = tuongKhacData.map((item: any) => new DestinyTuongKhac(item.name));
+
+        // Update the map with the new data for the specific destiny
+        setDestinyToTuongSinhMap((prev) => ({
+          ...prev,
+          [destinyName]: newDestinyTuongSinhs,
+        }));
+        setDestinyToTuongKhacMap((prev) => ({
+          ...prev,
+          [destinyName]: newDestinyTuongKhac,
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching DestinyTuongSinh:", error);
+    }
+  };
+
+
+
+  useEffect(() => {
+    // Lấy danh sách các destiny từ thuộc tính colors
+    const uniqueDestinies = selectedAnimal?.colors
+      ?.flatMap((color: Color) => color.destiny ? color.destiny.destiny : null)
+      .filter((value, index, self) => value !== null && self.indexOf(value) === index);
+
+    if (uniqueDestinies && uniqueDestinies.length > 0) {
+      for (const destinyName of uniqueDestinies) {
+        if (destinyName) { // Chỉ gọi fetchDestiny nếu destinyName không phải null hoặc undefined
+          fetchDestinyTuongSinh(destinyName);
+        }
+      }
+    }
+  }, [selectedAnimal?.colors]);
+  const getTuongSinhOrKhac = (destinyName: string | undefined, map: any) => {
+    if (!destinyName) return "No data available";
+    const list = map[destinyName] || [];
+    const names = list.map((item: any) => item.name).join(', ');
+    return names || "No data available";
+  };
   return (
     <>
       {contextHolder}
@@ -307,9 +481,11 @@ const AnimalCollection: React.FC = () => {
         rowKey="id"
       />
       <Pagination
-        currentPage={pageNow}
-        totalPages={totalPage}
-        pagination={pagination}
+        current={pageNow}
+        total={totalElements}
+        pageSize={pageSize}
+        onChange={onPaginationChange}
+        style={{ textAlign: 'end', marginTop: '20px' }}
       />
       <Modal
         title={isUpdateMode ? "Update Animal Details" : "Animal Details"}
@@ -359,9 +535,37 @@ const AnimalCollection: React.FC = () => {
                 multiple
                 accept="image/*"
                 showUploadList={true}
-                beforeUpload={() => false}
+                beforeUpload={() => false} // Prevent automatic upload
                 listType="picture-card"
+                fileList={animalImageMetadata.map((file) => ({
+                  uid: file.uid, // Use UID for identification
+                  name: file.name, // Display name
+                  status: 'done', // Mark as done for completed uploads
+                  url: file.url, // Firebase URL for preview
+                }))}
                 onChange={handleUploadChange}
+                onRemove={async (file: UploadFile) => {
+                  try {
+                    // Use the file's URL to get the correct Firebase reference
+                    const filePath = file.url
+                      ? decodeURIComponent(file.url.split("/o/")[1].split("?")[0])
+                      : `koi_images/${file.name}`; // Fallback in case URL is missing
+
+                    const imageRef = ref(storage, filePath);
+                    await deleteObject(imageRef);
+
+                    // Update local state after deletion
+                    setAnimalImageMetadata((prevMetadata) =>
+                      prevMetadata.filter((img) => img.name !== file.name)
+                    );
+
+                    setAnimalImages((prevFiles) =>
+                      prevFiles.filter((img) => img.name !== file.name)
+                    );
+                  } catch (error) {
+                    console.error(`Error deleting image ${file.name}:`, error);
+                  }
+                }}
               >
                 <div>
                   <PlusOutlined />
@@ -377,7 +581,7 @@ const AnimalCollection: React.FC = () => {
               <Divider />
               <Checkbox.Group
                 options={plainOptions.map(option => ({ label: option.color, value: option.id }))}
-                value={checkedList}
+                value={checkedList} // Value from checkedList
                 onChange={onChange}
               />
             </Form.Item>
@@ -414,8 +618,72 @@ const AnimalCollection: React.FC = () => {
               <p><strong>Created Date:</strong> {selectedAnimal?.createdDate?.toString()}</p>
               <p><strong>Status:</strong> {selectedAnimal?.status}</p>
               <p><strong>Colors:</strong> {selectedAnimal?.colors?.map((color: any) => color.color).join(', ')}</p>
-              <p><strong>Destiny:</strong> {selectedAnimal?.colors?.map((color: Color) =>
-                color.destiny ? color.destiny : 'No destiny available').join(', ')}</p>
+              <p>
+                <strong>Mutual Accord:</strong> {
+                  selectedAnimal?.colors
+                    ?.flatMap((color: Color) => color.destiny ? color.destiny.destiny : 'No destiny available')
+                    .filter((value, index, self) => self.indexOf(value) === index)
+                    .join(', ')
+                }
+              </p>
+              <p><strong>Mutual Generation:</strong>
+                {(() => {
+                  // Lấy danh sách các destiny từ thuộc tính colors của selectedAnimal
+                  const destinies = selectedAnimal?.colors
+                    ?.flatMap((color: Color) => color.destiny ? color.destiny.destiny : null)
+                    .filter((value, index, self) => value !== null && self.indexOf(value) === index);
+
+                  // Kiểm tra nếu destinies tồn tại và không rỗng
+                  if (!destinies || destinies.length === 0) {
+                    return "No data available";
+                  }
+
+                  // Dùng các destiny để lấy danh sách tuongSinh, bỏ qua null và undefined
+                  const tuongSinhList = destinies
+                    .filter((destinyName): destinyName is string => destinyName !== null && destinyName !== undefined)
+                    .flatMap(destinyName => destinyToTuongSinhMap[destinyName] || []);
+
+                  // Lấy tên từ danh sách và loại bỏ các tên trùng lặp
+                  const tuongSinhNames = Array.from(new Set(tuongSinhList.map(tuongSinh => tuongSinh.name))).join(', ');
+
+                  return tuongSinhNames || "No data available";
+                })()}
+              </p>
+
+              <p><strong>Mutual Overcoming:</strong>
+                {(() => {
+                  // Lấy danh sách các destiny từ thuộc tính colors của selectedAnimal
+                  const destinies = selectedAnimal?.colors
+                    ?.flatMap((color: Color) => color.destiny ? color.destiny.destiny : null)
+                    .filter((value, index, self) => value !== null && self.indexOf(value) === index);
+
+                  // Kiểm tra nếu destinies tồn tại và không rỗng
+                  if (!destinies || destinies.length === 0) {
+                    return "No data available";
+                  }
+
+                  // Dùng các destiny để lấy danh sách tuongKhac, bỏ qua null và undefined
+                  const tuongKhacList = destinies
+                    .filter((destinyName): destinyName is string => destinyName !== null && destinyName !== undefined)
+                    .flatMap(destinyName => destinyToTuongKhacMap[destinyName] || []);
+
+                  // Lấy tên từ danh sách và loại bỏ các tên trùng lặp
+                  const tuongKhacNames = Array.from(new Set(tuongKhacList.map(tuongKhac => tuongKhac.name))).join(', ');
+
+                  return tuongKhacNames || "No data available";
+                })()}
+              </p>
+              <p>
+                <strong>Numbers:</strong> {
+                  selectedAnimal?.colors
+                    ?.flatMap((color: Color) => color.destiny?.numbers ? color.destiny.numbers : [])
+                    .filter((value, index, self) => self.findIndex(num => num.id === value.id) === index)
+                    .map((number: any) => number.number) // Lấy giá trị number từ object
+                    .join(', ')
+                }
+              </p>
+
+
             </div>
           </div>
         )}

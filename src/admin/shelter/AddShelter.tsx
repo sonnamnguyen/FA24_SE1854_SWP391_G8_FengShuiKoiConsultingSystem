@@ -74,13 +74,7 @@ const AddShelter: React.FC = () => {
 
     const base64Images = shelterImages.length > 0 ? await uploadImagesToFirebase(shelterImages) : [];
     try {
-      const response = await fetch("http://localhost:9090/shelters", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify({
+      const response = await api.post("/shelters", {
           shelterCategoryName,
           description,
           shape: { id: selectedShape },
@@ -91,19 +85,18 @@ const AddShelter: React.FC = () => {
           waterVolume,
           waterFiltrationSystem,
           shelterImages: base64Images.map(url => ({ imageUrl: url })),
-        }),
+    
       });
 
-      const data = await response.json();
-      if (data.code === 1000) {
+      if (response.data.code === 1000) {
         apii.success({ message: 'Success', description: 'Shelter has been successfully added.' });
         // Optionally reset the form here
       } else {
-        apii.error({ message: 'Error', description: 'Failed to add shelter.' });
+        apii.error({ message: 'Error', description: response.data.message });
       }
     } catch (error) {
       console.error(error); // Log error for debugging
-      apii.error({ message: 'Error', description: 'Error adding shelter.' });
+      apii.error({ message: 'Error', description: `Error adding shelter. Please try again later.` });
     }
   };
 

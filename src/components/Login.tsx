@@ -1,23 +1,12 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
-  Snackbar,
-  TextField,
-  Typography,
-} from "@mui/material";
-import GoogleIcon from "@mui/icons-material/Google";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { getToken, setToken } from "../service/localStorageService";
+import React, { useState } from "react";
+import { Form, Input, Button, Checkbox, notification } from "antd";
+import { LockOutlined, UserOutlined, GoogleOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import "../css/LoginForm.css"; // Link to the updated CSS file
 import { OAuthConfig } from "../configuration/OAuthConfigType";
-import Navbar from "../layouts/header-footer/Navbar";
+import { setToken } from "../service/localStorageService";
+import imgLogin from "../img/Login.webp"; // Path to the background image
 import { jwtDecode } from "jwt-decode";
-
 
 interface JwtPayload {
   iss: string;
@@ -25,16 +14,12 @@ interface JwtPayload {
   exp: number;
   iat: number;
   jti: string;
-  scope: string; 
+  scope: string;
 }
-export default function Login() {
+
+const Login = () => {
   const navigate = useNavigate();
-  
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [snackBarOpen, setSnackBarOpen] = useState<boolean>(false);
-  const [snackBarMessage, setSnackBarMessage] = useState<string>("");
-  const [snackType, setSnackType] = useState<"error" | "success">("error");
+  const [apii, contextHolder] = notification.useNotification();
 
   const handleContinueWithGoogle = () => {
     const { redirectUri, authUri, clientId } = OAuthConfig;
@@ -42,185 +27,123 @@ export default function Login() {
       redirectUri
     )}&response_type=code&client_id=${clientId}&scope=openid%20email%20profile`;
 
-    console.log(targetUrl);
     window.location.href = targetUrl;
   };
 
-  // useEffect(() => {
-  //   const accessToken = getToken();
-  //   if (accessToken) {
-  //     console.log("Access Token: ", accessToken);
-  //     navigate("/");
-  //   }
-  // }, [navigate]);
+  const handleLogin = async (values: { email: string; password: string }) => {
+    const { email, password } = values;
 
-  const handleCloseSnackBar = (
-    event: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") return;
-    setSnackBarOpen(false);
-  };
-
-  const showError = (message: string) => {
-    setSnackType("error");
-    setSnackBarMessage(message);
-    setSnackBarOpen(true);
-  };
-
-  const showSuccess = (message: string) => {
-    setSnackType("success");
-    setSnackBarMessage(message);
-    setSnackBarOpen(true);
-  };
-
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  
-    if (!email || !password) {
-      showError("Username and password cannot be empty");
-      return;
-    }
-  
-    const data = { email, password };
-  
     try {
       const response = await fetch(`http://localhost:9090/auth/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ email, password }),
       });
-  
+
       const result = await response.json();
-  
+
       if (result.code !== 1000) {
+        apii.error({
+          message: "Error",
+          description: result.message,
+        });
         throw new Error(result.message);
       }
-  
+
       setToken(result.result?.token);
       const decodedToken = jwtDecode<JwtPayload>(result.result?.token);
-      console.log(decodedToken);
-  
       if (decodedToken.scope === "ROLE_USER") {
         navigate("/");
       } else if (decodedToken.scope === "ROLE_ADMIN") {
         navigate("/admin-page");
       } else {
-        showError("Invalid role");
+        apii.error({
+          message: "Error",
+          description: "Invalid role",
+        });
       }
     } catch (error) {
-      showError("hehe");
+      apii.error({
+        message: "Login Error",
+        description: "An error occurred during login",
+      });
     }
   };
-  
-
 
   return (
-    <>
-      <Snackbar
-        open={snackBarOpen}
-        onClose={handleCloseSnackBar}
-        autoHideDuration={6000}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleCloseSnackBar}
-          severity={snackType}
-          variant="filled"
-          sx={{ width: "100%" }}
+    <div className="login-container">
+      <div className="login-form">
+        <h2>Sign in</h2>
+        <p>Welcome back to FengShuiKoiSysTem! Please enter your details below to sign in.</p>
+        {contextHolder}
+        <Form
+          name="normal_login"
+          className="login-form"
+          initialValues={{ remember: true }}
+          onFinish={handleLogin}
         >
-          {snackBarMessage}
-        </Alert>
-      </Snackbar>
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        height="100vh"
-        bgcolor={"#f0f2f5"}
-      >
-        <Card
-          sx={{
-            minWidth: 250,
-            maxWidth: 400,
-            boxShadow: 4,
-            borderRadius: 4,
-            padding: 4,
-          }}
-        >
-          <CardContent>
-          <Typography variant="h5" component="h1" gutterBottom textAlign="center">
-              LOGIN 
-            </Typography>
-            <Box component="form" onSubmit={handleLogin} sx={{ mt: 2 }}>
-              <TextField
-                label="Username"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                fullWidth
-                sx={{ mt: 2 }}
-              >
-                Login
-              </Button>
-            </Box>
-          </CardContent>
-          <CardActions>
-            <Box display="flex" flexDirection="column" width="100%" gap="25px">
-              <Button
-                type="button"
-                variant="contained"
-                color="secondary"
-                size="large"
-                onClick={handleContinueWithGoogle}
-                fullWidth
-                sx={{ gap: "10px" }}
-              >
-                <GoogleIcon />
-                Continue with Google
-              </Button>
-              <Divider />
-              <Button
-                type="button"
-                variant="contained"
-                color="success"
-                size="large"
-                onClick={() => navigate("/register")}
-              >
-                Create an account
-              </Button>
-            </Box>
-          </CardActions>
+          <Form.Item
+            name="email"
+            rules={[{ required: true, message: "Please input your Email!" }]}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Email"
+            />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: "Please input your Password!" }]}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
 
-          <Box display="flex" justifyContent="center" mt={2}>
-            <Button
-              type="button"
-              color="inherit"
-              onClick={() => navigate("/forgot-password")}
-            >
+          <Form.Item>
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+            <a className="login-form-forgot" onClick={() => navigate("/forgot-password")}>
               Forgot password?
+            </a>
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="login-form-button">
+              Log in
             </Button>
-          </Box>
-        </Card>
-      </Box>
-    </>
+          </Form.Item>
+
+          <div className="login-divider">
+            <span>OR</span>
+          </div>
+
+          <Form.Item>
+            <Button
+              icon={<GoogleOutlined />}
+              className="social-login-button"
+              onClick={handleContinueWithGoogle}
+            >
+              Continue with Google
+            </Button>
+          </Form.Item>
+
+          <Form.Item>
+            <span> Do not have an account?  </span>
+            <a onClick={() => navigate("/register")} style={{ cursor: "pointer" }}>
+              Sign up now
+            </a>
+          </Form.Item>
+        </Form>
+      </div>
+      <div className="login-image">
+        <img src={imgLogin} alt="Koi Fish Background" />
+      </div>
+    </div>
   );
-}
+};
+
+export default Login;
