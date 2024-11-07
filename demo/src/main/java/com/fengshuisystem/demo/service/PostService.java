@@ -9,4 +9,6 @@ public interface PostService {
     public PageResponse<PostDTO> getPosts(int page, int size);
     public void deletePost(Integer id);
     public PostDTO updatePost(Integer id, PostDTO postDTO);
+    public PageResponse<PostDTO> getPostByAccountEmail(int page, int size);
+    public PageResponse<PostDTO> getPostByTitle(String title,int page, int size);
 }

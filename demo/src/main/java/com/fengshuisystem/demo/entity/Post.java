@@ -63,6 +63,10 @@ public class Post {
     @NotNull
     @Column(name = "created_date", nullable = false)
     private Instant createdDate;
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "title", nullable = false)
+    private String title;
 
     @Size(max = 255)
     @NotNull
@@ -80,6 +84,6 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     private Set<Comment> comments = new LinkedHashSet<>();
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    private Set<PostImage> postImages = new LinkedHashSet<>();
+    private Set<PostImage> images = new LinkedHashSet<>();
 
 }
