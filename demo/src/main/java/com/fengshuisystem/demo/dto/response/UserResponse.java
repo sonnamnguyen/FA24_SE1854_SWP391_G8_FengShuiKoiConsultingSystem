@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 
+import com.fengshuisystem.demo.entity.enums.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -21,7 +22,9 @@ public class UserResponse {
     String fullName;
     String email;
     String phoneNumber;
-    String gender;
+
+    Gender gender;
+
     String avatar;
     LocalDate dob;
     String code;

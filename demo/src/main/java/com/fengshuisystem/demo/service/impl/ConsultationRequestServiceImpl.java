@@ -110,10 +110,17 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
         return consultationRequestMapper.toDTO(consultationRequest);
     }
 
+    @Override
+    @PreAuthorize("hasRole('USER') or hasRole(ADMIN)")
+    public ConsultationRequestDTO findById(Integer id) {
+        return consultationRequestMapper.toDTO(consultationRequestRepository.findById(id).orElse(null));
+    }
+
     private String getCurrentUserEmailFromJwt() {
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = jwt.getClaimAsString("sub");
         log.info("Extracted email from JWT: {}", email);
         return email;
     }
+
 }

@@ -34,5 +34,12 @@ public class ConsultationRequestController {
                 .build();
     }
 
+    @GetMapping("/{requestId}")
+    public ApiResponse<ConsultationRequestDTO> getConsultationRequest(@PathVariable Integer requestId) {
+        return ApiResponse.<ConsultationRequestDTO>builder()
+                .result(consultationRequestService.findById(requestId))
+                .build();
+    }
+
 
 }
