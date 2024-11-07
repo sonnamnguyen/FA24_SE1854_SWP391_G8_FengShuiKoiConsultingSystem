@@ -25,6 +25,9 @@ import ViewColorManagement from "../admin/color/layoutCokor/ViewColorManagement"
 import ViewShapeManagement from "../admin/shape/layoutShape/ViewManagementShape";
 import ViewUserManagement from "../admin/user/UserManagement";
 import ConsultationRequest from "../consultation/request/ConsultationRequest";
+import PaymentPage from "../payment/PaymentPage"
+import BillPage from "../bill/BillPage";
+import PaymentSuccessPage from "../payment/PaymentSuccessPage";
 
 
 const AppRoutes = () => {
@@ -64,14 +67,24 @@ const AppRoutes = () => {
         <Route path="/view-color" element={<PageViewColor />} />
         <Route path="/view-shape" element={<PageViewShape />} />
         <Route path="/view-user" element={<PageViewUser />} />
-
+        <Route path="/view-ponds" element={<ShelterViewAdmin />} />
+        
         {/* Consultation */}
         {/* Consultation Request */}
         <Route path="/consultation-request" element={<ConsultationRequest />} />
+        {/* Thanh toán Consultation Request */}
+        <Route path="/consultation-request/:requestId/payment" element={<PaymentPage />} />
+        {/* In Bill */}
+        <Route path="/bill/:billId" element={<BillPage />} />
+        {/* payment-success */}
+        <Route path="/payment-success" element={<PaymentSuccessPage />} />
+
+
+
 
 
         
-        <Route path="/view-ponds" element={<ShelterViewAdmin />} />
+        
 
         
       </Routes>
