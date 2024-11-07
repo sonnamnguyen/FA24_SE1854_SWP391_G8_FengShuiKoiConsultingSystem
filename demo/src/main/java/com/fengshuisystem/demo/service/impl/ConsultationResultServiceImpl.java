@@ -110,6 +110,7 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         // 3. Cập nhật trạng thái thành COMPLETED
         consultationResult.setStatus(Request.COMPLETED);
         consultationResultRepository.save(consultationResult);
+        consultationResult.getRequestDetail().setStatus(Request.COMPLETED);
 
         // 4. Lấy email từ account liên quan đến request
         String email = consultationResult.getRequest().getAccount().getEmail();
@@ -127,37 +128,64 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
     private void sendConsultationDetailsEmail(String email, ConsultationResult consultationResult) {
         String subject = "Consultation Result Details - FengShuiConsultingSystem.com";
 
-        // 1. Tạo nội dung email với description chung
-        StringBuilder text = new StringBuilder("<html><body>");
-        text.append("Dear User,<br/><br/>");
-        text.append("Here are the details for your consultation result:<br/><br/>");
-        text.append("<strong>Description:</strong> ").append(consultationResult.getDescription()).append("<br/><br/>");
+        // 1. Tạo nội dung email với description chung và trang trí
+        StringBuilder text = new StringBuilder("<html><body style='font-family: Arial, sans-serif; line-height: 1.6; margin: 20px;'>");
+        text.append("<h2 style='color: #2c3e50; margin-bottom: 10px;'>Dear User,</h2>");
+        text.append("<p>Here are the details for your consultation result:</p>");
+        text.append("<hr style='border: 1px solid #ccc; margin-bottom: 20px;'/>");
+
+        // Làm nổi bật phần mô tả chính
+        text.append("<h3 style='color: #2980b9;'>Description</h3>");
+        text.append("<div style='background-color: #f2f9ff; padding: 15px; border-left: 5px solid #2980b9; margin-bottom: 20px; font-size: 1.1em;'>")
+                .append(consultationResult.getDescription())
+                .append("</div>");
 
         // 2. Thêm thông tin về từng Animal trong kết quả
         List<ConsultationAnimal> animals = consultationAnimalRepository.findByConsultationResult(consultationResult);
         if (!animals.isEmpty()) {
-            text.append("<strong>Animals:</strong><br/>");
+            text.append("<h3 style='color: #2980b9;'>Animals</h3>");
             animals.forEach(animal -> {
-                text.append("- ").append(animal.getAnimalCategory().getAnimalCategoryName())
-                        .append(": ").append(animal.getDescription()).append("<br/>");
+                text.append("<div style='margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fdfdfd;'>")
+                        .append("<h4 style='color: #27ae60;'>").append(animal.getAnimalCategory().getAnimalCategoryName()).append("</h4>")
+                        .append("<div style='margin-bottom: 10px; background-color: #e8f4fc; padding: 10px; border-radius: 4px;'>")
+                        .append("<p style='margin: 0; font-size: 1.1em; color: #8e44ad;'><strong>Description:</strong> ")
+                        .append(animal.getDescription()).append("</p>") // Nổi bật mô tả chính trong khung riêng biệt
+                        .append("</div>")
+                        .append("<div style='font-size: 0.95em; color: #555;'>")
+                        .append("<strong>Category Description:</strong> ").append(animal.getAnimalCategory().getDescription()).append("<br/>")
+                        .append("<strong>Origin:</strong> ").append(animal.getAnimalCategory().getOrigin()).append("<br/>")
+                        .append("</div>")
+                        .append("</div>");
             });
-            text.append("<br/>");
         }
 
         // 3. Thêm thông tin về từng Shelter trong kết quả
         List<ConsultationShelter> shelters = consultationShelterRepository.findByConsultationResult(consultationResult);
         if (!shelters.isEmpty()) {
-            text.append("<strong>Shelters:</strong><br/>");
+            text.append("<h3 style='color: #2980b9;'>Shelters</h3>");
             shelters.forEach(shelter -> {
-                text.append("- ").append(shelter.getShelterCategory().getShelterCategoryName())
-                        .append(": ").append(shelter.getDescription()).append("<br/>");
+                text.append("<div style='margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #fdfdfd;'>")
+                        .append("<h4 style='color: #27ae60;'>").append(shelter.getShelterCategory().getShelterCategoryName()).append("</h4>")
+                        .append("<div style='margin-bottom: 10px; background-color: #e8f4fc; padding: 10px; border-radius: 4px;'>")
+                        .append("<p style='margin: 0; font-size: 1.1em; color: #8e44ad;'><strong>Description:</strong> ")
+                        .append(shelter.getDescription()).append("</p>") // Nổi bật mô tả chính trong khung riêng biệt
+                        .append("</div>")
+                        .append("<div style='font-size: 0.95em; color: #555;'>")
+                        .append("<strong>Category Description:</strong> ").append(shelter.getShelterCategory().getDescription()).append("<br/>")
+                        .append("<strong>Diameter:</strong> ").append(shelter.getShelterCategory().getDiameter()).append(" cm<br/>")
+                        .append("<strong>Height:</strong> ").append(shelter.getShelterCategory().getHeight()).append(" cm<br/>")
+                        .append("<strong>Length:</strong> ").append(shelter.getShelterCategory().getLength()).append(" cm<br/>")
+                        .append("<strong>Water Filtration System:</strong> ").append(shelter.getShelterCategory().getWaterFiltrationSystem()).append("<br/>")
+                        .append("<strong>Water Volume:</strong> ").append(shelter.getShelterCategory().getWaterVolume()).append(" liters<br/>")
+                        .append("</div>")
+                        .append("</div>");
             });
-            text.append("<br/>");
         }
 
-        // 4. Kết thúc email
-        text.append("Thank you for using FengShuiConsultingSystem.com!<br/><br/>");
-        text.append("Best regards,<br/>The FengShuiConsultingSystem Support Team");
+        // 4. Kết thúc email với lời cảm ơn
+        text.append("<hr style='border: 1px solid #ccc; margin-top: 20px;'/>");
+        text.append("<p>Thank you for using FengShuiConsultingSystem.com!</p>");
+        text.append("<p>Best regards,<br/><strong>The FengShuiConsultingSystem Support Team</strong></p>");
         text.append("</body></html>");
 
         // 5. Gửi email
