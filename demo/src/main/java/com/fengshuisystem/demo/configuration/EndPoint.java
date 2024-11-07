@@ -6,7 +6,7 @@ public class EndPoint {
                 "/animals", "/animals/animal-search", "/shelters", "/shelters/search-name", "/shelters/{search}",
                 "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors",
                 "shapes/getAll-Shapes", "shapes/shape-search", "/users", "/users/search-name", "/roles",
-                "colors/search-colors", "/bills", "/bills/status", "api/bills", "api/bills/status"
+                "colors/search-colors", "/bills", "/bills/status", "api/bills", "api/bills/status", "/api/consultation-requests/{requestId}"
         };
 
         public static final String[] ADMIN_POST_ENDPOINTS = {
@@ -42,7 +42,8 @@ public class EndPoint {
         public static final String[] USER_GET_ENDPOINTS = {
                 "/posts", "/posts/search-posts", "/post/comments", "/post/images",
                 "/consultation-request-details/{id}", "/api/consultation-request-details/{requestDetailId}",
-                "api/bills/{billId}", "/vn_pay/create_vn_pay","/search-posts/title","/search-posts/email"
+                "api/bills/{billId}", "/vn_pay/create_vn_pay","/search-posts/title","/search-posts/email",
+                "/packages/{id}", "/packages", "/api/consultation-requests/{requestId}"
         };
 
         public static final String[] USER_POST_ENDPOINTS = {
@@ -64,7 +65,7 @@ public class EndPoint {
 
         public static final String[] BOTH_GET_ENDPOINTS = {
                 "api/bills/{accountId}/status", "/api/consultation-request-details/{requestDetailId}",
-                "api/bills/{billId}"
+                "api/bills/{billId}", "/api/consultation-requests/{requestId}"
         };
 
         public static final String[] BOTH_DELETE_ENDPOINTS = {

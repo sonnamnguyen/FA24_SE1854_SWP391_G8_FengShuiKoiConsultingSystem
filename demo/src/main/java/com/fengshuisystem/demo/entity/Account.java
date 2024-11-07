@@ -1,6 +1,7 @@
 package com.fengshuisystem.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fengshuisystem.demo.entity.enums.Gender;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -48,7 +49,8 @@ public class Account {
     private String phoneNumber;
 
     @Column(name = "gender")
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Lob
     @Column(name = "avatar")

@@ -9,5 +9,6 @@ public interface PackageService {
     public void deletePackage(Integer id);
     public PackageDTO updatePackage(Integer id, PackageDTO packageDTO);
     public PageResponse<PackageDTO> getPackages(int page, int size);
+    PackageDTO findById(Integer id);
 
 }

@@ -74,4 +74,12 @@ public class PackageServiceImpl implements PackageService {
                 .data(pageData.getContent().stream().map(packageMapper::toDto).toList())
                 .build();
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @Override
+    public PackageDTO findById(Integer id) {
+        var pkg = packageRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PACKAGE_NOT_EXISTED));
+        return packageMapper.toDto(pkg);
+    }
+
 }
