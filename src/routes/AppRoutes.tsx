@@ -29,6 +29,8 @@ import ViewMyPost from "../user/ViewMyPost";
 import VNPAY from "../user/VNPAY";
 import AboutUs from "../user/AboutUs";
 import ViewUserManagement from "../admin/user/UserManagement";
+import AutoConsultation from "../user/autoConsultation/AutoConsultationView";
+import CompatibilityCaculation from "../user/compatibilityCaculation/CompatibilityCaculationView";
 
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
@@ -70,6 +72,8 @@ const AppRoutes = () => {
         <Route path="/add-shape" element={<PageViewAddShape />} />
         <Route path="/view-color" element={<PageViewColor />} />
         <Route path="/view-shape" element={<PageViewShape />} />
+        <Route path="/auto-consultation" element={<AutoConsultation  />} />
+        <Route path="/compatibility_caculation" element={<CompatibilityCaculation />} />
 
         <Route path="/view-user" element={<PageViewUser />} />
 

@@ -235,3 +235,9 @@
   padding: 20px;
   margin: 10px 0;
 }
+.fengShui-bg{
+  background-image:url(../user/compatibilityCaculation/bodybg2.jpg);
+  background-repeat: repeat;
+  background-position: center;
+  position: relative;
+}

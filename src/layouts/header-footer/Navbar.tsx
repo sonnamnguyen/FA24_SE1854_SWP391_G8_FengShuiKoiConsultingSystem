@@ -108,10 +108,25 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                 </li>
               </ul>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link menunav text-dark" to="#">
-                Destiny
+            <li className="nav-item dropdown">
+              <NavLink
+                className="nav-link dropdown-toggle"
+                data-bs-toggle="dropdown"
+                to="#">
+               Feng Shui Tools
               </NavLink>
+              <ul className="dropdown-menu">
+                <li>
+                  <NavLink className="dropdown-item" to="/auto-consultation">
+                    Feng Shui Consultation Tool
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink className="dropdown-item" to="/compatibility_caculation">
+                    Compatibility Caculation Tool
+                  </NavLink>
+                </li>
+              </ul>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link menunav text-dark" to="/about-us">
