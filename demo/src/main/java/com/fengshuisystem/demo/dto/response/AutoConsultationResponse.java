@@ -11,7 +11,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AutoConsultationResponse {
-    String message;
     List<Integer> numbers;
     List<String> directions;
     List<String> colors;

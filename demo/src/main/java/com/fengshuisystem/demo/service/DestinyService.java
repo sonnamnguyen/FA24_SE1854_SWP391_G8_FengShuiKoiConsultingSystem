@@ -18,5 +18,5 @@ public interface DestinyService {
     DestinyDTO getDestinyByNumber(int numberId);
     List<String> getAnimalNames(Integer destinyId, String tuongKhacTruoc, String tuongKhacSau);
     List<String> getShelterNames(Integer destinyId);
-    public DestinyDTO getAllDestinyTuongSinhAndTuongKhac(String destinyName);
+    DestinyDTO getAllDestinyTuongSinhAndTuongKhac(String destinyName);
 }
