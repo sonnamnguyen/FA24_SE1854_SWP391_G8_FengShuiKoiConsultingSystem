@@ -130,28 +130,6 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
     }
   };
 
-  // const handleUpdate = (id: number) => {
-  //   const animal = listAnimalCategory.find((animal) => animal.id === id);
-  //   if (animal) {
-  //     setSelectedAnimal(animal);
-  //     setIsModalVisible(true);
-  //     setIsUpdateMode(true);
-  //     setCheckedList(animal.colors.map((color) => color.id).filter((id): id is number => id !== undefined));
-
-  //     // Set animal images, populating animalImageMetadata for preview
-  //     setAnimalImageMetadata(
-  //       animal.animalImages
-  //         .filter((image) => image.imageUrl) // Filter out images without a URL
-  //         .map((image, index) => ({
-  //           uid: `${image.imageUrl}-${index}`, // Unique identifier
-  //           name: `Image-${index + 1}`, // Set a display name for each image
-  //           url: image.imageUrl || "", // Use an empty string as a fallback if undefined
-  //         }))
-  //     );
-
-  //   };
-  // }
-
   const handleUpdate = async (id: number) => {
     const animal = listAnimalCategory.find((animal) => animal.id === id);
     if (animal) {
