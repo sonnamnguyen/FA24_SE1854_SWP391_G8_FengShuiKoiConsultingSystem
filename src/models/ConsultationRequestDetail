@@ -1,0 +1,33 @@
+import { ConsultationRequest } from './ConsultationRequest';
+import { Request } from './enums/Request';
+import { ConsultationResult } from './ConsultationResult';
+import { ShelterCategory } from './ShelterCategory';
+import { AnimalCategory } from './AnimalCategory';
+
+export class ConsultationRequestDetail {
+    consultationRequestDetailId: number;
+    consultationRequest: ConsultationRequest | null;
+    status: Request;
+    createdDate: Date;
+    createdBy: string;
+    updatedDate: Date;
+    updatedBy: string;
+    description: string;
+    consultationResults: Set<ConsultationResult>;
+    shelterCategories: Set<ShelterCategory>;
+    animalCategories: Set<AnimalCategory>;
+
+    constructor() {
+        this.consultationRequestDetailId = 0;
+        this.consultationRequest = null;
+        this.status = Request.PENDING;
+        this.createdDate = new Date();
+        this.createdBy = '';
+        this.updatedDate = new Date();
+        this.updatedBy = '';
+        this.description = '';
+        this.consultationResults = new Set<ConsultationResult>();
+        this.shelterCategories = new Set<ShelterCategory>();
+        this.animalCategories = new Set<AnimalCategory>();
+    }
+}
