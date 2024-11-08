@@ -1,18 +1,22 @@
+import AnimalCategory from "../../models/AnimalCategory";
+import ShelterCategory from "../../models/ShelterCategory";
+
+
 class AutoConsultation {
     numbers: number[];
     directions: string[];
     colors: string[];
     shapes: string[];
-    shelters: string[];
-    animals: string[];
+    shelters: ShelterCategory[];
+    animals: AnimalCategory[];
 
     constructor(
         numbers: number[],
         directions: string[],
         colors: string[],
         shapes: string[],
-        shelters: string[],
-        animals: string[]
+        shelters: ShelterCategory[],
+        animals: AnimalCategory[]
     ) {
         this.numbers = numbers;
         this.directions = directions;
