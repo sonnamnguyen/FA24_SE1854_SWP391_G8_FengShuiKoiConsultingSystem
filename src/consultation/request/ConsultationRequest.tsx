@@ -6,10 +6,15 @@ import '../../css/ConsultationRequest.css';
 
 const { Option } = Select;
 
+// Utility function for validating Vietnamese phone numbers
+const isVietnamesePhoneNumber = (number: string): boolean => {
+  return /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(number);
+};
+
 const ConsultationRequest: React.FC = () => {
   const navigate = useNavigate();
-  const [packageId, setPackageId] = useState<number>(1); // Mặc định là gói 1
-  const [yob, setYob] = useState<number | null>(new Date().getFullYear() - 20); // Mặc định năm sinh là 20 năm trước
+  const [packageId, setPackageId] = useState<number>(1); // Default package is 1
+  const [yob, setYob] = useState<number | null>(new Date().getFullYear() - 20); // Default birth year is 20 years ago
   const [description, setDescription] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [years, setYears] = useState<number[]>([]);
@@ -50,7 +55,7 @@ const ConsultationRequest: React.FC = () => {
     fetchAccountInfo();
 
     // Fetch package info for initial selection
-    fetchPackageInfo(1); // Mặc định hiển thị thông tin gói 1
+    fetchPackageInfo(1); // Default package information is shown for package 1
   }, []);
 
   const fetchPackageInfo = async (id: number) => {
@@ -80,6 +85,22 @@ const ConsultationRequest: React.FC = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        message.error('Vui lòng nhập email hợp lệ.');
+        setLoading(false);
+        return;
+      }
+      if (!isVietnamesePhoneNumber(phone)) {
+        message.error('Vui lòng nhập số điện thoại Việt Nam hợp lệ.');
+        setLoading(false);
+        return;
+      }
+      if (description.length < 10) {
+        message.error('Mô tả yêu cầu phải có ít nhất 10 ký tự.');
+        setLoading(false);
+        return;
+      }
+  
       const response = await api.post('/api/consultation-requests', {
         packageId,
         yob,
@@ -89,10 +110,13 @@ const ConsultationRequest: React.FC = () => {
         email,
         phone,
       });
-
+  
       if (response.data.code === 1000) {
-        message.success('Tạo yêu cầu thành công!');
         const requestId = response.data.result.id;
+        // Save requestId and packageId to localStorage
+        localStorage.setItem('requestId', requestId);
+        localStorage.setItem('selectedPackageId', packageId.toString()); // Convert packageId to string for storage
+        message.success('Tạo yêu cầu thành công!');
         navigate(`/consultation-request/${requestId}/payment`);
       } else {
         throw new Error(response.data.message);
@@ -103,6 +127,8 @@ const ConsultationRequest: React.FC = () => {
       setLoading(false);
     }
   };
+  
+  
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
@@ -165,7 +191,7 @@ const ConsultationRequest: React.FC = () => {
         <Form.Item label="Mô tả yêu cầu" required>
           <Input.TextArea
             rows={4}
-            placeholder="Nhập mô tả yêu cầu"
+            placeholder="Nhập mô tả yêu cầu (ít nhất 10 ký tự)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
