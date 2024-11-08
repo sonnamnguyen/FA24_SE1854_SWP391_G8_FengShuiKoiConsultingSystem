@@ -46,7 +46,12 @@ import ViewConsultationResult from "../admin/consultation/ViewConsultationResult
 import ViewConsultationAnimal from "../admin/consultation/ViewConsultationAnimal";
 import ViewConsultationShelter from "../admin/consultation/ViewConsultationShelter";
 
+// Bill - Payment
+import ViewBill from "../admin/transaction/ViewBill";
+import ViewPayment from "../admin/transaction/ViewPayment";
+
 const AppRoutes = () => {
+
   // const ProtectedBlog = AdminRoute(Blog);
   const Page = AdminRoute(AdminPage);
   const PageViewAddKoi = AdminRoute(ViewAdd);
@@ -65,8 +70,10 @@ const AppRoutes = () => {
   const PageViewConsultationAnimal = AdminRoute(ViewConsultationAnimal);
   const PageViewConsultationShelter = AdminRoute(ViewConsultationShelter);
 
+  const PageViewBill = AdminRoute(ViewBill);
+  const PageViewPayment = AdminRoute(ViewPayment);
+
   return (
-    <Router>
       <Routes>
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/vnpay-success" element={<VNPAY />} />
@@ -117,8 +124,11 @@ const AppRoutes = () => {
         <Route path="/view-consultation-animal" element={<PageViewConsultationAnimal />} />
         <Route path="/view-consultation-shelter" element={<PageViewConsultationShelter />} />
 
+        {/* Bill - Payment*/}
+        <Route path="/view-bills" element={<PageViewBill />} />
+        <Route path="/view-payments" element={<PageViewPayment />} />
+
       </Routes>
-    </Router>
   );
 };
 

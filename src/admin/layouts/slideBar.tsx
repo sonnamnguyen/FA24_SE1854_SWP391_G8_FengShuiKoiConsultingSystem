@@ -133,6 +133,15 @@ const SidebarAdmin: React.FC = () => {
               <Link to="/view-consultation-shelter">SHELTER</Link>
             </Menu.Item>
           </Menu.SubMenu>
+
+          <Menu.SubMenu key="sub7" icon={<AppstoreOutlined />} title="TRANSACTION">
+            <Menu.Item key="19">
+              <Link to="/view-bills">BILL</Link>
+            </Menu.Item>
+            <Menu.Item key="20">
+              <Link to="/view-payments">PAYMENT</Link>
+            </Menu.Item>
+          </Menu.SubMenu>
         </Menu>
       </nav>
     </div>
