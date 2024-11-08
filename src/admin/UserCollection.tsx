@@ -6,7 +6,11 @@ import api from "../axious/axious";
 import User from "../models/User";
 import Role from "../models/Role";
 
-const UserCollection: React.FC = () => {
+interface UserCollectionProps {
+  setIsNavbarVisible: (visible: boolean) => void; 
+}
+
+const UserCollection: React.FC<UserCollectionProps> = ({ setIsNavbarVisible }) => {
   const [listUser, setListUser] = useState<User[]>([]);
   const [reloadData, setReloadData] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -98,6 +102,7 @@ const UserCollection: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    
     if (selectedUserId === null) return;
     try {
       const response = await api.post(`/users/${selectedUserId}/set-roles`, { roles: checkedList.map(id => ({id})) 
@@ -127,6 +132,7 @@ const UserCollection: React.FC = () => {
   };
   const handleModalCancel = () => {
     setIsModalVisible(false);
+    setIsNavbarVisible(true);
   };
 
   const pagination = (page: number) => {
@@ -207,6 +213,7 @@ const UserCollection: React.FC = () => {
               if (record.id !== undefined) {
                 setSelectedUserId(record.id);
                 setIsModalVisible(true);
+                setIsNavbarVisible(false);
               } else {
                 apii.error({ message: "Error", description: "Invalid user ID." });
               }

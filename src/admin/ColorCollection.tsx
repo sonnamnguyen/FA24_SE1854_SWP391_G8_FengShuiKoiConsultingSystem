@@ -7,12 +7,16 @@ import { findByColor, getAllColors } from "./api/ColorAPI";
 import DestinyTuongSinh from "../models/DestinyTuongSinh";
 import DestinyTuongKhac from "../models/DestinyTuongKhac";
 
+interface ColorCollectionProps {
+  setIsNavbarVisible: (visible: boolean) => void; 
+}
+
 interface Destinys {
   id: number;
   destiny: string;
 }
 
-const ColorCollection: React.FC = () => {
+const ColorCollection: React.FC<ColorCollectionProps> = ({ setIsNavbarVisible }) => {
   const [listColor, setListColor] = useState<Color[]>([]);
   const [reloadData, setReloadData] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -107,6 +111,7 @@ const ColorCollection: React.FC = () => {
       setSelectedDestiny(color.destiny?.id || null);
       setIsModalVisible(true);
       setIsUpdateMode(true);
+      setIsNavbarVisible(false);
     }
   };
 
@@ -128,6 +133,7 @@ const ColorCollection: React.FC = () => {
     setIsModalVisible(false);
     setSelectedColor(null);
     setSelectedDestiny(null);
+    setIsNavbarVisible(true);
   };
 
   const handleSubmit = async () => {
@@ -308,7 +314,10 @@ const ColorCollection: React.FC = () => {
             Search
           </Button>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => {
+          setIsModalVisible(true);
+          setIsNavbarVisible(false);
+        }}>
           Add Color
         </Button>
       </div>

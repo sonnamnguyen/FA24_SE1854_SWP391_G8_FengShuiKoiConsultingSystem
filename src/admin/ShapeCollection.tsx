@@ -7,12 +7,16 @@ import { findByShape, getAllShapes } from "./api/ShapeAPI";
 import DestinyTuongSinh from "../models/DestinyTuongSinh";
 import DestinyTuongKhac from "../models/DestinyTuongKhac";
 
+interface ShapeCollectionProps {
+  setIsNavbarVisible: (visible: boolean) => void; 
+}
+
 interface Destinys {
   id: number;
   destiny: string;
 }
 
-const ShapeCollection: React.FC = () => {
+const ShapeCollection: React.FC<ShapeCollectionProps> = ({ setIsNavbarVisible }) => {
   const [listShape, setListShape] = useState<Shape[]>([]);
   const [reloadData, setReloadData] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -107,6 +111,7 @@ const ShapeCollection: React.FC = () => {
       setSelectedDestiny(color.destiny?.id || null);
       setIsModalVisible(true);
       setIsUpdateMode(true);
+      setIsNavbarVisible(false);
     }
   };
 
@@ -128,6 +133,7 @@ const ShapeCollection: React.FC = () => {
     setIsModalVisible(false);
     setSelectedShape(null);
     setSelectedDestiny(null);
+    setIsNavbarVisible(true);
   };
 
   const handleSubmit = async () => {
@@ -301,7 +307,11 @@ const ShapeCollection: React.FC = () => {
             Search
           </Button>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => 
+          {
+            setIsModalVisible(true);
+            setIsNavbarVisible(false); 
+          }}>
           Add Shape
         </Button>
       </div>

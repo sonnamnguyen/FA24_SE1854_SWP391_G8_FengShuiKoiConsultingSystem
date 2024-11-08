@@ -13,6 +13,10 @@ import Color from "../models/Color";
 import DestinyTuongSinh from "../models/DestinyTuongSinh";
 import DestinyTuongKhac from "../models/DestinyTuongKhac";
 
+interface AnimalCollectionProps {
+  setIsNavbarVisible: (visible: boolean) => void; // Khai báo setIsNavbarVisible là một hàm nhận vào boolean
+}
+
 interface Colors {
   id: number;
   color: string;
@@ -21,7 +25,7 @@ interface AnimalImage {
   id: string; // Sử dụng uid làm id
   imageUrl?: string;
 }
-const AnimalCollection: React.FC = () => {
+const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible }) => {
   const [listAnimalCategory, setListAnimalCategory] = useState<AnimalCategory[]>([]);
   const [reloadData, setReloadData] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -122,6 +126,7 @@ const AnimalCollection: React.FC = () => {
       setSelectedAnimal(animal);
       setIsModalVisible(true);
       setIsUpdateMode(false);
+      setIsNavbarVisible(false);
     }
   };
 
@@ -153,6 +158,7 @@ const AnimalCollection: React.FC = () => {
       setSelectedAnimal(animal);
       setIsModalVisible(true);
       setIsUpdateMode(true);
+      setIsNavbarVisible(false);
 
       setCheckedList(animal.colors.map((color) => color.id).filter((id): id is number => id !== undefined));
 
@@ -203,6 +209,7 @@ const AnimalCollection: React.FC = () => {
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
+    setIsNavbarVisible(true);
   };
 
   const uploadImagesToFirebase = async (files: File[]): Promise<string[]> => {
@@ -470,7 +477,10 @@ const AnimalCollection: React.FC = () => {
             Search
           </Button>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => {
+          setIsModalVisible(true);
+          setIsNavbarVisible(false);}
+          }>
           Add Animal
         </Button>
       </div>

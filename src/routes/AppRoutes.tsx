@@ -32,11 +32,19 @@ import ViewUserManagement from "../admin/user/UserManagement";
 import AutoConsultation from "../user/autoConsultation/AutoConsultationView";
 import CompatibilityCaculation from "../user/compatibilityCaculation/CompatibilityCaculationView";
 
+// Consultation - user
 import ConsultationRequest from "../consultation/request/ConsultationRequest";
 import PaymentPage from "../payment/PaymentPage"
 import BillPage from "../bill/BillPage";
 import PaymentSuccessPage from "../payment/PaymentSuccessPage";
 import ConsultationRequestDetail from "../consultation/request/ConsultationRequestDetail"
+
+// Consultation - admin
+import ViewConsultationRequest from "../admin/consultation/ViewConsultationRequest";
+import ViewConsultationRequestDetail from "../admin/consultation/ViewConsultationRequestDetail";
+import ViewConsultationResult from "../admin/consultation/ViewConsultationResult";
+import ViewConsultationAnimal from "../admin/consultation/ViewConsultationAnimal";
+import ViewConsultationShelter from "../admin/consultation/ViewConsultationShelter";
 
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
@@ -49,6 +57,13 @@ const AppRoutes = () => {
   const PageViewColor = AdminRoute(ViewColorManagement);
   const PageViewShape = AdminRoute(ViewShapeManagement);
   const PageViewUser = AdminRoute(ViewUserManagement);
+
+  {/* Admin Consultation */}
+  const PageViewConsultationRequest = AdminRoute(ViewConsultationRequest);
+  const PageViewConsultationRequestDetail = AdminRoute(ViewConsultationRequestDetail);
+  const PageViewConsultationResult = AdminRoute(ViewConsultationResult);
+  const PageViewConsultationAnimal = AdminRoute(ViewConsultationAnimal);
+  const PageViewConsultationShelter = AdminRoute(ViewConsultationShelter);
 
   return (
     <Router>
@@ -83,8 +98,6 @@ const AppRoutes = () => {
 
         <Route path="/view-user" element={<PageViewUser />} />
 
-        <Route path="/view-ponds" element={<ShelterViewAdmin />} />
-
         {/* Consultation */}
         {/* Consultation Request */}
         <Route path="/consultation-request" element={<ConsultationRequest />} />
@@ -96,6 +109,14 @@ const AppRoutes = () => {
         <Route path="/payment-success" element={<PaymentSuccessPage />} />
         {/* Consultation Request Detail */}
         <Route path="/consultation-request-detail" element={<ConsultationRequestDetail />} />
+
+        {/* Admin Consultation */}
+        <Route path="/view-consultation-request" element={<PageViewConsultationRequest />} />
+        <Route path="/view-consultation-request-detail" element={<PageViewConsultationRequestDetail />} />
+        <Route path="/view-consultation-result" element={<PageViewConsultationResult />} />
+        <Route path="/view-consultation-animal" element={<PageViewConsultationAnimal />} />
+        <Route path="/view-consultation-shelter" element={<PageViewConsultationShelter />} />
+
       </Routes>
     </Router>
   );

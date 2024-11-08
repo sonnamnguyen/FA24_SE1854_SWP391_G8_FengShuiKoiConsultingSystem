@@ -1,9 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import AnimalCategory from "../models/AnimalCategory";
 import { Button, Form, Input, Popconfirm, Modal, Upload, Checkbox, Divider, Carousel, notification, UploadFile, Pagination } from 'antd';
 import { Table, Tag, Space } from 'antd';
 import { Radio } from 'antd';
-
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import api from "../axious/axious";
 import { CheckboxProps } from 'antd';
@@ -16,12 +14,16 @@ import Shape from "../models/Shape";
 import DestinyTuongSinh from "../models/DestinyTuongSinh";
 import DestinyTuongKhac from "../models/DestinyTuongKhac";
 
+interface ShelterCollectionProps {
+  setIsNavbarVisible: (visible: boolean) => void; 
+}
+
 interface Shapes {
   id: number;
   shape: string;
 }
 
-const ShelterCollection: React.FC = () => {
+const ShelterCollection: React.FC<ShelterCollectionProps> = ({ setIsNavbarVisible }) => {
   const [listShelterCategory, setListShelterCategory] = useState<ShelterCategory[]>([]);
   const [reloadData, setReloadData] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -116,6 +118,7 @@ const ShelterCollection: React.FC = () => {
       setSelectedShelter(shelter);
       setIsModalVisible(true);
       setIsUpdateMode(false);
+      setIsNavbarVisible(false);
     }
   };
 
@@ -125,6 +128,7 @@ const ShelterCollection: React.FC = () => {
       setSelectedShelter(shelter);
       setIsModalVisible(true);
       setIsUpdateMode(true);
+      setIsNavbarVisible(false);
       setSelectedShape(shelter.shape?.id || null)
       // Check if shelterImages exists and is an array
       if (shelter.shelterImages && Array.isArray(shelter.shelterImages)) {
@@ -181,6 +185,7 @@ const ShelterCollection: React.FC = () => {
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
+    setIsNavbarVisible(true);
   };
 
   const uploadImagesToFirebase = async (files: File[]): Promise<string[]> => {
@@ -433,7 +438,10 @@ const ShelterCollection: React.FC = () => {
             Search
           </Button>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsModalVisible(true)}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => {
+          setIsModalVisible(true);
+          setIsNavbarVisible(false);
+        }}>
           Add Pond
         </Button>
       </div>
