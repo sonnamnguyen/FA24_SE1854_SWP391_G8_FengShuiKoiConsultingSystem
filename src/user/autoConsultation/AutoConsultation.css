@@ -77,6 +77,73 @@
     margin-bottom: 10px;
 }
 
+.autoConsultation-view {
+  background-color: white;
+  color: #003366;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+}
+
+.autoConsultation-view:hover {
+  color: #0569cd;
+
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Increase darkness for better focus */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  padding: 15px 20px; /* Adjust padding for compactness */
+  width: 300px; /* Adjust width to match target style */
+  max-width: 90%;
+  border-radius: 10px; /* Smoothen the corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow */
+  text-align: center; /* Center-align text */
+  font-family: Arial, sans-serif; /* Match font to target */
+  color: #333; /* Darker text color */
+}
+
+.popup-content h3 {
+  margin-top: 0;
+  font-size: 1.25em; /* Slightly smaller header */
+  color: #333;
+  font-weight: bold; /* Emphasize title */
+}
+
+.popup-content p {
+  font-size: 1em;
+  color: #555;
+  margin: 8px 0; /* Adjust spacing between lines */
+  line-height: 1.4; /* Compact line spacing */
+}
+
+.popup-content strong {
+  color: #333;
+  font-weight: normal; /* Reduce weight on labels */
+}
+
+.popup-content img {
+  display: block;
+  margin: 10px auto;
+  border-radius: 5px;
+}
+
+
+
+
 
 #MỘC {position:relative;top:-50px;width:100%;text-align: right;}
 
