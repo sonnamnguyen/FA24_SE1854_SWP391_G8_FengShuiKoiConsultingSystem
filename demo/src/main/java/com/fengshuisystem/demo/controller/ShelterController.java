@@ -1,6 +1,4 @@
-
 package com.fengshuisystem.demo.controller;
-
 
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.PageResponse;
@@ -11,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/shelters")
@@ -64,6 +64,20 @@ public class ShelterController {
     shelterService.deleteShelter(id);
     return ApiResponse.<String>builder()
             .result("The shelter has been deleted")
+            .build();
+  }
+
+  @GetMapping("/{id}")
+  public ApiResponse<ShelterCategoryDTO> getShelterById(@PathVariable Integer id) {
+    return ApiResponse.<ShelterCategoryDTO>builder()
+            .result(shelterService.getShelterById(id))
+            .build();
+  }
+
+  @GetMapping("/shelterCategory")
+  public ApiResponse<List<ShelterCategoryDTO>> getAllShelters() {
+    return ApiResponse.<List<ShelterCategoryDTO>>builder()
+            .result(shelterService.getAllShelterCategory())
             .build();
   }
 }
