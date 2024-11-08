@@ -140,7 +140,7 @@ const ViewPost: React.FC = () => {
 
             {/* Display HTML content using dangerouslySetInnerHTML */}
             <div
-              className="content"
+              className="contentPost"
               dangerouslySetInnerHTML={{ __html: posts[currentPage].content }}
             />
 

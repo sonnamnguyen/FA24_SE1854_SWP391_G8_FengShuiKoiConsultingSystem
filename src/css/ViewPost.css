@@ -3,7 +3,11 @@
 div {
   font-family: Arial, sans-serif;
 }
-
+.contentPost {
+  width: 80%;
+  margin-left: 10%;
+  margin-bottom: 30px;
+}
 .view-post-content {
   background-color: rgb(251, 251, 251);
   align-items: center;
