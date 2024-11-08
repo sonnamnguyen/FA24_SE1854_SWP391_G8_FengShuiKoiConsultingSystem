@@ -14,4 +14,5 @@ public interface ShapeService {
     ShapeDTO updateShape(Integer id, ShapeDTO shapeDTO);
     List<ShapeDTO> getAllShapes();
     List<ShapeDTO> getShapesByDestiny(Integer destiny);
+    ShapeDTO getShapeById(Integer id);
 }

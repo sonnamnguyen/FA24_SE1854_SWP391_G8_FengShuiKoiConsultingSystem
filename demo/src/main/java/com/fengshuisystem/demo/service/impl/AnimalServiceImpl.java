@@ -148,7 +148,6 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public AnimalCategoryDTO getAnimalById(Integer id) {
         AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
         return animalMapper.toDto(animalCategory);
