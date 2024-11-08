@@ -41,6 +41,7 @@ public class ColorServiceImpl implements ColorService {
     public ColorDTO createColor(ColorDTO colorDTO) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
+        if(colorDTO.getDestiny() == null) throw new AppException(ErrorCode.DESTINY_NOT_EXISTED);
         if(colorRepository.existsByColor(colorDTO.getColor())) throw new AppException(ErrorCode.COLOR_EXISTED);
         Destiny destiny = destinyRepository.findById(colorDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
         Color color = colorMapper.toEntity(colorDTO);
@@ -105,11 +106,12 @@ public class ColorServiceImpl implements ColorService {
     public ColorDTO updateColor(Integer id, ColorDTO colorDTO) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
+        if(colorDTO.getDestiny() == null) throw new AppException(ErrorCode.DESTINY_NOT_EXISTED);
         Destiny destiny = destinyRepository.findById(colorDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
-        Color color = colorRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
+        Color color = colorRepository.findById(colorDTO.getId()).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
+        if(colorRepository.existsByColor(colorDTO.getColor())) throw new AppException(ErrorCode.COLOR_EXISTED);
         color.setDestiny(destiny);
         colorMapper.update(colorDTO, color);
-        color.setStatus(Status.ACTIVE);
         color.setUpdatedDate(Instant.now());
         color.setUpdatedBy(name);
         return colorMapper.toDto(colorRepository.saveAndFlush(color));

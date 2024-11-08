@@ -23,7 +23,7 @@ import java.util.List;
 public class ColorController {
     ColorService colorService;
     @PostMapping
-    public ApiResponse<ColorDTO> createColor(@RequestBody ColorDTO colorRequest) {
+    public ApiResponse<ColorDTO> createColor(@Valid @RequestBody ColorDTO colorRequest) {
         return ApiResponse.<ColorDTO>builder()
                 .result(colorService.createColor(colorRequest))
                 .build();
@@ -52,7 +52,7 @@ public class ColorController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<ColorDTO> updateColor(@PathVariable Integer id, @RequestBody @Valid ColorDTO colorRequest) {
+    public ApiResponse<ColorDTO> updateColor(@PathVariable Integer id,@Valid @RequestBody ColorDTO colorRequest) {
         return ApiResponse.<ColorDTO>builder()
                 .result(colorService.updateColor(id, colorRequest))
                 .build();

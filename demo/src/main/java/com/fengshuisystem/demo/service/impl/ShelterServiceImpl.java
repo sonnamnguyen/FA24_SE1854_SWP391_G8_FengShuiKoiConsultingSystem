@@ -39,6 +39,7 @@ public class ShelterServiceImpl implements ShelterService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         if(shelterRepository.existsByShelterCategoryName(request.getShelterCategoryName())) throw new AppException(ErrorCode.SHELTER_EXISTED);
+        if(request.getShape() == null) throw new AppException(ErrorCode.SHAPE_NOT_EXISTED);
         Shape shape = shapeRepository.findById(request.getShape().getId()).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
         ShelterCategory shelterCategory = shelterMapper.toEntity(request);
         shelterCategory.setStatus(Status.ACTIVE);
@@ -105,12 +106,11 @@ public class ShelterServiceImpl implements ShelterService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         ShelterCategory shelterCategory = shelterRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
+        if(shelterRepository.existsByShelterCategoryName(request.getShelterCategoryName())) throw new AppException(ErrorCode.SHELTER_EXISTED);
+        if(request.getShape() == null) throw new AppException(ErrorCode.SHAPE_NOT_EXISTED);
         Shape shape = shapeRepository.findById(request.getShape().getId()).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
         shelterMapper.update(request, shelterCategory);
         shelterCategory.setShape(shape);
-        shelterCategory.setStatus(Status.ACTIVE);
-        shelterCategory.setCreatedDate(Instant.now());
-        shelterCategory.setCreatedBy(name);
         shelterCategory.setUpdatedDate(Instant.now());
         shelterCategory.setUpdatedBy(name);
         for (ShelterImage shelterImage : shelterCategory.getShelterImages()) {

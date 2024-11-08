@@ -38,10 +38,11 @@ public class DestinyServiceImpl implements DestinyService {
     // Bảng Chi (0-11 tương ứng với Thân, Dậu, Tuất, Hợi, Tý, Sửu, Dần, Mão, Thìn, Tỵ, Ngọ, Mùi)
     int[] EARTHLY_BRANCH_VALUES = {1, 1, 2, 2, 0, 0, 1, 1, 2, 2, 0, 0};
 
-    List<String> tuongSinhList = Arrays.asList("KIM", "THỦY", "MỘC", "HỎA", "THỔ");
-    List<String> tuongKhacList = Arrays.asList("KIM", "MỘC", "THỔ", "THỦY", "HỎA");
+    List<String> tuongSinhList  = Arrays.asList("METAL", "WATER", "WOOD", "FIRE", "EARTH");
+    List<String> tuongKhacList  = Arrays.asList("METAL", "WOOD", "EARTH", "WATER", "FIRE");
 
-    String[] ELEMENTS = {"KIM", "THỦY", "HỎA", "THỔ", "MỘC"};
+    String[] ELEMENTS = {"METAL", "WATER", "FIRE", "EARTH", "WOOD"};
+
 
     @Override
     public String getDestinyFromYear(int yearOfBirth) {
@@ -123,9 +124,9 @@ public class DestinyServiceImpl implements DestinyService {
 
 
     @Override
-    public List<String> getAnimalNames(Integer destinyId, String tuongKhacTruoc, String tuongKhacSau) {
+    public List<AnimalCategoryDTO> getAnimal(Integer destinyId, String tuongKhacTruoc, String tuongKhacSau) {
         List<ColorDTO> colors = colorService.getColorsByDestiny(destinyId);
-        List<String> animalNames = new ArrayList<>();
+        List<AnimalCategoryDTO> animalList = new ArrayList<>();
         for (ColorDTO color : colors) {
             List<AnimalCategoryDTO> animalCategories = animalService.getAnimalCategoryByColorId(color.getId());
             for (AnimalCategoryDTO animalCategory : animalCategories) {
@@ -141,25 +142,23 @@ public class DestinyServiceImpl implements DestinyService {
                     }
                 }
                 if (!hasConflict) {
-                    animalNames.add(animalCategory.getAnimalCategoryName());
+                    animalList.add(animalCategory);
                 }
             }
         }
-        return animalNames;
+        return animalList;
     }
 
 
     @Override
-    public List<String> getShelterNames(Integer destinyId) {
+    public List<ShelterCategoryDTO> getShelter(Integer destinyId) {
         List<ShapeDTO> shapes = shapeService.getShapesByDestiny(destinyId);
-        List<String> shelterNames = new ArrayList<>();
+        List<ShelterCategoryDTO> shelterList = new ArrayList<>();
         for (ShapeDTO shape : shapes) {
             List<ShelterCategoryDTO> shelters = shelterService.getAllSheltersByShape(shape.getId());
-            for (ShelterCategoryDTO shelter : shelters) {
-                shelterNames.add(shelter.getShelterCategoryName());
-            }
+            shelterList.addAll(shelters);
         }
-        return shelterNames;
+        return shelterList;
     }
 
     @Override

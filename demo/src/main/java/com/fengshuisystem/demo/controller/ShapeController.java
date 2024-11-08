@@ -25,7 +25,7 @@ public class ShapeController {
     ShapeService shapeService;
 
     @PostMapping
-    public ApiResponse<ShapeDTO> createShape(@RequestBody ShapeDTO shapeRequest) {
+    public ApiResponse<ShapeDTO> createShape(@Valid @RequestBody ShapeDTO shapeRequest) {
         return ApiResponse.<ShapeDTO>builder()
                 .result(shapeService.createShape(shapeRequest))
                 .build();
@@ -54,7 +54,7 @@ public class ShapeController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<ShapeDTO> updateShape(@PathVariable Integer id, @RequestBody @Valid ShapeDTO shapeRequest) {
+    public ApiResponse<ShapeDTO> updateShape(@PathVariable Integer id,@Valid @RequestBody  ShapeDTO shapeRequest) {
         return ApiResponse.<ShapeDTO>builder()
                 .result(shapeService.updateShape(id, shapeRequest))
                 .build();
