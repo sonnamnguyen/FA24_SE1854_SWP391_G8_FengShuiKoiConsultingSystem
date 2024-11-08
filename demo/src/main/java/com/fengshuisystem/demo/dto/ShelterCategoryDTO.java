@@ -17,6 +17,7 @@ public class ShelterCategoryDTO {
     Integer id;
     @NotBlank(message = "Shelter category name is required")
     @Size(min = 3, max = 50, message = "Shelter category name must be between 3 and 50 characters")
+    @Pattern(regexp = "^[A-Za-z\\s]+$", message = "Shelter category name cannot contain numbers or special characters")
     private String shelterCategoryName;
 
     private ShapeDTO shape;
