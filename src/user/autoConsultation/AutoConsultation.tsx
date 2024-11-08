@@ -62,7 +62,7 @@ const AutoConsultationComponent: React.FC = () => {
         <div className="autoConsultation-container">
             <form className="AutoConsultationForm" onSubmit={handleSubmit}>
                 <div>
-                    <h1 className="titleDestiny">Tra Cứu Mệnh Ngũ Hành</h1>
+                    <h1 className="titleDestiny">Five Element Destiny Consultation</h1>
                     <label htmlFor="year">Choose Year:</label>
                     <select id="year" value={year} onChange={handleYearChange}>
                         <option>-- Select a Year --</option>
@@ -73,7 +73,7 @@ const AutoConsultationComponent: React.FC = () => {
                         ))}
                     </select>
                 </div>
-                <button className="autoConsultation" type="submit">Kiểm Tra</button>
+                <button className="autoConsultation" type="submit">CHECK</button>
             </form>
 
             {error && (
@@ -93,7 +93,7 @@ const AutoConsultationComponent: React.FC = () => {
                 </>
             )}            {consultationData && (
                 <div className="consultation-results">
-                    <h2 className="titleDestiny2">Mệnh Ngũ Hành {consultationData.destiny}</h2>
+                    <h2 className="titleDestiny2">Your Element Destiny is {consultationData.destiny}</h2>
                     <div id={consultationData.destiny}>
                         <i></i>
                         <i></i>
@@ -138,25 +138,18 @@ const AutoConsultationComponent: React.FC = () => {
                         <div id={consultationData.destiny} className="shield__inner"></div>
                     </div>
                     <div>
-                        <h3 className="titleDestiny2">1. Số lượng cá</h3>
-                        <p>Đối với người mệnh {consultationData.destiny}, số lượng cá nuôi phù hợp không chỉ hỗ trợ vận khí mà còn kích hoạt phong thủy, giúp thu hút tài lộc và tạo ra sự hài hòa trong cuộc sống.</p>
-                        <p>Các số may mắn thuộc hành {consultationData.destiny}, như {consultationData.consultation2.numbers.join(", ")} sẽ góp phần ổn định và tăng cường năng lượng bản mệnh của bạn. Điều này đem lại sự bền vững và thuận lợi, giúp bạn đạt được hòa hợp và phát triển.</p>
-                        <p>Trong khi đó, các số đại diện cho hành {consultationData.destinyTuongSinh}, như {consultationData.consultation1.numbers.join(", ")}, có sức mạnh tương sinh, bổ trợ mệnh {consultationData.destiny}. Chọn số lượng cá theo những con số này sẽ mang lại sự phát đạt, gia tăng vận may và mở rộng cơ hội thành công trong sự nghiệp.</p>
-                        <p>Từ 11 con cá koi trở đi, bỏ chữ số hàng chục, lấy theo chữ số hàng đơn vị. Ví dụ: 11, 15, 38, 40, 49 con…. Tính thành 1, 5, 8, 4 , 9 con. Sau đó tiếp tục dựa vào bảng ở trên để tính.</p>
+                        <h3 className="titleDestiny2">1. Number of Fish</h3>
+                        <p>For those with the {consultationData.destiny} destiny, having the right number of fish not only supports fortune but also activates feng shui, attracting wealth and creating harmony in life.</p>
+                        <p>Lucky numbers belonging to the {consultationData.destiny} element, such as {consultationData.consultation2.numbers.join(", ")}, will contribute to the stability and enhancement of your destiny energy. This brings sustainability and favor, helping you achieve harmony and growth.</p>
+                        <p>Meanwhile, numbers representing the {consultationData.destinyTuongSinh} element, such as {consultationData.consultation1.numbers.join(", ")}, possess mutual generation power, supporting the {consultationData.destiny} destiny. Choosing the number of fish according to these numbers will bring prosperity, increase fortune, and expand opportunities for success in your career.</p>
+                        <p>For 11 or more koi fish, disregard the tens digit and use the units digit. For example: 11, 15, 38, 40, 49 fish... count as 1, 5, 8, 4, 9 fish. Then refer to the table above for calculation.</p>
                     </div>
                     <div>
-                        <h3 className="titleDestiny2">1. Số lượng cá</h3>
-                        <p>Đối với người mệnh {consultationData.destiny}, số lượng cá nuôi phù hợp không chỉ hỗ trợ vận khí mà còn kích hoạt phong thủy, giúp thu hút tài lộc và tạo ra sự hài hòa trong cuộc sống.</p>
-                        <p>Các số may mắn thuộc hành {consultationData.destiny}, như {consultationData.consultation2.numbers.join(", ")}, sẽ góp phần ổn định và tăng cường năng lượng bản mệnh của bạn. Điều này đem lại sự bền vững và thuận lợi, giúp bạn đạt được hòa hợp và phát triển.</p>
-                        <p>Trong khi đó, các số đại diện cho hành {consultationData.destinyTuongSinh}, như {consultationData.consultation1.numbers.join(", ")}, có sức mạnh tương sinh, bổ trợ mệnh {consultationData.destiny}. Chọn số lượng cá theo những con số này sẽ mang lại sự phát đạt, gia tăng vận may và mở rộng cơ hội thành công trong sự nghiệp.</p>
-                        <p>Từ 11 con cá koi trở đi, bỏ chữ số hàng chục, lấy theo chữ số hàng đơn vị. Ví dụ: 11, 15, 38, 40, 49 con…. Tính thành 1, 5, 8, 4 , 9 con. Sau đó tiếp tục dựa vào bảng ở trên để tính.</p>
-                    </div>
-                    <div>
-                        <h3 className="titleDestiny2">2. Màu sắc và loài cá</h3>
-                        <p>Những loài cá và màu sắc tương sinh và tương hợp với mệnh {consultationData.destiny}:</p>
+                        <h3 className="titleDestiny2">2. Colors and Fish Types</h3>
+                        <p>Fish types and colors that are mutually generating and compatible with the {consultationData.destiny} destiny:</p>
                         <ul>
-                            <li>Cá {consultationData.consultation2.colors.join(", ")}: Những màu này thuộc hành {consultationData.destiny}, giúp gia tăng sự ổn định và bình yên.</li>
-                            <p>Các loài cá phù hợp:
+                            <li>Fish with colors {consultationData.consultation2.colors.join(", ")}: These colors belong to the {consultationData.destiny} element, enhancing stability and peace.</li>
+                            <p>Suitable fish types:
                                 {consultationData.consultation2.animals.map((animal: AnimalCategory, index: number) => (
                                     <React.Fragment key={animal.id}>
                                         {" "}
@@ -167,8 +160,8 @@ const AutoConsultationComponent: React.FC = () => {
                                     </React.Fragment>
                                 ))}
                             </p>
-                            <li>Cá màu {consultationData.consultation1.colors.join(", ")}: Những màu này thuộc hành {consultationData.destinyTuongSinh}, vì {consultationData.destinyTuongSinh} sinh {consultationData.destiny}, tạo sự hỗ trợ và phát triển cho người mệnh {consultationData.destiny}.</li>
-                            <p>Các loài cá phù hợp:
+                            <li>Fish with colors {consultationData.consultation1.colors.join(", ")}: These colors belong to the {consultationData.destinyTuongSinh} element, as {consultationData.destinyTuongSinh} generates {consultationData.destiny}, offering support and growth to those with the {consultationData.destiny} destiny.</li>
+                            <p>Suitable fish types:
                                 {consultationData.consultation1.animals.map((animal: AnimalCategory, index: number) => (
                                     <React.Fragment key={animal.id}>
                                         {" "}
@@ -182,18 +175,18 @@ const AutoConsultationComponent: React.FC = () => {
                         </ul>
                     </div>
                     <div>
-                        <h3 className="titleDestiny2">3. Hướng hồ</h3>
-                        <p>Hướng hồ cá cho người mệnh {consultationData.destiny} nên đặt ở các hướng thuộc hành {consultationData.destiny} hoặc hành {consultationData.destinyTuongSinh}:</p>
+                        <h3 className="titleDestiny2">3. Pond Direction</h3>
+                        <p>The pond direction for those with the {consultationData.destiny} destiny should be placed in directions belonging to the {consultationData.destiny} element or the {consultationData.destinyTuongSinh} element:</p>
                         <ul>
-                            <li>Hướng {consultationData.consultation2.directions.join(", ")}: Thuộc hành {consultationData.destiny}, rất tốt cho sự thăng tiến và tài lộc.</li>
-                            <li>Hướng {consultationData.consultation1.directions.join(", ")}: sẽ hỗ trợ và giúp gia tăng vượng khí cho mệnh {consultationData.destiny}.</li>
+                            <li>Directions {consultationData.consultation2.directions.join(", ")}: Belonging to the {consultationData.destiny} element, very beneficial for advancement and wealth.</li>
+                            <li>Directions {consultationData.consultation1.directions.join(", ")}: These support and enhance the fortune of the {consultationData.destiny} destiny.</li>
                         </ul>
                     </div>
                     <div>
-                        <h3 className="titleDestiny2">4. Hình dáng hồ</h3>
+                        <h3 className="titleDestiny2">4. Pond Shape</h3>
                         <ul>
-                            <li>Hình {consultationData.consultation2.shapes.join(", ")}, vì đây là các hình tượng của hành Thủy, giúp kích hoạt sự hài hòa và lưu thông năng lượng.</li>
-                            <p>Các mẫu hồ chúng tôi sưu tầm:
+                            <li>Shape {consultationData.consultation2.shapes.join(", ")}, as these shapes represent the Water element, fostering harmony and energy flow.</li>
+                            <p>Collected pond models:
                                 {consultationData.consultation2.shelters.map((shelter: ShelterCategory, index: number) => (
                                     <React.Fragment key={shelter.id}>
                                         {" "}
@@ -204,8 +197,8 @@ const AutoConsultationComponent: React.FC = () => {
                                     </React.Fragment>
                                 ))}
                             </p>
-                            <li>Hình dáng thuộc hành {consultationData.destinyTuongSinh} như hình {consultationData.consultation1.shapes.join(", ")} cũng rất phù hợp, vì {consultationData.destinyTuongSinh} sinh {consultationData.destiny}, tạo ra sự tương sinh mạnh mẽ, mang lại sự thịnh vượng và hỗ trợ cho vận khí của gia chủ.</li>
-                            <p>Các mẫu hồ chúng tôi sưu tầm:
+                            <li>Shapes belonging to the {consultationData.destinyTuongSinh} element, like shape {consultationData.consultation1.shapes.join(", ")}, are also suitable, as {consultationData.destinyTuongSinh} generates {consultationData.destiny}, creating strong compatibility and bringing prosperity and support to the homeowner's fortune.</li>
+                            <p>Collected pond models:
                                 {consultationData.consultation1.shelters.map((shelter: ShelterCategory, index: number) => (
                                     <React.Fragment key={shelter.id}>
                                         {" "}
@@ -218,6 +211,7 @@ const AutoConsultationComponent: React.FC = () => {
                             </p>
                         </ul>
                     </div>
+
                     {selectedAnimal && (
                         <div className="popup-overlay" onClick={() => setSelectedAnimal(null)}>
                             <div className="popup-content" onClick={(e) => e.stopPropagation()}>
