@@ -16,7 +16,7 @@ public class ConsultationRequestDetailController {
 
     private final ConsultationRequestDetailServiceImpl consultationRequestDetailService;
 
-    @PostMapping("/request-id/{requestId}/bill-id/{billId}")
+    @PostMapping("/request-id/{requestId}")
     public ApiResponse<ConsultationRequestDetailDTO> createConsultationRequestDetail(
             @Valid @RequestBody ConsultationRequestDetailDTO requestDTO, @PathVariable Integer requestId) {
         ConsultationRequestDetailDTO result =
