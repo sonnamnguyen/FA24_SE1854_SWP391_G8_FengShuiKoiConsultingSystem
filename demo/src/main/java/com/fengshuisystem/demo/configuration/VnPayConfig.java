@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.configuration;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,74 +12,13 @@ import java.util.*;
 
 public class VnPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    //    public static String vnp_ReturnUrl = "https://www.google.com/webhp?hl=vi&sa=X&ved=0ahUKEwi-vp2Sg5OJAxVes1YBHdz9HhEQPAgI";
-    public static String vnp_ReturnUrl = "http://localhost:3000/payment-success"; // Khôi
+    public static String vnp_ReturnUrl = "http://localhost:3000/payment-success";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
     public static String orderType = "other";
-    //    public static String vnp_TmnCode = "0CARK38C"; // Minh
-    public static String vnp_TmnCode = "UHTFO8F0"; // Khôi
-    // public static String secretKey = "VZ25W2N00VUCE83URJ926UBISPXL4OHH"; // Minh
-    public static String secretKey = "QU0MUEANS34P3OC5ZIIBCYAY1VKK0MGX"; // Khôi
-
+    public static String vnp_TmnCode = "5P0JWNAM";
+    public static String secretKey = "VKNXRUEX8N0C8XF1OOOBG37X38XEPAOE";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
-
-//    public static String md5(String message) {
-//        String digest = null;
-//        try {
-//            MessageDigest md = MessageDigest.getInstance("MD5");
-//            byte[] hash = md.digest(message.getBytes("UTF-8"));
-//            StringBuilder sb = new StringBuilder(2 * hash.length);
-//            for (byte b : hash) {
-//                sb.append(String.format("%02x", b & 0xff));
-//            }
-//            digest = sb.toString();
-//        } catch (UnsupportedEncodingException ex) {
-//            digest = "";
-//        } catch (NoSuchAlgorithmException ex) {
-//            digest = "";
-//        }
-//        return digest;
-//    }
-
-    public static String Sha256(String message) {
-        String digest = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(message.getBytes("UTF-8"));
-            StringBuilder sb = new StringBuilder(2 * hash.length);
-            for (byte b : hash) {
-                sb.append(String.format("%02x", b & 0xff));
-            }
-            digest = sb.toString();
-        } catch (UnsupportedEncodingException ex) {
-            digest = "";
-        } catch (NoSuchAlgorithmException ex) {
-            digest = "";
-        }
-        return digest;
-    }
-
-    //Util for VNPAY
-    public static String hashAllFields(Map fields) {
-        List fieldNames = new ArrayList(fields.keySet());
-        Collections.sort(fieldNames);
-        StringBuilder sb = new StringBuilder();
-        Iterator itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = (String) itr.next();
-            String fieldValue = (String) fields.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                sb.append(fieldName);
-                sb.append("=");
-                sb.append(fieldValue);
-            }
-            if (itr.hasNext()) {
-                sb.append("&");
-            }
-        }
-        return hmacSHA512(secretKey,sb.toString());
-    }
 
     public static String hmacSHA512(final String key, final String data) {
         try {
