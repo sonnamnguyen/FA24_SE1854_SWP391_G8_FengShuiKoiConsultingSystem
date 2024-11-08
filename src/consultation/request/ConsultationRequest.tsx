@@ -170,9 +170,7 @@ const ConsultationRequest: React.FC = () => {
             onChange={(e) => setDescription(e.target.value)}
           />
         </Form.Item>
-
         
-
         <Form.Item label="Chọn gói dịch vụ" required>
           <Radio.Group
             onChange={(e) => handlePackageChange(e.target.value)}

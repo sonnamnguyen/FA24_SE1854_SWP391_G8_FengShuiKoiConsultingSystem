@@ -12,34 +12,39 @@ const PaymentSuccessPage: React.FC = () => {
     const handleVNPayResponse = async () => {
       const queryParams = new URLSearchParams(location.search);
 
-      // Lấy billId từ URL
-      const billId = queryParams.get('billId') || queryParams.get('vnp_TxnRef');
+      // Attempt to retrieve the billId from local storage
+      const originalBillId = localStorage.getItem('originalBillId');
+      const returnedBillId = queryParams.get('billId') || queryParams.get('vnp_TxnRef');
 
-      // Cố định giá trị cho các tham số
-      const responseCode = '00'; // Luôn success
-      const amount = queryParams.get('vnp_Amount') || '100000'; // Giá trị mặc định
-      const bankCode = queryParams.get('vnp_BankCode') || 'NCB'; // Giá trị mặc định
+      // Log for debugging purposes
+      console.log('Original Bill ID (from local storage):', originalBillId);
+      console.log('Returned Bill ID (from VNPay):', returnedBillId);
+
+      // Set billId to original if available, otherwise fallback to returned ID
+      const billId = originalBillId || returnedBillId;
+
+      const responseCode = '00'; // Always success
+      const amount = queryParams.get('vnp_Amount') || '100000'; // Default value
+      const bankCode = queryParams.get('vnp_BankCode') || 'NCB'; // Default value
       const orderInfo = queryParams.get('vnp_OrderInfo') || 'Thanh toán đơn hàng';
 
       if (!billId) {
         message.error('Thiếu thông tin hóa đơn!');
-        navigate('/error'); // Điều hướng đến trang lỗi nếu thiếu billId
+        navigate('/error');
         return;
       }
 
       try {
-        // Lấy token nếu có
         const token = getToken();
         if (!token) {
           message.error('Không thể xác thực người dùng!');
-          navigate('/error'); // Điều hướng đến trang lỗi nếu không có token
+          navigate('/error');
           return;
         }
 
-        // Gọi API để xử lý kết quả thanh toán với các tham số cố định
         const response = await api.get(`/vn_pay/vnpay_infor?vnp_ResponseCode=${responseCode}&billId=${billId}&vnp_Amount=${amount}&vnp_BankCode=${bankCode}&vnp_OrderInfo=${encodeURIComponent(orderInfo)}`, {
           headers: {
-            Authorization: `Bearer ${token}` // Thêm token vào header
+            Authorization: `Bearer ${token}`
           }
         });
 
@@ -47,12 +52,12 @@ const PaymentSuccessPage: React.FC = () => {
           message.success(response.data || 'Thanh toán thành công!');
         } else {
           message.error(response.data || 'Thanh toán không thành công!');
-          navigate('/error'); // Điều hướng đến trang lỗi khi thanh toán không thành công
+          navigate('/error');
         }
       } catch (error) {
         message.error('Lỗi trong quá trình xử lý kết quả thanh toán!');
         console.error('Error handling VNPay response:', error);
-        navigate('/error'); // Điều hướng đến trang lỗi khi có lỗi xảy ra
+        navigate('/error');
       }
     };
 

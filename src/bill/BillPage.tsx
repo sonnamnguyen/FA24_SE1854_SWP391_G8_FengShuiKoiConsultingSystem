@@ -55,8 +55,11 @@ const BillPage: React.FC = () => {
           message.error('Số tiền hoặc token không hợp lệ!');
           return;
         }
-  
-        // Gọi API tạo liên kết thanh toán với `amount`
+
+        // Store the billId before redirecting
+        localStorage.setItem('originalBillId', bill.id.toString());
+
+        // Create VNPay payment link
         const response = await fetch(`http://localhost:9090/vn_pay/create_vn_pay?amount=${encodeURIComponent(amount)}`, {
           method: 'GET',
           headers: {
@@ -64,11 +67,10 @@ const BillPage: React.FC = () => {
             'Content-Type': 'application/json',
           },
         });
-  
+
         const data = await response.json();
         if (data.status === 'OK' && data.url) {
-          // Chuyển hướng đến URL được cung cấp bởi VNPay
-          window.location.href = data.url;
+          window.location.href = data.url; // Redirect to VNPay URL
         } else {
           message.error('Lỗi khi tạo liên kết thanh toán!');
         }
@@ -80,7 +82,6 @@ const BillPage: React.FC = () => {
       message.error('Hóa đơn không hợp lệ!');
     }
   };
-  
 
   if (loading) {
     return <p>Đang tải thông tin hóa đơn...</p>;
