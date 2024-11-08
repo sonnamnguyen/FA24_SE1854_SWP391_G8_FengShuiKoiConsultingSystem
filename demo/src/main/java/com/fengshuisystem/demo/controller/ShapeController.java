@@ -4,6 +4,7 @@ package com.fengshuisystem.demo.controller;
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShapeDTO;
+import com.fengshuisystem.demo.entity.Shape;
 import com.fengshuisystem.demo.service.ShapeService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -20,7 +21,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ShapeController {
+
     ShapeService shapeService;
+
     @PostMapping
     public ApiResponse<ShapeDTO> createShape(@RequestBody ShapeDTO shapeRequest) {
         return ApiResponse.<ShapeDTO>builder()
@@ -67,6 +70,13 @@ public class ShapeController {
     public ApiResponse<List<ShapeDTO>> getAllShapes() {
         return ApiResponse.<List<ShapeDTO>>builder()
                 .result(shapeService.getAllShapes())
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<ShapeDTO> getShape(@PathVariable Integer id) {
+        return ApiResponse.<ShapeDTO>builder()
+                .result(shapeService.getShapeById(id))
                 .build();
     }
 }
