@@ -1,8 +1,6 @@
 package com.fengshuisystem.demo.controller;
 
-import com.fengshuisystem.demo.dto.ApiResponse;
-import com.fengshuisystem.demo.dto.ConsultationRequestDTO;
-import com.fengshuisystem.demo.dto.ConsultationResultDTO;
+import com.fengshuisystem.demo.dto.*;
 import com.fengshuisystem.demo.service.impl.ConsultationResultServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -29,11 +27,39 @@ public class ConsultationResultController {
                 .build();
     }
 
+    @GetMapping
+    public ApiResponse<PageResponse<ConsultationResultDTO>> getAllConsultationResult(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ) {
+        return ApiResponse.<PageResponse<ConsultationResultDTO>>builder()
+                .result(consultationResultService.getAllConsultationResult(page, size))
+                .build();
+    }
+
+    @GetMapping("/consultation-result-search")
+    public ApiResponse<PageResponse<ConsultationResultDTO>> getConsultationResultBySearch(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+            @RequestParam String search
+    ) {
+        return ApiResponse.<PageResponse<ConsultationResultDTO>>builder()
+                .result(consultationResultService.getConsultationResultBySearch(search, page, size))
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse<ConsultationResultDTO> updateConsultationResult(@PathVariable Integer id, @RequestBody @Valid ConsultationResultDTO consulationResultDTO) {
+        return ApiResponse.<ConsultationResultDTO>builder()
+                .result(consultationResultService.updateConsultationResult(id, consulationResultDTO))
+                .build();
+    }
+
     @PutMapping("/send-email/{resultId}")
-    public ApiResponse<ConsultationResultDTO> updateConsultationResult(@PathVariable Integer resultId) {
+    public ApiResponse<ConsultationResultDTO> updateConsultationResultAndSendMail(@PathVariable Integer resultId) {
 
         return ApiResponse.<ConsultationResultDTO>builder()
-                .result(consultationResultService.updateConsultationResult(resultId))
+                .result(consultationResultService.updateConsultationResultAndSendMail(resultId))
                 .build();
     }
 

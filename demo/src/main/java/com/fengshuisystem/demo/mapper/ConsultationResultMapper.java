@@ -1,12 +1,14 @@
 package com.fengshuisystem.demo.mapper;
 
+import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
 import com.fengshuisystem.demo.dto.ConsultationResultDTO;
+import com.fengshuisystem.demo.entity.AnimalCategory;
 import com.fengshuisystem.demo.entity.ConsultationResult;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface ConsultationResultMapper {
+public interface ConsultationResultMapper extends EntityMapper<ConsultationResultDTO, ConsultationResult> {
 
     @Mapping(target = "consultationRequestId", source = "request.id")
     @Mapping(target = "consultationRequestDetailId", source = "requestDetail.id")

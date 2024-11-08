@@ -1,22 +1,33 @@
 package com.fengshuisystem.demo.service.impl;
 
+import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
+import com.fengshuisystem.demo.dto.ColorDTO;
 import com.fengshuisystem.demo.dto.ConsultationResultDTO;
+import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.enums.Request;
+import com.fengshuisystem.demo.exception.AppException;
+import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.ConsultationResultMapper;
 import com.fengshuisystem.demo.repository.*;
 import com.fengshuisystem.demo.service.ConsultationResultService;
 import com.fengshuisystem.demo.service.EmailService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -97,7 +108,7 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public ConsultationResultDTO updateConsultationResult(Integer resultId) {
+    public ConsultationResultDTO updateConsultationResultAndSendMail(Integer resultId) {
         // 1. Lấy ConsultationResult từ resultId
         ConsultationResult consultationResult = consultationResultRepository.findById(resultId)
                 .orElseThrow(() -> new RuntimeException("ConsultationResult không tìm thấy với ID: " + resultId));
@@ -198,6 +209,69 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         log.info("Extracted email from JWT: {}", email);
         return email;
     }
+
+    public PageResponse<ConsultationResultDTO> getAllConsultationResult(int page, int size) {
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = consultationResultRepository.findAll(pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED);
+        }
+        return PageResponse.<ConsultationResultDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(consultationResultMapper::toDto).toList())
+                .build();
+    }
+
+    public PageResponse<ConsultationResultDTO> getConsultationResultBySearch(String search, int page, int size) {
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = consultationResultRepository.findAllByConsultantName(search, pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED);
+        }
+
+        return PageResponse.<ConsultationResultDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(consultationResultMapper::toDto).toList())
+                .build();
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public ConsultationResultDTO updateConsultationResult(Integer id, @Valid ConsultationResultDTO consultationResultDTO) {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+
+        ConsultationResult consultationResult = consultationResultRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED));
+
+        // Update specific fields only if they are provided in DTO
+        if (consultationResultDTO.getConsultantName() != null) {
+            consultationResult.setConsultantName(consultationResultDTO.getConsultantName());
+        }
+        if (consultationResultDTO.getDescription() != null) {
+            consultationResult.setDescription(consultationResultDTO.getDescription());
+        }
+        if (consultationResultDTO.getStatus() != null) {
+            consultationResult.setStatus(consultationResultDTO.getStatus());
+        }
+
+        consultationResult.setUpdatedBy(name);
+        consultationResult.setUpdatedDate(Instant.now());
+
+        // Save the updated entity and return the DTO
+        ConsultationResult savedResult = consultationResultRepository.saveAndFlush(consultationResult);
+        return consultationResultMapper.toDto(savedResult);
+    }
+
 }
 
 
