@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.service.impl;
 
+import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
 import com.fengshuisystem.demo.dto.ConsultationRequestDTO;
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.Bill;
@@ -7,6 +8,8 @@ import com.fengshuisystem.demo.entity.ConsultationRequest;
 import com.fengshuisystem.demo.entity.Package;
 import com.fengshuisystem.demo.entity.enums.BillStatus;
 import com.fengshuisystem.demo.entity.enums.Request;
+import com.fengshuisystem.demo.exception.AppException;
+import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.ConsultationRequestMapper;
 import com.fengshuisystem.demo.repository.BillRepository;
 import com.fengshuisystem.demo.repository.ConsultationRequestRepository;
@@ -20,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -111,9 +115,20 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
     }
 
     @Override
-    @PreAuthorize("hasRole('USER') or hasRole(ADMIN)")
     public ConsultationRequestDTO findById(Integer id) {
         return consultationRequestMapper.toDTO(consultationRequestRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public List<ConsultationRequestDTO> findAllRequests() {
+        List<ConsultationRequestDTO> animalCategoryDTOS = consultationRequestRepository.findAll()
+                .stream()
+                .map(consultationRequestMapper::toDTO)
+                .toList();
+        if (animalCategoryDTOS.isEmpty()) {
+            throw new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED);
+        }
+        return animalCategoryDTOS;
     }
 
     private String getCurrentUserEmailFromJwt() {

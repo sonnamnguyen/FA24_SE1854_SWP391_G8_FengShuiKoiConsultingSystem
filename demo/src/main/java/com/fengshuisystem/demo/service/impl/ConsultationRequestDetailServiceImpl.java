@@ -63,6 +63,11 @@ public class ConsultationRequestDetailServiceImpl implements ConsultationRequest
         return detailMapper.toDTO(savedDetail);
     }
 
+    @Override
+    public ConsultationRequestDetailDTO findById(Integer id) {
+        return detailMapper.toDTO(detailRepository.findById(id).orElse(null));
+    }
+
     /**
      * Cập nhật một chi tiết yêu cầu đã tồn tại.
      */

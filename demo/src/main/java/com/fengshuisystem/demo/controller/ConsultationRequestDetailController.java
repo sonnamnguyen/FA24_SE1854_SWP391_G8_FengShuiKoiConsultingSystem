@@ -23,4 +23,11 @@ public class ConsultationRequestDetailController {
                 consultationRequestDetailService.createConsultationRequestDetail(requestDTO, requestId);
         return ApiResponse.<ConsultationRequestDetailDTO>builder().result(result).build();
     }
+
+    @GetMapping("/{id}")
+    public ApiResponse<ConsultationRequestDetailDTO> getConsultationRequestDetail(@PathVariable Integer id) {
+        return ApiResponse.<ConsultationRequestDetailDTO>builder()
+                .result(consultationRequestDetailService.findById(id))
+                .build();
+    }
 }

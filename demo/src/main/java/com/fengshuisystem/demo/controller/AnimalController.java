@@ -29,6 +29,7 @@ public class AnimalController {
                 .result(animalService.createAnimal(animalCreationRequest))
                 .build();
     }
+
     @GetMapping
     public ApiResponse<PageResponse<AnimalCategoryDTO>> getAllAnimals(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -58,6 +59,7 @@ public class AnimalController {
                 .result(animalService.updateAnimal(id, animalCreationRequest))
                 .build();
     }
+
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteAnimal(@PathVariable Integer id) {
         animalService.deleteAnimal(id);
@@ -65,6 +67,7 @@ public class AnimalController {
                 .message("The animal has been deleted")
                 .build();
     }
+
     @GetMapping("/{id}")
     public ApiResponse<AnimalCategoryDTO> getAnimalById(@PathVariable Integer id) {
         return ApiResponse.<AnimalCategoryDTO>builder()

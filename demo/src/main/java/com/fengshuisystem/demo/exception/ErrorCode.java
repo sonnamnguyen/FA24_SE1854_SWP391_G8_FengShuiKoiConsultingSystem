@@ -31,6 +31,7 @@ public enum ErrorCode {
     SHAPE_NOT_EXISTED(1021, "Shape not existed", HttpStatus.NOT_FOUND),
     CONSULATION_CATEGORY_NOT_EXISTED(1022, "Consulation Category not existed", HttpStatus.NOT_FOUND),
     SHAPE_EXISTED(1023, "Shape existed", HttpStatus.BAD_REQUEST), // added from second file
+    CONSULTATION_CATEGORY_NOT_EXISTED(1024, "Consulation Category not existed", HttpStatus.NOT_FOUND),
     POST_NOT_EXISTED(2001, "Post not existed", HttpStatus.NOT_FOUND),
     COMMENT_NOT_EXISTED(2002, "Comment not existed", HttpStatus.NOT_FOUND),
     POST_IMAGE_NOT_EXISTED(2003, "Post image not existed", HttpStatus.NOT_FOUND),

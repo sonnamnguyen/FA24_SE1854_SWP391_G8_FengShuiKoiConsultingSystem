@@ -6,6 +6,8 @@ import com.fengshuisystem.demo.entity.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -13,5 +15,10 @@ import java.util.Optional;
 
 @Repository
 public interface ConsultationResultRepository extends JpaRepository<ConsultationResult, Integer> {
-    public Page<ConsultationResult> findAllByStatus(Request status, Pageable pageable);
+    Page<ConsultationResult> findAll(Pageable pageable);
+
+    @Query("SELECT cr FROM ConsultationResult cr WHERE (:name IS NULL OR TRIM(:name) = '' OR cr.consultantName LIKE CONCAT('%', :name, '%'))")
+    Page<ConsultationResult> findAllByConsultantName(@Param("name") String name, Pageable pageable);
+
+
 }

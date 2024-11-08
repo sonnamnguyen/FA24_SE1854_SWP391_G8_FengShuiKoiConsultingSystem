@@ -117,7 +117,6 @@ public class AnimalServiceImpl implements AnimalService {
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public AnimalCategoryDTO updateAnimal(Integer id, AnimalCategoryDTO request) {
-        Status status = Status.DELETED;
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
