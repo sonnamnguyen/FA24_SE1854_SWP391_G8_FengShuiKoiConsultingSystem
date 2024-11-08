@@ -4,6 +4,7 @@ import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
 import com.fengshuisystem.demo.service.ShelterService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +24,7 @@ public class ShelterController {
   ShelterService shelterService;
 
   @PostMapping
-  public ApiResponse<ShelterCategoryDTO> createShelter(@RequestBody  ShelterCategoryDTO shelterCreationRequest) {
+  public ApiResponse<ShelterCategoryDTO> createShelter(@Valid @RequestBody  ShelterCategoryDTO shelterCreationRequest) {
     return ApiResponse.<ShelterCategoryDTO>builder()
             .result(shelterService.createShelter(shelterCreationRequest))
             .build();
@@ -53,7 +54,7 @@ public class ShelterController {
   }
 
   @PutMapping("/{id}")
-  public ApiResponse<ShelterCategoryDTO> updateShelter(@PathVariable Integer id, @RequestBody  ShelterCategoryDTO shelterCreationRequest) {
+  public ApiResponse<ShelterCategoryDTO> updateShelter(@PathVariable Integer id, @Valid @RequestBody ShelterCategoryDTO shelterCreationRequest) {
     return ApiResponse.<ShelterCategoryDTO>builder()
             .result(shelterService.updateShelter(id, shelterCreationRequest))
             .build();

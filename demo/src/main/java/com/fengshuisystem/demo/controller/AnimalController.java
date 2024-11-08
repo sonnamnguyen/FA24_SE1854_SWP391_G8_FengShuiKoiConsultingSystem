@@ -23,7 +23,7 @@ public class AnimalController {
     AnimalService animalService;
 
     @PostMapping
-    public ApiResponse<AnimalCategoryDTO> createAnimal(@RequestBody AnimalCategoryDTO animalCreationRequest) {
+    public ApiResponse<AnimalCategoryDTO> createAnimal(@Valid @RequestBody AnimalCategoryDTO animalCreationRequest) {
         System.out.println("Received request: " + animalCreationRequest); // Logging nội dung reques
         return ApiResponse.<AnimalCategoryDTO>builder()
                 .result(animalService.createAnimal(animalCreationRequest))
@@ -53,7 +53,7 @@ public class AnimalController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<AnimalCategoryDTO> updateAnimal(@PathVariable Integer id, @RequestBody @Valid AnimalCategoryDTO animalCreationRequest) {
+    public ApiResponse<AnimalCategoryDTO> updateAnimal(@PathVariable Integer id, @Valid @RequestBody AnimalCategoryDTO animalCreationRequest) {
         return ApiResponse.<AnimalCategoryDTO>builder()
                 .result(animalService.updateAnimal(id, animalCreationRequest))
                 .build();

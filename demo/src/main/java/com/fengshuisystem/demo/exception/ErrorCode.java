@@ -42,7 +42,8 @@ public enum ErrorCode {
     REQUEST_NOT_FOUND(2009, "Request not found", HttpStatus.NOT_FOUND),
     CONSULTATION_REQUEST_DETAIL_NOT_FOUND(2010, "Consultation request detail not found", HttpStatus.NOT_FOUND),
     CONSULTATION_REQUEST_DETAIL_NOT_COMPLETED(2011, "Consultation request detail not completed", HttpStatus.BAD_REQUEST),
-    PAYMENT_NOT_FOUND(2012, "Payment not found", HttpStatus.BAD_REQUEST); // corrected duplicate with unique code
+    PAYMENT_NOT_FOUND(2012, "Payment not found", HttpStatus.BAD_REQUEST), // corrected duplicate with unique code
+    TOO_MANY_COLORS(2013, "A maximum of three colors is allowed. Please reduce the selection.", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
