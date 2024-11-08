@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { logOut } from "../../service/authentication";
+import { getToken } from '../../service/localStorageService'; // Import getToken function
 import "../css/NavbarUser.css";
 import logo from "../../img/logo.png";
 
@@ -12,9 +13,16 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSticky, setIsSticky] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // State to track login status
 
   // Sử dụng useLocation để theo dõi khi đường dẫn thay đổi
   const location = useLocation();
+
+  // Kiểm tra trạng thái đăng nhập khi component được tải
+  useEffect(() => {
+    const token = getToken(); // Sử dụng getToken để kiểm tra trạng thái đăng nhập
+    setIsLoggedIn(!!token); // Nếu có token thì set isLoggedIn = true, ngược lại là false
+  }, []);
 
   // Cuộn trang lên đầu mỗi khi location thay đổi
   useEffect(() => {
@@ -47,7 +55,8 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
   const handleLogout = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     logOut();
-    window.location.href = "/login";
+    setIsLoggedIn(false); // Cập nhật trạng thái đăng xuất
+    window.location.href = "/";
   };
 
   const handleSearch = () => {
@@ -112,8 +121,9 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               <NavLink
                 className="nav-link dropdown-toggle"
                 data-bs-toggle="dropdown"
-                to="#">
-               Feng Shui Tools
+                to="#"
+              >
+                Feng Shui Tools
               </NavLink>
               <ul className="dropdown-menu">
                 <li>
@@ -138,6 +148,11 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                 KoiFish
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="nav-link menunav text-dark" to="/consultation-request">
+                Book a Consultation
+              </NavLink>
+            </li>
           </ul>
           <form
             className="d-flex"
@@ -153,7 +168,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               onChange={onSearchInputChange}
             />
             <button
-              className="btn btn-danger" // Red button for search
+              className="btn btn-danger"
               type="submit"
               onClick={handleSearch}
             >
@@ -176,36 +191,53 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               />
             </a>
             <ul className="dropdown-menu dropdown-menu-end bg-light">
-              <li>
-                <NavLink className="dropdown-item text-dark" to="/login">
-                  Login
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  className="dropdown-item text-dark"
-                  to="/logout"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </NavLink>
-              </li>
-              <li>
-                <hr className="dropdown-divider" />
-              </li>
-              <li>
-                <NavLink
-                  className="dropdown-item text-dark"
-                  to="/update-profile"
-                >
-                  Update Profile
-                </NavLink>
-              </li>
-              <li>
-                <NavLink className="dropdown-item text-dark" to="/view-profile">
-                  View Profile
-                </NavLink>
-              </li>
+              {!isLoggedIn && ( // Hiển thị mục "Login" nếu chưa đăng nhập
+                <li>
+                  <NavLink className="dropdown-item text-dark" to="/login">
+                    Login
+                  </NavLink>
+                </li>
+              )}
+              {isLoggedIn && ( // Hiển thị mục "Logout" và các mục khác nếu đã đăng nhập
+                <>
+                  <li>
+                    <NavLink
+                      className="dropdown-item text-dark"
+                      to="/logout"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </NavLink>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <NavLink
+                      className="dropdown-item text-dark"
+                      to="/update-profile"
+                    >
+                      Update Profile
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      className="dropdown-item text-dark"
+                      to="/view-profile"
+                    >
+                      View Profile
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      className="dropdown-item text-dark"
+                      to="/view-history"
+                    >
+                      History
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </ul>
           </li>
         </div>

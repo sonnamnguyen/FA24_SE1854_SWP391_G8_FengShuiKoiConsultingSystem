@@ -59,14 +59,16 @@ const SidebarAdmin: React.FC = () => {
           theme="light"
         >
           <Menu.Item key="1" icon={<AppstoreOutlined />}>
-            <Link to="/">Dashboard</Link>
+            <Link to="/admin-page">Dashboard</Link>
           </Menu.Item>
+
           <Menu.SubMenu key="sub1" icon={<MailOutlined />} title="USER MANAGEMENT">
             <Menu.Item key="4">
               <Link to="/view-user">VIEW USER</Link>
             </Menu.Item>
           </Menu.SubMenu>
-          <Menu.SubMenu key="sub1" icon={<MailOutlined />} title="KOI FISH ANIMAL">
+
+          <Menu.SubMenu key="sub2" icon={<MailOutlined />} title="KOI FISH ANIMAL">
             <Menu.Item key="2">
               <Link to="/add-koi">ADD KOI FISH</Link>
             </Menu.Item>
@@ -78,7 +80,7 @@ const SidebarAdmin: React.FC = () => {
             </Menu.Item>
           </Menu.SubMenu>
 
-          <Menu.SubMenu key="sub2" icon={<SettingOutlined />} title="KOI FISH COLOR">
+          <Menu.SubMenu key="sub3" icon={<SettingOutlined />} title="KOI FISH COLOR">
             <Menu.Item key="5">
               <Link to="/add-color">ADD COLOR KOI FISH</Link>
             </Menu.Item>
@@ -90,7 +92,7 @@ const SidebarAdmin: React.FC = () => {
             </Menu.Item>
           </Menu.SubMenu>
 
-          <Menu.SubMenu key="sub3" icon={<AppstoreOutlined />} title="PONDS KOI FISH">
+          <Menu.SubMenu key="sub4" icon={<AppstoreOutlined />} title="PONDS KOI FISH">
             <Menu.Item key="8">
               <Link to="/add-ponds">ADD PONDS</Link>
             </Menu.Item>
@@ -102,7 +104,7 @@ const SidebarAdmin: React.FC = () => {
             </Menu.Item>
           </Menu.SubMenu>
 
-          <Menu.SubMenu key="sub4" icon={<AppstoreOutlined />} title="PONDS SHAPE KOI">
+          <Menu.SubMenu key="sub5" icon={<AppstoreOutlined />} title="PONDS SHAPE KOI">
             <Menu.Item key="11">
               <Link to="/add-shape">ADD SHAPE PONDS</Link>
             </Menu.Item>
@@ -111,6 +113,24 @@ const SidebarAdmin: React.FC = () => {
             </Menu.Item>
             <Menu.Item key="13">
               <Link to="/view-shape">VIEW SHAPE PONDS</Link>
+            </Menu.Item>
+          </Menu.SubMenu>
+
+          <Menu.SubMenu key="sub6" icon={<AppstoreOutlined />} title="CONSULTATION">
+            <Menu.Item key="14">
+              <Link to="/view-consultation-request">REQUEST</Link>
+            </Menu.Item>
+            <Menu.Item key="15">
+              <Link to="/view-consultation-request-detail">REQUEST DETAIL</Link>
+            </Menu.Item>
+            <Menu.Item key="16">
+              <Link to="/view-consultation-result">RESULT</Link>
+            </Menu.Item>
+            <Menu.Item key="17">
+              <Link to="/view-consultation-animal">ANIMAL</Link>
+            </Menu.Item>
+            <Menu.Item key="18">
+              <Link to="/view-consultation-shelter">SHELTER</Link>
             </Menu.Item>
           </Menu.SubMenu>
         </Menu>

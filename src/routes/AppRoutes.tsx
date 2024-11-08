@@ -32,6 +32,12 @@ import ViewUserManagement from "../admin/user/UserManagement";
 import AutoConsultation from "../user/autoConsultation/AutoConsultationView";
 import CompatibilityCaculation from "../user/compatibilityCaculation/CompatibilityCaculationView";
 
+import ConsultationRequest from "../consultation/request/ConsultationRequest";
+import PaymentPage from "../payment/PaymentPage"
+import BillPage from "../bill/BillPage";
+import PaymentSuccessPage from "../payment/PaymentSuccessPage";
+import ConsultationRequestDetail from "../consultation/request/ConsultationRequestDetail"
+
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
   const Page = AdminRoute(AdminPage);
@@ -78,6 +84,18 @@ const AppRoutes = () => {
         <Route path="/view-user" element={<PageViewUser />} />
 
         <Route path="/view-ponds" element={<ShelterViewAdmin />} />
+
+        {/* Consultation */}
+        {/* Consultation Request */}
+        <Route path="/consultation-request" element={<ConsultationRequest />} />
+        {/* Thanh toán Consultation Request */}
+        <Route path="/consultation-request/:requestId/payment" element={<PaymentPage />} />
+        {/* In Bill */}
+        <Route path="/bill/:billId" element={<BillPage />} />
+        {/* payment-success */}
+        <Route path="/payment-success" element={<PaymentSuccessPage />} />
+        {/* Consultation Request Detail */}
+        <Route path="/consultation-request-detail" element={<ConsultationRequestDetail />} />
       </Routes>
     </Router>
   );

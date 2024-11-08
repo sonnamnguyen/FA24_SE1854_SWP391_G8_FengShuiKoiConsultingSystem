@@ -1,5 +1,4 @@
 import api from "../../axious/axious";
-import AnimalCategory from "../../models/AnimalCategory";
 import ShelterCategory from "../../models/ShelterCategory";
 import { getToken } from "../../service/localStorageService";
 
