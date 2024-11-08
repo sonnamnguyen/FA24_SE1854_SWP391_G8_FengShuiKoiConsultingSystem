@@ -43,7 +43,8 @@ public class EndPoint {
                 "/posts", "/posts/search-posts", "/post/comments", "/post/images",
                 "/consultation-request-details/{id}", "/api/consultation-request-details/{requestDetailId}",
                 "api/bills/{billId}","/search-posts/title","/search-posts/email",
-                "/packages/{id}", "/packages", "/api/consultation-requests/{requestId}"
+                "/packages/{id}", "/packages", "/api/consultation-requests/{requestId}",
+                "/animals/{id}", "/shelters/{id}"
         };
 
         public static final String[] USER_POST_ENDPOINTS = {

@@ -2,19 +2,14 @@ package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
-import com.fengshuisystem.demo.entity.AnimalImage;
-import com.fengshuisystem.demo.entity.Shape;
-import com.fengshuisystem.demo.entity.ShelterCategory;
-import com.fengshuisystem.demo.entity.ShelterImage;
+import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.ShelterMapper;
 import com.fengshuisystem.demo.repository.ShapeRepository;
-import com.fengshuisystem.demo.repository.ShelterImageRepository;
 import com.fengshuisystem.demo.repository.ShelterRepository;
 import com.fengshuisystem.demo.service.ShelterService;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,15 +23,16 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ShelterServiceImpl implements ShelterService {
+
     ShelterRepository shelterRepository;
     ShelterMapper shelterMapper;
     ShapeRepository shapeRepository;
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ShelterCategoryDTO createShelter(ShelterCategoryDTO request) {
@@ -129,5 +125,24 @@ public class ShelterServiceImpl implements ShelterService {
                 .stream()
                 .map(shelterMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public ShelterCategoryDTO getShelterById(Integer id) {
+        ShelterCategory shelterCategory = shelterRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
+        return shelterMapper.toDto(shelterCategory);
+    }
+
+    @Override
+    public List<ShelterCategoryDTO> getAllShelterCategory() {
+        List<ShelterCategoryDTO> shelterCategoryDTOS = shelterRepository.findAll()
+                .stream()
+                .map(shelterMapper::toDto)
+                .toList();
+        if (shelterCategoryDTOS.isEmpty()) {
+            throw new AppException(ErrorCode.SHELTER_NOT_EXISTED);
+        }
+        return shelterCategoryDTOS;
     }
 }

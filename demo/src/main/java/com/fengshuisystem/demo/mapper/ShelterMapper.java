@@ -6,11 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(
         config = DefaultConfigMapper.class
-
-
 )
 public interface ShelterMapper extends EntityMapper<ShelterCategoryDTO, ShelterCategory> {
 
-     //    @Mapping(target = "shape.id", source = "shapeId")
-     ShelterCategory toEntity(ShelterCategoryDTO dto);
 }

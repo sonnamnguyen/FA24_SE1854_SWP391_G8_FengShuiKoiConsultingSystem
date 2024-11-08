@@ -71,6 +71,7 @@ public class AnimalController {
                 .result(animalService.getAnimalById(id))
                 .build();
     }
+
     @GetMapping("/animalCategory")
     public ApiResponse<List<AnimalCategoryDTO>> getAllAnimals() {
         return ApiResponse.<List<AnimalCategoryDTO>>builder()
