@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../layouts/header-footer/Navbar";
 import Footer from "../layouts/header-footer/Footer";
 import { Link } from "react-router-dom";
+import { message } from "antd"; // Import message từ Ant Design
 
 function Blog() {
     const [search, setSearchData] = useState('');
+
+    // useEffect để kiểm tra và hiển thị thông báo nếu cần
+    useEffect(() => {
+        const success = localStorage.getItem('consultationSuccess');
+        if (success) {
+            message.success('Chi tiết yêu cầu đã được lưu thành công!', 2);
+            setTimeout(() => {
+                message.info('Tư vấn đã được gửi đi, vui lòng kiểm tra gmail trong 24h tới.', 2);
+            }, 2000); // Thời gian giữa hai thông báo
+            localStorage.removeItem('consultationSuccess'); // Xóa trạng thái sau khi hiển thị thông báo
+        }
+    }, []);
 
     return (
         <div>

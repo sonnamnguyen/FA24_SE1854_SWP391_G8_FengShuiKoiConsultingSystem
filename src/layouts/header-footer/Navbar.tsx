@@ -143,10 +143,16 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                     </NavLink>
                   </li>
                   <li>
+                    <NavLink className="dropdown-item" to="/view-history">
+                      History
+                    </NavLink>
+                  </li>
+                  <li>
                     <NavLink className="dropdown-item" to="/logout" onClick={handleLogout}>
                       Logout
                     </NavLink>
                   </li>
+                  
                 </>
               )}
             </ul>

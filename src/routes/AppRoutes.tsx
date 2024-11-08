@@ -29,8 +29,7 @@ import PaymentPage from "../payment/PaymentPage"
 import BillPage from "../bill/BillPage";
 import PaymentSuccessPage from "../payment/PaymentSuccessPage";
 import ConsultationRequestDetail from "../consultation/request/ConsultationRequestDetail"
-import AnimalDetail from "../consultation/request/AnimalDetail";
-import ShelterDetail from "../consultation/request/ShelterDetail";
+
 
 
 const AppRoutes = () => {
@@ -83,9 +82,7 @@ const AppRoutes = () => {
         <Route path="/payment-success" element={<PaymentSuccessPage />} />
         {/* Consultation Request Detail */}
         <Route path="/consultation-request-detail" element={<ConsultationRequestDetail />} />
-        {/* Detail */}
-        <Route path="/animal-detail/:animalId" element={<AnimalDetail />} />
-        <Route path="/shelter-detail/:shelterId" element={<ShelterDetail />} />
+
 
 
         

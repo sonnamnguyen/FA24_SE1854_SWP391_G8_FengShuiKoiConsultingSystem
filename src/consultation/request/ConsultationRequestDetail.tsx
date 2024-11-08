@@ -83,7 +83,7 @@ const ConsultationRequestDetail: React.FC = () => {
       message.error('Mô tả chi tiết phải có ít nhất 100 từ.');
       return;
     }
-
+  
     try {
       const payload = {
         animalCategoryIds: selectedAnimal, // Contains selected animal IDs
@@ -91,13 +91,15 @@ const ConsultationRequestDetail: React.FC = () => {
         description,
       };
       await api.post(`/api/consultation-request-details/request-id/${requestId}`, payload);
-      message.success('Chi tiết yêu cầu đã được lưu thành công!');
-      window.location.href = '/';
-      message.info('Tư vấn đã được gửi đi, vui lòng kiểm tra gmail trong 24h tới.');
+      
+      // Lưu trạng thái thành công vào localStorage trước khi chuyển trang
+      localStorage.setItem('consultationSuccess', 'true');
+      window.location.href = '/'; // Điều hướng về trang chủ
+      
     } catch (error) {
       message.error('Lỗi khi lưu chi tiết yêu cầu.');
     }
-  };
+  };  
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
