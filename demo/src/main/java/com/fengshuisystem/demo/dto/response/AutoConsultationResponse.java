@@ -1,5 +1,9 @@
 package com.fengshuisystem.demo.dto.response;
 
+import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
+import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
+import com.fengshuisystem.demo.entity.AnimalCategory;
+import com.fengshuisystem.demo.entity.ShelterCategory;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,11 +15,10 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AutoConsultationResponse {
-    String message;
     List<Integer> numbers;
     List<String> directions;
     List<String> colors;
     List<String> shapes;
-    List<String> shelters;
-    List<String> animals;
+    List<ShelterCategoryDTO> shelters;
+    List<AnimalCategoryDTO> animals;
 }
