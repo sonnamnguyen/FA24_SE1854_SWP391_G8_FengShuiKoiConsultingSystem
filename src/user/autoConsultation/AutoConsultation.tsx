@@ -76,8 +76,22 @@ const AutoConsultationComponent: React.FC = () => {
                 <button className="autoConsultation" type="submit">Kiểm Tra</button>
             </form>
 
-            {error && <div className="error-message">{error}</div>}
-            {consultationData && (
+            {error && (
+                <>
+                    <div className="ac-error-overlay" onClick={() => setError("")}></div>
+                    <div className="ac-error-popup">
+                        <div className="ac-error-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" color="#f44336">
+                                <circle cx="12" cy="12" r="10" stroke="#f44336" strokeWidth="2" fill="none"></circle>
+                                <line x1="15" y1="9" x2="9" y2="15" stroke="#f44336" strokeWidth="2"></line>
+                                <line x1="9" y1="9" x2="15" y2="15" stroke="#f44336" strokeWidth="2"></line>
+                            </svg>
+                        </div>
+                        <p className="ac-error-text">{error}</p>
+                        <button className="ac-error-button" onClick={() => setError("")}>OK</button>
+                    </div>
+                </>
+            )}            {consultationData && (
                 <div className="consultation-results">
                     <h2 className="titleDestiny2">Mệnh Ngũ Hành {consultationData.destiny}</h2>
                     <div id={consultationData.destiny}>
