@@ -3,6 +3,7 @@ package com.fengshuisystem.demo.service.impl;
 import com.fengshuisystem.demo.dto.*;
 import com.fengshuisystem.demo.dto.response.AutoConsultationResponse;
 import com.fengshuisystem.demo.dto.response.AutoConsultationContainerResponse;
+import com.fengshuisystem.demo.entity.ShelterCategory;
 import com.fengshuisystem.demo.service.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +48,8 @@ public class AutoConsultationServiceImpl implements AutoConsultationService {
                 .directions(directionService.getDirections(destinyId.getId()).stream().map(DirectionDTO::getDirection).toList())
                 .shapes(shapeService.getShapesByDestiny(destinyId.getId()).stream().map(ShapeDTO::getShape).toList())
                 .colors(colorService.getColorsByDestiny(destinyId.getId()).stream().map(ColorDTO::getColor).toList())
-                .shelters(destinyService.getShelterNames(destinyId.getId()))
-                .animals(destinyService.getAnimalNames(destinyId.getId(), tuongKhacTruoc, tuongKhacSau))
+                .shelters(destinyService.getShelter(destinyId.getId()))
+                .animals(destinyService.getAnimal(destinyId.getId(), tuongKhacTruoc, tuongKhacSau))
                 .build();
     }
 

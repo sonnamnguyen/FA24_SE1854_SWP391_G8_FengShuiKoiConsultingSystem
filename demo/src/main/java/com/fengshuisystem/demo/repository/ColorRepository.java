@@ -11,10 +11,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ColorRepository extends JpaRepository<Color, Integer> {
     boolean existsByColor(String color);
+    Optional<Color> findByColor(String color);
     Page<Color> findAllByStatus(Status status, Pageable pageable);
     @Query("SELECT ac FROM Color ac " +
             "WHERE ac.status = :status " +

@@ -41,6 +41,7 @@ public class ShapeServiceImpl implements ShapeService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         if(shapeRepository.existsByShape((shapeDTO.getShape()))) throw new AppException(ErrorCode.SHAPE_EXISTED);
+        if(shapeDTO.getDestiny() == null) throw new AppException(ErrorCode.DESTINY_NOT_EXISTED);
         Destiny destiny = destinyRepository.findById(shapeDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
         Shape shape = shapeMapper.toEntity(shapeDTO);
         shape.setStatus(Status.ACTIVE);
@@ -105,8 +106,10 @@ public class ShapeServiceImpl implements ShapeService {
     public ShapeDTO updateShape(Integer id, ShapeDTO shapeDTO) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
+        if(shapeDTO.getDestiny() == null) throw new AppException(ErrorCode.DESTINY_NOT_EXISTED);
         Destiny destiny = destinyRepository.findById(shapeDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
-        Shape shape = shapeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
+        Shape shape = shapeRepository.findById(shapeDTO.getId()).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
+        if(shapeRepository.findByShape((shapeDTO.getShape())).isPresent()) throw new AppException(ErrorCode.SHAPE_EXISTED);
         shape.setDestiny(destiny);
         shapeMapper.update(shapeDTO, shape);
         shape.setUpdatedBy(name);

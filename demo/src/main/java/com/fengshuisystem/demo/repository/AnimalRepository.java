@@ -11,11 +11,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface AnimalRepository extends JpaRepository<AnimalCategory, Integer> {
     boolean existsByAnimalCategoryName(String name);
+    Optional<AnimalCategory> findByAnimalCategoryName(String name);
     Page<AnimalCategory> findAllByStatus(Status status, Pageable pageable);
     @Query("SELECT ac FROM AnimalCategory ac " +
             "WHERE ac.status = :status " +

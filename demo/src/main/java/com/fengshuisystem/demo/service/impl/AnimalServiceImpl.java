@@ -52,6 +52,12 @@ public class AnimalServiceImpl implements AnimalService {
                         .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
                 colors.add(color);
             }
+            // Kiểm tra số lượng màu sắc
+            if (colors.size() > 3) {
+                throw new AppException(ErrorCode.TOO_MANY_COLORS);
+            }
+        } else {
+            throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
         }
 
         AnimalCategory animalCategory = animalMapper.toEntity(request);
@@ -120,6 +126,7 @@ public class AnimalServiceImpl implements AnimalService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
+        if(animalRepository.existsByAnimalCategoryName(request.getAnimalCategoryName())) throw new AppException(ErrorCode.ANIMAL_EXISTED);
         animalMapper.update(request, animalCategory);
         Set<Color> colors = new HashSet<>();
         if (request.getColors() != null) {
@@ -128,6 +135,11 @@ public class AnimalServiceImpl implements AnimalService {
                         .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
                 colors.add(color);
             }
+            if (colors.size() > 3) {
+                throw new AppException(ErrorCode.TOO_MANY_COLORS);
+            }
+        } else {
+            throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
         }
         for (AnimalImage animalImage : animalCategory.getAnimalImages()) {
             animalImage.setAnimalCategory(animalCategory);
