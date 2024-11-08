@@ -39,34 +39,36 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
 
         if (userDestiny.equals(attributeDestiny)) {
             score = 4;
-            explanation = attributeName + " thuộc hành " + attributeDestiny
-                    + ", cùng hành với mệnh của bạn, mang lại sự ổn định, hòa hợp và bền vững. Sự tương hợp này giúp cho công việc và cuộc sống của bạn luôn trong trạng thái cân bằng, ít gặp trở ngại.";
+            explanation = attributeName + " belongs to the element " + attributeDestiny
+                    + ", the same element as your destiny, bringing stability, harmony, and sustainability."
+                    + " This compatibility helps keep your work and life balanced, with fewer obstacles.";
         } else if (destinyService.findTuongSinhSau(userDestiny).equals(attributeDestiny)) {
             score = 3;
-            explanation = attributeName + " thuộc hành " + attributeDestiny
-                    + ". Mệnh của bạn, thuộc hành " + userDestiny + ", sinh ra hành " + attributeDestiny
-                    + ", mang lại sự phát triển, hỗ trợ và thăng tiến cho hồ cá của bạn"
-                    + ". Điều này giúp yếu tố này trong hồ cá Koi thúc đẩy vận may và năng lượng tích cực cho bạn.";
+            explanation = attributeName + " belongs to the element " + attributeDestiny
+                    + ". Your destiny, the element " + userDestiny + ", generates the element " + attributeDestiny
+                    + ", bringing growth, support, and advancement to your Koi pond."
+                    + " This enhances your Koi pond's ability to attract good fortune and positive energy.";
         } else if (destinyService.findTuongKhacSau(userDestiny).equals(attributeDestiny)) {
             score = 2;
-            explanation = attributeName + " thuộc hành " + attributeDestiny
-                    + ". Hành " + userDestiny + " của bạn bị hành " + attributeDestiny
-                    + " khắc chế, gây ra sự xung đột và mất cân bằng cho cho hồ cá của bạn"
-                    + ". Điều này có thể khiến hồ cá Koi của bạn không mang lại sự thuận lợi như mong muốn.";
+            explanation = attributeName + " belongs to the element " + attributeDestiny
+                    + ". The element " + userDestiny + " is restricted by " + attributeDestiny
+                    + ", causing conflict and imbalance in your pond."
+                    + " This may hinder the Koi pond's ability to bring about the desired benefits.";
         } else if (destinyService.findTuongKhacTruoc(userDestiny).equals(attributeDestiny)) {
             score = 1;
-            explanation = attributeName + " thuộc hành " + attributeDestiny
-                    + ". Hành " + attributeDestiny + " khắc chế mệnh của bạn (" + userDestiny
-                    + "), gây ra nhiều khó khăn và cản trở trong cuộc sống và công việc.";
+            explanation = attributeName + " belongs to the element " + attributeDestiny
+                    + ". The element " + attributeDestiny + " restricts your destiny (" + userDestiny
+                    + "), causing challenges and obstacles in life and work.";
         } else if (destinyService.findTuongSinhTruoc(userDestiny).equals(attributeDestiny)) {
             score = 5;
-            explanation = attributeName + " thuộc hành " + attributeDestiny
-                    + ". Hành " + attributeDestiny + " sinh ra mệnh của bạn (" + userDestiny
-                    + "), mang lại sự phát triển, hỗ trợ và thăng tiến cho bạn. Đây là yếu tố vô cùng tốt cho phong thủy của hồ cá, giúp thu hút tài lộc và năng lượng tích cực.";
+            explanation = attributeName + " belongs to the element " + attributeDestiny
+                    + ". The element " + attributeDestiny + " generates your destiny (" + userDestiny
+                    + "), bringing growth, support, and advancement to you. This is an extremely favorable element for the pond's feng shui, attracting prosperity and positive energy.";
         }
 
         return score + ";" + explanation;
     }
+
 
 
 
@@ -145,8 +147,8 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
         double averageAnimalListScore = 0.0;
         boolean hasAnimal = animals.isEmpty();
         if (hasAnimal) {
-            animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getAnimals());
-            animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation2().getAnimals());
+            animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getAnimals().stream().map(AnimalCategoryDTO::getAnimalCategoryName).toList());
+            animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation2().getAnimals().stream().map(AnimalCategoryDTO::getAnimalCategoryName).toList());
         } else {
             for (AnimalRequest animal : animals) {
                 List<ColorDTO> animalColors = colorService.getColorsByAnimalId(animal.getAnimalId());
@@ -184,13 +186,13 @@ public class CompatibilityResultResponseServiceImpl implements CompatibilityResu
             }
             averageAnimalListScore = Math.round(animalListScore / animals.size()* 100.0) / 100.0;;
             if(averageAnimalListScore < 3){
-                animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getAnimals());
-                animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation2().getAnimals());
+                animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation1().getAnimals().stream().map(AnimalCategoryDTO::getAnimalCategoryName).toList());
+                animalAdvice.addAll(autoConsultationResponseContainer.autoConsultationResponseContainer(yearOfBirth).getConsultation2().getAnimals().stream().map(AnimalCategoryDTO::getAnimalCategoryName).toList());
             }
         }
 
         CompatibilityResultResponse.CompatibilityResultResponseBuilder responseBuilder = CompatibilityResultResponse.builder()
-                .yourDestiny("Mệnh của bạn là mệnh " + userDestiny);
+                .yourDestiny("Your destiny is the element " + userDestiny);
 
         if (hasAnimal) {
             responseBuilder.animalAdvice(animalAdvice);
