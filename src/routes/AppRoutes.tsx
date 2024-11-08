@@ -74,6 +74,7 @@ const AppRoutes = () => {
   const PageViewPayment = AdminRoute(ViewPayment);
 
   return (
+    <Router>
       <Routes>
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/vnpay-success" element={<VNPAY />} />
@@ -127,8 +128,8 @@ const AppRoutes = () => {
         {/* Bill - Payment*/}
         <Route path="/view-bills" element={<PageViewBill />} />
         <Route path="/view-payments" element={<PageViewPayment />} />
-
       </Routes>
+    </Router>
   );
 };
 
