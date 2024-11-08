@@ -11,10 +11,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ShapeRepository extends JpaRepository<Shape, Integer> {
     boolean existsByShape(String shape);
+    Optional<Shape> findByShape(String shape);
     Page<Shape> findAllByStatus(Status status, Pageable pageable);
     @Query("SELECT ac FROM Shape ac " +
             "WHERE ac.status = :status " +
