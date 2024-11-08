@@ -128,7 +128,6 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ShelterCategoryDTO getShelterById(Integer id) {
         ShelterCategory shelterCategory = shelterRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
         return shelterMapper.toDto(shelterCategory);

@@ -132,4 +132,12 @@ public class ShapeServiceImpl implements ShapeService {
         }
         return shapes;
     }
+
+    @Override
+    public ShapeDTO getShapeById(Integer id) {
+        Shape shape = shapeRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
+        return shapeMapper.toDto(shape);
+    }
+
+
 }
