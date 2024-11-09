@@ -43,7 +43,7 @@ public class EndPoint {
         public static final String[] USER_GET_ENDPOINTS = {
                 "/posts", "/posts/search-posts", "/post/comments", "/post/images",
                 "/consultation-request-details/{id}", "/api/consultation-request-details/{requestDetailId}",
-                "api/bills/{billId}", "/vn_pay/create_vn_pay","/search-posts/title","/search-posts/email","/search-posts/{id}"
+                "api/bills/{billId}", "/vn_pay/create_vn_pay","/search-posts/title","/search-posts/email"
         };
 
         public static final String[] USER_POST_ENDPOINTS = {
