@@ -1,5 +1,6 @@
 package com.fengshuisystem.demo.dto;
 
+import com.fengshuisystem.demo.entity.enums.Request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.Instant;
@@ -23,7 +24,7 @@ public class ConsultationRequestDetailDTO {
     String description;
 
     // Trạng thái của yêu cầu (nên là Enum)
-    String status;
+    Request status;
 
     // Thông tin về thời gian tạo và cập nhật
     Instant createdDate;

@@ -20,7 +20,7 @@ public class EndPoint {
         public static final String[] ADMIN_PUT_ENDPOINTS = {
                 "/animals/{id}", "/shelters/{id}", "/colors/{id}", "/shapes/{id}", "/bills/{id}",
                 "/packages/{id}", "api/bills/{id}", "/api/consultation-results/send-email/{resultId}",
-                "/api/consultation-results/{id}"
+                "/api/consultation-results/{id}", "/api/consultation-request-details/{id}"
         };
 
         public static final String[] ADMIN_DELETE_ENDPOINTS = {
