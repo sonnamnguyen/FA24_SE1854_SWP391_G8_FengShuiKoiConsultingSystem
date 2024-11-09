@@ -78,5 +78,9 @@ public class PostController {
                 .result(postService.getPostByTitle(title,page, size))
                 .build();
     }
+    @GetMapping("/search-posts/{id}")
+    public ApiResponse<PostDTO> getPostById(@PathVariable Integer id) {
+        return ApiResponse.<PostDTO>builder().result(postService.getPostById(id)).build();
+    }
 
 }

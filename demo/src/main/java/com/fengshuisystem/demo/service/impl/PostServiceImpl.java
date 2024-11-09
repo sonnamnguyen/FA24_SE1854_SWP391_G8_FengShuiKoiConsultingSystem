@@ -165,4 +165,12 @@ public class PostServiceImpl implements PostService {
 
     }
 
+    @Override
+    @PreAuthorize("hasRole('USER')")
+    public PostDTO getPostById(Integer id) {
+        var post = postRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXISTED));
+        return postMapper.toDto(post);
+
+    }
+
 }
