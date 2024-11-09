@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
 
         List<String> errorMessages = exception.getBindingResult().getFieldErrors()
                 .stream()
-                .map(fieldError -> fieldError.getField() + " " + fieldError.getDefaultMessage())
+                .map(fieldError ->  fieldError.getDefaultMessage())
                 .collect(Collectors.toList());
 
         ApiResponse apiResponse = ApiResponse.builder()

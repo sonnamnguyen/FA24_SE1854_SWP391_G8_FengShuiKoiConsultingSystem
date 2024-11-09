@@ -12,4 +12,5 @@ public interface ConsultationResultService {
     PageResponse<ConsultationResultDTO> getAllConsultationResult(int page, int size);
     PageResponse<ConsultationResultDTO> getConsultationResultBySearch(String search, int page, int size);
     ConsultationResultDTO updateConsultationResult(Integer id, @Valid ConsultationResultDTO consulationResultDTO);
+    public long countCompletedConsultations();
 }

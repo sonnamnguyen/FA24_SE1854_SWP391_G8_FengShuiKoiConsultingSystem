@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface ConsultationRequestRepository extends JpaRepository<ConsultationRequest, Integer> {
     @Query("SELECT cr FROM ConsultationRequest cr JOIN cr.bills b WHERE b.id = :billId")
     Optional<ConsultationRequest> findByBillId(@Param("billId") Integer billId);
+    @Query("SELECT COUNT(c) FROM ConsultationRequest c WHERE c.status = 'COMPLETED'")
+    long countCompletedConsultationRequests();
 }

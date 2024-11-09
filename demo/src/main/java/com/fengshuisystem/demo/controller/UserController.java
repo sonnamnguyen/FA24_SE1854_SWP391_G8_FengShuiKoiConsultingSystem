@@ -147,4 +147,26 @@ public class UserController {
                 .result(userService.setRole(userId, id))
                 .build();
     }
+    @GetMapping("/new-users-today")
+    public ApiResponse<Long> getNewUsersToday() {
+        long newUsersToday = userService.getNewUsersToday();
+        return ApiResponse.<Long>builder()
+                .result(newUsersToday)
+                .build();
+    }
+    @GetMapping("/new-users-this-week")
+    public ApiResponse<Long> getNewUsersThisWeek() {
+        long newUsersThisWeek = userService.getNewUsersThisWeek();
+        return ApiResponse.<Long>builder()
+                .result(newUsersThisWeek)
+                .build();
+    }
+    @GetMapping("/new-users-this-month")
+    public ApiResponse<Long> getNewUsersThisMonth() {
+        long newUsersThisMonth = userService.getNewUsersThisMonth();
+        return ApiResponse.<Long>builder()
+                .result(newUsersThisMonth)
+                .build();
+    }
+
 }
