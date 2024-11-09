@@ -271,6 +271,11 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         ConsultationResult savedResult = consultationResultRepository.saveAndFlush(consultationResult);
         return consultationResultMapper.toDto(savedResult);
     }
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public long countCompletedConsultations() {
+        return consultationResultRepository.countByStatus(Request.COMPLETED);
+    }
 
 }
 

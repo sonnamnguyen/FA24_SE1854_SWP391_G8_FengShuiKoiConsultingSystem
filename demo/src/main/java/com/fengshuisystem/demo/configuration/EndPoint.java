@@ -7,6 +7,10 @@ public class EndPoint {
                 "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors",
                 "shapes/getAll-Shapes", "shapes/shape-search", "/users", "/users/search-name", "/roles",
                 "colors/search-colors", "/bills", "/bills/status", "api/bills", "api/bills/status"
+                ,"/users/new-users-today", "/users/new-users-this-week", "/users/new-users-this-month",
+                "/api/consultation-requests/completed-count",  "/posts/count", "/consultation-results/completed-count",
+                "/api/bills/total-income-this-month"
+
         };
 
         public static final String[] ADMIN_POST_ENDPOINTS = {

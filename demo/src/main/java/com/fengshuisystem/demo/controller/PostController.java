@@ -83,4 +83,12 @@ public class PostController {
         return ApiResponse.<PostDTO>builder().result(postService.getPostById(id)).build();
     }
 
+    @GetMapping("/count")
+    public ApiResponse<Long> getPostCount() {
+        long postCount = postService.getPostCount();
+        return ApiResponse.<Long>builder()
+                .result(postCount)
+                .build();
+    }
+
 }

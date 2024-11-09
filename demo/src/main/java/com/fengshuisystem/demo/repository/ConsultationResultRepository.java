@@ -20,5 +20,6 @@ public interface ConsultationResultRepository extends JpaRepository<Consultation
     @Query("SELECT cr FROM ConsultationResult cr WHERE (:name IS NULL OR TRIM(:name) = '' OR cr.consultantName LIKE CONCAT('%', :name, '%'))")
     Page<ConsultationResult> findAllByConsultantName(@Param("name") String name, Pageable pageable);
 
-
+    @Query("SELECT COUNT(cr) FROM ConsultationResult cr WHERE cr.status = :status")
+    long countByStatus(@Param("status") Request status);
 }

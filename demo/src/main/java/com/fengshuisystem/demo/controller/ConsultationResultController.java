@@ -62,5 +62,8 @@ public class ConsultationResultController {
                 .result(consultationResultService.updateConsultationResultAndSendMail(resultId))
                 .build();
     }
-
+    @GetMapping("/completed-count")
+    public long getCompletedConsultationsCount() {
+        return consultationResultService.countCompletedConsultations();
+    }
 }
