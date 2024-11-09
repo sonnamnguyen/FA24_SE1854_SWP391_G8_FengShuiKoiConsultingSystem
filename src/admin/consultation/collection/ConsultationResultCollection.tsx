@@ -43,6 +43,11 @@ interface ConsultationRequestDetail {
   id: number;
   description: string;
   createdDate: string;
+  createdBy: string;
+  updatedBy: string;
+  shelterCategoryIds: number[];
+  animalCategoryIds: number[];
+  consultationResults: ConsultationResult[];
 }
 
 interface ApiResponse<T> {
@@ -78,6 +83,12 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
   const [selectedRequestInfo, setSelectedRequestInfo] = useState<ConsultationRequest | null>(null);
   const [consultationCategories, setConsultationCategories] = useState<ConsultationCategory[]>([]);
   const pageSize = 10;
+
+  useEffect(() => {
+    fetchConsultationResults(page, pageSize, search);
+    fetchConsultationRequests();
+    fetchConsultationCategories();
+  }, [page, search]);
 
   const fetchConsultationResults = async (page: number, size: number, search: string) => {
     setLoading(true);
@@ -183,19 +194,24 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
     }
   };
 
-  useEffect(() => {
-    fetchConsultationResults(page, pageSize, search);
-    fetchConsultationRequests();
-    fetchConsultationCategories();
-  }, [page, search]);
+  const handleSendEmail = async (resultId: number) => {
+    const token = getToken();
+    try {
+      await axios.put(
+        `http://localhost:9090/api/consultation-results/send-email/${resultId}`,
+        null,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      notification.success({ message: 'Email sent successfully!' });
 
-  const onPageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const onSearch = (value: string) => {
-    setSearch(value);
-    setPage(1);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error sending email:', error);
+      notification.error({
+        message: 'Error',
+        description: 'Failed to send email.',
+      });
+    }
   };
 
   const showViewModal = async (result: ConsultationResult) => {
@@ -226,15 +242,6 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
     setIsUpdateMode(false);
     setIsModalVisible(true);
     setIsNavbarVisible(false);
-  };
-
-  const handleRequestSelect = async (requestId: number) => {
-    setSelectedResult({ ...selectedResult!, consultationRequestId: requestId });
-    await fetchRequestDetailInfo(requestId);
-  };
-
-  const handleCategorySelect = (categoryId: number) => {
-    setSelectedResult({ ...selectedResult!, consultationCategoryId: categoryId });
   };
 
   const handleModalOk = async () => {
@@ -278,24 +285,6 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
   const handleModalCancel = () => {
     setIsModalVisible(false);
     setIsNavbarVisible(true);
-  };
-
-  const handleSendEmail = async (resultId: number) => {
-    const token = getToken();
-    try {
-      await axios.put(
-        `http://localhost:9090/api/consultation-results/send-email/${resultId}`,
-        null,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      notification.success({ message: 'Email sent successfully!' });
-    } catch (error) {
-      console.error('Error sending email:', error);
-      notification.error({
-        message: 'Error',
-        description: 'Failed to send email.',
-      });
-    }
   };
 
   const columns = [
@@ -361,7 +350,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
         <Input.Search
           placeholder="Search by Consultant Name"
           enterButton={<SearchOutlined />}
-          onSearch={onSearch}
+          onSearch={(value) => { setSearch(value); setPage(1); }}
           style={{ width: '300px' }}
         />
         <Button type="primary" icon={<PlusOutlined />} onClick={showAddModal}>
@@ -379,7 +368,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
         current={page}
         pageSize={pageSize}
         total={totalElements}
-        onChange={onPageChange}
+        onChange={(newPage) => setPage(newPage)}
         style={{ marginTop: '20px', textAlign: 'center' }}
       />
 
@@ -408,7 +397,20 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
               <Form.Item label="Consultation Request Detail">
                 <p><strong>ID:</strong> {selectedRequestDetail?.id}</p>
                 <p><strong>Description:</strong> {selectedRequestDetail?.description}</p>
-                <p><strong>Created Date:</strong> {selectedRequestDetail?.createdDate}</p>
+                <p><strong>Shelter Categories:</strong> {selectedRequestDetail?.shelterCategoryIds.join(', ')}</p>
+                <p><strong>Animal Categories:</strong> {selectedRequestDetail?.animalCategoryIds.join(', ')}</p>
+                <p><strong>Created By:</strong> {selectedRequestDetail?.createdBy}</p>
+                <p><strong>Updated By:</strong> {selectedRequestDetail?.updatedBy}</p>
+                <Table
+                  dataSource={selectedRequestDetail?.consultationResults}
+                  columns={[
+                    { title: 'ID', dataIndex: 'id', key: 'id' },
+                    { title: 'Consultant Name', dataIndex: 'consultantName', key: 'consultantName' },
+                    { title: 'Description', dataIndex: 'description', key: 'description' },
+                  ]}
+                  pagination={false}
+                  rowKey="id"
+                />
               </Form.Item>
             </>
           ) : (
@@ -416,7 +418,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
               <Form.Item label="Consultation Request">
                 <Select
                   placeholder="Select Consultation Request"
-                  onChange={handleRequestSelect}
+                  onChange={(requestId) => { setSelectedResult({ ...selectedResult!, consultationRequestId: requestId }); fetchRequestDetailInfo(requestId); }}
                   value={selectedResult?.consultationRequestId}
                 >
                   {consultationRequests.map((request) => (
@@ -429,7 +431,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
               <Form.Item label="Consultation Category">
                 <Select
                   placeholder="Select Consultation Category"
-                  onChange={handleCategorySelect}
+                  onChange={(categoryId) => setSelectedResult({ ...selectedResult!, consultationCategoryId: categoryId })}
                   value={selectedResult?.consultationCategoryId}
                 >
                   {consultationCategories.map((category) => (
@@ -458,7 +460,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
           <Form.Item label="Status">
             <Select
               value={selectedResult?.status}
-              onChange={(value) => setSelectedResult({ ...selectedResult!, status: value })}
+              onChange={(status) => setSelectedResult({ ...selectedResult!, status })}
               disabled={isViewMode}
             >
               {statusOptions.map(option => (
