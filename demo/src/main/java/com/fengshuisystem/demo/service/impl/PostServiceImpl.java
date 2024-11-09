@@ -112,11 +112,11 @@ public class PostServiceImpl implements PostService {
         PostCategory  postCategory = postCategoryRepository.findById(request.getPostCategory().getId()).orElseThrow(()->new AppException(ErrorCode.POST_CATEGORY_NOT_EXISTED));
         Destiny destiny = destinyRepository.findById(request.getDestiny().getId()).orElseThrow(()->new AppException(ErrorCode.DESTINY_NOT_EXISTED));
         Package pkg = packageRepository.findById(request.getPackageId().getId()).orElseThrow(()->new AppException(ErrorCode.PACKAGE_NOT_EXISTED));
-        postMapper.update(request, post);
-        post.setAccount(account);
         post.setPostCategory(postCategory);
         post.setDestiny(destiny);
         post.setPackageId(pkg);
+        postMapper.update(request, post);
+        post.setAccount(account);
         post.setUpdatedBy(name);
         for (PostImage postImage : post.getImages()) {
             postImage.setPost(post);
