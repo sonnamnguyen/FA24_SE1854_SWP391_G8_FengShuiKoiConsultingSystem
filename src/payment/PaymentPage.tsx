@@ -11,7 +11,6 @@ import mastercardLogo from '../assets/images/mastercard_logo.svg';
 import amexLogo from '../assets/images/amex_logo.svg';
 import discoverLogo from '../assets/images/discover_logo.svg';
 import unionpayLogo from '../assets/images/unionpay_logo.svg';
-
 import vietcombankLogo from '../assets/images/vietcombank_logo.svg';
 import tpbankLogo from '../assets/images/tpbank_logo.svg';
 import techcombankLogo from '../assets/images/techcombank_logo.svg';
@@ -49,17 +48,17 @@ const PaymentPage: React.FC = () => {
   };
 
   return (
-    <div className="payment-container">
+    <div className="khoi_payment_page_payment-container">
       <h1>Select Payment Method</h1>
-      <div className="payment-options">
+      <div className="khoi_payment_page_payment-options">
         <div
-          className={`payment-option ${paymentId === 1 ? 'selected' : ''}`}
+          className={`khoi_payment_page_payment-option ${paymentId === 1 ? 'selected' : ''}`}
           onClick={() => setPaymentId(1)}
         >
-          <img src={vnpayLogo} alt="VNPay Logo" className="payment-logo-large" />
+          <img src={vnpayLogo} alt="VNPay Logo" className="khoi_payment_page_payment-logo-large" />
           <span>VNPay</span>
           <p>VAT 10%</p>
-          <div className="bank-logos">
+          <div className="khoi_payment_page_bank-logos">
             <img src={vietcombankLogo} alt="Vietcombank" />
             <img src={tpbankLogo} alt="TPBank" />
             <img src={techcombankLogo} alt="Techcombank" />
@@ -67,13 +66,13 @@ const PaymentPage: React.FC = () => {
           </div>
         </div>
         <div
-          className={`payment-option ${paymentId === 2 ? 'selected' : ''}`}
+          className={`khoi_payment_page_payment-option ${paymentId === 2 ? 'selected' : ''}`}
           onClick={() => setPaymentId(2)}
         >
-          <img src={paypalLogo} alt="PayPal Logo" className="payment-logo-large" />
+          <img src={paypalLogo} alt="PayPal Logo" className="khoi_payment_page_payment-logo-large" />
           <span>PayPal</span>
           <p>+ $2 / ~ 50,000₫ handling fee</p>
-          <div className="accepted-cards">
+          <div className="khoi_payment_page_accepted-cards">
             <img src={visaLogo} alt="Visa" />
             <img src={mastercardLogo} alt="MasterCard" />
             <img src={amexLogo} alt="AmEx" />
@@ -82,7 +81,7 @@ const PaymentPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="payment-buttons">
+      <div className="khoi_payment_page_payment-buttons">
         <Button
           type="primary"
           onClick={paymentId === 1 ? handlePayment : handlePayPal}
@@ -104,6 +103,7 @@ const PaymentPage: React.FC = () => {
             Agree
           </Button>,
         ]}
+        className="khoi_payment_page_ant-modal"
       >
         <p>PayPal payment functionality is being updated. Please select another payment method.</p>
       </Modal>
