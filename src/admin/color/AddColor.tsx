@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../../service/localStorageService";
 import { Radio, Form, Input, Button, notification } from 'antd';
-import Destiny from "../../models/Destiny";
+import { Formik } from 'formik';
+import * as Yup from 'yup'; // Import Yup for validation
 import api from "../../axious/axious"; // Ensure axios is configured here
 
 interface Destinys {
@@ -10,8 +11,7 @@ interface Destinys {
   destiny: string;
 }
 
-function AddColor() {
-  const [color, setColor] = useState("");
+const AddColor: React.FC = () => {
   const [apii, contextHolder] = notification.useNotification();
   const [destinyOptions, setDestinyOptions] = useState<Destinys[]>([]);
   const [selectedDestiny, setSelectedDestiny] = useState<number | null>(null);
@@ -31,9 +31,9 @@ function AddColor() {
       const response = await api.get(`/destinys`);
       if (response.data.code === 1000) {
         return response.data.result.map((destiny: any) => ({
-          id: destiny.id, 
-          destiny: destiny.destiny, 
-        })) as Destinys[]; 
+          id: destiny.id,
+          destiny: destiny.destiny,
+        })) as Destinys[];
       }
       console.error("Failed to fetch destinies: ", response.status);
       return null;
@@ -43,19 +43,33 @@ function AddColor() {
     }
   };
 
+  // Validation schema using Yup (without destiny validation)
+  const validationSchema = Yup.object({
+    color: Yup.string()
+        .required("Color is required")
+        .min(3, "Color must be between 3 and 30 characters")
+        .max(30, "Color must be between 3 and 30 characters")
+        .matches(/^[a-zA-Z\s]+$/, "Color must only contain letters and spaces"), // Allow only letters and spaces
+  });
+
   // Form submission
-  const handleSubmit = async () => {
+  const handleSubmit = async (values: any) => {
+    // Manually validate destiny
+    if (selectedDestiny === null) {
+      apii.error({ message: 'Error', description: 'Please select a destiny.' });
+      return;
+    }
+
     try {
       const response = await api.post('/colors', {
-        color,
+        color: values.color,
         destiny: { id: selectedDestiny },
       });
 
       const data = await response.data;
       if (data.code === 1000) {
         apii.success({ message: 'Success', description: 'Color has been successfully added.' });
-        setColor("");
-        setSelectedDestiny(null);
+        // Optionally reset form here
       } else {
         apii.error({ message: 'Error', description: 'Failed to add color.' });
       }
@@ -66,35 +80,53 @@ function AddColor() {
   };
 
   return (
-    <div className="container">
-      <h1 className="mt-5">Add Color</h1>
-      <Form onFinish={handleSubmit}>
-        <Form.Item label="Color Name" required rules={[{ required: true, message: 'Please input the color name!' }]}>
-          <Input value={color} onChange={(e) => setColor(e.target.value)} />
-        </Form.Item>
+      <div className="container">
+        <h1 className="mt-5">Add Color</h1>
+        <Formik
+            initialValues={{
+              color: ""
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+        >
+          {({ values, handleChange, handleBlur, handleSubmit, errors, touched }) => (
+              <Form onFinish={handleSubmit}>
+                <Form.Item label="Color Name" required>
+                  <Input
+                      name="color"
+                      value={values.color}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                  />
+                  {errors.color && touched.color && (
+                      <div style={{ color: 'red' }}>{errors.color}</div>
+                  )}
+                </Form.Item>
 
-        <Form.Item label="Destiny">
-          <Radio.Group
-            onChange={e => setSelectedDestiny(e.target.value)}
-            value={selectedDestiny}
-          >
-            {destinyOptions.map(destiny => (
-              <Radio key={destiny.id} value={destiny.id}>
-                {destiny.destiny}
-              </Radio>
-            ))}
-          </Radio.Group>
-        </Form.Item>
+                <Form.Item label="Destiny">
+                  <Radio.Group
+                      onChange={e => setSelectedDestiny(e.target.value)}
+                      value={selectedDestiny}
+                  >
+                    {destinyOptions.map(destiny => (
+                        <Radio key={destiny.id} value={destiny.id}>
+                          {destiny.destiny}
+                        </Radio>
+                    ))}
+                  </Radio.Group>
+                </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-      {contextHolder}
-    </div>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Form>
+          )}
+        </Formik>
+        {contextHolder}
+      </div>
   );
-}
+};
 
 export default AddColor;

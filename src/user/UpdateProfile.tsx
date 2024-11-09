@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, DatePicker, Upload, notification } from "antd";
+import { Input, Button, DatePicker, Upload, notification } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import { getToken } from "../service/localStorageService";
 import { useNavigate } from "react-router-dom";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
-import { storage } from "../firebase/firebase"; // Ensure this is the correct path
-import { jwtDecode } from "jwt-decode";
+import { storage } from "../firebase/firebase";
 import api from "../axious/axious";
+import { jwtDecode } from "jwt-decode";
 
 const UpdateProfile: React.FC = () => {
-  const [form] = Form.useForm();
   const [fileList, setFileList] = useState<File[]>([]);
   const [email, setEmail] = useState("");
   const [apii, contextHolder] = notification.useNotification();
@@ -18,7 +19,7 @@ const UpdateProfile: React.FC = () => {
   useEffect(() => {
     const token = getToken();
     if (token) {
-      const userData: any = jwtDecode(token); // Decode the token to get user info
+      const userData: any = jwtDecode(token);
       if (userData) {
         setEmail(userData.sub || "");
       }
@@ -26,11 +27,10 @@ const UpdateProfile: React.FC = () => {
   }, []);
 
   const handleUploadChange = (info: any) => {
-    const newFileList = info.fileList.slice(-1); // Keep only the last file
+    const newFileList = info.fileList.slice(-1);
     setFileList(newFileList.map((file: any) => file.originFileObj));
   };
 
-  // Convert file to base64
   const getBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -40,36 +40,51 @@ const UpdateProfile: React.FC = () => {
     });
   };
 
-  // Upload image to Firebase
   const uploadImagesToFirebase = async (files: File[]): Promise<string[]> => {
     const uploadPromises = files.map(async (file) => {
       const storageRef = ref(storage, `avatars/${file.name}`);
       const base64Image = await getBase64(file);
-      await uploadString(storageRef, base64Image, 'data_url');
-      const downloadURL = await getDownloadURL(storageRef);
-      return downloadURL;
+      await uploadString(storageRef, base64Image, "data_url");
+      return getDownloadURL(storageRef);
     });
     return Promise.all(uploadPromises);
   };
 
+  const validationSchema = Yup.object({
+    userName: Yup.string()
+        .min(3, "Username must be between 3 and 50 characters")
+        .max(50, "Username must be between 3 and 50 characters")
+        .required("Username is required"),
+    password: Yup.string()
+        .min(6, "Password must be between 6 and 50 characters")
+        .max(50, "Password must be between 6 and 50 characters")
+        .required("Password is required"),
+    confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password")], "Passwords must match")
+        .required("Confirm your password"),
+    fullName: Yup.string()
+        .min(3, "Full name must be between 3 and 100 characters")
+        .max(100, "Full name must be between 3 and 100 characters")
+        .required("Full name is required"),
+    dob: Yup.date().required("Date of birth is required"),
+    phoneNumber: Yup.string()
+        .matches(/^\d{10}$/, "Phone number must be 10 digits")
+        .required("Phone number is required"),
+  });
+
   const handleSubmit = async (values: any) => {
-    const { userName, password, fullName, dob, phoneNumber, gender, email } = values; // Destructured `email`
-  
+    const { userName, password, fullName, dob, phoneNumber, gender } = values;
     try {
       const avatar = fileList.length > 0 ? await uploadImagesToFirebase(fileList) : null;
-  
-      const formattedDob = dob instanceof Date ? dob.toISOString().split('T')[0] : dob;
-  
-      const response = await api.put(`/users/${email}`, {
+      const data = {
         userName,
         password,
         email,
-        dob: formattedDob,
+        dob: dob ? dob.format("YYYY-MM-DD") : "",
         phoneNumber,
-        gender,
         avatar: avatar ? avatar[0] : null,
-      });
-  
+      };
+      const response = await api.put(`/users/${email}`, data);
       if (response.data.code !== 1000) {
         apii.error({
           message: "Error",
@@ -91,103 +106,87 @@ const UpdateProfile: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      {contextHolder}
-      <h1 className="mt-5 text-center">Update Profile</h1>
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSubmit}
-        className="col-md-6 col-12 mx-auto"
-        initialValues={{ email }} // Pre-fill email if available
-      >
-        <Form.Item
-          label="Username"
-          name="userName"
-          rules={[{ required: true, message: "Please input your username!" }]}
+      <div className="container">
+        {contextHolder}
+        <h1 className="mt-5 text-center">Update Profile</h1>
+        <Formik
+            initialValues={{
+              userName: "",
+              password: "",
+              confirmPassword: "",
+              fullName: "",
+              dob: null,
+              phoneNumber: "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
         >
-          <Input />
-        </Form.Item>
+          {({ setFieldValue, values }) => (
+              <Form className="col-md-6 col-12 mx-auto">
+                <div className="form-item">
+                  <label>Username</label>
+                  <Field name="userName" type="text" className="form-control" />
+                  <ErrorMessage name="userName" component="div" className="error-message" />
+                </div>
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Input.Password />
-        </Form.Item>
+                <div className="form-item">
+                  <label>Password</label>
+                  <Field name="password" type="password" className="form-control" />
+                  <ErrorMessage name="password" component="div" className="error-message" />
+                </div>
 
-        <Form.Item
-          label="Confirm Password"
-          name="confirmPassword"
-          dependencies={["password"]}
-          rules={[
-            { required: true, message: "Please confirm your password!" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error("The two passwords do not match!"));
-              },
-            }),
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
+                <div className="form-item">
+                  <label>Confirm Password</label>
+                  <Field name="confirmPassword" type="password" className="form-control" />
+                  <ErrorMessage name="confirmPassword" component="div" className="error-message" />
+                </div>
 
-        <Form.Item
-          label="Full Name"
-          name="fullName"
-          rules={[{ required: true, message: "Please input your full name!" }]}
-        >
-          <Input />
-        </Form.Item>
+                <div className="form-item">
+                  <label>Full Name</label>
+                  <Field name="fullName" type="text" className="form-control" />
+                  <ErrorMessage name="fullName" component="div" className="error-message" />
+                </div>
 
-        <Form.Item
-          label="Date of Birth"
-          name="dob"
-          rules={[{ required: true, message: "Please select your date of birth!" }]}
-        >
-          <DatePicker style={{ width: "100%" }} />
-        </Form.Item>
+                <div className="form-item">
+                  <label>Date of Birth</label>
+                  <DatePicker
+                      onChange={(date) => setFieldValue("dob", date)}
+                      value={values.dob}
+                      style={{ width: "100%" }}
+                  />
+                  <ErrorMessage name="dob" component="div" className="error-message" />
+                </div>
 
-        <Form.Item
-          label="Phone Number"
-          name="phoneNumber"
-          rules={[
-            { required: true, message: "Please input your phone number!" },
-            { pattern: /^\d{10}$/, message: "Phone number must be 10 digits" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+                <div className="form-item">
+                  <label>Phone Number</label>
+                  <Field name="phoneNumber" type="text" className="form-control" />
+                  <ErrorMessage name="phoneNumber" component="div" className="error-message" />
+                </div>
 
-        <Form.Item
-          label="Avatar"
-        >
-          <Upload
-            maxCount={1} // Only allow 1 image
-            accept="image/*"
-            showUploadList={true}
-            beforeUpload={() => false} // Prevent immediate upload
-            onChange={handleUploadChange}
-            listType="picture-card"
-          >
-            <div>
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </div>
-          </Upload>
-        </Form.Item>
+                <div className="form-item">
+                  <label>Avatar</label>
+                  <Upload
+                      maxCount={1}
+                      accept="image/*"
+                      showUploadList={true}
+                      beforeUpload={() => false}
+                      onChange={handleUploadChange}
+                      listType="picture-card"
+                  >
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </div>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form>
+          )}
+        </Formik>
+      </div>
   );
 };
 

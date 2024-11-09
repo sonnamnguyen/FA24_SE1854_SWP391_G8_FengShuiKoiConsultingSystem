@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Form, Input, Button, DatePicker, Upload, Modal } from "antd";
+import { Button, DatePicker, Upload, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-import api from "../axious/axious";
 import { storage } from "../firebase/firebase";
 
 const Register: React.FC = () => {
-  const [form] = Form.useForm();
   const [fileList, setFileList] = useState<File[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -16,11 +16,10 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
 
   const handleUploadChange = (info: any) => {
-    const newFileList = info.fileList.slice(-1); // Keep only the last file
+    const newFileList = info.fileList.slice(-1); // Chỉ giữ lại file cuối cùng
     setFileList(newFileList.map((file: any) => file.originFileObj));
   };
 
-  // Convert file to base64
   const getBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -30,59 +29,69 @@ const Register: React.FC = () => {
     });
   };
 
-  // Upload image to Firebase
   const uploadImagesToFirebase = async (files: File[]): Promise<string[]> => {
     const uploadPromises = files.map(async (file) => {
       const storageRef = ref(storage, `avatars/${file.name}`);
       const base64Image = await getBase64(file);
-      await uploadString(storageRef, base64Image, 'data_url');
+      await uploadString(storageRef, base64Image, "data_url");
       const downloadURL = await getDownloadURL(storageRef);
       return downloadURL;
     });
     return Promise.all(uploadPromises);
   };
 
+  const validationSchema = Yup.object({
+    userName: Yup.string()
+        .min(3, "Username must be between 3 and 50 characters")
+        .max(50, "Username must be between 3 and 50 characters")
+        .required("Username is required"),
+    password: Yup.string()
+        .min(8, "Password must be between 8 and 15 characters")
+        .max(15, "Password must be between 8 and 15 characters")
+        .matches(
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/,
+            "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
+        )
+        .required("Password is required"),
+    confirmPassword: Yup.string()
+        .oneOf([Yup.ref("password")], "Passwords must match")
+        .required("Confirm your password"),
+    fullName: Yup.string()
+        .min(3, "Full name must be between 3 and 100 characters")
+        .max(100, "Full name must be between 3 and 100 characters")
+        .required("Full name is required"),
+    email: Yup.string().email("Invalid email format").required("Email is required"),
+    dob: Yup.date().required("Date of birth is required"),
+    phoneNumber: Yup.string()
+        .matches(/^\d{10}$/, "Phone number must be 10 digits")
+        .required("Phone number is required"),
+    gender: Yup.string()
+        .oneOf(["MALE", "FEMALE", "OTHER"], "Gender must be Male, Female, or Other")
+        .required("Gender is required"),
+  });
+
   const handleSubmit = async (values: any) => {
-    const { userName, password, fullName, email, dob, phoneNumber, gender } = values;
-  
     try {
-      // Upload avatar image to Firebase if the fileList is not empty
       const avatar = fileList.length > 0 ? await uploadImagesToFirebase(fileList) : null;
-  
-      // Prepare data to be sent in the POST request
       const data = {
-        userName,
-        password,
-        fullName,
-        email,
-        dob: dob.format("YYYY-MM-DD"), // Format the date of birth
-        phoneNumber,
-        gender,
-        avatar: avatar ? avatar[0] : null, // Use the first uploaded image as avatar
+        ...values,
+        dob: values.dob.format("YYYY-MM-DD"),
+        avatar: avatar ? avatar[0] : null,
       };
-  
-      // Send the POST request to create a new user
-      const response = await fetch(`http://localhost:9090/users`, {
+      const response = await fetch("http://localhost:9090/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-  
-      // Parse the JSON response
       const result = await response.json();
-  
-      // Check if the request was successful
       if (result.code !== 1000) {
-        throw new Error(result.message); // Throw an error if the code is not 1000
+        throw new Error(result.message);
       }
-  
-      // Show success message
-      setModalMessage("Profile registered successfully. Please check your email for the authentication code.");
+      setModalMessage("Profile registered successfully.");
       setModalNotification("Success");
       setModalNotificationColor("green");
       setShowModal(true);
     } catch (error) {
-      // Show error message in case of failure
       setModalMessage("An error occurred while registering your profile");
       setModalNotification("Failed");
       setModalNotificationColor("red");
@@ -96,134 +105,115 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <h1 className="mt-5 text-center">Register</h1>
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSubmit}
-        className="col-md-6 col-12 mx-auto"
-      >
-        <Form.Item
-          label="Username"
-          name="userName"
-          rules={[{ required: true, message: "Please input your username!" }]}
+      <div className="container">
+        <h1 className="mt-5 text-center">Register</h1>
+        <Formik
+            initialValues={{
+              userName: "",
+              password: "",
+              confirmPassword: "",
+              fullName: "",
+              email: "",
+              dob: null,
+              phoneNumber: "",
+              gender: "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
         >
-          <Input />
-        </Form.Item>
+          {({ setFieldValue, values }) => (
+              <Form className="col-md-6 col-12 mx-auto">
+                <div className="form-item">
+                  <label>Username</label>
+                  <Field name="userName" type="text" className="form-control" />
+                  <ErrorMessage name="userName" component="div" className="error-message" />
+                </div>
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
+                <div className="form-item">
+                  <label>Password</label>
+                  <Field name="password" type="password" className="form-control" />
+                  <ErrorMessage name="password" component="div" className="error-message" />
+                </div>
+
+                <div className="form-item">
+                  <label>Confirm Password</label>
+                  <Field name="confirmPassword" type="password" className="form-control" />
+                  <ErrorMessage name="confirmPassword" component="div" className="error-message" />
+                </div>
+
+                <div className="form-item">
+                  <label>Full Name</label>
+                  <Field name="fullName" type="text" className="form-control" />
+                  <ErrorMessage name="fullName" component="div" className="error-message" />
+                </div>
+
+                <div className="form-item">
+                  <label>Email</label>
+                  <Field name="email" type="email" className="form-control" />
+                  <ErrorMessage name="email" component="div" className="error-message" />
+                </div>
+
+                <div className="form-item">
+                  <label>Date of Birth</label>
+                  <DatePicker
+                      onChange={(date) => setFieldValue("dob", date)}
+                      value={values.dob}
+                      style={{ width: "100%" }}
+                  />
+                  <ErrorMessage name="dob" component="div" className="error-message" />
+                </div>
+
+                <div className="form-item">
+                  <label>Phone Number</label>
+                  <Field name="phoneNumber" type="text" className="form-control" />
+                  <ErrorMessage name="phoneNumber" component="div" className="error-message" />
+                </div>
+
+                <div className="form-item">
+                  <label>Gender</label>
+                  <Field name="gender" as="select" className="form-control">
+                    <option value="">Select Gender</option>
+                    <option value="Male">MALE</option>
+                    <option value="Female">FEMALE</option>
+                    <option value="Other">OTHER</option>
+                  </Field>
+                  <ErrorMessage name="gender" component="div" className="error-message" />
+                </div>
+
+                <div className="form-item">
+                  <label>Avatar</label>
+                  <Upload
+                      maxCount={1}
+                      accept="image/*"
+                      showUploadList={true}
+                      beforeUpload={() => false}
+                      onChange={handleUploadChange}
+                      listType="picture-card"
+                  >
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </div>
+
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form>
+          )}
+        </Formik>
+
+        <Modal
+            open={showModal}
+            onCancel={() => setShowModal(false)}
+            footer={<Button onClick={handleGoToLogin}>Go to Login</Button>}
+            title={modalNotification}
+            style={{ color: modalNotificationColor }}
         >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item
-          label="Confirm Password"
-          name="confirmPassword"
-          dependencies={["password"]}
-          rules={[
-            { required: true, message: "Please confirm your password!" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error("The two passwords do not match!"));
-              },
-            }),
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item
-          label="Full Name"
-          name="fullName"
-          rules={[{ required: true, message: "Please input your full name!" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[
-            { type: "email", message: "The input is not valid E-mail!" },
-            { required: true, message: "Please input your E-mail!" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Date of Birth"
-          name="dob"
-          rules={[{ required: true, message: "Please select your date of birth!" }]}
-        >
-          <DatePicker style={{ width: "100%" }} />
-        </Form.Item>
-
-        <Form.Item
-          label="Phone Number"
-          name="phoneNumber"
-          rules={[
-            { required: true, message: "Please input your phone number!" },
-            { pattern: /^\d{10}$/, message: "Phone number must be 10 digits" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Gender"
-          name="gender"
-          rules={[{ required: true, message: "Please input your gender!" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Avatar"
-        >
-          <Upload
-            maxCount={1} // Only allow 1 image
-            accept="image/*"
-            showUploadList={true}
-            beforeUpload={() => false} // Prevent immediate upload
-            onChange={handleUploadChange}
-            listType="picture-card"
-          >
-            <div>
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </div>
-          </Upload>
-        </Form.Item>
-
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-
-      <Modal
-        open={showModal}
-        onCancel={() => setShowModal(false)}
-        footer={
-          <Button type="primary" onClick={handleGoToLogin}>
-            Go to Login
-          </Button>
-        }
-        title={modalNotification}
-        style={{ color: modalNotificationColor }}
-      >
-        {modalMessage}
-      </Modal>
-    </div>
+          {modalMessage}
+        </Modal>
+      </div>
   );
 };
 
