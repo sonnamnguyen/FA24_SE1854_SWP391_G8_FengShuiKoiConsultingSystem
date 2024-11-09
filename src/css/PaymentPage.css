@@ -1,130 +1,135 @@
-.payment-container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9fafc;
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .payment-container h1 {
-    font-size: 28px;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  .payment-options {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-  }
-  
-  .payment-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    transition: transform 0.3s, border-color 0.3s;
-    width: 45%;
-    background-color: #fff;
-  }
-  
-  .payment-option:hover {
-    transform: scale(1.05);
-    border-color: #1890ff;
-  }
-  
-  .payment-option.selected {
-    border-color: #1890ff;
-    background-color: #e6f7ff;
-  }
-  
-  .payment-logo-large {
-    width: 64px; 
-    height: auto;
-    margin-bottom: 8px;
-  }
-  
-  .payment-option span {
-    font-size: 18px;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  .payment-option p {
-    margin: 5px 0 10px;
-    color: #666;
-  }
-  
-  .accepted-cards,
-  .bank-logos {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  
-  .accepted-cards img,
-  .bank-logos img {
-    width: 32px;
-    height: auto;
-  }
-  
-  .bank-logos span {
-    font-size: 12px;
-    color: #888;
-  }
-  
-  .total-amount {
-    margin-top: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .payment-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .payment-buttons .ant-btn-primary {
-    background-color: #1890ff;
-    border-color: #1890ff;
-  }
-  
-  .payment-buttons .ant-btn-primary:hover {
-    background-color: #40a9ff;
-    border-color: #40a9ff;
-  }
-  
-  .ant-modal-content {
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  }
-  
-  .ant-modal-title {
-    color: #d9534f;
-    font-weight: bold;
-    text-align: center;
-  }
-  
-  .ant-modal-body {
-    font-size: 16px;
-    color: #333;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .ant-modal-footer .ant-btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    font-weight: bold;
-  }
-  
+/* Container chính của trang thanh toán */
+.khoi_payment_page_payment-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9fafc;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.khoi_payment_page_payment-container h1 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Các tùy chọn thanh toán */
+.khoi_payment_page_payment-options {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.khoi_payment_page_payment-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: transform 0.3s, border-color 0.3s;
+  width: 45%;
+  background-color: #fff;
+}
+
+.khoi_payment_page_payment-option:hover {
+  transform: scale(1.05);
+  border-color: #1890ff;
+}
+
+.khoi_payment_page_payment-option.selected {
+  border-color: #1890ff;
+  background-color: #e6f7ff;
+}
+
+.khoi_payment_page_payment-logo-large {
+  width: 64px; 
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.khoi_payment_page_payment-option span {
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
+}
+
+.khoi_payment_page_payment-option p {
+  margin: 5px 0 10px;
+  color: #666;
+}
+
+/* Các logo ngân hàng và thẻ chấp nhận thanh toán */
+.khoi_payment_page_accepted-cards,
+.khoi_payment_page_bank-logos {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.khoi_payment_page_accepted-cards img,
+.khoi_payment_page_bank-logos img {
+  width: 32px;
+  height: auto;
+}
+
+.khoi_payment_page_bank-logos span {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Số tiền thanh toán tổng */
+.khoi_payment_page_total-amount {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Các nút thanh toán */
+.khoi_payment_page_payment-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.khoi_payment_page_payment-buttons .ant-btn-primary {
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+
+.khoi_payment_page_payment-buttons .ant-btn-primary:hover {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}
+
+/* Tùy chỉnh modal */
+.khoi_payment_page_ant-modal-content {
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.khoi_payment_page_ant-modal-title {
+  color: #d9534f;
+  font-weight: bold;
+  text-align: center;
+}
+
+.khoi_payment_page_ant-modal-body {
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  padding: 20px;
+}
+
+.khoi_payment_page_ant-modal-footer .ant-btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  font-weight: bold;
+}

@@ -13,7 +13,7 @@ import walletLogo from '../assets/images/wallet_logo.svg';
 import personLogo from '../assets/images/person_logo.svg';
 import statusLogo from '../assets/images/status-warning_logo.svg';
 import dateLogo from '../assets/images/date_logo.svg';
-import vnPayLogo from '../assets/images/v-vnpay-svgrepo-com.svg'; // Logo VNPay
+import vnPayLogo from '../assets/images/v-vnpay-svgrepo-com.svg';
 
 interface Bill {
   id: number;
@@ -101,62 +101,59 @@ const BillPage: React.FC = () => {
   }
 
   return (
-    <div className="bill-container">
+    <div className="khoi_bill_page_bill-container">
       <h1>Bill Details</h1>
       
-      <div className="bill-info">
+      <div className="khoi_bill_page_bill-info">
           <p>
-              <img src={billLogo} alt="Bill ID" className="icon" />
+              <img src={billLogo} alt="Bill ID" className="khoi_bill_page_icon" />
               <strong>Bill ID: </strong> {bill.id}
           </p>
           <p>
-              <img src={personLogo} alt="Created By" className="icon" />
+              <img src={personLogo} alt="Created By" className="khoi_bill_page_icon" />
               <strong>Created By: </strong> {bill.createdBy}
           </p>
           <p>
-              <img src={dateLogo} alt="Creation Date" className="icon" />
+              <img src={dateLogo} alt="Creation Date" className="khoi_bill_page_icon" />
               <strong>Creation Date: </strong> {new Date(bill.createdDate).toLocaleString()}
           </p>
           <p>
-              <img src={cartLogo} alt="Subtotal" className="icon" />
+              <img src={cartLogo} alt="Subtotal" className="khoi_bill_page_icon" />
               <strong>Subtotal: </strong> {bill.subAmount.toLocaleString()} VND
           </p>
           <p>
-              <img src={moneyLogo} alt="VAT" className="icon" />
+              <img src={moneyLogo} alt="VAT" className="khoi_bill_page_icon" />
               <strong>VAT: </strong> {bill.vat * 100}%
           </p>
           <p>
-              <img src={moneyLogo} alt="VAT Amount" className="icon" />
+              <img src={moneyLogo} alt="VAT Amount" className="khoi_bill_page_icon" />
               <strong>VAT Amount: </strong> {bill.vatAmount.toLocaleString()} VND
           </p>
           <p>
-              <img src={statusLogo} alt="Status" className="icon" />
+              <img src={statusLogo} alt="Status" className="khoi_bill_page_icon" />
               <strong>Status: </strong> {bill.status}
           </p>
 
-          {/* Divider line between status and total amount */}
-          <div className="divider"></div>
+          <div className="khoi_bill_page_divider"></div>
 
-          <p className="total-amount">
-              <img src={walletLogo} alt="Total Amount" className="icon" />
+          <p className="khoi_bill_page_total-amount">
+              <img src={walletLogo} alt="Total Amount" className="khoi_bill_page_icon" />
               <strong>Total Amount: {bill.totalAmount.toLocaleString()} VND</strong>
           </p>
       </div>
       
-      {/* VNPay Logo that appears on hover */}
-      <div className="vnpay-logo-container">
-          <img src={vnPayLogo} alt="VNPay Logo" className="vnpay-logo" />
+      <div className="khoi_bill_page_vnpay-logo-container">
+          <img src={vnPayLogo} alt="VNPay Logo" className="khoi_bill_page_vnpay-logo" />
       </div>
 
       <Button
           type="primary"
           onClick={handlePaymentVNPay}
-          className="pay-button"
+          className="khoi_bill_page_pay-button"
       >
           Pay with VNPay
       </Button>
   </div>
-
   );
 };
 

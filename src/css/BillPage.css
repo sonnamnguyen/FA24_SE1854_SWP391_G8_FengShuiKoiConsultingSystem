@@ -1,4 +1,4 @@
-.bill-container {
+.khoi_bill_page_bill-container {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
@@ -8,19 +8,19 @@
     font-family: Arial, sans-serif;
     position: relative;
     overflow: hidden;
-    z-index: 2; /* Để form nổi lên trên logo */
+    z-index: 2;
     transition: transform 0.5s ease, opacity 0.5s ease, box-shadow 0.5s ease;
-    transform: translateX(-10px); /* Ban đầu lệch nhẹ sang trái */
+    transform: translateX(-10px);
 }
 
-.bill-info {
+.khoi_bill_page_bill-info {
     padding: 10px;
     border-top: 2px solid #0073e6;
     border-bottom: 2px solid #0073e6;
     margin-bottom: 15px;
 }
 
-.bill-info p {
+.khoi_bill_page_bill-info p {
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -30,13 +30,13 @@
     padding-bottom: 5px;
 }
 
-.icon {
+.khoi_bill_page_icon {
     width: 24px;
     height: 24px;
     margin-right: 8px;
 }
 
-.total-amount {
+.khoi_bill_page_total-amount {
     font-size: 20px;
     font-weight: bold;
     color: #0073e6;
@@ -47,20 +47,13 @@
     margin-top: 15px;
 }
 
-.total-amount img {
+.khoi_bill_page_total-amount img {
     width: 30px;
     height: 30px;
     margin-right: 8px;
 }
 
-h1 {
-    color: #0073e6;
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.pay-button {
+.khoi_bill_page_pay-button {
     width: 100%;
     height: 40px;
     font-size: 16px;
@@ -72,20 +65,19 @@ h1 {
     transition: background-color 0.3s ease;
 }
 
-.pay-button:hover {
+.khoi_bill_page_pay-button:hover {
     background-color: #005bb5;
 }
 
-.divider {
+.khoi_bill_page_divider {
     border-top: 2px solid #0073e6;
     margin: 10px 0;
 }
 
-/* VNPay Logo Animation */
-.vnpay-logo-container {
+.khoi_bill_page_vnpay-logo-container {
     position: absolute;
     top: 0;
-    left: 100%; /* Đặt logo bên ngoài bên phải form */
+    left: 100%;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 115, 230, 0.1);
@@ -94,23 +86,22 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1; /* Giữ nguyên z-index nếu cần */
-    pointer-events: none; /* Chặn các sự kiện chuột */
+    z-index: 1;
+    pointer-events: none;
 }
 
-
-.bill-container:hover {
-    transform: translateX(0); /* Dịch nhẹ form sang phải khi hover */
+.khoi_bill_page_bill-container:hover {
+    transform: translateX(0);
     opacity: 0.95;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Tăng cường độ bóng khi hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.bill-container:hover .vnpay-logo-container {
-    transform: translateX(-100%); /* Di chuyển logo vào bên phải form */
-    opacity: 0.3; /* Hiển thị logo đậm hơn */
+.khoi_bill_page_bill-container:hover .khoi_bill_page_vnpay-logo-container {
+    transform: translateX(-100%);
+    opacity: 0.3;
 }
 
-.vnpay-logo {
+.khoi_bill_page_vnpay-logo {
     width: 300px;
     height: auto;
 }
