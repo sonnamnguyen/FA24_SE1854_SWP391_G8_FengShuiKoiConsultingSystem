@@ -23,13 +23,11 @@ public class ConsultationAnimalController {
 
     ConsultationAnimalServiceImpl consultationAnimalService;
 
-    @PostMapping("/resultId/{resultId}/animal-category-id/{animalCategoryId}")
+    @PostMapping
     public ApiResponse<ConsultationAnimalDTO> createConsultationAnimal(
-            @RequestBody ConsultationAnimalDTO consultationAnimalDTO,
-            @PathVariable Integer resultId,
-            @PathVariable Integer animalCategoryId) {
+            @RequestBody ConsultationAnimalDTO consultationAnimalDTO) {
         return ApiResponse.<ConsultationAnimalDTO>builder()
-                .result(consultationAnimalService.createConsultationAnimal(consultationAnimalDTO, resultId, animalCategoryId))
+                .result(consultationAnimalService.createConsultationAnimal(consultationAnimalDTO))
                 .build();
     }
 

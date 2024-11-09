@@ -40,7 +40,10 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public ConsultationAnimalDTO createConsultationAnimal(ConsultationAnimalDTO dto, Integer resultId, Integer animalCategoryId) {
+    public ConsultationAnimalDTO createConsultationAnimal(ConsultationAnimalDTO dto) {
+        int resultId = dto.getConsultationResultId();
+        int animalCategoryId = dto.getAnimalCategoryId();
+
         log.info("Bắt đầu tạo ConsultationAnimal cho resultId: {} và animalCategoryId: {}", resultId, animalCategoryId);
 
         // Kiểm tra sự tồn tại của ConsultationResult

@@ -7,8 +7,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 public interface ConsultationShelterService {
-    public ConsultationShelterDTO createConsultationShelter(
-            ConsultationShelterDTO dto, Integer resultId, Integer shelterCategoryId);
 
     PageResponse<ConsultationShelterDTO> getAllConsultationShelterPage(int page, int size);
 
@@ -17,4 +15,6 @@ public interface ConsultationShelterService {
     ConsultationShelterDTO getConsultationShelterById(Integer id);
 
     List<ConsultationShelterDTO> getAllConsultationShelter();
+
+    ConsultationShelterDTO createConsultationShelter(ConsultationShelterDTO consultationShelterDTO);
 }
