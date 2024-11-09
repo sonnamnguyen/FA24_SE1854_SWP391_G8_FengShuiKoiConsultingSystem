@@ -16,9 +16,9 @@ function Blog() {
   useEffect(() => {
     const success = localStorage.getItem('consultationSuccess');
     if (success) {
-        message.success('Chi tiết yêu cầu đã được lưu thành công!', 2);
-        setTimeout(() => {
-            message.info('Tư vấn đã được gửi đi, vui lòng kiểm tra gmail trong 24h tới.', 2);
+      message.success('Request details have been saved successfully!', 2);
+      setTimeout(() => {
+          message.info('Consultation has been sent, please check your email within the next 24 hours.', 2);      
         }, 2000); // Thời gian giữa hai thông báo
         localStorage.removeItem('consultationSuccess'); // Xóa trạng thái sau khi hiển thị thông báo
     }

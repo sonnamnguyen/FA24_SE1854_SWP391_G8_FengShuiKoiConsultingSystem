@@ -22,7 +22,7 @@ const ConsultationRequestDetail: React.FC = () => {
 
   useEffect(() => {
     if (!requestId || !packageId) {
-      message.error('Thiếu thông tin cần thiết (requestId hoặc packageId)!');
+      message.error('Missing required information (requestId or packageId)!');
       return;
     }
     fetchCategories();
@@ -53,7 +53,7 @@ const ConsultationRequestDetail: React.FC = () => {
         setShelterCategories(shelterResponse.data.result);
       }
     } catch (error) {
-      message.error('Lỗi khi tải danh mục.');
+      message.error('Error loading categories.');
     } finally {
       setLoading(false);
     }
@@ -66,21 +66,21 @@ const ConsultationRequestDetail: React.FC = () => {
         setShapeDetails(response.data.result);
       }
     } catch (error) {
-      message.error('Lỗi khi tải thông tin hình dạng.');
+      message.error('Error loading shape details.');
     }
   };
 
   const handleFormSubmit = async () => {
     if (!selectedAnimal.length && (packageId === '1' || packageId === '3')) {
-      message.error('Vui lòng chọn ít nhất một cá.');
+      message.error('Please select at least one fish.');
       return;
     }
-    if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
-      message.error('Vui lòng chọn ít nhất một hồ.');
+if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
+      message.error('Please select at least one pond.');
       return;
     }
     if (description.split(' ').filter(Boolean).length < 100) {
-      message.error('Mô tả chi tiết phải có ít nhất 100 từ.');
+      message.error('The detailed description must be at least 100 words.');
       return;
     }
   
@@ -92,31 +92,31 @@ const ConsultationRequestDetail: React.FC = () => {
       };
       await api.post(`/api/consultation-request-details/request-id/${requestId}`, payload);
       
-      // Lưu trạng thái thành công vào localStorage trước khi chuyển trang
+      // Save success status in localStorage before navigating away
       localStorage.setItem('consultationSuccess', 'true');
-      window.location.href = '/'; // Điều hướng về trang chủ
+      window.location.href = '/'; // Redirect to home page
       
     } catch (error) {
-      message.error('Lỗi khi lưu chi tiết yêu cầu.');
+      message.error('Error saving consultation request details.');
     }
   };  
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-      <h1>Chi tiết yêu cầu tư vấn</h1>
+      <h1>Consultation Request Details</h1>
       {loading ? (
         <Spin />
       ) : (
         <Form onFinish={handleFormSubmit}>
           {(packageId === '1' || packageId === '3') && (
             <Form.Item
-              label="Chọn Cá"
+              label="Select Fish"
               name="selectedAnimal"
-              rules={[{ required: true, message: 'Vui lòng chọn ít nhất một cá.' }]}
+              rules={[{ required: true, message: 'Please select at least one fish.' }]}
             >
               <Select
                 mode="multiple"
-                placeholder="Chọn cá"
+                placeholder="Select fish"
                 value={selectedAnimal}
                 onChange={(values) => setSelectedAnimal(values)}
               >
@@ -137,19 +137,19 @@ const ConsultationRequestDetail: React.FC = () => {
                             )}
                           </div>
                           <div>
-                            <p><strong>Tên:</strong> {animal.animalCategoryName}</p>
-                            <p><strong>Mô tả:</strong> {animal.description}</p>
-                            <p><strong>Xuất xứ:</strong> {animal.origin}</p>
-                            <p><strong>Trạng thái:</strong> {animal.status}</p>
-                            <p><strong>Ngày tạo:</strong> {new Date(animal.createdDate).toLocaleDateString()}</p>
-                            <p><strong>Người tạo:</strong> {animal.createdBy}</p>
+                            <p><strong>Name:</strong> {animal.animalCategoryName}</p>
+                            <p><strong>Description:</strong> {animal.description}</p>
+                            <p><strong>Origin:</strong> {animal.origin}</p>
+                            <p><strong>Status:</strong> {animal.status}</p>
+<p><strong>Creation Date:</strong> {new Date(animal.createdDate).toLocaleDateString()}</p>
+                            <p><strong>Created By:</strong> {animal.createdBy}</p>
                             {animal.colors && animal.colors.length > 0 && (
-                              <p><strong>Màu sắc:</strong> {animal.colors.map((color: any) => color.color).join(', ')}</p>
+                              <p><strong>Colors:</strong> {animal.colors.map((color: any) => color.color).join(', ')}</p>
                             )}
                           </div>
                         </div>
                       }
-                      title="Chi Tiết Cá"
+                      title="Fish Details"
                       trigger="hover"
                       placement="right"
                       onVisibleChange={(visible) => visible && setHoveredAnimal(animal)}
@@ -164,13 +164,13 @@ const ConsultationRequestDetail: React.FC = () => {
 
           {(packageId === '2' || packageId === '3') && (
             <Form.Item
-              label="Chọn Hồ"
+              label="Select Pond"
               name="selectedShelter"
-              rules={[{ required: true, message: 'Vui lòng chọn ít nhất một hồ.' }]}
+              rules={[{ required: true, message: 'Please select at least one pond.' }]}
             >
               <Select
                 mode="multiple"
-                placeholder="Chọn hồ"
+                placeholder="Select pond"
                 value={selectedShelter}
                 onChange={(values) => setSelectedShelter(values)}
               >
@@ -183,21 +183,21 @@ const ConsultationRequestDetail: React.FC = () => {
                             <span>{shelter.shelterCategoryName}</span>
                           </div>
                           <div>
-                            <p><strong>Tên:</strong> {shelter.shelterCategoryName}</p>
-                            <p><strong>Mô tả:</strong> {shelter.description}</p>
-                            <p><strong>Kích thước:</strong> {`${shelter.width} x ${shelter.height} x ${shelter.length}`}</p>
-                            <p><strong>Đường kính:</strong> {shelter.diameter}</p>
-                            <p><strong>Thể tích nước:</strong> {shelter.waterVolume}</p>
-                            <p><strong>Hệ thống lọc nước:</strong> {shelter.waterFiltrationSystem}</p>
-                            <p><strong>Hình dạng:</strong> {shapeDetails?.shape}</p>
+                            <p><strong>Name:</strong> {shelter.shelterCategoryName}</p>
+                            <p><strong>Description:</strong> {shelter.description}</p>
+                            <p><strong>Dimensions:</strong> {`${shelter.width} x ${shelter.height} x ${shelter.length}`}</p>
+                            <p><strong>Diameter:</strong> {shelter.diameter}</p>
+                            <p><strong>Water Volume:</strong> {shelter.waterVolume}</p>
+                            <p><strong>Water Filtration System:</strong> {shelter.waterFiltrationSystem}</p>
+                            <p><strong>Shape:</strong> {shapeDetails?.shape}</p>
                           </div>
                         </div>
                       }
-                      title="Chi Tiết Hồ"
+                      title="Pond Details"
                       trigger="hover"
                       placement="right"
                       onVisibleChange={(visible) => visible && fetchShapeDetails(shelter.shape?.id)}
-                    >
+>
                       {shelter.shelterCategoryName}
                     </Popover>
                   </Option>
@@ -207,16 +207,16 @@ const ConsultationRequestDetail: React.FC = () => {
           )}
 
           <Form.Item
-            label="Mô tả chi tiết"
+            label="Detailed Description"
             name="description"
             rules={[
-              { required: true, message: 'Mô tả chi tiết là bắt buộc.' },
+              { required: true, message: 'Detailed description is required.' },
               {
                 validator: (_, value) => {
                   if (value) {
                     const wordCount = value.trim().split(/\s+/).filter((word: string) => word.length > 0).length;
                     if (wordCount < 100) {
-                      return Promise.reject(new Error('Mô tả chi tiết phải có ít nhất 100 từ.'));
+                      return Promise.reject(new Error('The detailed description must be at least 100 words.'));
                     }
                   }
                   return Promise.resolve();
@@ -232,7 +232,7 @@ const ConsultationRequestDetail: React.FC = () => {
           </Form.Item>
 
           <Button type="primary" htmlType="submit">
-            Lưu Chi Tiết
+            Save Details
           </Button>
         </Form>
       )}

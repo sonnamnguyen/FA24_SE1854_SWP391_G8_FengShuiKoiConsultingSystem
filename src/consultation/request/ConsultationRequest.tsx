@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../axious/axious'; 
+import api from '../../axious/axious';
 import { Form, Input, Radio, Button, message, Select } from 'antd';
 import { getToken } from '../../service/localStorageService';
 
@@ -25,12 +25,12 @@ const ConsultationRequest: React.FC = () => {
   const [selectedPackageInfo, setSelectedPackageInfo] = useState<{ name: string, description: string, price: number } | null>(null);
 
   useEffect(() => {
-    // Kiểm tra token trước khi gọi API
+    // Check token before calling API
     const token = getToken();
     if (!token) {
-      message.warning('Vui lòng đăng nhập để tiếp tục.');
-      navigate('/'); // Chuyển hướng đến trang đăng nhập (nếu có trang đăng nhập)
-      return; // Ngăn chặn việc tiếp tục nếu không có token
+      message.warning('Please log in to continue.');
+      navigate('/'); // Redirect to login page (if there is a login page)
+      return; // Prevent further actions if there is no token
     }
   
     const currentYear = new Date().getFullYear();
@@ -55,7 +55,7 @@ const ConsultationRequest: React.FC = () => {
           throw new Error('Invalid user data response');
         }
       } catch (error) {
-        message.error('Không thể lấy thông tin tài khoản.');
+        message.error('Unable to fetch account information.');
         console.error('Error fetching user info:', error);
       }
     };
@@ -74,14 +74,14 @@ const ConsultationRequest: React.FC = () => {
         const packageData = response.data.result;
         setSelectedPackageInfo({
           name: packageData.package_name,
-          description: packageData.description,
+description: packageData.description,
           price: packageData.price,
         });
       } else {
         throw new Error(`Invalid package data for id ${id}`);
       }
     } catch (error) {
-      message.error('Không thể lấy thông tin gói dịch vụ.');
+      message.error('Unable to fetch package information.');
       console.error(`Error fetching package data for id ${id}:`, error);
     }
   };
@@ -95,17 +95,17 @@ const ConsultationRequest: React.FC = () => {
     setLoading(true);
     try {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        message.error('Vui lòng nhập email hợp lệ.');
+        message.error('Please enter a valid email.');
         setLoading(false);
         return;
       }
       if (!isVietnamesePhoneNumber(phone)) {
-        message.error('Vui lòng nhập số điện thoại Việt Nam hợp lệ.');
+        message.error('Please enter a valid Vietnamese phone number.');
         setLoading(false);
         return;
       }
       if (description.length < 10) {
-        message.error('Mô tả yêu cầu phải có ít nhất 10 ký tự.');
+        message.error('The request description must be at least 10 characters.');
         setLoading(false);
         return;
       }
@@ -125,13 +125,13 @@ const ConsultationRequest: React.FC = () => {
         // Save requestId and packageId to localStorage
         localStorage.setItem('requestId', requestId);
         localStorage.setItem('selectedPackageId', packageId.toString()); // Convert packageId to string for storage
-        message.success('Tạo yêu cầu thành công!');
+        message.success('Request created successfully!');
         navigate(`/consultation-request/${requestId}/payment`);
       } else {
         throw new Error(response.data.message);
       }
     } catch (error) {
-      message.error('Có lỗi xảy ra, vui lòng thử lại!');
+      message.error('An error occurred, please try again!');
     } finally {
       setLoading(false);
     }
@@ -141,24 +141,24 @@ const ConsultationRequest: React.FC = () => {
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-      <h1>Yêu cầu tư vấn</h1>
+      <h1>Consultation Request</h1>
       <Form onFinish={handleSubmit} layout="vertical">
-        <Form.Item label="Họ và tên" required>
+        <Form.Item label="Full Name" required>
           <Input
-            placeholder="Họ và tên"
+            placeholder="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
         </Form.Item>
 
-        <Form.Item label="Giới tính" required>
+        <Form.Item label="Gender" required>
           <Radio.Group
             onChange={(e) => setGender(e.target.value)}
             value={gender}
           >
-            <Radio value="MALE">Nam</Radio>
-            <Radio value="FEMALE">Nữ</Radio>
-            <Radio value="OTHER">Khác</Radio>
+            <Radio value="MALE">Male</Radio>
+            <Radio value="FEMALE">Female</Radio>
+            <Radio value="OTHER">Other</Radio>
           </Radio.Group>
         </Form.Item>
 
@@ -170,18 +170,18 @@ const ConsultationRequest: React.FC = () => {
           />
         </Form.Item>
 
-        <Form.Item label="Số điện thoại" required>
+        <Form.Item label="Phone Number" required>
           <Input
-            placeholder="Số điện thoại"
+            placeholder="Phone Number"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+onChange={(e) => setPhone(e.target.value)}
           />
         </Form.Item>
 
-        <Form.Item label="Chọn năm sinh" required>
+        <Form.Item label="Select Year of Birth" required>
           <Select
             showSearch
-            placeholder="Chọn hoặc nhập năm sinh"
+            placeholder="Select or enter year of birth"
             value={yob || undefined}
             onChange={(value) => setYob(value)}
             filterOption={(input, option) => {
@@ -197,39 +197,39 @@ const ConsultationRequest: React.FC = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item label="Mô tả yêu cầu" required>
+        <Form.Item label="Request Description" required>
           <Input.TextArea
             rows={4}
-            placeholder="Nhập mô tả yêu cầu (ít nhất 10 ký tự)"
+            placeholder="Enter request description (at least 10 characters)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </Form.Item>
         
-        <Form.Item label="Chọn gói dịch vụ" required>
+        <Form.Item label="Select Package" required>
           <Radio.Group
             onChange={(e) => handlePackageChange(e.target.value)}
             value={packageId}
           >
-            <Radio value={1}>Gói tư vấn cá</Radio>
-            <Radio value={2}>Gói tư vấn hồ</Radio>
-            <Radio value={3}>Gói tư vấn cá và hồ</Radio>
+            <Radio value={1}>Fish Consultation Package</Radio>
+            <Radio value={2}>Pond Consultation Package</Radio>
+            <Radio value={3}>Fish and Pond Consultation Package</Radio>
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="Thông tin gói dịch vụ">
+        <Form.Item label="Package Information">
           {selectedPackageInfo && (
             <div>
               <h3>{selectedPackageInfo.name}</h3>
               <p>{selectedPackageInfo.description}</p>
-              <p>Giá: {selectedPackageInfo.price.toLocaleString()} VND</p>
+              <p>Price: {selectedPackageInfo.price.toLocaleString()} VND</p>
             </div>
           )}
         </Form.Item>
 
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
-            Thanh Toán
+            Pay
           </Button>
         </Form.Item>
       </Form>

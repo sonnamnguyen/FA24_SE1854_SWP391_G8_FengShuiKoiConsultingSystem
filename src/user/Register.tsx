@@ -66,7 +66,7 @@ const Register: React.FC = () => {
         .matches(/^\d{10}$/, "Phone number must be 10 digits")
         .required("Phone number is required"),
     gender: Yup.string()
-        .oneOf(["MALE", "FEMALE", "OTHER"], "Gender must be Male, Female, or Other")
+        .oneOf(["MALE", "FEMALE", "OTHER"], "Gender must be MALE, FEMALE, or OTHER")
         .required("Gender is required"),
   });
 
@@ -172,10 +172,9 @@ const Register: React.FC = () => {
                 <div className="form-item">
                   <label>Gender</label>
                   <Field name="gender" as="select" className="form-control">
-                    <option value="">Select Gender</option>
-                    <option value="Male">MALE</option>
-                    <option value="Female">FEMALE</option>
-                    <option value="Other">OTHER</option>
+                    <option value="MALE">MALE</option>
+                    <option value="FEMALE">FEMALE</option>
+                    <option value="OTHER">OTHER</option>
                   </Field>
                   <ErrorMessage name="gender" component="div" className="error-message" />
                 </div>

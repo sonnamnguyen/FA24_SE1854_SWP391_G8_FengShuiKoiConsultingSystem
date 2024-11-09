@@ -48,7 +48,6 @@ const AddShape: React.FC = () => {
         .min(3, "Shape must be between 3 and 50 characters")
         .max(50, "Shape must be between 3 and 50 characters")
         .matches(/^[a-zA-Z\s]+$/, "Shape must only contain letters and spaces"), // Allow only letters and spaces
-    destiny: Yup.number().required("Please select a destiny"),
   });
 
   // Form submission
@@ -98,21 +97,17 @@ const AddShape: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item label="Destiny">
-                  <Radio.Group
-                      name="destiny"
-                      value={selectedDestiny}
-                      onChange={e => setSelectedDestiny(e.target.value)}
-                  >
-                    {destinyOptions.map(destiny => (
-                        <Radio key={destiny.id} value={destiny.id}>
-                          {destiny.destiny}
-                        </Radio>
-                    ))}
-                  </Radio.Group>
-                  {errors.destiny && touched.destiny && (
-                      <div style={{ color: 'red' }}>{errors.destiny}</div>
-                  )}
-                </Form.Item>
+          <Radio.Group
+            onChange={e => setSelectedDestiny(e.target.value)}
+            value={selectedDestiny}
+          >
+            {destinyOptions.map(destiny => (
+              <Radio key={destiny.id} value={destiny.id}>
+                {destiny.destiny}
+              </Radio>
+            ))}
+          </Radio.Group>
+        </Form.Item>
 
                 <Form.Item>
                   <Button type="primary" htmlType="submit">

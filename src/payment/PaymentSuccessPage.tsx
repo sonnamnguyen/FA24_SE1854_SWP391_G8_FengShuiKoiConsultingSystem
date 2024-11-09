@@ -19,7 +19,7 @@ const PaymentSuccessPage: React.FC = () => {
       const billId = originalBillId || returnedBillId;
 
       if (!billId) {
-        message.error('Thiếu thông tin hóa đơn!');
+        message.error('Missing bill information!');
         navigate('/error');
         return;
       }
@@ -27,12 +27,12 @@ const PaymentSuccessPage: React.FC = () => {
       const responseCode = '00'; // Indicates successful payment
       const amount = queryParams.get('vnp_Amount') || '100000'; // Example default amount
       const bankCode = queryParams.get('vnp_BankCode') || 'NCB'; // Example default bank code
-      const orderInfo = queryParams.get('vnp_OrderInfo') || 'Thanh toán đơn hàng';
+      const orderInfo = queryParams.get('vnp_OrderInfo') || 'Order payment';
 
       try {
         const token = getToken();
         if (!token) {
-          message.error('Không thể xác thực người dùng!');
+          message.error('Unable to authenticate user!');
           navigate('/error');
           return;
         }
@@ -48,14 +48,13 @@ const PaymentSuccessPage: React.FC = () => {
         });
 
         if (response.status === 200) {
-          message.success(response.data || 'Thanh toán thành công!');
+          message.success(response.data || 'Payment successful!');
 
           // Assuming `requestId` is returned in the response, you can extract and store it
           const requestId = response.data.result?.requestId || 'defaultRequestId'; // Replace with actual response handling logic
           
           // Store requestId and billId in localStorage
           localStorage.setItem('originalBillId', billId);
-          
 
           // Navigate to ConsultationRequestDetail page
           navigate('/consultation-request-detail', {
@@ -65,19 +64,18 @@ const PaymentSuccessPage: React.FC = () => {
             },
           });
         } else {
-          message.error(response.data || 'Thanh toán không thành công!');
+          message.error(response.data || 'Payment unsuccessful!');
           navigate('/error');
         }
       } catch (error) {
-        message.error('Lỗi trong quá trình xử lý kết quả thanh toán!');
+        message.error('Error processing payment result!');
         console.error('Error handling VNPay response:', error);
         navigate('/error');
       } finally {
         setLoading(false);
       }
     };
-
-    handleVNPayResponse();
+handleVNPayResponse();
   }, [location, navigate]);
 
   return (
@@ -86,10 +84,10 @@ const PaymentSuccessPage: React.FC = () => {
       footer={null}
       closable={false}
       centered
-      bodyStyle={{ textAlign: 'center' }} // Correct usage for styling
+      bodyStyle={{ textAlign: 'center' }}
     >
       <Spin size="large" />
-      <p>Đang xử lý kết quả thanh toán...</p>
+      <p>Processing payment result...</p>
     </Modal>
   );
 };

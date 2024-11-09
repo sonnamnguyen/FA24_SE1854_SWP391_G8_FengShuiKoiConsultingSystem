@@ -24,7 +24,7 @@ const BillPage: React.FC = () => {
     const fetchBillDetails = async () => {
       try {
         if (!billId) {
-          message.error('ID hóa đơn không hợp lệ!');
+          message.error('Invalid bill ID!');
           return;
         }
 
@@ -35,7 +35,7 @@ const BillPage: React.FC = () => {
           throw new Error(response.data.message);
         }
       } catch (error) {
-        message.error('Không thể tải thông tin hóa đơn!');
+        message.error('Unable to load bill information!');
         console.error('Error fetching bill details:', error);
       } finally {
         setLoading(false);
@@ -52,7 +52,7 @@ const BillPage: React.FC = () => {
         const token = getToken();
   
         if (!amount || amount <= 0 || !token) {
-          message.error('Số tiền hoặc token không hợp lệ!');
+          message.error('Invalid amount or token!');
           return;
         }
 
@@ -72,43 +72,43 @@ const BillPage: React.FC = () => {
         if (data.status === 'OK' && data.url) {
           window.location.href = data.url; // Redirect to VNPay URL
         } else {
-          message.error('Lỗi khi tạo liên kết thanh toán!');
+          message.error('Error creating payment link!');
         }
       } catch (error) {
-        message.error('Lỗi khi tạo liên kết thanh toán!');
+        message.error('Error creating payment link!');
         console.error('Error creating VNPay payment link:', error);
       }
     } else {
-      message.error('Hóa đơn không hợp lệ!');
+      message.error('Invalid bill!');
     }
   };
 
   if (loading) {
-    return <p>Đang tải thông tin hóa đơn...</p>;
+    return <p>Loading bill information...</p>;
   }
 
   if (!bill) {
-    return <p>Không tìm thấy hóa đơn!</p>;
+    return <p>Bill not found!</p>;
   }
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-      <h1>Chi tiết Hóa Đơn</h1>
-      <p><strong>Mã hóa đơn:</strong> {bill.id}</p>
-      <p><strong>Người tạo:</strong> {bill.createdBy}</p>
-      <p><strong>Ngày tạo:</strong> {new Date(bill.createdDate).toLocaleString()}</p>
-      <p><strong>Tạm tính:</strong> {bill.subAmount.toLocaleString()} VND</p>
-      <p><strong>VAT:</strong> {bill.vat * 100}%</p>
-      <p><strong>Tiền VAT:</strong> {bill.vatAmount.toLocaleString()} VND</p>
-      <p><strong>Tổng tiền:</strong> {bill.totalAmount.toLocaleString()} VND</p>
-      <p><strong>Trạng thái:</strong> {bill.status}</p>
+      <h1>Bill Details</h1>
+      <p><strong>Bill ID:</strong> {bill.id}</p>
+      <p><strong>Created By:</strong> {bill.createdBy}</p>
+      <p><strong>Creation Date:</strong> {new Date(bill.createdDate).toLocaleString()}</p>
+      <p><strong>Subtotal:</strong> {bill.subAmount.toLocaleString()} VND</p>
+<p><strong>VAT:</strong> {bill.vat * 100}%</p>
+      <p><strong>VAT Amount:</strong> {bill.vatAmount.toLocaleString()} VND</p>
+      <p><strong>Total Amount:</strong> {bill.totalAmount.toLocaleString()} VND</p>
+      <p><strong>Status:</strong> {bill.status}</p>
 
       <Button
         type="primary"
         onClick={handlePaymentVNPay}
         style={{ marginTop: '20px' }}
       >
-        Thanh Toán VNPay
+        Pay with VNPay
       </Button>
     </div>
   );

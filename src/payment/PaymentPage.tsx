@@ -4,25 +4,25 @@ import { Radio, Button, message, Modal } from 'antd';
 import api from '../axious/axious';
 
 const PaymentPage: React.FC = () => {
-  const { requestId } = useParams<{ requestId: string }>(); // Lấy requestId từ URL
+  const { requestId } = useParams<{ requestId: string }>(); // Get requestId from URL
   const navigate = useNavigate();
-  const [paymentId, setPaymentId] = useState<number>(1); // Mặc định là VNPay
+  const [paymentId, setPaymentId] = useState<number>(1); // Default is VNPay
   const [loading, setLoading] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // Modal cho PayPal
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // Modal for PayPal
 
   const handlePayment = async () => {
     setLoading(true);
     try {
       const billResponse = await api.post(`/api/bills/request/${requestId}/payments/${paymentId}`, {
-        description: 'Thanh toán cho gói tư vấn',
+        description: 'Payment for consultation package',
       });
 
-      const billId = billResponse.data.result.id; // Lấy billId từ API
+      const billId = billResponse.data.result.id; // Get billId from API
 
-      // Điều hướng sang BillPage với billId sau khi tạo xong hóa đơn
+      // Navigate to BillPage with billId after creating the bill
       navigate(`/bill/${billId}`);
     } catch (error) {
-      message.error('Lỗi khi tạo hóa đơn!');
+      message.error('Error creating bill!');
       console.error(error);
     } finally {
       setLoading(false);
@@ -30,16 +30,16 @@ const PaymentPage: React.FC = () => {
   };
 
   const handlePayPal = () => {
-    setIsModalVisible(true); // Mở modal cho PayPal
+    setIsModalVisible(true); // Open modal for PayPal
   };
 
   const closeModal = () => {
-    setIsModalVisible(false); // Đóng modal
+    setIsModalVisible(false); // Close modal
   };
 
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-      <h1>Chọn phương thức thanh toán</h1>
+      <h1>Select Payment Method</h1>
       <Radio.Group
         onChange={(e) => setPaymentId(e.target.value)}
         value={paymentId}
@@ -53,25 +53,25 @@ const PaymentPage: React.FC = () => {
           onClick={paymentId === 1 ? handlePayment : handlePayPal}
           loading={loading}
         >
-          Thanh Toán
+          Pay
         </Button>
         <Button
           style={{ marginLeft: '10px' }}
           onClick={() => navigate('/')}
         >
-          Quay về Trang Chủ
+          Back to Home
         </Button>
       </div>
 
       <Modal
-        title="Thông báo"
+        title="Notification"
         visible={isModalVisible}
         onOk={closeModal}
         onCancel={closeModal}
-        okText="Đồng ý"
-        cancelText="Hủy"
+        okText="Agree"
+        cancelText="Cancel"
       >
-        <p>Chức năng thanh toán bằng PayPal đang được cập nhật. Vui lòng chọn phương thức thanh toán khác.</p>
+        <p>PayPal payment functionality is being updated. Please select another payment method.</p>
       </Modal>
     </div>
   );

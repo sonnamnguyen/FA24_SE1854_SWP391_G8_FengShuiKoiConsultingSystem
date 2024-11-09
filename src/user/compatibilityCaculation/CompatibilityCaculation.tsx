@@ -312,7 +312,7 @@ const CompatibilityForm = () => {
                     </tbody>
                 </table>
 
-                <button type="submit" className="compability-btn">XEM</button>
+                <button type="submit" className="compability-btn">Check compatibility</button>
             </form>
 
             {error && (

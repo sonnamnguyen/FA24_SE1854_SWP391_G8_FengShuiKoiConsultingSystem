@@ -104,17 +104,17 @@ const AddColor: React.FC = () => {
                 </Form.Item>
 
                 <Form.Item label="Destiny">
-                  <Radio.Group
-                      onChange={e => setSelectedDestiny(e.target.value)}
-                      value={selectedDestiny}
-                  >
-                    {destinyOptions.map(destiny => (
-                        <Radio key={destiny.id} value={destiny.id}>
-                          {destiny.destiny}
-                        </Radio>
-                    ))}
-                  </Radio.Group>
-                </Form.Item>
+          <Radio.Group
+            onChange={e => setSelectedDestiny(e.target.value)}
+            value={selectedDestiny}
+          >
+            {destinyOptions.map(destiny => (
+              <Radio key={destiny.id} value={destiny.id}>
+                {destiny.destiny}
+              </Radio>
+            ))}
+          </Radio.Group>
+        </Form.Item>
 
                 <Form.Item>
                   <Button type="primary" htmlType="submit">
