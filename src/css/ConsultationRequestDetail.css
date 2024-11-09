@@ -1,4 +1,4 @@
-.consultation-request-detail-container {
+.khoi_con_req_de_consultation-request-detail-container {
     max-width: 700px;
     margin: 0 auto;
     padding: 20px;
@@ -15,23 +15,23 @@ h1 {
     margin-bottom: 20px;
 }
 
-.form-item {
+.khoi_con_req_de_form-item {
     margin-bottom: 20px;
 }
 
-.form-item label {
+.khoi_con_req_de_form-item label {
     font-weight: bold;
     color: #333;
 }
 
-.form-icon {
+.khoi_con_req_de_form-icon {
     width: 24px;
     height: 24px;
     margin-right: 8px;
     vertical-align: middle;
 }
 
-.select-container {
+.khoi_con_req_de_select-container {
     display: flex;
     align-items: center;
 }
@@ -40,7 +40,7 @@ h1 {
     width: 100%;
 }
 
-.submit-button {
+.khoi_con_req_de_submit-button {
     width: 100%;
     height: 40px;
     font-size: 16px;
@@ -52,11 +52,11 @@ h1 {
     transition: background-color 0.3s ease;
 }
 
-.submit-button:hover {
+.khoi_con_req_de_submit-button:hover {
     background-color: #005bb5;
 }
 
-.note-section {
+.khoi_con_req_de_note-section {
     display: flex;
     align-items: flex-start;
     margin-top: 20px;
@@ -66,25 +66,25 @@ h1 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.note-icon {
+.khoi_con_req_de_note-icon {
     width: 24px;
     height: 24px;
     margin-right: 8px;
 }
 
-.note-section p {
+.khoi_con_req_de_note-section p {
     margin: 0;
     color: #0073e6;
     font-weight: 500;
 }
 
-.popover-content {
+.khoi_con_req_de_popover-content {
     display: flex;
     align-items: flex-start;
     max-width: 350px;
 }
 
-.popover-image-container {
+.khoi_con_req_de_popover-image-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -97,16 +97,16 @@ h1 {
     overflow: hidden;
 }
 
-.animal-image {
+.khoi_con_req_de_animal-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-.ant-input-textarea {
+.khoi_con_req_de_textarea {
     width: 100%;
     resize: vertical;
-    min-height: 150px; /* Tăng chiều cao tối thiểu cho description */
+    min-height: 150px;
 }
 
 .ant-form-item-label > label:after {
@@ -114,7 +114,7 @@ h1 {
     color: red;
     margin-left: 4px;
     font-size: 1rem;
-    vertical-align: middle; /* Căn giữa dấu * với văn bản */
+    vertical-align: middle;
 }
 
 .ant-select-selector {

@@ -68,6 +68,13 @@ const ConsultationRequest: React.FC = () => {
 
     fetchAccountInfo();
     fetchPackageInfo(1);
+
+    document.body.classList.add('khoi_body');
+
+  // Gỡ bỏ lớp `khoi_body` khi component bị unmount
+  return () => {
+    document.body.classList.remove('khoi_body');
+  };
   }, [navigate]);
 
   const fetchPackageInfo = async (id: number) => {

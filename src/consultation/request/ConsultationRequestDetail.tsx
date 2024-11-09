@@ -6,7 +6,7 @@ import { storage } from '../../firebase/firebase';
 import koiFishLogo from '../../assets/images/koifish_logo.svg';
 import pondLogo from '../../assets/images/pond_logo.svg';
 import descriptionLogo from '../../assets/images/description_logo.svg';
-import noteLogo from '../../assets/images/note_logo.svg'; // Note icon
+import noteLogo from '../../assets/images/note_logo.svg';
 
 import '../../css/ConsultationRequestDetail.css';
 
@@ -63,6 +63,12 @@ const ConsultationRequestDetail: React.FC = () => {
     } finally {
       setLoading(false);
     }
+    document.body.classList.add('khoi_body');
+
+  // Gỡ bỏ lớp `khoi_body` khi component bị unmount
+  return () => {
+    document.body.classList.remove('khoi_body');
+  };
   };
 
   const fetchShapeDetails = async (shapeId: number) => {
@@ -105,7 +111,7 @@ const ConsultationRequestDetail: React.FC = () => {
   };  
 
   return (
-    <div className="consultation-request-detail-container">
+    <div className="khoi_con_req_de_consultation-request-detail-container">
       <h1>Consultation Request Details</h1>
       {loading ? (
         <Spin />
@@ -113,10 +119,10 @@ const ConsultationRequestDetail: React.FC = () => {
         <Form onFinish={handleFormSubmit}>
           {(packageId === '1' || packageId === '3') && (
             <Form.Item
-              label={<span><img src={koiFishLogo} alt="Fish Icon" className="form-icon" /> Select Fish</span>}
+              label={<span><img src={koiFishLogo} alt="Fish Icon" className="khoi_con_req_de_form-icon" /> Select Fish</span>}
               name="selectedAnimal"
               rules={[{ required: true, message: 'Please select at least one fish.' }]}
-              className="form-item"
+              className="khoi_con_req_de_form-item"
             >
               <Select
                 mode="multiple"
@@ -128,13 +134,13 @@ const ConsultationRequestDetail: React.FC = () => {
                   <Option key={animal.id} value={animal.id}>
                     <Popover
                       content={
-                        <div className="popover-content">
-                          <div className="popover-image-container">
+                        <div className="khoi_con_req_de_popover-content">
+                          <div className="khoi_con_req_de_popover-image-container">
                             {animal.imageUrl ? (
                               <img
                                 src={animal.imageUrl}
                                 alt={animal.animalCategoryName}
-                                className="animal-image"
+                                className="khoi_con_req_de_animal-image"
                               />
                             ) : (
                               <span>{animal.animalCategoryName}</span>
@@ -167,10 +173,10 @@ const ConsultationRequestDetail: React.FC = () => {
 
           {(packageId === '2' || packageId === '3') && (
             <Form.Item
-              label={<span><img src={pondLogo} alt="Pond Icon" className="form-icon" /> Select Pond</span>}
+              label={<span><img src={pondLogo} alt="Pond Icon" className="khoi_con_req_de_form-icon" /> Select Pond</span>}
               name="selectedShelter"
               rules={[{ required: true, message: 'Please select at least one pond.' }]}
-              className="form-item"
+              className="khoi_con_req_de_form-item"
             >
               <Select
                 mode="multiple"
@@ -182,8 +188,8 @@ const ConsultationRequestDetail: React.FC = () => {
                   <Option key={shelter.id} value={shelter.id}>
                     <Popover
                       content={
-                        <div className="popover-content">
-                          <div className="popover-image-container">
+                        <div className="khoi_con_req_de_popover-content">
+                          <div className="khoi_con_req_de_popover-image-container">
                             <span>{shelter.shelterCategoryName}</span>
                           </div>
                           <div>
@@ -208,7 +214,7 @@ const ConsultationRequestDetail: React.FC = () => {
           )}
 
           <Form.Item
-            label={<span><img src={descriptionLogo} alt="Description Icon" className="form-icon" /> Detailed Description</span>}
+            label={<span><img src={descriptionLogo} alt="Description Icon" className="khoi_con_req_de_form-icon" /> Detailed Description</span>}
             name="description"
             rules={[
               { required: true, message: 'Detailed description is required.' },
@@ -224,25 +230,25 @@ const ConsultationRequestDetail: React.FC = () => {
                 },
               },
             ]}
-            className="form-item"
+            className="khoi_con_req_de_form-item"
           >
             <Input.TextArea
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            autoSize={{ minRows: 5, maxRows: 10 }} // Điều chỉnh chiều cao tự động dựa trên nội dung
-          />
+              rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              autoSize={{ minRows: 5, maxRows: 10 }}
+              className="khoi_con_req_de_textarea"
+            />
           </Form.Item>
 
-          <Button type="primary" htmlType="submit" className="submit-button">
+          <Button type="primary" htmlType="submit" className="khoi_con_req_de_submit-button">
             Save Details
           </Button>
         </Form>
       )}
 
-      {/* Note Section */}
-      <div className="note-section">
-        <img src={noteLogo} alt="Note Icon" className="note-icon" />
+      <div className="khoi_con_req_de_note-section">
+        <img src={noteLogo} alt="Note Icon" className="khoi_con_req_de_note-icon" />
         <p>
           Please provide specific details, such as the number of fish with their colors, or detailed pond information you have, so our consultation can be more effective.
         </p>

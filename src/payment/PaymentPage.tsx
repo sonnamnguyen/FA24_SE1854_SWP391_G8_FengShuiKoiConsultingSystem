@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message, Modal } from 'antd';
 import api from '../axious/axious';
@@ -21,6 +21,16 @@ const PaymentPage: React.FC = () => {
   const [paymentId, setPaymentId] = useState<number>(1); 
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false); 
+
+  useEffect(() => {
+    // Thêm lớp `khoi_body` vào body khi component được render
+    document.body.classList.add('khoi_body');
+  
+    // Gỡ bỏ lớp `khoi_body` khi component bị unmount
+    return () => {
+      document.body.classList.remove('khoi_body');
+    };
+  }, []);  
 
   const handlePayment = async () => {
     setLoading(true);
