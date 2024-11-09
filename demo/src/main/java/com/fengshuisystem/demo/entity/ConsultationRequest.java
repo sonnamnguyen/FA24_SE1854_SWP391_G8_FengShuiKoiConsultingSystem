@@ -6,15 +6,16 @@ import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.enums.Gender;
 import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
+import com.fengshuisystem.demo.validator.ValidYearOfBirth;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Instant;
+import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,6 +40,7 @@ public class ConsultationRequest {
     private Package packageId;
 
     @NotNull
+    @Size(max = 100, message = "Full name cannot exceed 100 characters.")
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
@@ -47,19 +49,23 @@ public class ConsultationRequest {
     @Column(name = "gender", nullable = false)
     private Gender gender;
 
+    @ValidYearOfBirth
     @NotNull
     @Column(name = "yob", nullable = false)
     private Integer yob;
 
     @NotNull
+    @Pattern(regexp = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$", message = "Please enter a valid email.")
     @Column(name = "email", nullable = false)
     private String email;
 
     @NotNull
+    @Pattern(regexp = "^(0|\\+84|\\+840)(3|5|7|8|9)[0-9]{8}$", message = "Please enter a valid Vietnamese phone number.")
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @Size(max = 1000)
+    @NotNull
+    @Size(min = 10, max = 1000, message = "The request description must be between 10 and 1000 characters.")
     @Nationalized
     @Column(name = "description", length = 1000)
     private String description;
