@@ -3,6 +3,17 @@ import { useParams } from 'react-router-dom';
 import { Button, message } from 'antd';
 import api from '../axious/axious';
 import { getToken } from '../service/localStorageService';
+import '../css/BillPage.css';
+
+// Import các đường dẫn SVG
+import billLogo from '../assets/images/bill_logo.svg';
+import cartLogo from '../assets/images/cart_logo.svg';
+import moneyLogo from '../assets/images/money_logo.svg';
+import walletLogo from '../assets/images/wallet_logo.svg';
+import personLogo from '../assets/images/person_logo.svg';
+import statusLogo from '../assets/images/status-warning_logo.svg';
+import dateLogo from '../assets/images/date_logo.svg';
+import vnPayLogo from '../assets/images/v-vnpay-svgrepo-com.svg'; // Logo VNPay
 
 interface Bill {
   id: number;
@@ -46,23 +57,18 @@ const BillPage: React.FC = () => {
   }, [billId]);
 
   const handlePaymentVNPay = async () => {
-    console.log("handlePaymentVNPay called");
     if (bill) {
-      console.log(bill);
-
       try {
         const amount = bill.totalAmount;
         const token = getToken();
-  
+
         if (!amount || amount <= 0 || !token) {
           message.error('Invalid amount or token!');
           return;
         }
 
-        // Store the billId before redirecting
         localStorage.setItem('originalBillId', bill.id.toString());
 
-        // Create VNPay payment link
         const response = await fetch(`http://localhost:9090/vn_pay/create_vn_pay?amount=${encodeURIComponent(amount)}`, {
           method: 'GET',
           headers: {
@@ -73,7 +79,7 @@ const BillPage: React.FC = () => {
 
         const data = await response.json();
         if (data.status === 'OK' && data.url) {
-          window.location.href = data.url; // Redirect to VNPay URL
+          window.location.href = data.url;
         } else {
           message.error('Error creating payment link!');
         }
@@ -95,25 +101,62 @@ const BillPage: React.FC = () => {
   }
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+    <div className="bill-container">
       <h1>Bill Details</h1>
-      <p><strong>Bill ID:</strong> {bill.id}</p>
-      <p><strong>Created By:</strong> {bill.createdBy}</p>
-      <p><strong>Creation Date:</strong> {new Date(bill.createdDate).toLocaleString()}</p>
-      <p><strong>Subtotal:</strong> {bill.subAmount.toLocaleString()} VND</p>
-<p><strong>VAT:</strong> {bill.vat * 100}%</p>
-      <p><strong>VAT Amount:</strong> {bill.vatAmount.toLocaleString()} VND</p>
-      <p><strong>Total Amount:</strong> {bill.totalAmount.toLocaleString()} VND</p>
-      <p><strong>Status:</strong> {bill.status}</p>
+      
+      <div className="bill-info">
+          <p>
+              <img src={billLogo} alt="Bill ID" className="icon" />
+              <strong>Bill ID: </strong> {bill.id}
+          </p>
+          <p>
+              <img src={personLogo} alt="Created By" className="icon" />
+              <strong>Created By: </strong> {bill.createdBy}
+          </p>
+          <p>
+              <img src={dateLogo} alt="Creation Date" className="icon" />
+              <strong>Creation Date: </strong> {new Date(bill.createdDate).toLocaleString()}
+          </p>
+          <p>
+              <img src={cartLogo} alt="Subtotal" className="icon" />
+              <strong>Subtotal: </strong> {bill.subAmount.toLocaleString()} VND
+          </p>
+          <p>
+              <img src={moneyLogo} alt="VAT" className="icon" />
+              <strong>VAT: </strong> {bill.vat * 100}%
+          </p>
+          <p>
+              <img src={moneyLogo} alt="VAT Amount" className="icon" />
+              <strong>VAT Amount: </strong> {bill.vatAmount.toLocaleString()} VND
+          </p>
+          <p>
+              <img src={statusLogo} alt="Status" className="icon" />
+              <strong>Status: </strong> {bill.status}
+          </p>
+
+          {/* Divider line between status and total amount */}
+          <div className="divider"></div>
+
+          <p className="total-amount">
+              <img src={walletLogo} alt="Total Amount" className="icon" />
+              <strong>Total Amount: {bill.totalAmount.toLocaleString()} VND</strong>
+          </p>
+      </div>
+      
+      {/* VNPay Logo that appears on hover */}
+      <div className="vnpay-logo-container">
+          <img src={vnPayLogo} alt="VNPay Logo" className="vnpay-logo" />
+      </div>
 
       <Button
-        type="primary"
-        onClick={handlePaymentVNPay}
-        style={{ marginTop: '20px' }}
+          type="primary"
+          onClick={handlePaymentVNPay}
+          className="pay-button"
       >
-        Pay with VNPay
+          Pay with VNPay
       </Button>
-    </div>
+  </div>
+
   );
 };
 
