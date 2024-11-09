@@ -1,0 +1,124 @@
+.consultation-request-detail-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f8ff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #0073e6;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-item {
+    margin-bottom: 20px;
+}
+
+.form-item label {
+    font-weight: bold;
+    color: #333;
+}
+
+.form-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.select-container {
+    display: flex;
+    align-items: center;
+}
+
+.ant-select {
+    width: 100%;
+}
+
+.submit-button {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    margin-top: 20px;
+    background-color: #0073e6;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #005bb5;
+}
+
+.note-section {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e6f7ff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.note-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.note-section p {
+    margin: 0;
+    color: #0073e6;
+    font-weight: 500;
+}
+
+.popover-content {
+    display: flex;
+    align-items: flex-start;
+    max-width: 350px;
+}
+
+.popover-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.animal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.ant-input-textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 150px; /* Tăng chiều cao tối thiểu cho description */
+}
+
+.ant-form-item-label > label:after {
+    content: '*';
+    color: red;
+    margin-left: 4px;
+    font-size: 1rem;
+    vertical-align: middle; /* Căn giữa dấu * với văn bản */
+}
+
+.ant-select-selector {
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
