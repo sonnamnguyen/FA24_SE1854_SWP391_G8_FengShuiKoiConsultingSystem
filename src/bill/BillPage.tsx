@@ -46,7 +46,10 @@ const BillPage: React.FC = () => {
   }, [billId]);
 
   const handlePaymentVNPay = async () => {
+    console.log("handlePaymentVNPay called");
     if (bill) {
+      console.log(bill);
+
       try {
         const amount = bill.totalAmount;
         const token = getToken();

@@ -1,0 +1,176 @@
+/* Nền tổng thể */
+body {
+    background-color: #f0f4f8; /* Nền xám nhạt bao quanh */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  
+  /* Container chính của form */
+  .consultation-form-container {
+    max-width: 600px;
+    padding: 30px;
+    background: linear-gradient(135deg, #dbeaf1, #b3cde0); /* Gradient màu xanh nhạt */
+    color: #1d3557; /* Màu chữ xanh đậm */
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border: 3px solid #a8dadc; /* Viền xanh nhạt */
+  }
+  
+  /* Tiêu đề */
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #1d3557; /* Màu tiêu đề xanh đậm */
+    font-size: 24px;
+  }
+  
+  /* Nhãn cho các trường */
+  .ant-form-item-label > label {
+    color: #1d3557; /* Màu nhãn xanh đậm */
+    font-weight: bold;
+  }
+  
+  /* Lỗi input */
+  .input-error {
+    border-color: #e63946 !important; /* Viền đỏ đậm cho input lỗi */
+    box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+  }
+  
+  input,
+  textarea,
+  select,
+  .ant-radio-group {
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #b3cde0; /* Viền xám xanh */
+    background-color: #f1f5f8; /* Nền xanh xám nhạt cho input */
+    color: #1d3557; /* Văn bản màu xanh đậm */
+  }
+  
+  input:focus,
+  textarea:focus,
+  select:focus,
+  .ant-radio-group:focus {
+    border-color: #457b9d; /* Đổi viền màu xanh lam khi focus */
+    box-shadow: 0 0 0 2px rgba(69, 123, 157, 0.2);
+  }
+  
+  /* Thông báo lỗi */
+  .ant-form-item-explain-error {
+    color: #e63946; /* Màu chữ lỗi đỏ đậm */
+  }
+  
+  /* Radio Buttons */
+  .ant-radio-group .ant-radio-wrapper {
+    color: #1d3557; /* Văn bản màu xanh đậm cho Radio */
+  }
+  
+  /* Nút bấm */
+  button,
+  .ant-btn-primary {
+    background-color: #457b9d; /* Nút chính màu xanh lam */
+    border-color: #457b9d;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover,
+  .ant-btn-primary:hover {
+    background-color: #1d3557; /* Đổi màu khi hover thành xanh đậm */
+    border-color: #1d3557;
+  }
+  
+  /* Package Information */
+  .package-info {
+    background-color: #f1f5f8; /* Nền xám nhạt */
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #b3cde0; /* Viền xanh nhạt */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); /* Bóng nhẹ để tạo chiều sâu */
+  }
+  
+  .package-info h3 {
+    color: #457b9d; /* Tiêu đề gói màu xanh lam */
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .package-info p {
+    color: #1d3557; /* Văn bản thông tin gói màu xanh đậm */
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 5px 0;
+    text-align: center;
+  }
+  
+  /* Định dạng phần giá */
+  .package-info .price {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  
+  .package-info .original-price {
+    color: #e63946; /* Màu đỏ cho giá gốc */
+    text-decoration: line-through; /* Gạch ngang cho giá gốc */
+    margin-right: 8px;
+  }
+  
+  .package-info .discounted-price {
+    color: #1d3557; /* Màu xanh đậm cho giá giảm */
+    font-size: 20px; /* Kích thước lớn hơn một chút để làm nổi bật */
+  }
+  
+  .package-info .discount-badge {
+    background-color: #e63946; /* Nền đỏ đậm cho badge giảm giá */
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 3px 6px;
+    margin-left: 10px;
+  }
+  
+  /* Các yếu tố khác */
+  .form-item-wrapper {
+    margin-bottom: 20px;
+  }
+  
+  .form-item-wrapper label {
+    font-weight: bold;
+  }
+  
+  button {
+    width: 100%;
+  }
+  
+  .consultation-form-container .ant-form-item {
+    margin-bottom: 20px;
+  }
+  
+  .consultation-form-container .ant-select-selector {
+    background-color: #f1f5f8; /* Nền xám nhạt cho select */
+    border-color: #b3cde0; /* Viền xanh nhạt */
+    color: #1d3557; /* Văn bản màu xanh đậm */
+  }
+  
+  .ant-select-dropdown {
+    background-color: #f1f5f8; /* Dropdown màu xám nhạt */
+  }
+  
+  .ant-select-item-option-selected {
+    background-color: #457b9d !important; /* Màu nền của mục chọn */
+    color: #ffffff !important; /* Màu chữ trắng */
+  }
+  

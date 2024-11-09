@@ -390,7 +390,7 @@ const CompatibilityForm = () => {
                                )}
                                {animal.colorCompatibilityResponses && (
                                    <p className="animal-explanation">
-                                       <div className="explain">Explanation:</div>
+                                       <div className="explain">Explain:</div>
                                        <ul className="color-explanations">
                                            {animal.colorCompatibilityResponses.map((response, index) => (
                                                <li key={index}>Color {response}</li>
