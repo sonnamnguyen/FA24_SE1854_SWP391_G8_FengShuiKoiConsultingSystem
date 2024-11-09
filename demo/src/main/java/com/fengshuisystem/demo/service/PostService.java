@@ -11,4 +11,5 @@ public interface PostService {
     public PostDTO updatePost(Integer id, PostDTO postDTO);
     public PageResponse<PostDTO> getPostByAccountEmail(int page, int size);
     public PageResponse<PostDTO> getPostByTitle(String title,int page, int size);
+    public PostDTO getPostById(Integer id);
 }
