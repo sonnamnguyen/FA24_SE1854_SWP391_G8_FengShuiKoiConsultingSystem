@@ -1,21 +1,27 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ConsultationRequestDetailDTO;
-import com.fengshuisystem.demo.entity.AnimalCategory;
-import com.fengshuisystem.demo.entity.ConsultationRequest;
-import com.fengshuisystem.demo.entity.ConsultationRequestDetail;
-import com.fengshuisystem.demo.entity.ShelterCategory;
+import com.fengshuisystem.demo.dto.ConsultationResultDTO;
+import com.fengshuisystem.demo.dto.PageResponse;
+import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.enums.Request;
+import com.fengshuisystem.demo.exception.AppException;
+import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.ConsultationRequestDetailMapper;
 import com.fengshuisystem.demo.repository.ConsultationRequestDetailRepository;
 import com.fengshuisystem.demo.repository.ConsultationRequestRepository;
 import com.fengshuisystem.demo.service.ConsultationRequestDetailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,6 +72,49 @@ public class ConsultationRequestDetailServiceImpl implements ConsultationRequest
     @Override
     public ConsultationRequestDetailDTO findById(Integer id) {
         return detailMapper.toDTO(detailRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public PageResponse<ConsultationRequestDetailDTO> getAllConsultationRequestDetail(int page, int size) {
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = detailRepository.findAll(pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.CONSULTATION_REQUEST_DETAIL_NOT_FOUND);
+        }
+        return PageResponse.<ConsultationRequestDetailDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(detailMapper::toDTO).toList())
+                .build();
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Override
+    public ConsultationRequestDetailDTO updateConsultationRequestDetail(Integer id, ConsultationRequestDetailDTO consultationRequestDetailDTO) {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+
+        ConsultationRequestDetail consultationRequestDetail = detailRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CONSULTATION_REQUEST_DETAIL_NOT_FOUND));
+
+        // Update specific fields only if they are provided in DTO
+        if (consultationRequestDetailDTO.getDescription() != null) {
+            consultationRequestDetail.setDescription(consultationRequestDetailDTO.getDescription());
+        }
+        if (consultationRequestDetailDTO.getStatus() != null) {
+            consultationRequestDetail.setStatus(consultationRequestDetailDTO.getStatus());
+        }
+
+        consultationRequestDetail.setUpdatedBy(name);
+        consultationRequestDetail.setUpdatedDate(Instant.now());
+
+        // Save the updated entity and return the DTO
+        ConsultationRequestDetail savedResult = detailRepository.saveAndFlush(consultationRequestDetail);
+        return detailMapper.toDTO(savedResult);
     }
 
     /**
