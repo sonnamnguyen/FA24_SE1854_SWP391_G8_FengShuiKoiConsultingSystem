@@ -8,8 +8,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 public interface ConsultationAnimalService {
-    ConsultationAnimalDTO createConsultationAnimal(ConsultationAnimalDTO dto, Integer resultId, Integer animalCategoryId);
-
     PageResponse<ConsultationAnimalDTO> getAllConsultationAnimalPage(int page, int size);
 
     ConsultationAnimalDTO updateConsultationAnimal(Integer id, @Valid ConsultationAnimalDTO consultationAnimalDTO);
@@ -17,4 +15,6 @@ public interface ConsultationAnimalService {
     ConsultationAnimalDTO getConsultationAnimalById(Integer id);
 
     List<ConsultationAnimalDTO> getAllConsultationAnimals();
+
+    ConsultationAnimalDTO createConsultationAnimal(ConsultationAnimalDTO consultationAnimalDTO);
 }

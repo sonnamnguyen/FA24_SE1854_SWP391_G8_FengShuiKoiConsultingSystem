@@ -37,7 +37,9 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public ConsultationShelterDTO createConsultationShelter(ConsultationShelterDTO dto, Integer resultId, Integer shelterCategoryId) {
+    public ConsultationShelterDTO createConsultationShelter(ConsultationShelterDTO dto) {
+        int resultId = dto.getConsultationResultId();
+        int shelterCategoryId = dto.getShelterCategoryId();
         // Kiểm tra xem cặp resultId và shelterCategoryId có tồn tại hay không
         boolean exists = consultationShelterRepository.existsByConsultationResultIdAndShelterCategoryId(resultId, shelterCategoryId);
         if (exists) {
