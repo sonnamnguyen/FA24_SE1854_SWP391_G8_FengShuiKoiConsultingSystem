@@ -1,17 +1,17 @@
 echo "Building app..."
-./mvnw clean package
+./mvnw clean package -DskipTests
 
 echo "Deploy files to server..."
-scp -r  target/be.jar root@103.200.20.149:/var/www/be/
+scp -r  target/be.jar root@14.225.253.117:/var/www/be/
 
-ssh root@103.200.20.149 <<EOF
-pid=\$(sudo lsof -t -i:8080)
+ssh root@14.225.253.117 <<EOF
+pid=$(sudo lsof -t -i:9090)
 
-if [ -z "\$pid" ]; then
+if [ -z "$pid" ]; then
     echo "Start server..."
 else
     echo "Restart server..."
-    sudo kill -9 "\$pid"
+    sudo kill -9 "$pid"
 fi
 cd /var/www/be
 java -jar be.jar
