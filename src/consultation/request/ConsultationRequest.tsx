@@ -160,23 +160,23 @@ const ConsultationRequest: React.FC = () => {
   };
 
   return (
-    <div className="consultation-form-container">
+    <div className="khoi_con_req_consultation-form-container">
       <h1>Consultation Request</h1>
       <Form onFinish={handleSubmit} layout="vertical">
-        <Form.Item label="Full Name" required>
+        <Form.Item label="Full Name" required className="khoi_con_req_form-item">
           <Input
             placeholder="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className={!fullName ? 'input-error' : ''}
+            className={!fullName ? 'khoi_con_req_input-error' : ''}
           />
         </Form.Item>
 
-        <Form.Item label="Gender" required>
+        <Form.Item label="Gender" required className="khoi_con_req_form-item">
           <Radio.Group
             onChange={(e) => setGender(e.target.value)}
             value={gender}
-            className={!gender ? 'input-error' : ''}
+            className={!gender ? 'khoi_con_req_input-error' : ''}
           >
             <Radio value="MALE">Male</Radio>
             <Radio value="FEMALE">Female</Radio>
@@ -184,25 +184,25 @@ const ConsultationRequest: React.FC = () => {
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="Email" required>
+        <Form.Item label="Email" required className="khoi_con_req_form-item">
           <Input
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={!email ? 'input-error' : ''}
+            className={!email ? 'khoi_con_req_input-error' : ''}
           />
         </Form.Item>
 
-        <Form.Item label="Phone Number" required>
+        <Form.Item label="Phone Number" required className="khoi_con_req_form-item">
           <Input
             placeholder="Phone Number"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className={!phone ? 'input-error' : ''}
+            className={!phone ? 'khoi_con_req_input-error' : ''}
           />
         </Form.Item>
 
-        <Form.Item label="Select Year of Birth" required>
+        <Form.Item label="Select Year of Birth" required className="khoi_con_req_form-item">
           <Select
             showSearch
             placeholder="Select or enter year of birth"
@@ -212,7 +212,7 @@ const ConsultationRequest: React.FC = () => {
               const value = option?.value?.toString().toLowerCase();
               return value ? value.includes(input.toLowerCase()) : false;
             }}
-            className={!yob ? 'input-error' : ''}
+            className={!yob ? 'khoi_con_req_input-error' : ''}
           >
             {years.map((year) => (
               <Option key={year} value={year}>
@@ -222,21 +222,21 @@ const ConsultationRequest: React.FC = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item label="Request Description" required>
+        <Form.Item label="Request Description" required className="khoi_con_req_form-item">
           <Input.TextArea
             rows={4}
             placeholder="Enter request description (between 10 and 1000 characters)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className={!description ? 'input-error' : ''}
+            className={!description ? 'khoi_con_req_input-error' : ''}
           />
         </Form.Item>
 
-        <Form.Item label="Select Package" required>
+        <Form.Item label="Select Package" required className="khoi_con_req_form-item">
           <Radio.Group
             onChange={(e) => handlePackageChange(e.target.value)}
             value={packageId}
-            className={!packageId ? 'input-error' : ''}
+            className={!packageId ? 'khoi_con_req_input-error' : ''}
           >
             <Radio value={1}>Fish Consultation Package</Radio>
             <Radio value={2}>Pond Consultation Package</Radio>
@@ -244,31 +244,29 @@ const ConsultationRequest: React.FC = () => {
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="Package Information">
+        <Form.Item label="Package Information" className="khoi_con_req_form-item">
           {selectedPackageInfo && (
-            <div className="package-info">
-              <div className="package-info-content">
+            <div className="khoi_con_req_package-info">
+              <div className="khoi_con_req_package-info-content">
                 <h3>{selectedPackageInfo.name}</h3>
                 <p>{selectedPackageInfo.description}</p>
                 
-                {/* Kiểm tra nếu là gói 3 thì hiển thị giá gốc, giá giảm, và mức giảm */}
                 {packageId === 3 ? (
-                  <div className="price">
-                    <span className="original-price">500,000 VND</span>
-                    <span className="discounted-price">450,000 VND</span>
-                    <span className="discount-badge">Sale 10%</span>
+                  <div className="khoi_con_req_price">
+                    <span className="khoi_con_req_original-price">500,000 VND</span>
+                    <span className="khoi_con_req_discounted-price">450,000 VND</span>
+                    <span className="khoi_con_req_discount-badge">Sale 10%</span>
                   </div>
                 ) : (
-                  <p className="discounted-price">Price: {selectedPackageInfo.price.toLocaleString()} VND</p>
+                  <p className="khoi_con_req_discounted-price">Price: {selectedPackageInfo.price.toLocaleString()} VND</p>
                 )}
               </div>
             </div>
           )}
         </Form.Item>
 
-
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+        <Form.Item className="khoi_con_req_form-item">
+          <Button type="primary" htmlType="submit" loading={loading} className="khoi_con_req_submit-button">
             Continue
           </Button>
         </Form.Item>
