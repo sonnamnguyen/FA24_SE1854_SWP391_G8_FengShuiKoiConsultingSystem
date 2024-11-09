@@ -54,6 +54,13 @@ const BillPage: React.FC = () => {
     };
 
     fetchBillDetails();
+
+    document.body.classList.add('khoi_body');
+
+  // Gỡ bỏ lớp `khoi_body` khi component bị unmount
+  return () => {
+    document.body.classList.remove('khoi_body');
+  };
   }, [billId]);
 
   const handlePaymentVNPay = async () => {

@@ -1,5 +1,5 @@
 /* Nền tổng thể */
-body {
+.khoi_body {
   background-color: #f0f4f8; /* Nền xám nhạt bao quanh */
   display: flex;
   justify-content: center;
