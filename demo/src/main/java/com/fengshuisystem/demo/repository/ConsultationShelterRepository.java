@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface ConsultationShelterRepository extends JpaRepository<ConsultationShelter, Integer> {
-    Optional<ConsultationShelter> existsByConsultationResultIdAndShelterCategoryId(Integer resultId, Integer shelterCategoryId);
+    Optional<ConsultationShelter> findByConsultationResultIdAndShelterCategoryId(Integer resultId, Integer shelterCategoryId);
 
     List<ConsultationShelter> findByConsultationResult(ConsultationResult consultationResult);
 }

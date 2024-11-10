@@ -85,7 +85,6 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
             throw new RuntimeException("AnimalCategoryId không hợp lệ vì ko tồn tại trong Request");
         }
 
-
         // Tạo mới ConsultationAnimal từ DTO
         ConsultationAnimal consultationAnimal = consultationAnimalMapper.toEntity(dto);
         consultationAnimal.setConsultationResult(consultationResult);

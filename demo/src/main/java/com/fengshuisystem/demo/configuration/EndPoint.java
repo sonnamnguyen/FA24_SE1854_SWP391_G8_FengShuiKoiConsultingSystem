@@ -59,7 +59,7 @@ public class EndPoint {
         };
 
         public static final String[] USER_PUT_ENDPOINTS = {
-                "/posts/{id}", "/post/comments/{id}", "/post/images/{id}", "api/bills/{id}",
+                "/posts/{id}", "/post/comments/{id}", "/post/images/{id}", "api/bills/{id}", "/api/consultation-requests"
         };
 
         public static final String[] USER_DELETE_ENDPOINTS = {
