@@ -14,4 +14,8 @@ public interface ConsultationRequestRepository extends JpaRepository<Consultatio
     Optional<ConsultationRequest> findByBillId(@Param("billId") Integer billId);
     @Query("SELECT COUNT(c) FROM ConsultationRequest c WHERE c.status = 'COMPLETED'")
     long countCompletedConsultationRequests();
+
+    List<ConsultationRequest> findByFullNameContainingIgnoreCase(String fullName);
+    List<ConsultationRequest> findByEmailContainingIgnoreCase(String email);
+    List<ConsultationRequest> findByPhoneContainingIgnoreCase(String phone);
 }

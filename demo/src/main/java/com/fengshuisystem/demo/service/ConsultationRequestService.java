@@ -15,4 +15,6 @@ public interface ConsultationRequestService {
     List<ConsultationRequestDTO> findAllRequests();
 
     long getCompletedConsultationRequestCount();
+
+    List<ConsultationRequestDTO> searchConsultationRequests(String fullName, String email, String phone);
 }

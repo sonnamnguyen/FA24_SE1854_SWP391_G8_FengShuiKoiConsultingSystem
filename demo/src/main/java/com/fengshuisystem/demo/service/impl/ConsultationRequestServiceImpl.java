@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +68,7 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
     }
 
     @Override
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ConsultationRequestDTO updateStatusConsultationRequest(Integer requestId) {
         String email = getCurrentUserEmailFromJwt();
         log.info("Fetched email from JWT: {}", email);
@@ -142,5 +143,23 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
     @PreAuthorize("hasRole('ADMIN')")
     public long getCompletedConsultationRequestCount() {
         return consultationRequestRepository.countCompletedConsultationRequests();
+    }
+
+    @Override
+    public List<ConsultationRequestDTO> searchConsultationRequests(String fullName, String email, String phone) {
+        List<ConsultationRequest> requests;
+
+        if (fullName != null && !fullName.isEmpty()) {
+            requests = consultationRequestRepository.findByFullNameContainingIgnoreCase(fullName);
+        } else if (email != null && !email.isEmpty()) {
+            requests = consultationRequestRepository.findByEmailContainingIgnoreCase(email);
+        } else if (phone != null && !phone.isEmpty()) {
+            requests = consultationRequestRepository.findByPhoneContainingIgnoreCase(phone);
+        } else {
+            // Trả về toàn bộ danh sách nếu không có tham số tìm kiếm nào
+            requests = consultationRequestRepository.findAll();
+        }
+
+        return requests.stream().map(consultationRequestMapper::toDTO).collect(Collectors.toList());
     }
 }
