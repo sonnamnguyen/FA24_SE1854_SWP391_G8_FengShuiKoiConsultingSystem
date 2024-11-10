@@ -5,6 +5,7 @@ import SidebarAdmin from "../layouts/slideBar";
 import NavbarAdmin from "../layouts/headerAdmin";
 import FooterAdmin from "../layouts/footerAdmin";
 import ConsultationResultCollection from "./collection/ConsultationResultCollection";
+
 const ViewConsultationResult: React.FC = () => {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true); 
 
