@@ -23,17 +23,11 @@ public class ConsultationShelterController {
 
     ConsultationShelterServiceImpl consultationShelterService;
 
-    @PostMapping("/resultId/{resultId}/shelter-category-id/{shelterCategoryId}")
+    @PostMapping
     public ApiResponse<ConsultationShelterDTO> createConsultationShelter(
-            @RequestBody ConsultationShelterDTO consultationShelterDTO,
-            @PathVariable Integer resultId,
-            @PathVariable Integer shelterCategoryId) {
-        ConsultationShelterDTO result = consultationShelterService.createConsultationShelter(
-                consultationShelterDTO, resultId, shelterCategoryId);
+            @RequestBody ConsultationShelterDTO consultationShelterDTO) {
         return ApiResponse.<ConsultationShelterDTO>builder()
-                .result(result)
-                .code(1000)
-                .message("Consultation Shelter created successfully")
+                .result(consultationShelterService.createConsultationShelter(consultationShelterDTO))
                 .build();
     }
 
@@ -62,7 +56,7 @@ public class ConsultationShelterController {
                 .build();
     }
 
-    @GetMapping("/animalCategory")
+    @GetMapping("/shelterCategory")
     public ApiResponse<List<ConsultationShelterDTO>> getAllConsultationShelter() {
         return ApiResponse.<List<ConsultationShelterDTO>>builder()
                 .result(consultationShelterService.getAllConsultationShelter())

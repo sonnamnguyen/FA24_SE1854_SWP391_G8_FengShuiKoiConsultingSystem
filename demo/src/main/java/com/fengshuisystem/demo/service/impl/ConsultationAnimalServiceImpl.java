@@ -1,12 +1,10 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ConsultationAnimalDTO;
-import com.fengshuisystem.demo.dto.ConsultationShelterDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.AnimalCategory;
 import com.fengshuisystem.demo.entity.ConsultationAnimal;
 import com.fengshuisystem.demo.entity.ConsultationResult;
-import com.fengshuisystem.demo.entity.ConsultationShelter;
 import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
@@ -27,6 +25,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +40,10 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public ConsultationAnimalDTO createConsultationAnimal(ConsultationAnimalDTO dto, Integer resultId, Integer animalCategoryId) {
+    public ConsultationAnimalDTO createConsultationAnimal(ConsultationAnimalDTO dto) {
+        int resultId = dto.getConsultationResultId();
+        int animalCategoryId = dto.getAnimalCategoryId();
+
         log.info("Bắt đầu tạo ConsultationAnimal cho resultId: {} và animalCategoryId: {}", resultId, animalCategoryId);
 
         // Kiểm tra sự tồn tại của ConsultationResult
@@ -68,6 +71,20 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
         if (existingAnimal.isPresent()) {
             throw new RuntimeException("Cặp (resultId, animalCategoryId) đã tồn tại. Không được phép trùng lặp.");
         }
+
+        // Lấy danh sách các AnimalCategoryId từ requestDetailId
+        Set<AnimalCategory> allowedAnimalCategories = consultationResult.getRequestDetail().getAnimalCategories();
+
+        // Chuyển đổi Set<AnimalCategory> thành Set<Integer> chứa các AnimalCategoryId
+        Set<Integer> allowedAnimalCategoryIds = allowedAnimalCategories.stream()
+                .map(AnimalCategory::getId)
+                .collect(Collectors.toSet());
+
+        // Kiểm tra nếu animalCategoryId không nằm trong danh sách allowedAnimalCategoryIds
+        if (!allowedAnimalCategoryIds.contains(animalCategoryId)) {
+            throw new RuntimeException("AnimalCategoryId không hợp lệ vì ko tồn tại trong Request");
+        }
+
 
         // Tạo mới ConsultationAnimal từ DTO
         ConsultationAnimal consultationAnimal = consultationAnimalMapper.toEntity(dto);
