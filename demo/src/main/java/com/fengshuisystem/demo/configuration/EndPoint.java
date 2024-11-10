@@ -10,7 +10,6 @@ public class EndPoint {
                 ,"/users/new-users-today", "/users/new-users-this-week", "/users/new-users-this-month",
                 "/api/consultation-requests/completed-count",  "/posts/count", "/consultation-results/completed-count",
                 "/api/bills/total-income-this-month"
-
         };
 
         public static final String[] ADMIN_POST_ENDPOINTS = {
@@ -49,18 +48,19 @@ public class EndPoint {
 
         public static final String[] USER_GET_ENDPOINTS = {
                 "/posts", "/posts/search-posts", "/post/comments", "/post/images",
-                "api/bills/{billId}", "/vn_pay/create_vn_pay","/search-posts/title","/search-posts/email"
+                "api/bills/{billId}", "/vn_pay/create_vn_pay","/search-posts/title","/search-posts/email",
+
         };
 
         public static final String[] USER_POST_ENDPOINTS = {
                 "users/reset-password", "users/forgot-password", "/posts", "/post/comments", "/post/images",
                 "api/bills",
-                "api/bills/request/{requestId}/payments/{paymentId}"
+                "api/bills/request/{requestId}/payments/{paymentId}",
+                "/api/consultation-requests"
         };
 
         public static final String[] USER_PUT_ENDPOINTS = {
                 "/posts/{id}", "/post/comments/{id}", "/post/images/{id}", "api/bills/{id}",
-                "/api/consultation-requests/{requestId}"
         };
 
         public static final String[] USER_DELETE_ENDPOINTS = {
