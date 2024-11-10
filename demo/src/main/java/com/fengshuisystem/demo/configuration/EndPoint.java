@@ -18,8 +18,6 @@ public class EndPoint {
                 "/api/consultation-results/requestId/{requestId}",
                 "/api/consultation-animals/",
                 "/api/consultation-shelters/resultId/{resultId}/shelter-category-id/{shelterCategoryId}",
-                "/api/consultation-request-details/request-id/{requestId}",
-                "/api/consultation-requests"
         };
 
         public static final String[] ADMIN_PUT_ENDPOINTS = {
@@ -56,7 +54,8 @@ public class EndPoint {
                 "users/reset-password", "users/forgot-password", "/posts", "/post/comments", "/post/images",
                 "api/bills",
                 "api/bills/request/{requestId}/payments/{paymentId}",
-                "/api/consultation-requests"
+                "/api/consultation-requests",
+                "/api/consultation-request-details/request-id/{requestId}"
         };
 
         public static final String[] USER_PUT_ENDPOINTS = {
