@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getCompatibilityResult } from "./CompatibilityCaculationAPI";
 import CompatibilityResultResponse from "./CompatibilityCaculationModel";
 import api from "../../axious/axious";
-import "./CompatibilityCaculation.css"
+import "./CompatibilityCaculation.css";
 
 interface Direction {
     id: number;
@@ -179,8 +179,7 @@ const CompatibilityForm = () => {
         <div className="background-fenghsui">
             <form onSubmit={handleSubmit} className="compatibility-form">
                 <div className="blur-background"></div>
-
-                <h1 className="form-title">XEM ĐỘ PHÙ HỢP CỦA HỒ CÁ THEO NGŨ HÀNH </h1>
+                <h1 className="form-title">CHECK FENG SHUI COMPATIBILITY OF KOI POND BASED ON THE FIVE ELEMENTS</h1>
                 <table className="compatibility-table">
                     <tbody>
                         <tr className="form-group year-section">
@@ -316,88 +315,103 @@ const CompatibilityForm = () => {
                 <button type="submit" className="compability-btn">XEM</button>
             </form>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && (
+                <>
+                    <div className="ac-error-overlay" onClick={() => setError("")}></div>
+                    <div className="ac-error-popup">
+                        <div className="ac-error-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" color="#f44336">
+                                <circle cx="12" cy="12" r="10" stroke="#f44336" strokeWidth="2" fill="none"></circle>
+                                <line x1="15" y1="9" x2="9" y2="15" stroke="#f44336" strokeWidth="2"></line>
+                                <line x1="9" y1="9" x2="15" y2="15" stroke="#f44336" strokeWidth="2"></line>
+                            </svg>
+                        </div>
+                        <p className="ac-error-text">{error}</p>
+                        <button className="ac-error-button" onClick={() => setError("")}>OK</button>
+                    </div>
+                </>
+            )}
 
             {caculationData && (
-                <div className="result-container">
-                    <h2 className="result-title">Kết Quả Độ Phù Hợp:</h2>
-                    {caculationData.yourDestiny && (
-                        <p className="destiny">{caculationData.yourDestiny}</p>
-                    )}
-                    {caculationData.directionExplanation && (
-                        <div className="direction">
-                            <h3 className="direction-title">Hướng Hồ</h3>
-                            {caculationData.directionName && <p className="direction-name">Bạn chọn hướng: {caculationData.directionName}</p>}
-                            <p className="direction-explanation"><div className="explain">Biện Giải:</div> {caculationData.directionExplanation}</p>
-                            {caculationData.directionScore !== null && (
-                                <p className="direction-score">Điểm: {caculationData.directionScore}/5</p>
-                            )}
-                            {caculationData.directionsAdvice && caculationData.directionsAdvice.size > 0 && (
-                                <p className="directions-advice">Những Hướng Tốt Hơn: {Array.from(caculationData.directionsAdvice).join(', ')}</p>
-                            )}
-                        </div>
-                    )}
-
-                    {caculationData.numberExplanation && (
-                        <div className="number">
-                            <h3 className="number-title">Số Lượng Cá</h3>
-                            {caculationData.number && <p className="number">Bạn chọn số: {caculationData.number}</p>}
-                            <p className="number-explanation"><div className="explain">Biện Giải:</div> {caculationData.numberExplanation}</p>
-                            {caculationData.numberScore !== null && (
-                                <p className="number-score">Điểm: {caculationData.numberScore}/5</p>
-                            )}
-                            {caculationData.numbersAdvice && caculationData.numbersAdvice.size > 0 && (
-                                <p className="numbers-advice">Những Số Lượng Tốt Hơn: {Array.from(caculationData.numbersAdvice).join(', ')}</p>
-                            )}
-                        </div>
-                    )}
-
-                    {caculationData.shapeExplanation && (
-                        <div className="shape">
-                            <h3 className="shape-title">Hình Dáng Hồ</h3>
-                            {caculationData.shapeName && <p className="shape-name">Bạn chọn hồ hình: {caculationData.shapeName}</p>}
-                            <p className="shape-explanation"><div className="explain">Biện Giải:</div> {caculationData.shapeExplanation}</p>
-                            {caculationData.shapeScore !== null && (
-                                <p className="shape-score">Điểm: {caculationData.shapeScore}/5</p>
-                            )}
-                            {caculationData.shapesAdvice && caculationData.shapesAdvice.size > 0 && (
-                                <p className="shapes-advice">Những Hình Dáng Tốt Hơn: {Array.from(caculationData.shapesAdvice).join(', ')}</p>
-                            )}
-                        </div>
-                    )}
-                    {caculationData.animalCompatibilityResponse && caculationData.animalCompatibilityResponse.length > 0 && (
-                        <div className="animal">
-                            <h3 className="animal-title">Cá</h3>
-                            {caculationData.animalCompatibilityResponse.map((animal, index) => (
-                                <div key={index} className="animal-info">
-                                    {animal.animalName && <p className="animal-name">Bạn chọn cá: {animal.animalName}</p>}
-                                    {animal.animalScore !== null && (
-                                        <p className="animal-colors">{animal.animalName} có màu: {animal.animalColors.join(', ')}</p>
-                                    )}
-                                    {animal.colorCompatibilityResponses && (
-                                        <p className="animal-explanation">
-                                            <div className="explain">Biện Giải:</div>
-                                            <ul className="color-explanations">
-                                                {animal.colorCompatibilityResponses.map((response, index) => (
-                                                    <li key={index}>Màu {response}</li>
-                                                ))}
-                                            </ul>
-                                        </p>
-                                    )}
-                                    {animal.animalScore !== null && (
-                                        <p className="animal-score">Điểm: {animal.animalScore}/5</p>
-                                    )}
-                                </div>
-                            ))}
-                            {caculationData.animalAverageScore !== null && (
-                                <p className="animal-average-score">Điểm trung bình: {caculationData.animalAverageScore}/5</p>
-                            )}
-                            {caculationData.animalAdvice && caculationData.animalAdvice.size > 0 && (
-                                <p className="animal-advice">Những Loại Cá Tốt Hơn: {Array.from(caculationData.animalAdvice).join(', ')}</p>
-                            )}
-                        </div>
-                    )}
-                </div>
+               <div className="result-container">
+               <h2 className="result-title">Compatibility Result:</h2>
+               {caculationData.yourDestiny && (
+                   <p className="destiny">{caculationData.yourDestiny}</p>
+               )}
+               {caculationData.directionExplanation && (
+                   <div className="direction">
+                       <h3 className="direction-title">Pond Direction</h3>
+                       {caculationData.directionName && <p className="direction-name">Selected direction: {caculationData.directionName}</p>}
+                       <p className="direction-explanation"><div className="explain">Explanation:</div> {caculationData.directionExplanation}</p>
+                       {caculationData.directionScore !== null && (
+                           <p className="direction-score">Score: {caculationData.directionScore}/5</p>
+                       )}
+                       {caculationData.directionsAdvice && caculationData.directionsAdvice.size > 0 && (
+                           <p className="directions-advice">Better Directions: {Array.from(caculationData.directionsAdvice).join(', ')}</p>
+                       )}
+                   </div>
+               )}
+           
+               {caculationData.numberExplanation && (
+                   <div className="number">
+                       <h3 className="number-title">Number of Fish</h3>
+                       {caculationData.number && <p className="number">Selected number: {caculationData.number}</p>}
+                       <p className="number-explanation"><div className="explain">Explanation:</div> {caculationData.numberExplanation}</p>
+                       {caculationData.numberScore !== null && (
+                           <p className="number-score">Score: {caculationData.numberScore}/5</p>
+                       )}
+                       {caculationData.numbersAdvice && caculationData.numbersAdvice.size > 0 && (
+                           <p className="numbers-advice">Better Numbers: {Array.from(caculationData.numbersAdvice).join(', ')}</p>
+                       )}
+                   </div>
+               )}
+           
+               {caculationData.shapeExplanation && (
+                   <div className="shape">
+                       <h3 className="shape-title">Pond Shape</h3>
+                       {caculationData.shapeName && <p className="shape-name">Selected shape: {caculationData.shapeName}</p>}
+                       <p className="shape-explanation"><div className="explain">Explanation:</div> {caculationData.shapeExplanation}</p>
+                       {caculationData.shapeScore !== null && (
+                           <p className="shape-score">Score: {caculationData.shapeScore}/5</p>
+                       )}
+                       {caculationData.shapesAdvice && caculationData.shapesAdvice.size > 0 && (
+                           <p className="shapes-advice">Better Shapes: {Array.from(caculationData.shapesAdvice).join(', ')}</p>
+                       )}
+                   </div>
+               )}
+               {caculationData.animalCompatibilityResponse && caculationData.animalCompatibilityResponse.length > 0 && (
+                   <div className="animal">
+                       <h3 className="animal-title">Fish</h3>
+                       {caculationData.animalCompatibilityResponse.map((animal, index) => (
+                           <div key={index} className="animal-info">
+                               {animal.animalName && <p className="animal-name">Selected fish: {animal.animalName}</p>}
+                               {animal.animalScore !== null && (
+                                   <p className="animal-colors">{animal.animalName} colors: {animal.animalColors.join(', ')}</p>
+                               )}
+                               {animal.colorCompatibilityResponses && (
+                                   <p className="animal-explanation">
+                                       <div className="explain">Explanation:</div>
+                                       <ul className="color-explanations">
+                                           {animal.colorCompatibilityResponses.map((response, index) => (
+                                               <li key={index}>Color {response}</li>
+                                           ))}
+                                       </ul>
+                                   </p>
+                               )}
+                               {animal.animalScore !== null && (
+                                   <p className="animal-score">Score: {animal.animalScore}/5</p>
+                               )}
+                           </div>
+                       ))}
+                       {caculationData.animalAverageScore !== null && (
+                           <p className="animal-average-score">Average Score: {caculationData.animalAverageScore}/5</p>
+                       )}
+                       {caculationData.animalAdvice && caculationData.animalAdvice.size > 0 && (
+                           <p className="animal-advice">Better Fish Choices: {Array.from(caculationData.animalAdvice).join(', ')}</p>
+                       )}
+                   </div>
+               )}
+           </div>           
             )}
         </div>
     );

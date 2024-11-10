@@ -1,13 +1,13 @@
-class Role {
-    id?: number;
-    name ?: string;
+import { Account } from './Account';
 
-    constructor(
-        id?: number,
-    name ?: string,
-    ) {
-        this.id = id;
-        this.name = name;
+export class Role {
+    id: number;
+    name: string;
+    accounts: Set<Account>;
+
+    constructor() {
+        this.id = 0;
+        this.name = '';
+        this.accounts = new Set<Account>();
     }
 }
-export default Role
