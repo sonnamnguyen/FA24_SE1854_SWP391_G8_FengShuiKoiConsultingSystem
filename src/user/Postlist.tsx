@@ -6,12 +6,11 @@ import Footer from "../layouts/header-footer/Footer";
 import { getToken } from "../service/localStorageService";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { Height } from "@mui/icons-material";
 
 interface Post {
   id: number;
   postCategory: { postCategoryName: string };
-  title: String;
+  title: string;
   images: { id: number; imageUrl: string }[];
   content: string;
   destiny: { destiny: string };
@@ -27,34 +26,37 @@ interface Post {
   }[];
 }
 
-const ViewPost: React.FC = () => {
+const MyPostList: React.FC = () => {
   const [newComment, setNewComment] = useState<string>("");
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchData, setSearchData] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); // State cho chỉ số ảnh hiện tại
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
+  const navigate = useNavigate(); // Khai báo useNavigate
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       const token = getToken();
       try {
-        const response = await axios.get(
-          `http://localhost:9090/posts/search-posts/email?page=${currentPage}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const url = searchData
+          ? `http://localhost:9090/posts/search-posts/title?title=${searchData}`
+          : `http://localhost:9090/posts?page=${currentPage}`;
+
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (
           response.data &&
           response.data.result &&
           response.data.result.data
         ) {
+          console.log("API Response:", response.data);
           setPosts(response.data.result.data);
         } else {
           setError("Invalid data structure from API");
@@ -67,32 +69,10 @@ const ViewPost: React.FC = () => {
     };
 
     fetchPosts();
-  }, [currentPage]);
-  const navigate = useNavigate(); // Khai báo useNavigate
-
-  // Hàm xóa bài viết
-  const handleDeletePost = async (postId: number) => {
-    const token = getToken();
-    try {
-      await axios.delete(`http://localhost:9090/posts/${postId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      // Sau khi xóa, cập nhật lại danh sách bài viết
-      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
-    } catch (error) {
-      console.error("Xóa bài viết thất bại", error);
-      setError("Xóa bài viết thất bại");
-    }
-  };
-  const handleUpdatePost = (postId: number) => {
-    // Điều hướng sang trang UpdatePost và truyền postId qua URL
-    navigate(`/update-post/${postId}`);
-  };
+  }, [searchData, currentPage]); // Fetch posts whenever searchData changes
 
   const totalPages = Math.ceil(posts.length / 10);
+
   const getFirst100Chars = (htmlContent: string): string => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlContent, "text/html");
@@ -102,19 +82,25 @@ const ViewPost: React.FC = () => {
     );
   };
 
+  // Hàm xử lý sự kiện khi nhấn nút See More
+  const handleSeeMore = (postId: number) => {
+    // Điều hướng tới trang ViewPost với id của bài viết
+    navigate(`/posts/${postId}`);
+  };
+
   return (
     <div>
       <Navbar searchData={searchData} setSearchData={setSearchData} />
       <div className="post-content">
-        <h4 className="blogTitle"> Your Blog</h4>
+        <h4 className="blogTitle"> Blog</h4>
         {posts.length > 0 ? (
-          posts.map((post, index) => (
+          posts.map((post) => (
             <div
               className="card mb-3 cardMyPost"
-              style={{ width: "96%" }}
+              style={{ width: "95%" }}
               key={post.id}
             >
-              <div className="row g-0">
+              <div className="row g-0 ">
                 {/* Hiển thị ảnh đầu tiên */}
                 <div className="col-md-4">
                   {post.images.length > 0 && (
@@ -125,7 +111,7 @@ const ViewPost: React.FC = () => {
                     />
                   )}
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-8">
                   <div className="card-body">
                     {/* Hiển thị tiêu đề bài viết */}
                     <h5 className="card-title">{post.title}</h5>
@@ -138,7 +124,6 @@ const ViewPost: React.FC = () => {
                     {/* Hiển thị Destiny */}
                     <p className="card-text">
                       <div>
-                        {" "}
                         <strong>Destiny:</strong> {post.destiny.destiny}
                         <p className="card-text">
                           <small className="text-body-secondary">
@@ -147,31 +132,15 @@ const ViewPost: React.FC = () => {
                           </small>
                         </p>
                       </div>
+                      <button
+                        className="btnSeeMore"
+                        onClick={() => handleSeeMore(post.id)} // Sử dụng hàm điều hướng
+                      >
+                        See more
+                      </button>
                     </p>
 
                     {/* Hiển thị ngày tạo bài viết */}
-                  </div>
-                </div>
-                <div className="col-md-2 btnDiv">
-                  <div className="btnMPL">
-                    {" "}
-                    <button
-                      className="btnSeeMore"
-                      onClick={() => handleDeletePost(post.id)}
-                    >
-                      <i className="bx bxs-trash"></i>
-                    </button>
-                  </div>
-                  <div style={{ height: "60px" }}></div>
-
-                  {/* Nút xóa bài viết */}
-                  <div className="btnMPL">
-                    <button
-                      className="btnSeeMore"
-                      onClick={() => handleUpdatePost(post.id)}
-                    >
-                      Update
-                    </button>
                   </div>
                 </div>
               </div>
@@ -202,9 +171,10 @@ const ViewPost: React.FC = () => {
           </button>
         </div>
       </div>
+
       <Footer />
     </div>
   );
 };
 
-export default ViewPost;
+export default MyPostList;

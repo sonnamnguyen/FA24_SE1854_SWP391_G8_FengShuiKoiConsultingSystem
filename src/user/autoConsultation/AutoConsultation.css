@@ -570,37 +570,6 @@
 
       form, .consultation-results {
         max-width: 90%;
-      }
-
-      .earth.EARTH {
-          width: 150px;
-          height: 150px;
-          animation: roll 4s infinite ease-in-out alternate;
-      }
-  
-      #EARTH.spaceForRock {
-          margin: 30px 0px;
-      }
-  
-      @keyframes roll {
-          0% { transform: translateX(50px) rotate(0); }
-          100% { transform: translateX(45vw) rotate(2turn); }
-      }
-  }
-  
-  @media (max-width: 480px) {
-      .earth.EARTH {
-          width: 100px;
-          height: 100px;
-          animation: roll 3s infinite ease-in-out alternate;
-      }
-  
-      #EARTH.spaceForRock {
-          margin: 20px 0px;
-      }
-  
-      @keyframes roll {
-          0% { transform: translateX(30px) rotate(0); }
-          100% { transform: translateX(35vw) rotate(2turn); }
-      }
-  }
+    }
+    
+}

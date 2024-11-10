@@ -27,8 +27,6 @@ import ViewPost from "../user/ViewPost";
 import MyPostList from "../user/MyPostList";
 import CreatePost from "../user/CreatePost";
 import ViewMyPost from "../user/ViewMyPost";
-import UpdatePost from "../user/UpdatePost";
-import Postlist from "../user/PostList";
 import VNPAY from "../user/VNPAY";
 import AboutUs from "../user/AboutUs";
 import ViewUserManagement from "../admin/user/UserManagement";
@@ -83,11 +81,6 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-      ` <Route path="/loginnew" element={<LoginSignUp />} />
-        <Route path="/posts/:id" element={<ViewPost />} />
-        <Route path="/post-list" element={<Postlist />} />
-        <Route path="/update-post/:id" element={<UpdatePost />} />
-        <Route path="/my-post-list" element={<MyPostList />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/vnpay-success" element={<VNPAY />} />
         <Route path="/my-post" element={<ViewMyPost />} />
