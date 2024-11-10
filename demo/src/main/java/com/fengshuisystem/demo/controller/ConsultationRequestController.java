@@ -53,4 +53,15 @@ public class ConsultationRequestController {
                 .result(consultationRequestService.updateStatusConsultationRequest(id))
                 .build();
     }
+
+    @GetMapping("/search")
+    public ApiResponse<List<ConsultationRequestDTO>> searchConsultationRequests(
+            @RequestParam(value = "fullName", required = false) String fullName,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "phone", required = false) String phone) {
+        return ApiResponse.<List<ConsultationRequestDTO>>builder()
+                .result(consultationRequestService.searchConsultationRequests(fullName, email, phone))
+                .build();
+    }
+
 }
