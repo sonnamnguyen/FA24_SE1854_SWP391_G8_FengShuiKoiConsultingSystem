@@ -73,7 +73,7 @@ const ViewPost: React.FC = () => {
       const userEmail = decodedToken.email || decodedToken.sub; // Truy cập trường email
       try {
         const response = await axios.post(
-          "http://localhost:9090/posts/search-posts/email?page=1&size=10",
+          "http://localhost:9090/posts/search-posts/email?",
           {
             postId: posts[currentPage].id,
             content: newComment,
@@ -134,23 +134,31 @@ const ViewPost: React.FC = () => {
   return (
     <div>
       <Navbar searchData={searchData} setSearchData={setSearchData} />
-      <div className="view-post-content">
+      <div className="post-content">
         {totalPages > 0 ? (
           <div className="post">
             <h1 className="title">{posts[currentPage].title}</h1>
-
-            {/* Display HTML content using dangerouslySetInnerHTML */}
-            <div
-              className="contentPost"
-              dangerouslySetInnerHTML={{ __html: posts[currentPage].content }}
-            />
-
+            <h2>
+              <span className="first-line-indent">
+                {posts[currentPage].content.split("\\n")[0]}{" "}
+              </span>
+              {posts[currentPage].content
+                .split("\\n")
+                .slice(1)
+                .map((line, index) => (
+                  <span key={index}>
+                    {line}
+                    <br />
+                    <br />
+                  </span>
+                ))}
+            </h2>
             <div className="slide">
               <div className="images">
                 <div
                   className="image-container"
                   style={{
-                    transform: `translateX(-${currentImageIndex * 100}%)`,
+                    transform: `translateX(-${currentImageIndex * 100}%)`, // Thay đổi để trượt ảnh
                   }}
                 >
                   {posts[currentPage].images.map((image) => (
@@ -177,6 +185,14 @@ const ViewPost: React.FC = () => {
                   {posts[currentPage].postCategory.postCategoryName}
                 </span>
               </p>
+              {/* <p className="post-likes-dislikes">
+                Likes:{" "}
+                <span className="likes">{posts[currentPage].likeNumber}</span> |
+                Dislikes:{" "}
+                <span className="dislikes">
+                  {posts[currentPage].dislikeNumber}
+                </span>
+              </p> */}
               <p className="post-author">
                 Created By:{" "}
                 <span className="author-name">
@@ -189,34 +205,36 @@ const ViewPost: React.FC = () => {
               </p>
             </div>
             <div className="comments">
-              <h3 className="comments-title">Your Comment</h3>
+              <h3 className="comments-title">Bình luận</h3>
               {posts[currentPage].comments.length > 0 ? (
                 posts[currentPage].comments.map((comment) => (
                   <div key={comment.id} className="comment-item">
                     <p className="comment-content">{comment.content}</p>
                     <small className="comment-meta">
-                      By <strong>{comment.createdBy}</strong> At{" "}
+                      Bởi <strong>{comment.createdBy}</strong> vào{" "}
                       {new Date(comment.createdDate).toLocaleString()}
                     </small>
                   </div>
                 ))
               ) : (
-                <p className="no-comments">No Comment Yet.</p>
+                <p className="no-comments">Chưa có bình luận nào.</p>
               )}
 
+              {/* Form gửi bình luận */}
               <div className="comment-form">
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Your comment here..."
+                  placeholder="Viết bình luận..."
                   className="comment-input"
                 />
                 <button onClick={handleCommentSubmit} className="submit-button">
-                  Send Your Comment
+                  Gửi
                 </button>
               </div>
             </div>
 
+            {/* Phân trang */}
             <div className="pagination">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
@@ -225,6 +243,7 @@ const ViewPost: React.FC = () => {
                 Previous
               </button>
 
+              {/* Hiển thị trang hiện tại */}
               <span>
                 Page {currentPage + 1} of {totalPages}
               </span>

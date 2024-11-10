@@ -24,8 +24,11 @@ import ViewAddShape from "../admin/shape/layoutShape/ViewAddShape";
 import ViewColorManagement from "../admin/color/layoutCokor/ViewColorManagement";
 import ViewShapeManagement from "../admin/shape/layoutShape/ViewManagementShape";
 import ViewPost from "../user/ViewPost";
+import MyPostList from "../user/MyPostList";
 import CreatePost from "../user/CreatePost";
 import ViewMyPost from "../user/ViewMyPost";
+import UpdatePost from "../user/UpdatePost";
+import Postlist from "../user/Postlist";
 import VNPAY from "../user/VNPAY";
 import AboutUs from "../user/AboutUs";
 import ViewUserManagement from "../admin/user/UserManagement";
@@ -34,10 +37,10 @@ import CompatibilityCaculation from "../user/compatibilityCaculation/Compatibili
 
 // Consultation - user
 import ConsultationRequest from "../consultation/request/ConsultationRequest";
-import PaymentPage from "../payment/PaymentPage"
+import PaymentPage from "../payment/PaymentPage";
 import BillPage from "../bill/BillPage";
 import PaymentSuccessPage from "../payment/PaymentSuccessPage";
-import ConsultationRequestDetail from "../consultation/request/ConsultationRequestDetail"
+import ConsultationRequestDetail from "../consultation/request/ConsultationRequestDetail";
 
 // Consultation - admin
 import ViewConsultationRequest from "../admin/consultation/ViewConsultationRequest";
@@ -51,7 +54,6 @@ import ViewBill from "../admin/transaction/ViewBill";
 import ViewPayment from "../admin/transaction/ViewPayment";
 
 const AppRoutes = () => {
-
   // const ProtectedBlog = AdminRoute(Blog);
   const Page = AdminRoute(AdminPage);
   const PageViewAddKoi = AdminRoute(ViewAdd);
@@ -63,9 +65,13 @@ const AppRoutes = () => {
   const PageViewShape = AdminRoute(ViewShapeManagement);
   const PageViewUser = AdminRoute(ViewUserManagement);
 
-  {/* Admin Consultation */}
+  {
+    /* Admin Consultation */
+  }
   const PageViewConsultationRequest = AdminRoute(ViewConsultationRequest);
-  const PageViewConsultationRequestDetail = AdminRoute(ViewConsultationRequestDetail);
+  const PageViewConsultationRequestDetail = AdminRoute(
+    ViewConsultationRequestDetail
+  );
   const PageViewConsultationResult = AdminRoute(ViewConsultationResult);
   const PageViewConsultationAnimal = AdminRoute(ViewConsultationAnimal);
   const PageViewConsultationShelter = AdminRoute(ViewConsultationShelter);
@@ -74,62 +80,83 @@ const AppRoutes = () => {
   const PageViewPayment = AdminRoute(ViewPayment);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/vnpay-success" element={<VNPAY />} />
-        <Route path="/my-post" element={<ViewMyPost />} />
-        <Route path="/create-post" element={<CreatePost />} />
-        <Route path="/posts" element={<ViewPost />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/view-profile" element={<ViewProfile />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/update-profile" element={<UpdateProfile />} />
-        <Route path="/authenticate" element={<Authenticate />} />
-        <Route path="/" element={<Blog />} />
-        <Route path="/403" element={<Page403 />} />
-        <Route path="*" element={<Page404 />} />
-        <Route path="/activate/:email/:code" element={<ActivateAccount />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:email" element={<ResetPassword />} />
-        <Route path="/view-koi" element={<PageViewManagementKoi />} />
-        <Route path="/add-koi" element={<PageViewAddKoi />} />
-        <Route path="/view-ponds" element={<ViewManagementShelter />} />
-        <Route path="/add-ponds" element={<PageViewAddPond />} />
-        <Route path="/admin-page" element={<Page />} />
-        <Route path="/add-color" element={<PageViewAddColor />} />
-        <Route path="/add-shape" element={<PageViewAddShape />} />
-        <Route path="/view-color" element={<PageViewColor />} />
-        <Route path="/view-shape" element={<PageViewShape />} />
-        <Route path="/auto-consultation" element={<AutoConsultation  />} />
-        <Route path="/compatibility_caculation" element={<CompatibilityCaculation />} />
-
-        <Route path="/view-user" element={<PageViewUser />} />
-
-        {/* Consultation */}
-        {/* Consultation Request */}
-        <Route path="/consultation-request" element={<ConsultationRequest />} />
-        {/* Thanh toán Consultation Request */}
-        <Route path="/consultation-request/:requestId/payment" element={<PaymentPage />} />
-        {/* In Bill */}
-        <Route path="/bill/:billId" element={<BillPage />} />
-        {/* payment-success */}
-        <Route path="/payment-success" element={<PaymentSuccessPage />} />
-        {/* Consultation Request Detail */}
-        <Route path="/consultation-request-detail" element={<ConsultationRequestDetail />} />
-
-        {/* Admin Consultation */}
-        <Route path="/view-consultation-request" element={<PageViewConsultationRequest />} />
-        <Route path="/view-consultation-request-detail" element={<PageViewConsultationRequestDetail />} />
-        <Route path="/view-consultation-result" element={<PageViewConsultationResult />} />
-        <Route path="/view-consultation-animal" element={<PageViewConsultationAnimal />} />
-        <Route path="/view-consultation-shelter" element={<PageViewConsultationShelter />} />
-
-        {/* Bill - Payment*/}
-        <Route path="/view-bills" element={<PageViewBill />} />
-        <Route path="/view-payments" element={<PageViewPayment />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/post-list" element={<Postlist />} />
+      <Route path="/update-post/:id" element={<UpdatePost />} />
+      <Route path="/my-post-list" element={<MyPostList />} />
+      <Route path="/about-us" element={<AboutUs />} />
+      <Route path="/vnpay-success" element={<VNPAY />} />
+      <Route path="/my-post" element={<ViewMyPost />} />
+      <Route path="/create-post" element={<CreatePost />} />
+      <Route path="/posts/:id" element={<ViewPost />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/view-profile" element={<ViewProfile />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/update-profile" element={<UpdateProfile />} />
+      <Route path="/authenticate" element={<Authenticate />} />
+      <Route path="/" element={<Blog />} />
+      <Route path="/403" element={<Page403 />} />
+      <Route path="*" element={<Page404 />} />
+      <Route path="/activate/:email/:code" element={<ActivateAccount />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:email" element={<ResetPassword />} />
+      <Route path="/view-koi" element={<PageViewManagementKoi />} />
+      <Route path="/add-koi" element={<PageViewAddKoi />} />
+      <Route path="/view-ponds" element={<ViewManagementShelter />} />
+      <Route path="/add-ponds" element={<PageViewAddPond />} />
+      <Route path="/admin-page" element={<Page />} />
+      <Route path="/add-color" element={<PageViewAddColor />} />
+      <Route path="/add-shape" element={<PageViewAddShape />} />
+      <Route path="/view-color" element={<PageViewColor />} />
+      <Route path="/view-shape" element={<PageViewShape />} />
+      <Route path="/auto-consultation" element={<AutoConsultation />} />
+      <Route
+        path="/compatibility_caculation"
+        element={<CompatibilityCaculation />}
+      />
+      <Route path="/view-user" element={<PageViewUser />} />
+      {/* Consultation */}
+      {/* Consultation Request */}
+      <Route path="/consultation-request" element={<ConsultationRequest />} />
+      {/* Thanh toán Consultation Request */}
+      <Route
+        path="/consultation-request/:requestId/payment"
+        element={<PaymentPage />}
+      />
+      {/* In Bill */}
+      <Route path="/bill/:billId" element={<BillPage />} />
+      {/* payment-success */}
+      <Route path="/payment-success" element={<PaymentSuccessPage />} />
+      {/* Consultation Request Detail */}
+      <Route
+        path="/consultation-request-detail"
+        element={<ConsultationRequestDetail />}
+      />
+      {/* Admin Consultation */}
+      <Route
+        path="/view-consultation-request"
+        element={<PageViewConsultationRequest />}
+      />
+      <Route
+        path="/view-consultation-request-detail"
+        element={<PageViewConsultationRequestDetail />}
+      />
+      <Route
+        path="/view-consultation-result"
+        element={<PageViewConsultationResult />}
+      />
+      <Route
+        path="/view-consultation-animal"
+        element={<PageViewConsultationAnimal />}
+      />
+      <Route
+        path="/view-consultation-shelter"
+        element={<PageViewConsultationShelter />}
+      />
+      {/* Bill - Payment*/}
+      <Route path="/view-bills" element={<PageViewBill />} />
+      <Route path="/view-payments" element={<PageViewPayment />} />
+    </Routes>
   );
 };
 

@@ -1,0 +1,105 @@
+/* Container for the entire form */
+.post-content {
+  margin-top: 80px;
+  width: 80%;
+
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading style */
+.update-post-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #e63946;
+  text-align: center;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+/* Error message */
+.error-message {
+  color: #e63946;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Form container */
+.update-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form label */
+.form-label {
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+/* Input and select field styles */
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border 0.3s ease;
+}
+
+/* Focus effect for inputs */
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border: 1px solid #e63946;
+  outline: none;
+}
+
+/* Textarea specific styles */
+.form-textarea {
+  height: 150px;
+  resize: vertical;
+  font-family: "Arial", sans-serif;
+  font-size: 1rem;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border 0.3s ease;
+}
+
+/* Disabled inputs */
+.form-input[disabled],
+.form-select[disabled] {
+  background-color: #f1f1f1;
+}
+
+/* Created Date input style */
+input[type="datetime-local"] {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* For submit button */
+
+/* Responsive layout for small screens */
+@media (max-width: 768px) {
+  .post-content {
+    width: 95%;
+  }
+
+  .form-group {
+    flex-direction: column;
+  }
+}
