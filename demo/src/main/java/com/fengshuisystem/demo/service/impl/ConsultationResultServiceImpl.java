@@ -156,6 +156,19 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
                 .filter(shelter -> sheltersNeedToConsultation.contains(shelter.getShelterCategory()))
                 .collect(Collectors.toList());
 
+        // Kiểm tra trạng thái của các animal và shelter trong matchingAnimals và matchingShelters
+        boolean allAnimalsCompleted = matchingAnimals.stream()
+                .allMatch(animal -> animal.getStatus() == Request.COMPLETED);
+        boolean allSheltersCompleted = matchingShelters.stream()
+                .allMatch(shelter -> shelter.getStatus() == Request.COMPLETED);
+
+        if (!allAnimalsCompleted) {
+            throw new RuntimeException("Một số ConsultationAnimal chưa ở trạng thái COMPLETED.");
+        }
+        if (!allSheltersCompleted) {
+            throw new RuntimeException("Một số ConsultationShelter chưa ở trạng thái COMPLETED.");
+        }
+
         // Tìm AnimalCategory nào từ requestDetail không có trong matchingAnimals
         Set<Integer> matchedAnimalCategoryIds = matchingAnimals.stream()
                 .map(animal -> animal.getAnimalCategory().getId())
@@ -190,9 +203,7 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         // 6. Trả về DTO sau khi cập nhật
         return consultationResultMapper.toDto(consultationResult);
     }
-
-
-
+    
     /**
      * Gửi email với nội dung chi tiết của consultation result, bao gồm các Animal và Shelter.
      */
