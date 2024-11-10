@@ -91,4 +91,16 @@ public class PostController {
                 .build();
     }
 
+@GetMapping("/search-posts/year")
+    public ApiResponse<PageResponse<PostDTO>> getPostsByYear(
+            @RequestParam Integer year,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+
+    ) {
+        return ApiResponse.<PageResponse<PostDTO>>builder()
+                .result(postService.getPostsByYear(page, size, year))
+                .build();
+    }
+
 }

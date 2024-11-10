@@ -13,4 +13,5 @@ public interface PostService {
     public PageResponse<PostDTO> getPostByTitle(String title,int page, int size);
     public long getPostCount();
     public PostDTO getPostById(Integer id);
+    PageResponse<PostDTO> getPostsByYear(int page, int size, Integer year);
 }
