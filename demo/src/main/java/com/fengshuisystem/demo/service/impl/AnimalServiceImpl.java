@@ -10,6 +10,7 @@ import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.exception.AppException;
 import com.fengshuisystem.demo.exception.ErrorCode;
 import com.fengshuisystem.demo.mapper.AnimalMapper;
+import com.fengshuisystem.demo.repository.AnimalImageRepository;
 import com.fengshuisystem.demo.repository.AnimalRepository;
 import com.fengshuisystem.demo.repository.ColorRepository;
 import com.fengshuisystem.demo.service.AnimalService;
@@ -37,7 +38,7 @@ public class AnimalServiceImpl implements AnimalService {
     AnimalRepository animalRepository;
     AnimalMapper animalMapper;
     ColorRepository colorRepository;
-
+    AnimalImageRepository animalImageRepository;
     @Override
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
@@ -45,6 +46,8 @@ public class AnimalServiceImpl implements AnimalService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         if(animalRepository.existsByAnimalCategoryName(request.getAnimalCategoryName())) throw new AppException(ErrorCode.ANIMAL_EXISTED);
+        if(request.getAnimalImages().isEmpty()) throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
+        if(request.getColors().isEmpty()) throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
         Set<Color> colors = new HashSet<>();
         if (request.getColors() != null) {
             for (ColorDTO colorDTO : request.getColors()) {
@@ -52,7 +55,6 @@ public class AnimalServiceImpl implements AnimalService {
                         .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
                 colors.add(color);
             }
-            // Kiểm tra số lượng màu sắc
             if (colors.size() > 3) {
                 throw new AppException(ErrorCode.TOO_MANY_COLORS);
             }
@@ -67,7 +69,13 @@ public class AnimalServiceImpl implements AnimalService {
         animalCategory.setColors(colors);
         animalCategory.setCreatedBy(name);
         animalCategory.setUpdatedBy(name);
+        Set<String> uniqueUrls = new HashSet<>();
         for (AnimalImage animalImage : animalCategory.getAnimalImages()) {
+            String imageUrl = animalImage.getImageUrl();
+            if (!uniqueUrls.add(imageUrl)) {
+                throw new AppException(ErrorCode.PICK_SAME_IMAGE);
+            }
+            if(animalImageRepository.existsByImageUrl(animalImage.getImageUrl())) throw new AppException(ErrorCode.IMAGE_ALREADY_EXISTED);
             animalImage.setAnimalCategory(animalCategory);
         }
         return animalMapper.toDto(animalRepository.save(animalCategory));
@@ -80,7 +88,7 @@ public class AnimalServiceImpl implements AnimalService {
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = animalRepository.findAllByAnimalCategoryNameContainingOriginContaining(search, status,pageable);
         if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+            throw new AppException(ErrorCode.NONE_DATA_ANIMAL);
         }
 
         return PageResponse.<AnimalCategoryDTO>builder()
@@ -100,7 +108,7 @@ public class AnimalServiceImpl implements AnimalService {
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = animalRepository.findAllByStatus(status, pageable);
         if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.ANIMAL_NOT_EXISTED);
+            throw new AppException(ErrorCode.NONE_DATA_ANIMAL);
         }
         return PageResponse.<AnimalCategoryDTO>builder()
                 .currentPage(page)
@@ -127,6 +135,8 @@ public class AnimalServiceImpl implements AnimalService {
         String name = context.getAuthentication().getName();
         AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
         if(animalRepository.existsByAnimalCategoryName(request.getAnimalCategoryName())) throw new AppException(ErrorCode.ANIMAL_EXISTED);
+        if(request.getAnimalImages().isEmpty()) throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
+        if(request.getColors().isEmpty()) throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
         animalMapper.update(request, animalCategory);
         Set<Color> colors = new HashSet<>();
         if (request.getColors() != null) {
@@ -141,7 +151,13 @@ public class AnimalServiceImpl implements AnimalService {
         } else {
             throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
         }
+        Set<String> uniqueUrls = new HashSet<>();
         for (AnimalImage animalImage : animalCategory.getAnimalImages()) {
+            String imageUrl = animalImage.getImageUrl();
+            if (!uniqueUrls.add(imageUrl)) {
+                throw new AppException(ErrorCode.PICK_SAME_IMAGE);
+            }
+            if(animalImageRepository.existsByImageUrl(animalImage.getImageUrl())) throw new AppException(ErrorCode.IMAGE_ALREADY_EXISTED);
             animalImage.setAnimalCategory(animalCategory);
         }
         animalCategory.setUpdatedBy(name);
