@@ -72,9 +72,6 @@ const SidebarAdmin: React.FC = () => {
             <Menu.Item key="2">
               <Link to="/add-koi">ADD KOI FISH</Link>
             </Menu.Item>
-            <Menu.Item key="3">
-              <Link to="/update-koi">UPDATE KOI FISH</Link>
-            </Menu.Item>
             <Menu.Item key="4">
               <Link to="/view-koi">VIEW KOI FISH</Link>
             </Menu.Item>
@@ -83,9 +80,6 @@ const SidebarAdmin: React.FC = () => {
           <Menu.SubMenu key="sub3" icon={<SettingOutlined />} title="KOI FISH COLOR">
             <Menu.Item key="5">
               <Link to="/add-color">ADD COLOR KOI FISH</Link>
-            </Menu.Item>
-            <Menu.Item key="6">
-              <Link to="/update-color">UPDATE COLOR KOI FISH</Link>
             </Menu.Item>
             <Menu.Item key="7">
               <Link to="/view-color">VIEW COLOR KOI FISH</Link>
@@ -96,9 +90,6 @@ const SidebarAdmin: React.FC = () => {
             <Menu.Item key="8">
               <Link to="/add-ponds">ADD PONDS</Link>
             </Menu.Item>
-            <Menu.Item key="9">
-              <Link to="/update-ponds">UPDATE PONDS</Link>
-            </Menu.Item>
             <Menu.Item key="10">
               <Link to="/view-ponds">VIEW PONDS</Link>
             </Menu.Item>
@@ -107,9 +98,6 @@ const SidebarAdmin: React.FC = () => {
           <Menu.SubMenu key="sub5" icon={<AppstoreOutlined />} title="PONDS SHAPE KOI">
             <Menu.Item key="11">
               <Link to="/add-shape">ADD SHAPE PONDS</Link>
-            </Menu.Item>
-            <Menu.Item key="12">
-              <Link to="/update-shape">UPDATE SHAPE PONDS</Link>
             </Menu.Item>
             <Menu.Item key="13">
               <Link to="/view-shape">VIEW SHAPE PONDS</Link>

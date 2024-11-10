@@ -64,7 +64,7 @@ const AddShape: React.FC = () => {
         apii.success({ message: 'Success', description: 'Shape has been successfully added.' });
         // Optionally reset form here
       } else {
-        apii.error({ message: 'Error', description: 'Failed to add shape.' });
+        apii.error({ message: 'Error', description: data.message });
       }
     } catch (error) {
       console.error(error);

@@ -85,15 +85,15 @@ const AddKoiFish: React.FC = () => {
     },
     validationSchema: Yup.object({
       animalCategoryName: Yup.string()
-        .required("Animal category name is required")
-        .min(3, "Must be at least 3 characters")
-        .max(50, "Must be 50 characters or less"),
+          .required("Animal category name is required")
+          .min(3, "Must be at least 3 characters")
+          .max(50, "Must be 50 characters or less"),
       description: Yup.string()
-        .max(200, "Description can be up to 200 characters"),
+          .max(200, "Description can be up to 200 characters"),
       origin: Yup.string()
-        .required("Origin is required")
-        .min(2, "Must be at least 2 characters")
-        .max(30, "Must be 30 characters or less")
+          .required("Origin is required")
+          .min(2, "Must be at least 2 characters")
+          .max(30, "Must be 30 characters or less")
     }),
     onSubmit: async (values) => {
       const base64Avatars = animalImages.length > 0 ? await uploadImagesToFirebase(animalImages) : [];
@@ -134,81 +134,81 @@ const AddKoiFish: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <h1 className="mt-5">Koi Fish</h1>
-      <form onSubmit={formik.handleSubmit}>
-        <AntdForm.Item label="Name">
-          <Input
-            {...formik.getFieldProps('animalCategoryName')}
-          />
-          {formik.touched.animalCategoryName && formik.errors.animalCategoryName ? (
-            <div className="error-message">{formik.errors.animalCategoryName}</div>
-          ) : null}
-        </AntdForm.Item>
+      <div className="container">
+        <h1 className="mt-5">Koi Fish</h1>
+        <form onSubmit={formik.handleSubmit}>
+          <AntdForm.Item label="Name">
+            <Input
+                {...formik.getFieldProps('animalCategoryName')}
+            />
+            {formik.touched.animalCategoryName && formik.errors.animalCategoryName ? (
+                <div className="error-message">{formik.errors.animalCategoryName}</div>
+            ) : null}
+          </AntdForm.Item>
 
-        <AntdForm.Item label="Description">
-          <Input
-            {...formik.getFieldProps('description')}
-          />
-          {formik.touched.description && formik.errors.description ? (
-            <div className="error-message">{formik.errors.description}</div>
-          ) : null}
-        </AntdForm.Item>
+          <AntdForm.Item label="Description">
+            <Input
+                {...formik.getFieldProps('description')}
+            />
+            {formik.touched.description && formik.errors.description ? (
+                <div className="error-message">{formik.errors.description}</div>
+            ) : null}
+          </AntdForm.Item>
 
-        <AntdForm.Item label="Origin">
-          <Input
-            {...formik.getFieldProps('origin')}
-          />
-          {formik.touched.origin && formik.errors.origin ? (
-            <div className="error-message">{formik.errors.origin}</div>
-          ) : null}
-        </AntdForm.Item>
+          <AntdForm.Item label="Origin">
+            <Input
+                {...formik.getFieldProps('origin')}
+            />
+            {formik.touched.origin && formik.errors.origin ? (
+                <div className="error-message">{formik.errors.origin}</div>
+            ) : null}
+          </AntdForm.Item>
 
-        <AntdForm.Item label="Avatars">
-          <Upload
-            multiple
-            accept="image/*"
-            showUploadList={true}
-            beforeUpload={() => false}
-            onChange={handleUploadChange}
-            listType="picture-card"
-          >
-            <div>
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </div>
-          </Upload>
-        </AntdForm.Item>
+          <AntdForm.Item label="Avatars">
+            <Upload
+                multiple
+                accept="image/*"
+                showUploadList={true}
+                beforeUpload={() => false}
+                onChange={handleUploadChange}
+                listType="picture-card"
+            >
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            </Upload>
+          </AntdForm.Item>
 
-        <AntdForm.Item>
-          <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-            Check all
-          </Checkbox>
-          <Divider />
-          <CheckboxGroup
-            options={plainOptions.map(option => ({ label: option.color, value: option.id }))}
-            value={checkedList}
-            onChange={onChange}
-          />
-        </AntdForm.Item>
+          <AntdForm.Item>
+            <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+              Check all
+            </Checkbox>
+            <Divider />
+            <CheckboxGroup
+                options={plainOptions.map(option => ({ label: option.color, value: option.id }))}
+                value={checkedList}
+                onChange={onChange}
+            />
+          </AntdForm.Item>
 
-        <button type="submit" className="btn-primary">Submit</button>
-      </form>
+          <button type="submit" className="btn-primary">Submit</button>
+        </form>
 
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title style={{ color: modalNotificationColor }}>{modalNotification}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{modalMessage}</Modal.Body>
-        <Modal.Footer>
-          {modalNotification === "Success" ? (
-            <Button variant="primary" onClick={handleGoToLogin}>Go to Login</Button>
-          ) : (
-            <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-          )}
-        </Modal.Footer>
-      </Modal>
-    </div>
+        <Modal show={showModal} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+            <Modal.Title style={{ color: modalNotificationColor }}>{modalNotification}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{modalMessage}</Modal.Body>
+          <Modal.Footer>
+            {modalNotification === "Success" ? (
+                <Button variant="primary" onClick={handleGoToLogin}>Go to Login</Button>
+            ) : (
+                <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+            )}
+          </Modal.Footer>
+        </Modal>
+      </div>
   );
 };
 
