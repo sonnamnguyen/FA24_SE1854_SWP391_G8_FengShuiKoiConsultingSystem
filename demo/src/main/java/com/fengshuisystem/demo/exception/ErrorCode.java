@@ -24,7 +24,7 @@ public enum ErrorCode {
     SHELTER_NOT_EXISTED(1014, "The specified shelter does not exist in the system. Please check and try again.", HttpStatus.NOT_FOUND),
     COLOR_NOT_EXISTED(1015, "Specified colors do not exist. Verify your color selection and try again.", HttpStatus.NOT_FOUND),
     COLOR_EXISTED(1016, "The selected color already exists. Please choose different colors.", HttpStatus.BAD_REQUEST),
-    DESTINY_NOT_EXISTED(1017, "Destiny not existed", HttpStatus.NOT_FOUND),
+    DESTINY_NOT_EXISTED(1017, "Destiny not existed. Please choose destiny and try again", HttpStatus.NOT_FOUND),
     ERROR_CODE(1018, "Activate Code not true", HttpStatus.BAD_REQUEST),
     USER_INACTIVE(1019, "User is inactive", HttpStatus.BAD_REQUEST),
     CONSULATION_RESULT_NOT_EXISTED(1020, "Consulation result not existed", HttpStatus.NOT_FOUND),

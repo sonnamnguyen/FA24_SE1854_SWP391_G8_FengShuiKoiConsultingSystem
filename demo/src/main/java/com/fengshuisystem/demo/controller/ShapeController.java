@@ -55,6 +55,7 @@ public class ShapeController {
 
     @PutMapping("/{id}")
     public ApiResponse<ShapeDTO> updateShape(@PathVariable Integer id,@Valid @RequestBody  ShapeDTO shapeRequest) {
+        shapeRequest.setId(id);
         return ApiResponse.<ShapeDTO>builder()
                 .result(shapeService.updateShape(id, shapeRequest))
                 .build();

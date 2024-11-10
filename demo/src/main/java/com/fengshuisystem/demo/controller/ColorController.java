@@ -53,6 +53,7 @@ public class ColorController {
 
     @PutMapping("/{id}")
     public ApiResponse<ColorDTO> updateColor(@PathVariable Integer id,@Valid @RequestBody ColorDTO colorRequest) {
+        colorRequest.setId(id);
         return ApiResponse.<ColorDTO>builder()
                 .result(colorService.updateColor(id, colorRequest))
                 .build();

@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -104,6 +105,9 @@ public class ShapeServiceImpl implements ShapeService {
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public ShapeDTO updateShape(Integer id, ShapeDTO shapeDTO) {
+        if (shapeDTO.getId() == null) {
+            throw new InvalidDataAccessApiUsageException("The given id must not be null");
+        }
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         if(shapeDTO.getDestiny() == null) throw new AppException(ErrorCode.DESTINY_NOT_EXISTED);
