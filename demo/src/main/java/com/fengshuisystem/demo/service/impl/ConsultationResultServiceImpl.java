@@ -123,8 +123,25 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         // 4. Lấy email từ account liên quan đến request
         String email = consultationResult.getRequest().getAccount().getEmail();
 
+
+        // Kiểm tra nếu bất kỳ Animal nào không có description
+        List<ConsultationAnimal> animals = consultationAnimalRepository.findByConsultationResult(consultationResult);
+        for (ConsultationAnimal animal : animals) {
+            if (animal.getDescription() == null || animal.getDescription().isEmpty()) {
+                throw new IllegalArgumentException("One or more consultation animals do not have a description. Email not sent.");
+            }
+        }
+
+        // Kiểm tra nếu bất kỳ Shelter nào không có description
+        List<ConsultationShelter> shelters = consultationShelterRepository.findByConsultationResult(consultationResult);
+        for (ConsultationShelter shelter : shelters) {
+            if (shelter.getDescription() == null || shelter.getDescription().isEmpty()) {
+                throw new IllegalArgumentException("One or more consultation shelters do not have a description. Email not sent.");
+            }
+        }
+
         // 5. Gửi email với nội dung chi tiết
-        sendConsultationDetailsEmail(email, consultationResult);
+        sendConsultationDetailsEmail(email, consultationResult, animals, shelters);
 
         // 6. Trả về DTO sau khi cập nhật
         return consultationResultMapper.toDto(consultationResult);
@@ -133,8 +150,9 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
     /**
      * Gửi email với nội dung chi tiết của consultation result, bao gồm các Animal và Shelter.
      */
-    private void sendConsultationDetailsEmail(String email, ConsultationResult consultationResult) {
+    private void sendConsultationDetailsEmail(String email, ConsultationResult consultationResult, List<ConsultationAnimal> animals, List<ConsultationShelter> shelters) {
         String subject = "Consultation Result Details - FengShuiConsultingSystem.com";
+
 
         // 1. Tạo nội dung email với description chung và trang trí
         StringBuilder text = new StringBuilder("<html><body style='font-family: Arial, sans-serif; line-height: 1.6; margin: 20px;'>");
@@ -149,7 +167,6 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
                 .append("</div>");
 
         // 2. Thêm thông tin về từng Animal trong kết quả
-        List<ConsultationAnimal> animals = consultationAnimalRepository.findByConsultationResult(consultationResult);
         if (!animals.isEmpty()) {
             text.append("<h3 style='color: #2980b9;'>Animals</h3>");
             animals.forEach(animal -> {
@@ -168,7 +185,6 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         }
 
         // 3. Thêm thông tin về từng Shelter trong kết quả
-        List<ConsultationShelter> shelters = consultationShelterRepository.findByConsultationResult(consultationResult);
         if (!shelters.isEmpty()) {
             text.append("<h3 style='color: #2980b9;'>Shelters</h3>");
             shelters.forEach(shelter -> {
