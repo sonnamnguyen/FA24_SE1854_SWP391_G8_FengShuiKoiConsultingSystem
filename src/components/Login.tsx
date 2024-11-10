@@ -71,14 +71,17 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-form">
-        <h2>Sign in</h2>
-        <p>Welcome back to FengShuiKoiSysTem! Please enter your details below to sign in.</p>
+    <div className="login-page-container">
+      <div className="login-page-form">
+        <h2 className="login-page-title">Sign in</h2>
+        <p className="login-page-description">
+          Welcome back to FengShuiKoiSysTem! Please enter your details below to
+          sign in.
+        </p>
         {contextHolder}
         <Form
           name="normal_login"
-          className="login-form"
+          className="login-page-form-content"
           initialValues={{ remember: true }}
           onFinish={handleLogin}
         >
@@ -89,6 +92,7 @@ const Login = () => {
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="Email"
+              className="login-page-input"
             />
           </Form.Item>
           <Form.Item
@@ -99,48 +103,56 @@ const Login = () => {
               prefix={<LockOutlined className="site-form-item-icon" />}
               type="password"
               placeholder="Password"
+              className="login-page-input"
             />
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item className="login-page-remember">
             <Form.Item name="remember" valuePropName="checked" noStyle>
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
-            <a className="login-form-forgot" onClick={() => navigate("/forgot-password")}>
+            <a
+              className="login-page-forgot"
+              onClick={() => navigate("/forgot-password")}
+            >
               Forgot password?
             </a>
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" className="login-form-button">
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-page-submit-button"
+            >
               Log in
             </Button>
           </Form.Item>
 
-          <div className="login-divider">
+          <div className="login-page-divider">
             <span>OR</span>
           </div>
 
           <Form.Item>
             <Button
               icon={<GoogleOutlined />}
-              className="social-login-button"
+              className="login-page-social-button"
               onClick={handleContinueWithGoogle}
             >
               Continue with Google
             </Button>
           </Form.Item>
 
-          <Form.Item>
-            <span> Do not have an account?  </span>
-            <a onClick={() => navigate("/register")} style={{ cursor: "pointer" }}>
+          <Form.Item className="login-page-signup-link">
+            <span> Do not have an account? </span>
+            <a
+              onClick={() => navigate("/register")}
+              className="login-page-signup-link-text"
+            >
               Sign up now
             </a>
           </Form.Item>
         </Form>
-      </div>
-      <div className="login-image">
-        <img src={imgLogin} alt="Koi Fish Background" />
       </div>
     </div>
   );

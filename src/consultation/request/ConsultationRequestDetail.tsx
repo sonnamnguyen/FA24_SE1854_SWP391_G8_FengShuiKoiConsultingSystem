@@ -3,6 +3,12 @@ import { Form, Button, Input, Select, Spin, message, Popover } from 'antd';
 import api from '../../axious/axious';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../firebase/firebase';
+import koiFishLogo from '../../assets/images/koifish_logo.svg';
+import pondLogo from '../../assets/images/pond_logo.svg';
+import descriptionLogo from '../../assets/images/description_logo.svg';
+import noteLogo from '../../assets/images/note_logo.svg';
+
+import '../../css/ConsultationRequestDetail.css';
 
 const { Option } = Select;
 
@@ -57,6 +63,12 @@ const ConsultationRequestDetail: React.FC = () => {
     } finally {
       setLoading(false);
     }
+    document.body.classList.add('khoi_body');
+
+  // Gỡ bỏ lớp `khoi_body` khi component bị unmount
+  return () => {
+    document.body.classList.remove('khoi_body');
+  };
   };
 
   const fetchShapeDetails = async (shapeId: number) => {
@@ -75,7 +87,7 @@ const ConsultationRequestDetail: React.FC = () => {
       message.error('Please select at least one fish.');
       return;
     }
-if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
+    if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
       message.error('Please select at least one pond.');
       return;
     }
@@ -86,23 +98,20 @@ if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
   
     try {
       const payload = {
-        animalCategoryIds: selectedAnimal, // Contains selected animal IDs
-        shelterCategoryIds: selectedShelter, // Contains selected shelter IDs
+        animalCategoryIds: selectedAnimal,
+        shelterCategoryIds: selectedShelter,
         description,
       };
       await api.post(`/api/consultation-request-details/request-id/${requestId}`, payload);
-      
-      // Save success status in localStorage before navigating away
       localStorage.setItem('consultationSuccess', 'true');
-      window.location.href = '/'; // Redirect to home page
-      
+      window.location.href = '/';
     } catch (error) {
       message.error('Error saving consultation request details.');
     }
   };  
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+    <div className="khoi_con_req_de_consultation-request-detail-container">
       <h1>Consultation Request Details</h1>
       {loading ? (
         <Spin />
@@ -110,9 +119,10 @@ if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
         <Form onFinish={handleFormSubmit}>
           {(packageId === '1' || packageId === '3') && (
             <Form.Item
-              label="Select Fish"
+              label={<span><img src={koiFishLogo} alt="Fish Icon" className="khoi_con_req_de_form-icon" /> Select Fish</span>}
               name="selectedAnimal"
               rules={[{ required: true, message: 'Please select at least one fish.' }]}
+              className="khoi_con_req_de_form-item"
             >
               <Select
                 mode="multiple"
@@ -124,13 +134,13 @@ if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
                   <Option key={animal.id} value={animal.id}>
                     <Popover
                       content={
-                        <div style={{ display: 'flex', alignItems: 'flex-start', maxWidth: '350px' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '150px', height: '150px', marginRight: '10px', border: '1px solid #ccc' }}>
+                        <div className="khoi_con_req_de_popover-content">
+                          <div className="khoi_con_req_de_popover-image-container">
                             {animal.imageUrl ? (
                               <img
                                 src={animal.imageUrl}
                                 alt={animal.animalCategoryName}
-                                style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                                className="khoi_con_req_de_animal-image"
                               />
                             ) : (
                               <span>{animal.animalCategoryName}</span>
@@ -141,7 +151,6 @@ if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
                             <p><strong>Description:</strong> {animal.description}</p>
                             <p><strong>Origin:</strong> {animal.origin}</p>
                             <p><strong>Status:</strong> {animal.status}</p>
-<p><strong>Creation Date:</strong> {new Date(animal.createdDate).toLocaleDateString()}</p>
                             <p><strong>Created By:</strong> {animal.createdBy}</p>
                             {animal.colors && animal.colors.length > 0 && (
                               <p><strong>Colors:</strong> {animal.colors.map((color: any) => color.color).join(', ')}</p>
@@ -164,9 +173,10 @@ if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
 
           {(packageId === '2' || packageId === '3') && (
             <Form.Item
-              label="Select Pond"
+              label={<span><img src={pondLogo} alt="Pond Icon" className="khoi_con_req_de_form-icon" /> Select Pond</span>}
               name="selectedShelter"
               rules={[{ required: true, message: 'Please select at least one pond.' }]}
+              className="khoi_con_req_de_form-item"
             >
               <Select
                 mode="multiple"
@@ -178,18 +188,15 @@ if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
                   <Option key={shelter.id} value={shelter.id}>
                     <Popover
                       content={
-                        <div style={{ display: 'flex', alignItems: 'flex-start', maxWidth: '350px' }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '150px', height: '150px', marginRight: '10px', border: '1px solid #ccc' }}>
+                        <div className="khoi_con_req_de_popover-content">
+                          <div className="khoi_con_req_de_popover-image-container">
                             <span>{shelter.shelterCategoryName}</span>
                           </div>
                           <div>
                             <p><strong>Name:</strong> {shelter.shelterCategoryName}</p>
                             <p><strong>Description:</strong> {shelter.description}</p>
                             <p><strong>Dimensions:</strong> {`${shelter.width} x ${shelter.height} x ${shelter.length}`}</p>
-                            <p><strong>Diameter:</strong> {shelter.diameter}</p>
                             <p><strong>Water Volume:</strong> {shelter.waterVolume}</p>
-                            <p><strong>Water Filtration System:</strong> {shelter.waterFiltrationSystem}</p>
-                            <p><strong>Shape:</strong> {shapeDetails?.shape}</p>
                           </div>
                         </div>
                       }
@@ -197,7 +204,7 @@ if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
                       trigger="hover"
                       placement="right"
                       onVisibleChange={(visible) => visible && fetchShapeDetails(shelter.shape?.id)}
->
+                    >
                       {shelter.shelterCategoryName}
                     </Popover>
                   </Option>
@@ -207,7 +214,7 @@ if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
           )}
 
           <Form.Item
-            label="Detailed Description"
+            label={<span><img src={descriptionLogo} alt="Description Icon" className="khoi_con_req_de_form-icon" /> Detailed Description</span>}
             name="description"
             rules={[
               { required: true, message: 'Detailed description is required.' },
@@ -223,19 +230,29 @@ if (!selectedShelter.length && (packageId === '2' || packageId === '3')) {
                 },
               },
             ]}
+            className="khoi_con_req_de_form-item"
           >
             <Input.TextArea
               rows={4}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              autoSize={{ minRows: 5, maxRows: 10 }}
+              className="khoi_con_req_de_textarea"
             />
           </Form.Item>
 
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" className="khoi_con_req_de_submit-button">
             Save Details
           </Button>
         </Form>
       )}
+
+      <div className="khoi_con_req_de_note-section">
+        <img src={noteLogo} alt="Note Icon" className="khoi_con_req_de_note-icon" />
+        <p>
+          Please provide specific details, such as the number of fish with their colors, or detailed pond information you have, so our consultation can be more effective.
+        </p>
+      </div>
     </div>
   );
 };

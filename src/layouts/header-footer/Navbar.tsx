@@ -98,7 +98,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               </NavLink>
               <ul className="dropdown-menu bg-light">
                 <li>
-                  <NavLink className="dropdown-item text-dark" to="/post-list">
+                  <NavLink className="dropdown-item text-dark" to="/posts">
                     Blogs
                   </NavLink>
                 </li>
@@ -111,10 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
-                    className="dropdown-item text-dark"
-                    to="/my-post-list"
-                  >
+                  <NavLink className="dropdown-item text-dark" to="/my-post">
                     My Blogs
                   </NavLink>
                 </li>
@@ -135,10 +132,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
-                    className="dropdown-item"
-                    to="/compatibility_caculation"
-                  >
+                  <NavLink className="dropdown-item" to="/compatibility_caculation">
                     Compatibility Caculation Tool
                   </NavLink>
                 </li>
@@ -176,11 +170,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               value={searchTerm}
               onChange={onSearchInputChange}
             />
-            <button
-              className="btn btn-danger"
-              type="submit"
-              onClick={handleSearch}
-            >
+            <button className="btnSeeMore" type="submit" onClick={handleSearch}>
               Search
             </button>
           </form>

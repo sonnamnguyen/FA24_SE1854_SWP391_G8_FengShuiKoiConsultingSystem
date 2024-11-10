@@ -3,18 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../axious/axious';
 import { Form, Input, Radio, Button, message, Select } from 'antd';
 import { getToken } from '../../service/localStorageService';
+import '../../css/ConsultationRequest.css';
 
 const { Option } = Select;
 
-// Utility function for validating Vietnamese phone numbers
 const isVietnamesePhoneNumber = (number: string): boolean => {
-  return /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(number);
+  return /^(0|\+84|\+840)(3|5|7|8|9)[0-9]{8}$/.test(number);
+};
+
+const isValidEmail = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+type PackageInfo = {
+  name: string;
+  description: string;
+  price: number;
 };
 
 const ConsultationRequest: React.FC = () => {
   const navigate = useNavigate();
-  const [packageId, setPackageId] = useState<number>(1); // Default package is 1
-  const [yob, setYob] = useState<number | null>(new Date().getFullYear() - 20); // Default birth year is 20 years ago
+  const [packageId, setPackageId] = useState<number>(1);
+  const [yob, setYob] = useState<number | null>(new Date().getFullYear() - 20);
   const [description, setDescription] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [years, setYears] = useState<number[]>([]);
@@ -22,29 +32,26 @@ const ConsultationRequest: React.FC = () => {
   const [gender, setGender] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
-  const [selectedPackageInfo, setSelectedPackageInfo] = useState<{ name: string, description: string, price: number } | null>(null);
+  const [selectedPackageInfo, setSelectedPackageInfo] = useState<PackageInfo | null>(null);
 
   useEffect(() => {
-    // Check token before calling API
     const token = getToken();
     if (!token) {
       message.warning('Please log in to continue.');
-      navigate('/'); // Redirect to login page (if there is a login page)
-      return; // Prevent further actions if there is no token
+      navigate('/');
+      return;
     }
-  
+
     const currentYear = new Date().getFullYear();
     const yearsArray = Array.from({ length: currentYear - 1900 + 1 }, (_, index) => 1900 + index);
     setYears(yearsArray);
-  
+
     const fetchAccountInfo = async () => {
       try {
         const response = await api.get('/users/my-info', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-  
+
         if (response.data && response.data.result) {
           const userData = response.data.result;
           setFullName(userData.fullName || '');
@@ -56,16 +63,19 @@ const ConsultationRequest: React.FC = () => {
         }
       } catch (error) {
         message.error('Unable to fetch account information.');
-        console.error('Error fetching user info:', error);
       }
     };
-  
+
     fetchAccountInfo();
-  
-    // Fetch package info for initial selection
-    fetchPackageInfo(1); // Default package information is shown for package 1
+    fetchPackageInfo(1);
+
+    document.body.classList.add('khoi_body');
+
+  // Gỡ bỏ lớp `khoi_body` khi component bị unmount
+  return () => {
+    document.body.classList.remove('khoi_body');
+  };
   }, [navigate]);
-  
 
   const fetchPackageInfo = async (id: number) => {
     try {
@@ -74,7 +84,7 @@ const ConsultationRequest: React.FC = () => {
         const packageData = response.data.result;
         setSelectedPackageInfo({
           name: packageData.package_name,
-description: packageData.description,
+          description: packageData.description,
           price: packageData.price,
         });
       } else {
@@ -82,7 +92,6 @@ description: packageData.description,
       }
     } catch (error) {
       message.error('Unable to fetch package information.');
-      console.error(`Error fetching package data for id ${id}:`, error);
     }
   };
 
@@ -94,22 +103,43 @@ description: packageData.description,
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (!fullName) {
+        message.error('Full name is required.');
+        setLoading(false);
+        return;
+      }
+      if (fullName.length > 100) {
+        message.error('Full name cannot exceed 100 characters.');
+        setLoading(false);
+        return;
+      }
+      if (!gender) {
+        message.error('Gender is required.');
+        setLoading(false);
+        return;
+      }
+      if (!email || !isValidEmail(email)) {
         message.error('Please enter a valid email.');
         setLoading(false);
         return;
       }
-      if (!isVietnamesePhoneNumber(phone)) {
+      if (!phone || !isVietnamesePhoneNumber(phone)) {
         message.error('Please enter a valid Vietnamese phone number.');
         setLoading(false);
         return;
       }
-      if (description.length < 10) {
-        message.error('The request description must be at least 10 characters.');
+      const currentYear = new Date().getFullYear();
+      if (!yob || yob < 1900 || yob > currentYear) {
+        message.error('Year of birth must be between 1900 and the current year.');
         setLoading(false);
         return;
       }
-  
+      if (!description || description.length < 10 || description.length > 1000) {
+        message.error('The request description must be between 10 and 1000 characters.');
+        setLoading(false);
+        return;
+      }
+
       const response = await api.post('/api/consultation-requests', {
         packageId,
         yob,
@@ -119,12 +149,11 @@ description: packageData.description,
         email,
         phone,
       });
-  
+
       if (response.data.code === 1000) {
         const requestId = response.data.result.id;
-        // Save requestId and packageId to localStorage
         localStorage.setItem('requestId', requestId);
-        localStorage.setItem('selectedPackageId', packageId.toString()); // Convert packageId to string for storage
+        localStorage.setItem('selectedPackageId', packageId.toString());
         message.success('Request created successfully!');
         navigate(`/consultation-request/${requestId}/payment`);
       } else {
@@ -136,25 +165,25 @@ description: packageData.description,
       setLoading(false);
     }
   };
-  
-  
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+    <div className="khoi_con_req_consultation-form-container">
       <h1>Consultation Request</h1>
       <Form onFinish={handleSubmit} layout="vertical">
-        <Form.Item label="Full Name" required>
+        <Form.Item label="Full Name" required className="khoi_con_req_form-item">
           <Input
             placeholder="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+            className={!fullName ? 'khoi_con_req_input-error' : ''}
           />
         </Form.Item>
 
-        <Form.Item label="Gender" required>
+        <Form.Item label="Gender" required className="khoi_con_req_form-item">
           <Radio.Group
             onChange={(e) => setGender(e.target.value)}
             value={gender}
+            className={!gender ? 'khoi_con_req_input-error' : ''}
           >
             <Radio value="MALE">Male</Radio>
             <Radio value="FEMALE">Female</Radio>
@@ -162,23 +191,25 @@ description: packageData.description,
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="Email" required>
+        <Form.Item label="Email" required className="khoi_con_req_form-item">
           <Input
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className={!email ? 'khoi_con_req_input-error' : ''}
           />
         </Form.Item>
 
-        <Form.Item label="Phone Number" required>
+        <Form.Item label="Phone Number" required className="khoi_con_req_form-item">
           <Input
             placeholder="Phone Number"
             value={phone}
-onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => setPhone(e.target.value)}
+            className={!phone ? 'khoi_con_req_input-error' : ''}
           />
         </Form.Item>
 
-        <Form.Item label="Select Year of Birth" required>
+        <Form.Item label="Select Year of Birth" required className="khoi_con_req_form-item">
           <Select
             showSearch
             placeholder="Select or enter year of birth"
@@ -188,6 +219,7 @@ onChange={(e) => setPhone(e.target.value)}
               const value = option?.value?.toString().toLowerCase();
               return value ? value.includes(input.toLowerCase()) : false;
             }}
+            className={!yob ? 'khoi_con_req_input-error' : ''}
           >
             {years.map((year) => (
               <Option key={year} value={year}>
@@ -197,19 +229,21 @@ onChange={(e) => setPhone(e.target.value)}
           </Select>
         </Form.Item>
 
-        <Form.Item label="Request Description" required>
+        <Form.Item label="Request Description" required className="khoi_con_req_form-item">
           <Input.TextArea
             rows={4}
-            placeholder="Enter request description (at least 10 characters)"
+            placeholder="Enter request description (between 10 and 1000 characters)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            className={!description ? 'khoi_con_req_input-error' : ''}
           />
         </Form.Item>
-        
-        <Form.Item label="Select Package" required>
+
+        <Form.Item label="Select Package" required className="khoi_con_req_form-item">
           <Radio.Group
             onChange={(e) => handlePackageChange(e.target.value)}
             value={packageId}
+            className={!packageId ? 'khoi_con_req_input-error' : ''}
           >
             <Radio value={1}>Fish Consultation Package</Radio>
             <Radio value={2}>Pond Consultation Package</Radio>
@@ -217,19 +251,30 @@ onChange={(e) => setPhone(e.target.value)}
           </Radio.Group>
         </Form.Item>
 
-        <Form.Item label="Package Information">
+        <Form.Item label="Package Information" className="khoi_con_req_form-item">
           {selectedPackageInfo && (
-            <div>
-              <h3>{selectedPackageInfo.name}</h3>
-              <p>{selectedPackageInfo.description}</p>
-              <p>Price: {selectedPackageInfo.price.toLocaleString()} VND</p>
+            <div className="khoi_con_req_package-info">
+              <div className="khoi_con_req_package-info-content">
+                <h3>{selectedPackageInfo.name}</h3>
+                <p>{selectedPackageInfo.description}</p>
+                
+                {packageId === 3 ? (
+                  <div className="khoi_con_req_price">
+                    <span className="khoi_con_req_original-price">500,000 VND</span>
+                    <span className="khoi_con_req_discounted-price">450,000 VND</span>
+                    <span className="khoi_con_req_discount-badge">Sale 10%</span>
+                  </div>
+                ) : (
+                  <p className="khoi_con_req_discounted-price">Price: {selectedPackageInfo.price.toLocaleString()} VND</p>
+                )}
+              </div>
             </div>
           )}
         </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
-            Pay
+        <Form.Item className="khoi_con_req_form-item">
+          <Button type="primary" htmlType="submit" loading={loading} className="khoi_con_req_submit-button">
+            Continue
           </Button>
         </Form.Item>
       </Form>

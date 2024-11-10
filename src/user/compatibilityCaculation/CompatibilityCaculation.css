@@ -1,4 +1,3 @@
-
 .background-fenghsui{
 margin-top: 7rem;
 }
@@ -221,31 +220,4 @@ margin-top: 7rem;
     text-align: center;
     width: 15rem;
     margin: 0 auto; 
-}
-
-
-.animal-picked {
-    display: inline-flex;
-    align-items: center;
-    background-color: #e0efff; /* Light blue background */
-    color: #1a73e8; /* Blue text color */
-    border-radius: 20px; /* Rounded corners */
-    padding: 5px 10px; /* Padding around the text */
-    margin: 5px; /* Space between each tag */
-    font-size: 14px; /* Font size */
-}
-
-.Compa-x-button {
-    background: none;
-    border: none;
-    color: #1a73e8; /* Blue 'X' color */
-    font-weight: bold;
-    cursor: pointer;
-    margin-left: 5px; /* Space between text and 'X' */
-    display: flex;
-    align-items: center;
-}
-
-.Compa-x-button:hover {
-    color: #0056b3; /* Darker blue on hover */
 }

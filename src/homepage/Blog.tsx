@@ -18,7 +18,7 @@ function Blog() {
     if (success) {
       message.success('Request details have been saved successfully!', 2);
       setTimeout(() => {
-          message.info('Consultation has been sent, please check your email within the next 24 hours.', 2);      
+          message.info('Consultation has been sent, please check your email within the next 24 hours.', 4);      
         }, 2000); // Thời gian giữa hai thông báo
         localStorage.removeItem('consultationSuccess'); // Xóa trạng thái sau khi hiển thị thông báo
     }

@@ -6,16 +6,25 @@
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
-    color: #003366;
+    color: #ff6347;
+    animation: bounce 2s infinite;
 }
 
-.titleDestiny2{
+ .titleDestiny2{
     font-size: 22px;
     font-weight: bold;
     margin: 15px 0;
-    color: #003366;
 }
 
+.ac-text p{
+  color: black;
+}
+
+#WOOD.titleDestiny2{color: #01a119;}
+#WATER.titleDestiny2{color: #003366;}
+#FIRE.titleDestiny2{color: #9a0000;}
+#EARTH.titleDestiny2{color: #664200;}
+#METAL.titleDestiny2{color: #828282;}
 
 
 .AutoConsultationForm {
@@ -36,13 +45,17 @@
 }
 
 .autoConsultation {
-    background-color: grey;
-    color: #fff;
+  background-color: #ff6347;
+  color: white;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .autoConsultation:hover {
-    background-color: black;
+  background-color: #ff6347;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(2px);
 }
 
 .ac-error-overlay {
@@ -83,17 +96,21 @@
 }
 
 .ac-error-button {
-  background-color: #00aaff;
+  background-color: #ff6347;
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .ac-error-button:hover {
-  background-color: #008ecc;
+  background-color: #ff6347;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(2px);
 }
 
 .consultation-results {
@@ -105,7 +122,6 @@
 }
 
 .consultation-results h2 {
-    color: #003366;
     text-align: center;
 }
 
@@ -124,16 +140,33 @@
 
 .autoConsultation-view {
   background-color: white;
-  color: #003366;
   border: none;
   cursor: pointer;
   font-size: 16px;
   padding: 0;
 }
 
-.autoConsultation-view:hover {
-  color: #0569cd;
+#WOOD.autoConsultation-view{color: #01a119;}
+#WATER.autoConsultation-view{color: #003366;}
+#FIRE.autoConsultation-view{color: #9a0000;}
+#EARTH.autoConsultation-view{color: #664200;}
+#METAL.autoConsultation-view{color: #828282;}
 
+
+#WATER.autoConsultation-view:hover {
+  color: #828282;
+}
+#FIRE.autoConsultation-view:hover {
+  color: #01a119;
+}
+#EARTH.autoConsultation-view:hover {
+  color: #9a0000;
+}
+#METAL.autoConsultation-view:hover {
+  color: #664200;
+}
+#WOOD.autoConsultation-view:hover {
+  color: #003366;
 }
 
 .ac-popup-overlay {
@@ -179,10 +212,15 @@
   font-weight: normal; /* Reduce weight on labels */
 }
 
+#WOOD.ac-fish-infor h3{color: #01a119;}
+#WATER.ac-fish-infor h3{color: #003366;}
+#FIRE.ac-fish-infor h3{color: #9a0000;}
+#EARTH.ac-fish-infor h3{color: #664200;}
+#METAL.ac-fish-infor h3{color: #828282;}
 
-#WOOD {position:relative;top:-50px;width:100%;text-align: right;}
+.WOOD {position:relative;top:-50px;width:100%;text-align: right;}
 
-#WOOD i {
+.WOOD i {
     display: inline-block;
     width: 200px;
     height: 150px;
@@ -195,10 +233,10 @@
     animation: falling 5s 0s infinite;
 }
 
-#WOOD i:nth-of-type(2n) { animation: falling2 5s 0s infinite; }
-#WOOD i:nth-of-type(3n) { animation: falling3 5s 0s infinite; }
+.WOOD  i:nth-of-type(2n) { animation: falling2 5s 0s infinite; }
+.WOOD  i:nth-of-type(3n) { animation: falling3 5s 0s infinite; }
 
-#WOOD i:before {
+.WOOD i:before {
   position: absolute;
   content: '';
   top: 117px;
@@ -215,7 +253,7 @@
   z-index: 1;
 }
 
-#WOOD i:after {
+.WOOD  i:after {
   content: '';
   height: 125px;
   width: 10px;
@@ -228,46 +266,46 @@
 }
 
 
-#WOOD i:nth-of-type(n)    { height:23px; width:30px; }
-#WOOD i:nth-of-type(n):before { width:7px; height:5px; top:17px; right:1px; }
-#WOOD i:nth-of-type(n):after { width:2px; height:17px; left: 12px; top:0px; }
+.WOOD i:nth-of-type(n)    { height:23px; width:30px; }
+.WOOD i:nth-of-type(n):before { width:7px; height:5px; top:17px; right:1px; }
+.WOOD i:nth-of-type(n):after { width:2px; height:17px; left: 12px; top:0px; }
 
-#WOOD i:nth-of-type(2n+1)    { height:11px; width:16px; }
-#WOOD i:nth-of-type(2n+1):before { width:4px; height:3px; top:7px; right:0px; }
-#WOOD i:nth-of-type(2n+1):after { width:2px; height:6px; left: 5px; top:1px; }
+.WOOD i:nth-of-type(2n+1)    { height:11px; width:16px; }
+.WOOD i:nth-of-type(2n+1):before { width:4px; height:3px; top:7px; right:0px; }
+.WOOD i:nth-of-type(2n+1):after { width:2px; height:6px; left: 5px; top:1px; }
 
-#WOOD i:nth-of-type(3n+2)  { height:17px; width:23px; }
-#WOOD i:nth-of-type(3n+2):before  { height:4px; width:4px; top:12px; right:1px; }
-#WOOD i:nth-of-type(3n+2):after  { height:10px; width:2px; top:1px; left:8px; }
+.WOOD i:nth-of-type(3n+2)  { height:17px; width:23px; }
+.WOOD i:nth-of-type(3n+2):before  { height:4px; width:4px; top:12px; right:1px; }
+.WOOD i:nth-of-type(3n+2):after  { height:10px; width:2px; top:1px; left:8px; }
 
-#WOOD i:nth-of-type(n)   { animation-delay: 0.9s;}
-#WOOD i:nth-of-type(2n)  { animation-delay: 2.9s;}
-#WOOD i:nth-of-type(3n)  { animation-delay: 1.3s;}
-#WOOD i:nth-of-type(4n)  { animation-delay: 3.4s;}
-#WOOD i:nth-of-type(5n)  { animation-delay: 4s;  }
-#WOOD i:nth-of-type(6n)  { animation-delay: 2.5s;}
-#WOOD i:nth-of-type(7n)  { animation-delay: 1.8s;}
-#WOOD i:nth-of-type(8n)  { animation-delay: 0.5s;}
-#WOOD i:nth-of-type(9n)  { animation-delay: 2.3s;}
-#WOOD i:nth-of-type(10n) { animation-delay: 1.5s;}
-#WOOD i:nth-of-type(11n) { animation-delay: 0.2s;}
-#WOOD i:nth-of-type(12n) { animation-delay: 3.1s;}
-#WOOD i:nth-of-type(13n) { animation-delay: 0.5s;}
-#WOOD i:nth-of-type(14n) { animation-delay: 3.7s;}
-#WOOD i:nth-of-type(15n) { animation-delay: 2s;}
+.WOOD i:nth-of-type(n)   { animation-delay: 0.9s; }
+.WOOD i:nth-of-type(2n)  { animation-delay: 2.9s; }
+.WOOD i:nth-of-type(3n)  { animation-delay: 1.3s; }
+.WOOD i:nth-of-type(4n)  { animation-delay: 3.4s; }
+.WOOD i:nth-of-type(5n)  { animation-delay: 4s; }
+.WOOD i:nth-of-type(6n)  { animation-delay: 2.5s; }
+.WOOD i:nth-of-type(7n)  { animation-delay: 1.8s; }
+.WOOD i:nth-of-type(8n)  { animation-delay: 0.5s; }
+.WOOD i:nth-of-type(9n)  { animation-delay: 2.3s; }
+.WOOD i:nth-of-type(10n) { animation-delay: 1.5s; }
+.WOOD i:nth-of-type(11n) { animation-delay: 0.2s; }
+.WOOD i:nth-of-type(12n) { animation-delay: 3.1s; }
+.WOOD i:nth-of-type(13n) { animation-delay: 0.5s; }
+.WOOD i:nth-of-type(14n) { animation-delay: 3.7s; }
+.WOOD i:nth-of-type(15n) { animation-delay: 2s; }
 
-#WOOD i:nth-of-type(n)    { background: linear-gradient(to bottom right, #309900, #005600); }
-#WOOD i:nth-of-type(2n+2)  { background: linear-gradient(to bottom right, #5e9900, #2b5600); }
-#WOOD i:nth-of-type(4n+1)  { background: linear-gradient(to bottom right, #990, #564500); }
+.WOOD i:nth-of-type(n)    { background: linear-gradient(to bottom right, #309900, #005600); }
+.WOOD i:nth-of-type(2n+2)  { background: linear-gradient(to bottom right, #5e9900, #2b5600); }
+.WOOD i:nth-of-type(4n+1)  { background: linear-gradient(to bottom right, #990, #564500); }
 
-#WOOD i:nth-of-type(n)    { opacity: .7;}
-#WOOD i:nth-of-type(3n+1)  { opacity: .5;}
-#WOOD i:nth-of-type(3n+2)  { opacity: .3;}
+.WOOD i:nth-of-type(n)    { opacity: .7; }
+.WOOD i:nth-of-type(3n+1)  { opacity: .5; }
+.WOOD i:nth-of-type(3n+2)  { opacity: .3; }
 
-#WOOD i:nth-of-type(n)    {transform: rotate(180deg);}
+.WOOD i:nth-of-type(n)    { transform: rotate(180deg); }
 
+.WOOD i:nth-of-type(n) { animation-timing-function: ease-in-out; }
 
-#WOOD i:nth-of-type(n) { animation-timing-function:ease-in-out;}
 
 @keyframes falling {
     
@@ -527,9 +565,10 @@
       box-shadow: 0 0 20px 10px #f1f14a;
     }
   }
-  
-  @media (max-width: 768px) {
-    form, .consultation-results {
+   
+    @media (max-width: 768px) {
+
+      form, .consultation-results {
         max-width: 90%;
     }
     

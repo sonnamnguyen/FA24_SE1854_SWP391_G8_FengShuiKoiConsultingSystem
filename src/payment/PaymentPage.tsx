@@ -1,14 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Radio, Button, message, Modal } from 'antd';
+import { Button, message, Modal } from 'antd';
 import api from '../axious/axious';
+import '../css/PaymentPage.css';
+
+import vnpayLogo from '../assets/images/v-vnpay-svgrepo-com.svg';
+import paypalLogo from '../assets/images/paypal-svgrepo-com.svg';
+import visaLogo from '../assets/images/visa_logo.svg';
+import mastercardLogo from '../assets/images/mastercard_logo.svg';
+import amexLogo from '../assets/images/amex_logo.svg';
+import discoverLogo from '../assets/images/discover_logo.svg';
+import unionpayLogo from '../assets/images/unionpay_logo.svg';
+import vietcombankLogo from '../assets/images/vietcombank_logo.svg';
+import tpbankLogo from '../assets/images/tpbank_logo.svg';
+import techcombankLogo from '../assets/images/techcombank_logo.svg';
 
 const PaymentPage: React.FC = () => {
-  const { requestId } = useParams<{ requestId: string }>(); // Get requestId from URL
+  const { requestId } = useParams<{ requestId: string }>(); 
   const navigate = useNavigate();
-  const [paymentId, setPaymentId] = useState<number>(1); // Default is VNPay
+  const [paymentId, setPaymentId] = useState<number>(1); 
   const [loading, setLoading] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // Modal for PayPal
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); 
+
+  useEffect(() => {
+    // Thêm lớp `khoi_body` vào body khi component được render
+    document.body.classList.add('khoi_body');
+  
+    // Gỡ bỏ lớp `khoi_body` khi component bị unmount
+    return () => {
+      document.body.classList.remove('khoi_body');
+    };
+  }, []);  
 
   const handlePayment = async () => {
     setLoading(true);
@@ -17,10 +39,8 @@ const PaymentPage: React.FC = () => {
         description: 'Payment for consultation package',
       });
 
-      const billId = billResponse.data.result.id; // Get billId from API
-
-      // Navigate to BillPage with billId after creating the bill
-      navigate(`/bill/${billId}`);
+      const billId = billResponse.data.result.id; 
+      navigate(`/bill/${billId}`); 
     } catch (error) {
       message.error('Error creating bill!');
       console.error(error);
@@ -30,24 +50,48 @@ const PaymentPage: React.FC = () => {
   };
 
   const handlePayPal = () => {
-    setIsModalVisible(true); // Open modal for PayPal
+    setIsModalVisible(true); 
   };
 
   const closeModal = () => {
-    setIsModalVisible(false); // Close modal
+    setIsModalVisible(false); 
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+    <div className="khoi_payment_page_payment-container">
       <h1>Select Payment Method</h1>
-      <Radio.Group
-        onChange={(e) => setPaymentId(e.target.value)}
-        value={paymentId}
-      >
-        <Radio value={1}>VNPay</Radio>
-        <Radio value={2}>PayPal</Radio>
-      </Radio.Group>
-      <div style={{ marginTop: '20px' }}>
+      <div className="khoi_payment_page_payment-options">
+        <div
+          className={`khoi_payment_page_payment-option ${paymentId === 1 ? 'selected' : ''}`}
+          onClick={() => setPaymentId(1)}
+        >
+          <img src={vnpayLogo} alt="VNPay Logo" className="khoi_payment_page_payment-logo-large" />
+          <span>VNPay</span>
+          <p>VAT 10%</p>
+          <div className="khoi_payment_page_bank-logos">
+            <img src={vietcombankLogo} alt="Vietcombank" />
+            <img src={tpbankLogo} alt="TPBank" />
+            <img src={techcombankLogo} alt="Techcombank" />
+            <span>+ nhiều ngân hàng khác</span>
+          </div>
+        </div>
+        <div
+          className={`khoi_payment_page_payment-option ${paymentId === 2 ? 'selected' : ''}`}
+          onClick={() => setPaymentId(2)}
+        >
+          <img src={paypalLogo} alt="PayPal Logo" className="khoi_payment_page_payment-logo-large" />
+          <span>PayPal</span>
+          <p>+ $2 / ~ 50,000₫ handling fee</p>
+          <div className="khoi_payment_page_accepted-cards">
+            <img src={visaLogo} alt="Visa" />
+            <img src={mastercardLogo} alt="MasterCard" />
+            <img src={amexLogo} alt="AmEx" />
+            <img src={discoverLogo} alt="Discover" />
+            <img src={unionpayLogo} alt="UnionPay" />
+          </div>
+        </div>
+      </div>
+      <div className="khoi_payment_page_payment-buttons">
         <Button
           type="primary"
           onClick={paymentId === 1 ? handlePayment : handlePayPal}
@@ -55,10 +99,7 @@ const PaymentPage: React.FC = () => {
         >
           Pay
         </Button>
-        <Button
-          style={{ marginLeft: '10px' }}
-          onClick={() => navigate('/')}
-        >
+        <Button onClick={() => navigate('/')}>
           Back to Home
         </Button>
       </div>
@@ -67,9 +108,12 @@ const PaymentPage: React.FC = () => {
         title="Notification"
         visible={isModalVisible}
         onOk={closeModal}
-        onCancel={closeModal}
-        okText="Agree"
-        cancelText="Cancel"
+        footer={[
+          <Button key="ok" type="primary" onClick={closeModal}>
+            Agree
+          </Button>,
+        ]}
+        className="khoi_payment_page_ant-modal"
       >
         <p>PayPal payment functionality is being updated. Please select another payment method.</p>
       </Modal>
