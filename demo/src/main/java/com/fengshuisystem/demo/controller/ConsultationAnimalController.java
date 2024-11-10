@@ -1,9 +1,6 @@
 package com.fengshuisystem.demo.controller;
 
-import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
-import com.fengshuisystem.demo.dto.ApiResponse;
-import com.fengshuisystem.demo.dto.ConsultationAnimalDTO;
-import com.fengshuisystem.demo.dto.PageResponse;
+import com.fengshuisystem.demo.dto.*;
 import com.fengshuisystem.demo.service.impl.ConsultationAnimalServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
