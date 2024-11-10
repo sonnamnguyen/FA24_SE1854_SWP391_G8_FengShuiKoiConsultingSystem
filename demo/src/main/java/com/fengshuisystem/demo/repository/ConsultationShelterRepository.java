@@ -13,4 +13,6 @@ public interface ConsultationShelterRepository extends JpaRepository<Consultatio
     Optional<ConsultationShelter> findByConsultationResultIdAndShelterCategoryId(Integer resultId, Integer shelterCategoryId);
 
     List<ConsultationShelter> findByConsultationResult(ConsultationResult consultationResult);
+
+    List<ConsultationShelter> findByConsultationResultId(Integer resultId);
 }

@@ -17,4 +17,6 @@ public interface ConsultationAnimalService {
     List<ConsultationAnimalDTO> getAllConsultationAnimals();
 
     ConsultationAnimalDTO createConsultationAnimal(ConsultationAnimalDTO consultationAnimalDTO);
+
+    List<ConsultationAnimalDTO> searchByResultId(Integer resultId);
 }

@@ -61,4 +61,12 @@ public class ConsultationShelterController {
                 .result(consultationShelterService.getAllConsultationShelter())
                 .build();
     }
+
+    @GetMapping("/search-by-result-id")
+    public ApiResponse<List<ConsultationShelterDTO>> searchByResultId(
+            @RequestParam("resultId") Integer resultId) {
+        return ApiResponse.<List<ConsultationShelterDTO>>builder()
+                .result(consultationShelterService.searchByResultId(resultId))
+                .build();
+    }
 }

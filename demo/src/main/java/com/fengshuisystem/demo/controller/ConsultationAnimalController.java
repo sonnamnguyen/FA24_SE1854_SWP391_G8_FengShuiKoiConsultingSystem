@@ -59,4 +59,12 @@ public class ConsultationAnimalController {
                 .result(consultationAnimalService.getAllConsultationAnimals())
                 .build();
     }
+
+    @GetMapping("/search-by-result-id")
+    public ApiResponse<List<ConsultationAnimalDTO>> searchByResultId(
+            @RequestParam("resultId") Integer resultId) {
+        return ApiResponse.<List<ConsultationAnimalDTO>>builder()
+                .result(consultationAnimalService.searchByResultId(resultId))
+                .build();
+    }
 }
