@@ -176,11 +176,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               value={searchTerm}
               onChange={onSearchInputChange}
             />
-            <button
-              className="btn btn-danger"
-              type="submit"
-              onClick={handleSearch}
-            >
+            <button className="btnSeeMore" type="submit" onClick={handleSearch}>
               Search
             </button>
           </form>

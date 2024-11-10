@@ -34,6 +34,7 @@ import AboutUs from "../user/AboutUs";
 import ViewUserManagement from "../admin/user/UserManagement";
 import AutoConsultation from "../user/autoConsultation/AutoConsultationView";
 import CompatibilityCaculation from "../user/compatibilityCaculation/CompatibilityCaculationView";
+import LoginSignUp from "../components/LoginNew";
 
 // Consultation - user
 import ConsultationRequest from "../consultation/request/ConsultationRequest";
@@ -82,6 +83,7 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/loginnew" element={<LoginSignUp />} />
         <Route path="/posts/:id" element={<ViewPost />} />
         <Route path="/post-list" element={<Postlist />} />
         <Route path="/update-post/:id" element={<UpdatePost />} />
