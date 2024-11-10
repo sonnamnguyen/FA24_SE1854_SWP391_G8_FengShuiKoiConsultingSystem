@@ -1,9 +1,6 @@
 package com.fengshuisystem.demo.service.impl;
 
-import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
-import com.fengshuisystem.demo.dto.ColorDTO;
-import com.fengshuisystem.demo.dto.ConsultationResultDTO;
-import com.fengshuisystem.demo.dto.PageResponse;
+import com.fengshuisystem.demo.dto.*;
 import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.exception.AppException;
@@ -270,6 +267,23 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         // Save the updated entity and return the DTO
         ConsultationResult savedResult = consultationResultRepository.saveAndFlush(consultationResult);
         return consultationResultMapper.toDto(savedResult);
+    }
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public long countCompletedConsultations() {
+        return consultationResultRepository.countByStatus(Request.COMPLETED);
+    }
+
+    @Override
+    public List<ConsultationResultDTO> getAll() {
+        List<ConsultationResultDTO> consultationResultDTOS= consultationResultRepository.findAll()
+                .stream()
+                .map(consultationResultMapper::toDto)
+                .toList();
+        if (consultationResultDTOS.isEmpty()) {
+            throw new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED);
+        }
+        return consultationResultDTOS;
     }
 
 }

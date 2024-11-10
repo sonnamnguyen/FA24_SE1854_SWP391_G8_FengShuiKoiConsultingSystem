@@ -9,6 +9,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/consultation-results")
 @RequiredArgsConstructor
@@ -37,6 +39,14 @@ public class ConsultationResultController {
                 .build();
     }
 
+    @GetMapping("/find-all")
+    public ApiResponse<List<ConsultationResultDTO>> getAll(
+    ) {
+        return ApiResponse.<List<ConsultationResultDTO>>builder()
+                .result(consultationResultService.getAll())
+                .build();
+    }
+
     @GetMapping("/consultation-result-search")
     public ApiResponse<PageResponse<ConsultationResultDTO>> getConsultationResultBySearch(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -62,5 +72,8 @@ public class ConsultationResultController {
                 .result(consultationResultService.updateConsultationResultAndSendMail(resultId))
                 .build();
     }
-
+    @GetMapping("/completed-count")
+    public long getCompletedConsultationsCount() {
+        return consultationResultService.countCompletedConsultations();
+    }
 }

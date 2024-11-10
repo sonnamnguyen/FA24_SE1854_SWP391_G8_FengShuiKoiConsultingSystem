@@ -1,13 +1,18 @@
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.ApiResponse;
+import com.fengshuisystem.demo.dto.ConsultationAnimalDTO;
 import com.fengshuisystem.demo.dto.ConsultationShelterDTO;
+import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.service.impl.ConsultationShelterServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/consultation-shelters")
@@ -18,17 +23,43 @@ public class ConsultationShelterController {
 
     ConsultationShelterServiceImpl consultationShelterService;
 
-    @PostMapping("/resultId/{resultId}/shelter-category-id/{shelterCategoryId}")
+    @PostMapping
     public ApiResponse<ConsultationShelterDTO> createConsultationShelter(
-            @RequestBody ConsultationShelterDTO consultationShelterDTO,
-            @PathVariable Integer resultId,
-            @PathVariable Integer shelterCategoryId) {
-        ConsultationShelterDTO result = consultationShelterService.createConsultationShelter(
-                consultationShelterDTO, resultId, shelterCategoryId);
+            @RequestBody ConsultationShelterDTO consultationShelterDTO) {
         return ApiResponse.<ConsultationShelterDTO>builder()
-                .result(result)
-                .code(1000)
-                .message("Consultation Shelter created successfully")
+                .result(consultationShelterService.createConsultationShelter(consultationShelterDTO))
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<PageResponse<ConsultationShelterDTO>> getAllConsultationShelterPage(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ) {
+
+        return ApiResponse.<PageResponse<ConsultationShelterDTO>>builder()
+                .result(consultationShelterService.getAllConsultationShelterPage(page, size))
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse<ConsultationShelterDTO> updateConsultationShelter(@PathVariable Integer id, @Valid @RequestBody ConsultationShelterDTO consultationShelterDTO) {
+        return ApiResponse.<ConsultationShelterDTO>builder()
+                .result(consultationShelterService.updateConsultationShelter(id, consultationShelterDTO))
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<ConsultationShelterDTO> getConsultationShelterById(@PathVariable Integer id) {
+        return ApiResponse.<ConsultationShelterDTO>builder()
+                .result(consultationShelterService.getConsultationShelterById(id))
+                .build();
+    }
+
+    @GetMapping("/shelterCategory")
+    public ApiResponse<List<ConsultationShelterDTO>> getAllConsultationShelter() {
+        return ApiResponse.<List<ConsultationShelterDTO>>builder()
+                .result(consultationShelterService.getAllConsultationShelter())
                 .build();
     }
 }

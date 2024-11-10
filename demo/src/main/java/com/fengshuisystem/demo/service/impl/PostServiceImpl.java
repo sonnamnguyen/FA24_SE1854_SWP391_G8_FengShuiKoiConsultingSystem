@@ -164,6 +164,11 @@ public class PostServiceImpl implements PostService {
                 .build();
 
     }
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public long getPostCount() {
+        return postRepository.countAllPosts();
+    }
 
     @Override
     @PreAuthorize("hasRole('USER')")

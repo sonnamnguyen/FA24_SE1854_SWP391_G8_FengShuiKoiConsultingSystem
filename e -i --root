@@ -1,0 +1,88 @@
+[33ma1436e1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmerge_khoi_2[m[33m, [m[1;31morigin/merge_khoi_2[m[33m)[m chang hàm update
+[33md9f6782[m Merge branch 'merge_khoi_2' of https://github.com/khoipdse184586/FA24_SE1854_SWP391_G8_FengShuiKoiConsultingSystem into merge_khoi_2
+[33mccf8098[m add them Service Post
+[33mdb094fc[m Merge remote-tracking branch 'origin/merge_khoi_2' into merge_khoi_2
+[33mdfde23e[m send mail
+[33mb3e0125[m small change on Post
+[33m41ec950[m small change in Post
+[33m80e7e8c[m Merge remote-tracking branch 'origin/merge_khoi_2' into merge_khoi_2
+[33m8e89f2a[m finish logic for crud consul result + ... relative
+[33m8973fe8[m Update validation
+[33mad08d87[m Merge remote-tracking branch 'origin/merge_khoi_2' into merge_khoi_2
+[33md6d03ff[m Update validation
+[33mf292610[m update AutoConsultatiom
+[33m6c85a5e[m update AutoConsultatiom
+[33m8c783f8[m update endpoint
+[33m7b9a5d6[m Merge remote-tracking branch 'origin/merge_khoi_2' into merge_khoi_2
+[33mb2d1ac7[m Update validation
+[33mf5dcabe[m token unlimited time
+[33m678bacd[m get shape and up to date req detail
+[33m82752e1[m update
+[33ma2e27ec[m finish vnpay
+[33m828dce2[m update Gender <- String of gender of User
+[33mb1cf161[m merge
+[33m10b6d50[m[33m ([m[1;31morigin/DemoTC[m[33m)[m before mergr
+[33ma61d8b4[m merge k n h
+[33mdad4eae[m[33m ([m[1;31morigin/khoi_test[m[33m, [m[1;31morigin/khoi_merge[m[33m, [m[1;32mkhoi_test[m[33m, [m[1;32mkhoi_merge[m[33m)[m finish BE req
+[33m3dc39cc[m[33m ([m[1;31morigin/main-son-nam-clone[m[33m, [m[1;32mmain-son-nam-clone[m[33m)[m Merge remote-tracking branch 'origin/main-son-nam-clone' into main-son-nam-clone
+[33m3b287e4[m update merge
+[33m6ed3508[m update merge
+[33mef81d37[m create consultation animal & shelter
+[33m4204ad5[m creat result
+[33m3d740e1[m finish create result
+[33me1c297a[m finish consultationreq + update after vnpay
+[33m741e32a[m finish -> vnpay
+[33m37104c6[m finish bill create
+[33m08395f9[m bill
+[33m1ccaf58[m bo sung thong tin form consultation request
+[33mbd457b2[m update yob in request
+[33m74cf74f[m update full rq - result -vnpay
+[33m31ada4c[m Save local changes before merge
+[33m62778ed[m req +- payment???
+[33mac5416d[m result create
+[33m3af1e0d[m finish req - rep, need to add email res + payment req
+[33m2aeb574[m update payment + package = bill
+[33m8c1e2e7[m fix mapper: consul animal+shellter + update swagger
+[33mb3341b0[m reupdate req + req detail _ STATUS : PENDING
+[33mab8eb76[m update entity
+[33m71b56b1[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m update endpoint user post for consul req
+[33m9323b51[m update req detail + packageField -> packageId
+[33m2c81f43[m update create request
+[33me01aeed[m update 1-N -> N-N between req detail with animal/shelter category, pom ver 3.3.3->3.3.4
+[33mea85629[m Merge pull request #9 from khoipdse184586/main-son-nam-merge
+[33ma98a1fa[m merge code
+[33m960e309[m merge autoConsultation
+[33m4f566b4[m Merge pull request #8 from khoipdse184586/DemoTC
+[33mb1878db[m Resolved merge conflicts
+[33mcc2b51c[m Done all tasks and handle advance token and user
+[33mbd17642[m Change to suitable for destiny to FrontEnd
+[33md2f01cf[m Make suitable api to Frontend and done all task
+[33mfb23ace[m Delete demo directory
+[33m1df9201[m change
+[33m0bf0863[m Delete Document directory
+[33mb18c795[m Delete .idea directory
+[33mdff2f28[m[33m ([m[1;32mMinhnhdse181549[m[33m)[m AUTH,CRUD,VNPAY
+[33me4110d6[m[33m ([m[1;31morigin/tienhhse172559[m[33m)[m Merge pull request #2 from khoipdse184586/DucMinh
+[33mb360f32[m Merge branch 'DucMinh' of github.com:khoipdse184586/FA24_SE1854_SWP391_G8_FengShuiKoiConsultingSystem into DucMinh
+[33m2d3e24b[m CRUD
+[33m5e34894[m[33m ([m[1;31morigin/huypqse184931[m[33m, [m[1;31morigin/huypqse[m[33m)[m CRUD Color and CRUD Shape
+[33ma020bac[m CRUD AnimalCategory and CRUD ShelterCategory
+[33m4738a82[m thay đổi
+[33m1f96c7e[m Login Authentication with jwt Outh2 with google
+[33m9b69cd0[m Delete Source code/SWP391.sql
+[33m55f01ce[m Add files via upload
+[33m7e51144[m Delete Source Code/G8_Diagram.png
+[33m74e7e64[m Delete Source Code/FA24_SE1854_SWP391_G8_FengShuiKoiConsultingSystem.sql
+[33m13d4b29[m Add files via upload
+[33m81aabd5[m Delete Document/Source Code directory
+[33mcc143fc[m Add files via upload
+[33m4f7a587[m Delete SourceCode
+[33m9e73b1f[m Create SourceCode
+[33m3287c1f[m Add files via upload
+[33m4b6d77d[m Delete document directory
+[33m4aadb7a[m Delete src directory
+[33mfd4ee77[m Create code
+[33m68f0fc0[m Delete src
+[33m719d569[m Add files via upload
+[33ma889cb8[m Create src
+[33mc648e87[m Initial commit

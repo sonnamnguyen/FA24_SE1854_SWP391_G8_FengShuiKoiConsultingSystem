@@ -277,4 +277,19 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
         return userMapper.toUserResponse(userRepository.saveAndFlush(user));
     }
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public long getNewUsersToday() {
+        return userRepository.countNewUsersToday();
+    }
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public long getNewUsersThisWeek() {
+        return userRepository.countNewUsersThisWeek();
+    }
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public long getNewUsersThisMonth() {
+        return userRepository.countNewUsersThisMonth();
+    }
 }

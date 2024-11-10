@@ -13,4 +13,6 @@ public interface ConsultationRequestService {
     ConsultationRequestDTO findById(Integer id);
 
     List<ConsultationRequestDTO> findAllRequests();
+
+    long getCompletedConsultationRequestCount();
 }

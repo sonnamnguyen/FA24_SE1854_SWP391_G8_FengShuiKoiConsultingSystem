@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,7 +79,13 @@ public class BillController {
                     .body("Lỗi trong quá trình xử lý thanh toán!");
         }
     }
-
+    @GetMapping("/total-income-this-month")
+    public ApiResponse<BigDecimal> getTotalIncomeThisMonth() {
+        BigDecimal totalIncome = billService.getTotalIncomeThisMonth();
+        return ApiResponse.<BigDecimal>builder()
+                .result(totalIncome)
+                .build();
+    }
 }
 
 
