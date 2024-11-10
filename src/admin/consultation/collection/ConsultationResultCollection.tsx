@@ -37,6 +37,7 @@ interface ConsultationRequest {
   fullName: string;
   description: string;
   createdDate: string;
+  status: string;
 }
 
 interface ConsultationRequestDetail {
@@ -365,7 +366,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
 
   const columns = [
     {
-      title: 'Số thứ tự',
+      title: 'STT',
       dataIndex: 'index',
       key: 'index',
       render: (_: any, __: ConsultationResult, index: number) => index + 1 + (page - 1) * pageSize,
@@ -374,6 +375,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      sorter: (a: ConsultationResult, b: ConsultationResult) => a.id - b.id,
     },
     {
       title: 'Consultant Name',
@@ -394,6 +396,10 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      sorter: (a: ConsultationResult, b: ConsultationResult) => {
+        const statusOrder: { [key: string]: number } = { 'PENDING': 1, 'COMPLETED': 2, 'CANCELLED': 3 };
+        return statusOrder[a.status as keyof typeof statusOrder] - statusOrder[b.status as keyof typeof statusOrder];
+      },
       render: (status: string) => (
         <Tag color={status === 'COMPLETED' ? 'green' : status === 'PENDING' ? 'orange' : 'red'}>
           {status.charAt(0) + status.slice(1).toLowerCase()}
@@ -517,12 +523,15 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
         <Form.Item label="Consultation Request" style={{ marginBottom: '16px' }}>
           <Select
             placeholder="Select Consultation Request"
-            onChange={(requestId) => { setSelectedResult({ ...selectedResult!, consultationRequestId: requestId }); fetchRequestDetailInfo(requestId); }}
+            onChange={(requestId) => {
+              setSelectedResult({ ...selectedResult!, consultationRequestId: requestId });
+              fetchRequestDetailInfo(requestId);
+            }}
             value={selectedResult?.consultationRequestId}
           >
             {consultationRequests.map((request) => (
               <Option key={request.id} value={request.id}>
-                {request.id} - {request.fullName} - {request.createdDate}
+                {request.id} - {request.fullName} - {request.createdDate} - {request.status}
               </Option>
             ))}
           </Select>

@@ -1,5 +1,4 @@
-import React from "react";
-
+import React, { useState } from "react";
 import '../../css/boostrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SidebarAdmin from "../layouts/slideBar";
@@ -8,6 +7,8 @@ import FooterAdmin from "../layouts/footerAdmin";
 import ConsultationRequestDetailCollection from "./collection/ConsultationRequestDetailCollection";
 
 const ViewConsultationRequestDetail: React.FC = () => {
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true); 
+  
   return (
     <div className="container-fluid position-relative bg-white d-flex p-0">
       <SidebarAdmin />
