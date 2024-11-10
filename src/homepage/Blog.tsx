@@ -6,7 +6,7 @@ import "boxicons/css/boxicons.min.css";
 import { Margin } from "@mui/icons-material";
 import { getToken } from "../service/localStorageService";
 import { useNavigate } from "react-router-dom";
-import { message } from "antd"; 
+import { message } from "antd";
 
 function Blog() {
   const [search, setSearchData] = useState("");
@@ -14,13 +14,16 @@ function Blog() {
 
   // useEffect để kiểm tra và hiển thị thông báo nếu cần
   useEffect(() => {
-    const success = localStorage.getItem('consultationSuccess');
+    const success = localStorage.getItem("consultationSuccess");
     if (success) {
-      message.success('Request details have been saved successfully!', 2);
+      message.success("Request details have been saved successfully!", 2);
       setTimeout(() => {
-          message.info('Consultation has been sent, please check your email within the next 24 hours.', 4);      
-        }, 2000); // Thời gian giữa hai thông báo
-        localStorage.removeItem('consultationSuccess'); // Xóa trạng thái sau khi hiển thị thông báo
+        message.info(
+          "Consultation has been sent, please check your email within the next 24 hours.",
+          4
+        );
+      }, 2000); // Thời gian giữa hai thông báo
+      localStorage.removeItem("consultationSuccess"); // Xóa trạng thái sau khi hiển thị thông báo
     }
   }, []);
 
@@ -28,7 +31,7 @@ function Blog() {
     const token = getToken(); // Lấy token từ LocalStorage hoặc Cookie
     if (token) {
       // Điều hướng tới trang ViewPost nếu token hợp lệ
-      navigate("/posts");
+      navigate("/post-list");
     } else {
       // Nếu không có token, có thể redirect về trang login hoặc hiển thị thông báo
       navigate("/login");
@@ -78,7 +81,9 @@ function Blog() {
                 Discover the beauty and serenity of Feng Shui with our Koi
                 System.
               </p>
-              <button className="cta-button">Get Started</button>
+              <button onClick={handleSeeMore} className="btnSeeMore">
+                Get Started
+              </button>
             </div>
           </section>
         </div>
