@@ -126,7 +126,14 @@ const CreatePost: React.FC = () => {
       <Navbar searchData={searchData} setSearchData={setSearchData} />
       <div className="create-post-container">
         <h1 className="create-post-title">Creating Your Own Post</h1>
+
         <form onSubmit={handleSubmit(onSubmit)} className="create-post-form">
+          <input
+            {...register("title")}
+            placeholder="Title"
+            required
+            className="input-field title-input"
+          />
           <input
             {...register("email")}
             placeholder="Email"
@@ -200,13 +207,6 @@ const CreatePost: React.FC = () => {
           </div>
 
           <input
-            {...register("title")}
-            placeholder="Title"
-            required
-            className="input-field title-input"
-          />
-
-          <input
             type="file"
             accept="image/*"
             multiple
@@ -226,7 +226,7 @@ const CreatePost: React.FC = () => {
             ))}
           </div>
 
-          <button type="submit" className="submit-button">
+          <button type="submit" className="btnSeeMore">
             Create
           </button>
         </form>
