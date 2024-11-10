@@ -9583,6 +9583,7 @@ klona@^2.0.4, klona@^2.0.5:
     ckeditor5-premium-features "^43.3.1"
     cors "^2.8.5"
     firebase "^10.14.1"
+    formik "^2.4.6"
     jwt-decode "^4.0.0"
     koifengshuisystem "file:"
     react "^18.3.1"
@@ -9595,6 +9596,7 @@ klona@^2.0.4, klona@^2.0.5:
     slick-carousel "^1.8.1"
     typescript "^4.9.5"
     web-vitals "^2.1.4"
+    yup "^1.4.0"
 
 language-subtag-registry@^0.3.20:
   version "0.3.23"
