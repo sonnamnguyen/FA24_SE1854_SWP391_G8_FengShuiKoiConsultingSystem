@@ -5,12 +5,13 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  margin: 0;
-  margin-left: 100;
+  width: 100vw; /* Chiều rộng full màn hình */
+  margin: 160px 0 0 0; /* Di chuyển xuống dưới 160px, bỏ margin trái */
 }
 /* Container chính của form */
 .khoi_con_req_consultation-form-container {
-  max-width: 600px;
+  width: 80vh;
+  margin: 0 auto;
   padding: 30px;
   background: linear-gradient(135deg, #dbeaf1, #b3cde0); /* Gradient màu xanh nhạt */
   color: #1d3557; /* Màu chữ xanh đậm */
@@ -77,6 +78,7 @@
   font-weight: bold;
   border-radius: 5px;
   transition: background-color 0.3s ease;
+  margin: 0 auto;
 }
 
 .khoi_con_req_button:hover,
