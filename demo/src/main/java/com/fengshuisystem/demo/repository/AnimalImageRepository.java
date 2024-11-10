@@ -14,5 +14,5 @@ public interface AnimalImageRepository extends JpaRepository<AnimalImage, Intege
              "WHERE animal_category_id = :animalId " +
              "AND image_url IN (:imgUrls)", nativeQuery = true)
      List<AnimalImage> findByAnimalCategoryAndImgUrls(@Param("animalId") Integer animalId, @Param("imgUrls") List<String> imgUrls);
-
+     boolean existsByImageUrl(String imageUrl);
 }

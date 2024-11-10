@@ -61,7 +61,7 @@ public class ShapeServiceImpl implements ShapeService {
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = shapeRepository.findAlByShapeNameContaining(name, status, pageable);
         if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.SHAPE_NOT_EXISTED);
+            throw new AppException(ErrorCode.NONE_DATA_SHAPE);
         }
         return PageResponse.<ShapeDTO>builder()
                 .currentPage(page)
@@ -80,7 +80,7 @@ public class ShapeServiceImpl implements ShapeService {
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = shapeRepository.findAllByStatus(status, pageable);
         if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.SHAPE_NOT_EXISTED);
+            throw new AppException(ErrorCode.NONE_DATA_SHAPE);
         }
         return PageResponse.<ShapeDTO>builder()
                 .currentPage(page)

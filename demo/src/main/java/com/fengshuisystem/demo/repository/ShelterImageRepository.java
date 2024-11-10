@@ -12,4 +12,6 @@ import java.util.List;
 public interface ShelterImageRepository extends JpaRepository<ShelterImage, Integer> {
      @Query(value = "select s from ShelterImage s where s.shelterCategory.id = :shelterId AND s.imageUrl in (:imgUrls)")
      List<ShelterImage> findByShelterCategoryAndImgUrls(@Param("shelterId") Integer shelterId, @Param("imgUrls") List<String> imgUrls);
+     boolean existsByImageUrl(String imageUrl);
+
 }

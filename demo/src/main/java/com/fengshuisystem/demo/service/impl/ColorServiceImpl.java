@@ -62,7 +62,7 @@ public class ColorServiceImpl implements ColorService {
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = colorRepository.findAllByColorAndStatusContaining(name, status, pageable);
         if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
+            throw new AppException(ErrorCode.NONE_DATA_COLOR);
         }
         return PageResponse.<ColorDTO>builder()
                 .currentPage(page)
@@ -81,7 +81,7 @@ public class ColorServiceImpl implements ColorService {
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         var pageData = colorRepository.findAllByStatus(status, pageable);
         if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
+            throw new AppException(ErrorCode.NONE_DATA_COLOR);
         }
         return PageResponse.<ColorDTO>builder()
                 .currentPage(page)
