@@ -1,6 +1,8 @@
 package com.fengshuisystem.demo.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fengshuisystem.demo.entity.ConsultationCategory;
 import com.fengshuisystem.demo.entity.enums.Request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +25,9 @@ public class ConsultationResultDTO {
 
     Integer accountId;
 
-    @NotNull
+    @JsonIgnore
+    ConsultationCategory consultationCategory;
+
     Integer consultationCategoryId;
 
     Instant consultationDate;

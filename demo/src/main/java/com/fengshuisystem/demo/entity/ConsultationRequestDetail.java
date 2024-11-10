@@ -59,7 +59,7 @@ public class ConsultationRequestDetail {
     @NotNull
     @NotBlank
     @Nationalized
-    @Column(name = "description", nullable = false, length = 1000)
+    @Column(name = "description", nullable = false, length = 4000)
     private String description;
 
     // Phương thức kiểm tra số từ có đủ ít nhất 100 từ
