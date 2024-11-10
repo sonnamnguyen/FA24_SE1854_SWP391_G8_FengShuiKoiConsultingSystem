@@ -23,4 +23,13 @@ public interface ShelterRepository extends JpaRepository<ShelterCategory, Intege
     Page<ShelterCategory> findAllByStatus(Status status, Pageable pageable);
     @Query("SELECT sc FROM ShelterCategory sc JOIN sc.shape s WHERE s.id = :shapeId AND sc.status = 'ACTIVE' ")
     List<ShelterCategory> findAllByShape(@Param("shapeId") Integer shapeId);
+    @Query(value = "SELECT s.* FROM shelter_category s " +
+            "INNER JOIN shape sa ON s.shape_id = sa.shape_id " +
+            "INNER JOIN destiny d ON sa.destiny_id = d.destiny_id " +
+            "WHERE d.destiny = :destiny AND s.status = :status",
+            nativeQuery = true)
+    Page<ShelterCategory> findShelterCategoriesByDestinyAndStatus(@Param("destiny") String destiny,
+                                                                  @Param("status") String status,
+                                                                  Pageable pageable);
+
 }

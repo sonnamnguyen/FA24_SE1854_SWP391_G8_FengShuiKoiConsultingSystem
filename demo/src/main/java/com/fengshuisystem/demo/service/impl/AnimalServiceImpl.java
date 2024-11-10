@@ -101,6 +101,26 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
+    @PreAuthorize("hasRole('USER')")
+    public PageResponse<AnimalCategoryDTO> getAnimalsByDestiny(String destiny, int page, int size) {
+        Status status = Status.ACTIVE;
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = animalRepository.findAllByAnimalCategoryNameContainingOriginContaining(destiny, status,pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.NONE_DATA_ANIMAL);
+        }
+
+        return PageResponse.<AnimalCategoryDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(animalMapper::toDto).toList())
+                .build();
+    }
+
+    @Override
     @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<AnimalCategoryDTO> getAnimals(int page, int size) {
         Status status = Status.ACTIVE;
