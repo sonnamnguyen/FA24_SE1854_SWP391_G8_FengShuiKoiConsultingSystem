@@ -1,9 +1,8 @@
 package com.fengshuisystem.demo.service.impl;
 
-import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
-import com.fengshuisystem.demo.dto.ConsultationResultDTO;
 import com.fengshuisystem.demo.dto.ConsultationShelterDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
+import com.fengshuisystem.demo.entity.AnimalCategory;
 import com.fengshuisystem.demo.entity.ConsultationResult;
 import com.fengshuisystem.demo.entity.ConsultationShelter;
 import com.fengshuisystem.demo.entity.ShelterCategory;
@@ -16,6 +15,7 @@ import com.fengshuisystem.demo.repository.ConsultationShelterRepository;
 import com.fengshuisystem.demo.repository.ShelterCategoryRepository;
 import com.fengshuisystem.demo.service.ConsultationShelterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,9 +25,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ConsultationShelterServiceImpl implements ConsultationShelterService {
 
     private final ConsultationShelterRepository consultationShelterRepository;
@@ -37,12 +41,12 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public ConsultationShelterDTO createConsultationShelter(ConsultationShelterDTO dto, Integer resultId, Integer shelterCategoryId) {
-        // Kiểm tra xem cặp resultId và shelterCategoryId có tồn tại hay không
-        boolean exists = consultationShelterRepository.existsByConsultationResultIdAndShelterCategoryId(resultId, shelterCategoryId);
-        if (exists) {
-            throw new RuntimeException("Cặp resultId và shelterCategoryId đã tồn tại.");
-        }
+    public ConsultationShelterDTO createConsultationShelter(ConsultationShelterDTO dto) {
+        int resultId = dto.getConsultationResultId();
+        int shelterCategoryId = dto.getShelterCategoryId();
+
+        log.info("Bắt đầu tạo ConsultationShelter cho resultId: {} và animalCategoryId: {}", resultId, shelterCategoryId);
+
 
         // Lấy ConsultationResult dựa trên resultId
         ConsultationResult consultationResult = consultationResultRepository.findById(resultId)
@@ -55,6 +59,25 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
         // Lấy ShelterCategory dựa trên shelterCategoryId
         ShelterCategory shelterCategory = shelterCategoryRepository.findById(shelterCategoryId)
                 .orElseThrow(() -> new RuntimeException("ShelterCategory không tìm thấy với ID: " + shelterCategoryId));
+
+        // Kiểm tra xem cặp resultId và shelterCategoryId có tồn tại hay không
+        Optional<ConsultationShelter> existingShelter = consultationShelterRepository.existsByConsultationResultIdAndShelterCategoryId(resultId, shelterCategoryId);
+        if (existingShelter.isPresent()) {
+            throw new RuntimeException("Cặp resultId và shelterCategoryId đã tồn tại.");
+        }
+
+        // Lấy danh sách các ShelterCategoryId từ requestDetailId
+        Set<ShelterCategory> allowedShelterCategories = consultationResult.getRequestDetail().getShelterCategories();
+
+        // Chuyển đổi Set<ShelterCategory> thành Set<Integer> chứa các ShelterCategoryId
+        Set<Integer> allowedShelterCategoryIds = allowedShelterCategories.stream()
+                .map(ShelterCategory::getId)
+                .collect(Collectors.toSet());
+
+        // Kiểm tra nếu shelterCategoryId không nằm trong danh sách allowedAnimalCategoryIds
+        if (!allowedShelterCategoryIds.contains(shelterCategoryId)) {
+            throw new RuntimeException("ShelterCategoryId không hợp lệ vì ko tồn tại trong Request");
+        }
 
         // Tạo ConsultationShelter từ DTO và thiết lập các quan hệ
         ConsultationShelter shelter = consultationShelterMapper.toEntity(dto);
