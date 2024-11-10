@@ -98,6 +98,22 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
     }
 
     @Override
+    public List<ConsultationShelterDTO> searchByResultId(Integer resultId) {
+        // Thực hiện truy vấn trong repository để tìm các ConsultationShelter theo resultId
+        List<ConsultationShelter> shelters = consultationShelterRepository.findByConsultationResultId(resultId);
+
+        // Kiểm tra nếu không tìm thấy kết quả nào
+        if (shelters.isEmpty()) {
+            throw new AppException(ErrorCode.CONSULTATION_SHELTER_DOES_NOT_EXIST);
+        }
+
+        // Chuyển đổi kết quả sang DTO và trả về
+        return shelters.stream()
+                .map(consultationShelterMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public PageResponse<ConsultationShelterDTO> getAllConsultationShelterPage(int page, int size) {
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);

@@ -17,4 +17,6 @@ public interface ConsultationShelterService {
     List<ConsultationShelterDTO> getAllConsultationShelter();
 
     ConsultationShelterDTO createConsultationShelter(ConsultationShelterDTO consultationShelterDTO);
+
+    List<ConsultationShelterDTO> searchByResultId(Integer resultId);
 }

@@ -157,4 +157,20 @@ public class ConsultationAnimalServiceImpl implements ConsultationAnimalService 
         return consultationAnimalDTOS;
     }
 
+    @Override
+    public List<ConsultationAnimalDTO> searchByResultId(Integer resultId) {
+        // Thực hiện truy vấn trong repository để tìm các ConsultationAnimal theo resultId
+        List<ConsultationAnimal> animals = consultationAnimalRepository.findByConsultationResultId(resultId);
+
+        // Kiểm tra nếu không tìm thấy kết quả nào
+        if (animals.isEmpty()) {
+            throw new AppException(ErrorCode.CONSULTATION_ANIMAL_DOES_NOT_EXIST);
+        }
+
+        // Chuyển đổi kết quả sang DTO và trả về
+        return animals.stream()
+                .map(consultationAnimalMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

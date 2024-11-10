@@ -12,4 +12,6 @@ public interface ConsultationAnimalRepository extends JpaRepository<Consultation
 
     Optional<ConsultationAnimal> findByConsultationResultIdAndAnimalCategoryId(Integer resultId, Integer animalCategoryId);
 
+    List<ConsultationAnimal> findByConsultationResultId(Integer resultId);
+
 }
