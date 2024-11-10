@@ -6,25 +6,59 @@
   background-color: #f4f4f4;
   border-radius: 10px;
 }
+.blogTitle {
+  font-family: "Poppins", sans-serif; /* Font chữ hiện đại */
+  font-size: 3rem; /* Kích thước chữ */
+  color: #333; /* Màu tối cho văn bản */
+  text-align: center; /* Căn giữa tiêu đề */
+  text-transform: uppercase; /* Viết hoa chữ đầu */
+  font-weight: 600; /* Đậm chữ */
+  letter-spacing: 1px; /* Giãn cách giữa các chữ */
+  margin: 20px 0; /* Khoảng cách trên và dưới */
+  position: relative; /* Để áp dụng hiệu ứng */
+  transition: color 0.3s ease, transform 0.3s ease; /* Hiệu ứng chuyển màu và di chuyển */
+}
+
+/* Hiệu ứng khi di chuột */
+.blogTitle:hover {
+  color: #ff6347; /* Màu cam nhẹ khi hover */
+  transform: scale(1.1); /* Phóng to tiêu đề khi hover */
+  letter-spacing: 2px; /* Giãn cách các chữ khi hover */
+}
+
+/* Hiệu ứng động khi trang tải */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Thêm hiệu ứng fade-in khi trang tải */
+.blogTitle {
+  animation: fadeIn 1s ease-out;
+}
+
 .btnMPL {
   margin-top: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+/* Định dạng cho tiêu đề */
 .blogTitle {
-  font-family: "Pacifico", cursive; /* Sử dụng font chữ nghệ thuật */
-  font-size: 2.5rem; /* Kích thước chữ lớn */
-  color: #ff6f61; /* Màu sắc chữ đẹp */
-  background: linear-gradient(45deg, #ec493a, #eb5858); /* Gradient nền */
-  -webkit-background-clip: text; /* Cắt nền chỉ cho chữ */
-  color: transparent; /* Làm cho màu chữ trở thành trong suốt */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Thêm bóng đổ nhẹ cho chữ */
-  letter-spacing: 1px; /* Tăng khoảng cách giữa các chữ */
-  text-align: center; /* Căn giữa chữ */
-  padding: 10px 0; /* Khoảng cách bên trên và dưới */
-  margin-bottom: 30px;
-  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out; /* Hiệu ứng chuyển động */
+  font-size: 40px;
+  font-weight: bold;
+  color: #ff6347;
+  text-align: center;
+  margin: 20px 0;
+  padding: 10px;
+  text-transform: uppercase;
+  font-family: "Arial", sans-serif;
 }
 
 .btnUpdate {
