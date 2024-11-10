@@ -29,7 +29,7 @@ public interface ShelterRepository extends JpaRepository<ShelterCategory, Intege
             "WHERE d.destiny = :destiny AND s.status = :status",
             nativeQuery = true)
     Page<ShelterCategory> findShelterCategoriesByDestinyAndStatus(@Param("destiny") String destiny,
-                                                                  @Param("status") String status,
+                                                                  @Param("status") Status status,
                                                                   Pageable pageable);
 
 }
