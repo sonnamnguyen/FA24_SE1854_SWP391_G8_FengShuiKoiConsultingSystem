@@ -25,6 +25,7 @@ import ViewColorManagement from "../admin/color/layoutCokor/ViewColorManagement"
 import ViewShapeManagement from "../admin/shape/layoutShape/ViewManagementShape";
 import ViewPost from "../user/ViewPost";
 import MyPostList from "../user/MyPostList";
+
 import UpdatePost from "../user/UpdatePost";
 import CreatePost from "../user/CreatePost";
 import ViewMyPost from "../user/ViewMyPost";
@@ -88,7 +89,6 @@ const AppRoutes = () => {
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/vnpay-success" element={<VNPAY />} />
         <Route path="/posts/:id" element={<ViewPost />} />
-        <Route path="/post-list" element={<MyPostList />} />
         <Route path="/update-post/:id" element={<UpdatePost />} />
         <Route path="/my-post-list" element={<MyPostList />} />
 

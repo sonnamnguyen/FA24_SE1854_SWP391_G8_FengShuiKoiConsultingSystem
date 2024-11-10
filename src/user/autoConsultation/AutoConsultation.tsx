@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getAutoConsultationByYear } from "./AutoConsultationAPI";
 import AutoConsultationContainer from "./AutoConsultationContainer";
 import "./AutoConsultation.css"
@@ -7,7 +7,29 @@ import ShelterCategory from "../../models/ShelterCategory";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import { getToken } from "../../service/localStorageService";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import api from "../../axious/axious";
+
+interface Post {
+    id: number;
+    postCategory: { postCategoryName: string };
+    title: string;
+    images: { id: number; imageUrl: string }[];
+    content: string;
+    destiny: { destiny: string };
+    likeNumber: number;
+    dislikeNumber: number;
+    createdBy: string;
+    createdDate: string;
+    comments: {
+        id: number;
+        content: string;
+        createdBy: string;
+        createdDate: string;
+    }[];
+}
+
 
 interface ArrowButtonProps {
     onClick: React.MouseEventHandler<HTMLButtonElement>;
@@ -23,6 +45,35 @@ const AutoConsultationComponent: React.FC = () => {
     const [isShelterModalVisible, setShelterModalVisible] = useState(false);
     const [selectedAnimal, setSelectedAnimal] = useState<AnimalCategory | null>(null);
     const [selectedShelter, setSelectedShelter] = useState<ShelterCategory | null>(null);
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
+
+
+    const fetchPostsByYear = async () => {
+        const token = getToken();
+        const parsedYear = Number(year);
+        try {
+            const response = await api.get(`/posts/search-posts/year?year=${parsedYear}&page=${page}&size=${size}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const result = response.data.result;
+            console.log(result.data);
+            setPosts(result.data);
+            setTotalPages(result.totalPages);
+            console.log(posts);
+
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPostsByYear();
+    }, [year, page, size]);
 
     const showAnimalModal = (animal: AnimalCategory) => {
         setSelectedAnimal(animal);
@@ -66,45 +117,45 @@ const AutoConsultationComponent: React.FC = () => {
 
     const NextArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }> = ({ onClick }) => (
         <button
-          onClick={onClick}
-          style={{
-            position: "absolute",
-            top: "50%",
-            right: "10px",
-            transform: "translateY(-50%)",
-            background: "rgba(0, 0, 0, 0.5)",
-            color: "white",
-            border: "none",
-            borderRadius: "50%",
-            padding: "10px",
-            cursor: "pointer",
-            zIndex: 1,
-          }}
+            onClick={onClick}
+            style={{
+                position: "absolute",
+                top: "50%",
+                right: "10px",
+                transform: "translateY(-50%)",
+                background: "rgba(0, 0, 0, 0.5)",
+                color: "white",
+                border: "none",
+                borderRadius: "50%",
+                padding: "10px",
+                cursor: "pointer",
+                zIndex: 1,
+            }}
         >
-          <FaArrowRight />
+            <FaArrowRight />
         </button>
-      );
-      
-      const PrevArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }> = ({ onClick }) => (
+    );
+
+    const PrevArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }> = ({ onClick }) => (
         <button
-          onClick={onClick}
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "10px",
-            transform: "translateY(-50%)",
-            background: "rgba(0, 0, 0, 0.5)",
-            color: "white",
-            border: "none",
-            borderRadius: "50%",
-            padding: "10px",
-            cursor: "pointer",
-            zIndex: 1,
-          }}
+            onClick={onClick}
+            style={{
+                position: "absolute",
+                top: "50%",
+                left: "10px",
+                transform: "translateY(-50%)",
+                background: "rgba(0, 0, 0, 0.5)",
+                color: "white",
+                border: "none",
+                borderRadius: "50%",
+                padding: "10px",
+                cursor: "pointer",
+                zIndex: 1,
+            }}
         >
-          <FaArrowLeft />
+            <FaArrowLeft />
         </button>
-      );
+    );
     // Slider settings with custom arrows
     const settings = {
         dots: true,
@@ -114,7 +165,13 @@ const AutoConsultationComponent: React.FC = () => {
         slidesToScroll: 1,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
-      };
+    };
+
+
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage);
+    };
+
 
     return (
         <div className="autoConsultation-container">
@@ -259,7 +316,7 @@ const AutoConsultationComponent: React.FC = () => {
                                 {consultationData.consultation1.shelters.map((shelter: ShelterCategory, index: number) => (
                                     <React.Fragment key={shelter.id}>
                                         {" "}
-                                        <button id={consultationData.destiny}className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
+                                        <button id={consultationData.destiny} className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
                                             {shelter.shelterCategoryName}
                                         </button>
                                         {index < consultationData.consultation1.shelters.length - 1 && ", "}
@@ -291,15 +348,38 @@ const AutoConsultationComponent: React.FC = () => {
                                     )}
                                 </div>
 
-                                <div id={consultationData.destiny}  className="ac-fish-infor col-6">
+                                <div id={consultationData.destiny} className="ac-fish-infor col-6">
                                     <h3>{selectedAnimal.animalCategoryName}</h3>
                                     <p>Description: {selectedAnimal.description}</p>
                                     <p>Origin: {selectedAnimal.origin}</p>
                                 </div>
                             </div>
                         </div>
+
                     )}
 
+                    <div>
+                        {posts && posts.length > 0 ? (
+                            posts.map((post) => (
+                                <div key={post.id}>
+                                    <h3>{post.title}</h3>
+                                    {/* Render other details */}
+                                </div>
+                            ))
+                        ) : (
+                            <p>No posts available for this year.</p>
+                        )}
+                    </div>
+
+                    <div>
+                        <button onClick={() => handlePageChange(page - 1)} disabled={page === 1}>
+                            Previous
+                        </button>
+                        <span>Page {page} of {totalPages}</span>
+                        <button onClick={() => handlePageChange(page + 1)} disabled={page === totalPages}>
+                            Next
+                        </button>
+                    </div>
 
                     {/* Shelter Pop-up */}
                     {selectedShelter && (
