@@ -24,7 +24,7 @@ import ViewAddShape from "../admin/shape/layoutShape/ViewAddShape";
 import ViewColorManagement from "../admin/color/layoutCokor/ViewColorManagement";
 import ViewShapeManagement from "../admin/shape/layoutShape/ViewManagementShape";
 import ViewPost from "../user/ViewPost";
-import MyPostList from "../user/MyPostList";
+import MyPostList from "../user/MyPostList"
 import CreatePost from "../user/CreatePost";
 import ViewMyPost from "../user/ViewMyPost";
 import VNPAY from "../user/VNPAY";
