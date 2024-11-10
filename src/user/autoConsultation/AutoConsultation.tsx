@@ -4,9 +4,14 @@ import AutoConsultationContainer from "./AutoConsultationContainer";
 import "./AutoConsultation.css"
 import AnimalCategory from "../../models/AnimalCategory";
 import ShelterCategory from "../../models/ShelterCategory";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-
-
+interface ArrowButtonProps {
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
 
 const AutoConsultationComponent: React.FC = () => {
     const currentYear = new Date().getFullYear();
@@ -58,12 +63,64 @@ const AutoConsultationComponent: React.FC = () => {
         }
     };
 
+
+    const NextArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }> = ({ onClick }) => (
+        <button
+          onClick={onClick}
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "10px",
+            transform: "translateY(-50%)",
+            background: "rgba(0, 0, 0, 0.5)",
+            color: "white",
+            border: "none",
+            borderRadius: "50%",
+            padding: "10px",
+            cursor: "pointer",
+            zIndex: 1,
+          }}
+        >
+          <FaArrowRight />
+        </button>
+      );
+      
+      const PrevArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }> = ({ onClick }) => (
+        <button
+          onClick={onClick}
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "10px",
+            transform: "translateY(-50%)",
+            background: "rgba(0, 0, 0, 0.5)",
+            color: "white",
+            border: "none",
+            borderRadius: "50%",
+            padding: "10px",
+            cursor: "pointer",
+            zIndex: 1,
+          }}
+        >
+          <FaArrowLeft />
+        </button>
+      );
+    // Slider settings with custom arrows
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
+      };
+
     return (
         <div className="autoConsultation-container">
             <form className="AutoConsultationForm" onSubmit={handleSubmit}>
                 <div>
                     <h1 className="titleDestiny">Five Element Destiny Consultation</h1>
-                    <label htmlFor="year">Choose Year:</label>
                     <select id="year" value={year} onChange={handleYearChange}>
                         <option>-- Select a Year --</option>
                         {years.map((y) => (
@@ -92,9 +149,9 @@ const AutoConsultationComponent: React.FC = () => {
                     </div>
                 </>
             )}            {consultationData && (
-                <div className="consultation-results">
-                    <h2 className="titleDestiny2">Your Element Destiny is {consultationData.destiny}</h2>
-                    <div id={consultationData.destiny}>
+                <div id={consultationData.destiny} className="consultation-results">
+                    <h2 id={consultationData.destiny} className="titleDestiny2">Your Element Destiny is {consultationData.destiny}</h2>
+                    <div id="wood" className={consultationData.destiny}>
                         <i></i>
                         <i></i>
                         <i></i>
@@ -137,15 +194,15 @@ const AutoConsultationComponent: React.FC = () => {
                     <div id="shield" className={consultationData.destiny}>
                         <div id={consultationData.destiny} className="shield__inner"></div>
                     </div>
-                    <div>
-                        <h3 className="titleDestiny2">1. Number of Fish</h3>
+                    <div className="ac-text">
+                        <h3 id={consultationData.destiny} className="titleDestiny2">1. Number of Fish</h3>
                         <p>For those with the {consultationData.destiny} destiny, having the right number of fish not only supports fortune but also activates feng shui, attracting wealth and creating harmony in life.</p>
                         <p>Lucky numbers belonging to the {consultationData.destiny} element, such as {consultationData.consultation2.numbers.join(", ")}, will contribute to the stability and enhancement of your destiny energy. This brings sustainability and favor, helping you achieve harmony and growth.</p>
                         <p>Meanwhile, numbers representing the {consultationData.destinyTuongSinh} element, such as {consultationData.consultation1.numbers.join(", ")}, possess mutual generation power, supporting the {consultationData.destiny} destiny. Choosing the number of fish according to these numbers will bring prosperity, increase fortune, and expand opportunities for success in your career.</p>
                         <p>For 11 or more koi fish, disregard the tens digit and use the units digit. For example: 11, 15, 38, 40, 49 fish... count as 1, 5, 8, 4, 9 fish. Then refer to the table above for calculation.</p>
                     </div>
-                    <div>
-                        <h3 className="titleDestiny2">2. Colors and Fish Types</h3>
+                    <div className="ac-text">
+                        <h3 id={consultationData.destiny} className="titleDestiny2">2. Colors and Fish Types</h3>
                         <p>Fish types and colors that are mutually generating and compatible with the {consultationData.destiny} destiny:</p>
                         <ul>
                             <li>Fish with colors {consultationData.consultation2.colors.join(", ")}: These colors belong to the {consultationData.destiny} element, enhancing stability and peace.</li>
@@ -153,7 +210,7 @@ const AutoConsultationComponent: React.FC = () => {
                                 {consultationData.consultation2.animals.map((animal: AnimalCategory, index: number) => (
                                     <React.Fragment key={animal.id}>
                                         {" "}
-                                        <button className="autoConsultation-view" onClick={() => showAnimalModal(animal)}>
+                                        <button id={consultationData.destiny} className="autoConsultation-view" onClick={() => showAnimalModal(animal)}>
                                             {animal.animalCategoryName}
                                         </button>
                                         {index < consultationData.consultation2.animals.length - 1 && ", "}
@@ -165,7 +222,7 @@ const AutoConsultationComponent: React.FC = () => {
                                 {consultationData.consultation1.animals.map((animal: AnimalCategory, index: number) => (
                                     <React.Fragment key={animal.id}>
                                         {" "}
-                                        <button className="autoConsultation-view" onClick={() => showAnimalModal(animal)}>
+                                        <button id={consultationData.destiny} className="autoConsultation-view" onClick={() => showAnimalModal(animal)}>
                                             {animal.animalCategoryName}
                                         </button>
                                         {index < consultationData.consultation1.animals.length - 1 && ", "}
@@ -174,23 +231,23 @@ const AutoConsultationComponent: React.FC = () => {
                             </p>
                         </ul>
                     </div>
-                    <div>
-                        <h3 className="titleDestiny2">3. Pond Direction</h3>
+                    <div className="ac-text">
+                        <h3 id={consultationData.destiny} className="titleDestiny2">3. Pond Direction</h3>
                         <p>The pond direction for those with the {consultationData.destiny} destiny should be placed in directions belonging to the {consultationData.destiny} element or the {consultationData.destinyTuongSinh} element:</p>
                         <ul>
                             <li>Directions {consultationData.consultation2.directions.join(", ")}: Belonging to the {consultationData.destiny} element, very beneficial for advancement and wealth.</li>
                             <li>Directions {consultationData.consultation1.directions.join(", ")}: These support and enhance the fortune of the {consultationData.destiny} destiny.</li>
                         </ul>
                     </div>
-                    <div>
-                        <h3 className="titleDestiny2">4. Pond Shape</h3>
+                    <div className="ac-text">
+                        <h3 id={consultationData.destiny} className="titleDestiny2">4. Pond Shape</h3>
                         <ul>
                             <li>Shape {consultationData.consultation2.shapes.join(", ")}, as these shapes represent the Water element, fostering harmony and energy flow.</li>
                             <p>Collected pond models:
                                 {consultationData.consultation2.shelters.map((shelter: ShelterCategory, index: number) => (
                                     <React.Fragment key={shelter.id}>
                                         {" "}
-                                        <button className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
+                                        <button id={consultationData.destiny} className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
                                             {shelter.shelterCategoryName}
                                         </button>
                                         {index < consultationData.consultation2.shelters.length - 1 && ", "}
@@ -202,7 +259,7 @@ const AutoConsultationComponent: React.FC = () => {
                                 {consultationData.consultation1.shelters.map((shelter: ShelterCategory, index: number) => (
                                     <React.Fragment key={shelter.id}>
                                         {" "}
-                                        <button className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
+                                        <button id={consultationData.destiny}className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
                                             {shelter.shelterCategoryName}
                                         </button>
                                         {index < consultationData.consultation1.shelters.length - 1 && ", "}
@@ -213,24 +270,32 @@ const AutoConsultationComponent: React.FC = () => {
                     </div>
 
                     {selectedAnimal && (
-                        <div className="popup-overlay" onClick={() => setSelectedAnimal(null)}>
-                            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                                <h3>{selectedAnimal.animalCategoryName}</h3>
-                                <p>Description: {selectedAnimal.description}</p>
-                                <p>Origin: {selectedAnimal.origin}</p>
-                                <p>Images:</p>
-                                {selectedAnimal.animalImages?.length ? (
-                                    selectedAnimal.animalImages.map((img, index) => (
-                                        <img
-                                            key={index}
-                                            src={img.imageUrl}
-                                            alt={`${selectedAnimal.animalCategoryName} image ${index + 1}`}
-                                            style={{ maxWidth: "100%", height: "auto", objectFit: "contain", marginBottom: "10px" }}
-                                        />
-                                    ))
-                                ) : (
-                                    <p>No images available</p>
-                                )}
+                        <div className="ac-popup-overlay" onClick={() => setSelectedAnimal(null)}>
+                            <div className="ac-popup-content row" onClick={(e) => e.stopPropagation()}>
+                                <div className="ac-image col-6">
+                                    <p>Images:</p>
+                                    {selectedAnimal.animalImages?.length ? (
+                                        <Slider {...settings}>
+                                            {selectedAnimal.animalImages.map((img, index) => (
+                                                <div key={index}>
+                                                    <img
+                                                        src={img.imageUrl}
+                                                        alt={`${selectedAnimal.animalCategoryName} image ${index + 1}`}
+                                                        style={{ maxWidth: "100%", height: "auto", objectFit: "contain", marginBottom: "10px" }}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </Slider>
+                                    ) : (
+                                        <p>No images available</p>
+                                    )}
+                                </div>
+
+                                <div id={consultationData.destiny}  className="ac-fish-infor col-6">
+                                    <h3>{selectedAnimal.animalCategoryName}</h3>
+                                    <p>Description: {selectedAnimal.description}</p>
+                                    <p>Origin: {selectedAnimal.origin}</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -238,27 +303,36 @@ const AutoConsultationComponent: React.FC = () => {
 
                     {/* Shelter Pop-up */}
                     {selectedShelter && (
-                        <div className="popup-overlay" onClick={() => setSelectedShelter(null)}>
-                            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                                <h3>{selectedShelter.shelterCategoryName}</h3>
-                                <p>Description: {selectedShelter.description}</p>
-                                <p>Dimensions: {selectedShelter.width} x {selectedShelter.height} x {selectedShelter.length}</p>
-                                <p>Diameter: {selectedShelter.diameter}</p>
-                                <p>Water Volume: {selectedShelter.waterVolume} liters</p>
-                                <p>Filtration System: {selectedShelter.waterFiltrationSystem}</p>
-                                <p>Images:</p>
-                                {selectedShelter.shelterImages?.length ? (
-                                    selectedShelter.shelterImages.map((img, index) => (
-                                        <img
-                                            key={index}
-                                            src={img.imageUrl}
-                                            alt={`${selectedShelter.shelterCategoryName} image ${index + 1}`}
-                                            style={{ maxWidth: "100%", height: "auto", objectFit: "contain", marginBottom: "10px" }}
-                                        />
-                                    ))
-                                ) : (
-                                    <p>No images available</p>
-                                )}
+                        <div className="ac-popup-overlay" onClick={() => setSelectedShelter(null)}>
+                            <div className="ac-popup-content row" onClick={(e) => e.stopPropagation()}>
+                                <div className="ac-image col-6">
+                                    <p>Images:</p>
+                                    {selectedShelter.shelterImages?.length ? (
+                                        <Slider {...settings}>
+                                            {selectedShelter.shelterImages.map((img, index) => (
+                                                <div key={index}>
+                                                    <img
+                                                        src={img.imageUrl}
+                                                        alt={`${selectedShelter.shelterCategoryName} image ${index + 1}`}
+                                                        style={{ maxWidth: "100%", height: "100%", objectFit: "contain", marginBottom: "10px" }}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </Slider>
+                                    ) : (
+                                        <p>No images available</p>
+                                    )}
+                                </div>
+
+
+                                <div className="ac-fish-infor col-6">
+                                    <h3>{selectedShelter.shelterCategoryName}</h3>
+                                    <p>Description: {selectedShelter.description}</p>
+                                    <p>Dimensions: {selectedShelter.width} x {selectedShelter.height} x {selectedShelter.length}</p>
+                                    <p>Diameter: {selectedShelter.diameter}</p>
+                                    <p>Water Volume: {selectedShelter.waterVolume} liters</p>
+                                    <p>Filtration System: {selectedShelter.waterFiltrationSystem}</p>
+                                </div>
                             </div>
                         </div>
                     )}

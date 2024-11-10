@@ -5,6 +5,7 @@ import Navbar from "../layouts/header-footer/Navbar";
 import Footer from "../layouts/header-footer/Footer";
 import { getToken } from "../service/localStorageService";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface Post {
   id: number;
@@ -26,58 +27,53 @@ interface Post {
 }
 
 const ViewPost: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [newComment, setNewComment] = useState<string>("");
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [post, setPost] = useState<Post | null>(null); // Chỉ sử dụng một bài viết duy nhất
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchData, setSearchData] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(0);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [searchData, setSearchData] = useState<string>("");
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchPost = async () => {
       setLoading(true);
       const token = getToken();
       try {
-        const url = searchData
-          ? `http://localhost:9090/posts/search-posts/title?page=1&size=10&title=${searchData}`
-          : "http://localhost:9090/posts?page=1&size=10";
+        const response = await axios.get(
+          `http://localhost:9090/posts/search-posts/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (
-          response.data &&
-          response.data.result &&
-          response.data.result.data
-        ) {
-          setPosts(response.data.result.data);
+        if (response.data && response.data.result) {
+          setPost(response.data.result); // Lưu bài viết duy nhất
         } else {
-          setError("Invalid data structure from API");
+          setError("Bài viết không tồn tại");
         }
       } catch (err) {
-        setError("Failed to fetch data");
+        setError("Lỗi khi lấy dữ liệu");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPosts();
-  }, [searchData]); // Fetch posts whenever searchData changes
+    fetchPost();
+  }, [id]);
 
   const handleCommentSubmit = async () => {
     const token = getToken();
-    if (token) {
+    if (token && post) {
       const decodedToken: any = jwtDecode(token);
       const userEmail = decodedToken.email || decodedToken.sub;
       try {
         const response = await axios.post(
           "http://localhost:9090/post/comments",
           {
-            postId: posts[currentPage].id,
+            postId: post.id,
             content: newComment,
             status: "ACTIVE",
             createdBy: userEmail,
@@ -98,10 +94,13 @@ const ViewPost: React.FC = () => {
             createdDate: new Date().toISOString(),
           };
 
-          setPosts((prevPosts) => {
-            const updatedPosts = [...prevPosts];
-            updatedPosts[currentPage].comments.push(newCommentData);
-            return updatedPosts;
+          setPost((prevPost) => {
+            if (prevPost) {
+              const updatedPost = { ...prevPost };
+              updatedPost.comments.push(newCommentData);
+              return updatedPost;
+            }
+            return prevPost;
           });
           setNewComment("");
         }
@@ -114,34 +113,34 @@ const ViewPost: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => {
-        if (prev === posts[currentPage].images.length - 1) {
-          return 0;
-        }
-        return prev + 1;
-      });
+      if (post && post.images.length > 0) {
+        setCurrentImageIndex((prev) => {
+          if (prev === post.images.length - 1) {
+            return 0;
+          }
+          return prev + 1;
+        });
+      }
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [currentPage, posts]);
+  }, [post]);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
-  const totalPages = posts.length;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
       <Navbar searchData={searchData} setSearchData={setSearchData} />
       <div className="view-post-content">
-        {totalPages > 0 ? (
+        {post ? (
           <div className="post">
-            <h1 className="title">{posts[currentPage].title}</h1>
+            <h1 className="title">{post.title}</h1>
 
             {/* Display HTML content using dangerouslySetInnerHTML */}
             <div
               className="contentPost"
-              dangerouslySetInnerHTML={{ __html: posts[currentPage].content }}
+              dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
             <div className="slide">
@@ -152,7 +151,7 @@ const ViewPost: React.FC = () => {
                     transform: `translateX(-${currentImageIndex * 100}%)`,
                   }}
                 >
-                  {posts[currentPage].images.map((image) => (
+                  {post.images.map((image) => (
                     <img
                       key={image.id}
                       src={image.imageUrl}
@@ -163,34 +162,31 @@ const ViewPost: React.FC = () => {
                 </div>
               </div>
             </div>
+
             <div className="post-container">
               <p className="post-destiny">
                 Post Destiny:{" "}
-                <span className="author-name">
-                  {posts[currentPage].destiny.destiny}
-                </span>{" "}
+                <span className="author-name">{post.destiny.destiny}</span>
               </p>
               <p className="post-category">
                 Post Category:{" "}
                 <span className="author-name">
-                  {posts[currentPage].postCategory.postCategoryName}
+                  {post.postCategory.postCategoryName}
                 </span>
               </p>
               <p className="post-author">
                 Created By:{" "}
-                <span className="author-name">
-                  {posts[currentPage].createdBy}
-                </span>{" "}
-                on{" "}
+                <span className="author-name">{post.createdBy}</span> on{" "}
                 <span className="created-date">
-                  {new Date(posts[currentPage].createdDate).toLocaleString()}
+                  {new Date(post.createdDate).toLocaleString()}
                 </span>
               </p>
             </div>
+
             <div className="comments">
               <h3 className="comments-title">Your Comment</h3>
-              {posts[currentPage].comments.length > 0 ? (
-                posts[currentPage].comments.map((comment) => (
+              {post.comments.length > 0 ? (
+                post.comments.map((comment) => (
                   <div key={comment.id} className="comment-item">
                     <p className="comment-content">{comment.content}</p>
                     <small className="comment-meta">
@@ -215,31 +211,9 @@ const ViewPost: React.FC = () => {
                 </button>
               </div>
             </div>
-
-            <div className="pagination">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-                disabled={currentPage === 0}
-              >
-                Previous
-              </button>
-
-              <span>
-                Page {currentPage + 1} of {totalPages}
-              </span>
-
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
-                }
-                disabled={currentPage === totalPages - 1}
-              >
-                Next
-              </button>
-            </div>
           </div>
         ) : (
-          <p>No posts available.</p>
+          <p>No post available.</p>
         )}
       </div>
       <Footer />

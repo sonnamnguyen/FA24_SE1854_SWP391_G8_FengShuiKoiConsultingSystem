@@ -1,0 +1,188 @@
+/* General Container */
+.Register-container {
+    width: 100%;
+    width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #f7f7f7;
+  }
+  
+  /* Heading */
+  .Register-text {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 40px;
+    margin-left: 30%;
+    color: #333;
+    letter-spacing: 1px;
+  }
+  
+  /* Form Styling */
+  .Register-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .left-info,
+  .right-info {
+    width: 48%;
+  }
+  
+  /* Form Item Styling */
+  .form-item {
+    margin-bottom: 20px;
+  }
+  
+  .form-item label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f7f7f7;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #4caf50;
+    background-color: #fff;
+    outline: none;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 5px;
+  }
+  
+  /* Button Styling */
+  .register-btn{
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .register-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+  }
+  
+  .register-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* Avatar Upload */
+  .upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fafafa;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .upload:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .upload .ant-upload-list-item-thumbnail img {
+    border-radius: 50%;
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .upload .ant-upload-list-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .upload .ant-upload-list-item-name {
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  
+  /* Links and extra text */
+  .login-page-signup-link-text {
+    color: #4caf50;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .login-page-signup-link-text:hover {
+    color: #45a049;
+    text-decoration: underline;
+  }
+  
+  .login-page-signup-link-text:focus {
+    color: #45a049;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .Register-form {
+      flex-direction: column;
+      width: 100%;
+    }
+  
+    .left-info,
+    .right-info {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  
+    button[type="submit"] {
+      width: 100%;
+    }
+  
+    .form-item {
+      width: 100%;
+    }
+  }
+  
+  /* Additional Styling for spacing between elements */
+  .info {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .left-info,
+  .right-info {
+    flex: 1;
+  }

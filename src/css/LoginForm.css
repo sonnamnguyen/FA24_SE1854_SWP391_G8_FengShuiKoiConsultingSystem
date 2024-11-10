@@ -1,103 +1,150 @@
-.login-container {
+/* General Styles for the Login Page */
+.login-page-container {
   display: flex;
-  height: 100vh;
-  justify-content: space-between; /* Spread form and image across the space */
+  justify-content: center;
   align-items: center;
-  background-color: #f0f2f5;
+  min-height: 100vh;
+
+  background-size: cover;
+  background-position: center;
   padding: 0 20px;
 }
 
-.login-form {
-  padding: 24px;
-  width: 100%;
+.login-page-form {
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  padding: 40px;
   max-width: 400px;
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  z-index: 1;
-}
-
-.login-image {
-  flex: 1; /* Take remaining space to the right */
-  height: 100vh;
-  display: flex;
-  justify-content: flex-end; /* Push the image to the right */
-  position: relative;
-}
-
-.login-image img {
-  width: 88%; /* Maintain image aspect ratio */
-  height: 100%;
-  object-fit: cover;
-  border-radius: 0 10px 10px 0; /* Rounded edge on the left side */
-}
-
-.login-form h2 {
-  font-size: 26px;
-  margin-bottom: 10px;
-  color: #000;
-}
-
-.login-form p {
-  margin-bottom: 16px;
-  font-size: 14px;
-  color: #555;
-}
-
-.login-form-button {
   width: 100%;
-  background-color: #1890ff;
-  border-color: #1890ff;
-  color: white;
-  padding: 12px;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.login-divider {
   text-align: center;
-  margin: 20px 0;
-  position: relative;
+  position: relative; /* Đảm bảo form luôn hiển thị trên lớp phủ */
 }
 
-.login-divider::after {
-  content: "";
-  width: 100%;
-  height: 1px;
-  background-color: #e8e8e8;
-  position: absolute;
-  left: 0;
-  top: 50%;
+.login-page-title {
+  font-size: 32px;
+  color: #2c3e50;
+  font-family: "Roboto", sans-serif;
+  margin-bottom: 15px;
 }
 
-.login-divider span {
-  background-color: #fff;
-  padding: 0 10px;
-  position: relative;
-  z-index: 1;
-  color: #555;
+.login-page-description {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin-bottom: 30px;
 }
 
-.social-login-button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  background-color: #4285F4;
-  color: white;
-  border: none;
-  border-radius: 5px;
+.login-page-form-content {
+  max-width: 100%;
+  padding: 0;
+}
+
+.login-page-input {
+  border-radius: 50px;
+  padding: 10px 15px;
   font-size: 16px;
+  width: 100%;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  background-color: #f4f6f7;
+  transition: all 0.3s ease-in-out;
 }
 
-.login-form-forgot {
-  float: right;
+.login-page-input:focus {
+  border-color: #3498db;
+  outline: none;
+  background-color: #fff;
 }
 
-.login-container a {
-  color: #1890ff;
+.site-form-item-icon {
+  color: #3498db;
+}
+
+.login-page-remember {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.login-page-forgot {
+  font-size: 14px;
+  color: #3498db;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.login-page-forgot:hover {
+  color: #8e44ad;
+}
+
+.login-page-submit-button {
+  width: 100%;
+  background-color: #3498db;
+  border-radius: 50px;
+  border: none;
+  padding: 12px 0;
+  font-size: 18px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.login-page-submit-button:hover {
+  background-color: #2980b9;
+}
+
+.login-page-divider {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #7f8c8d;
+}
+
+.login-page-divider span {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.login-page-social-button {
+  width: 100%;
+  background-color: #db4437;
+  color: white;
+  border-radius: 50px;
+  border: none;
+  padding: 12px 0;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.login-page-social-button:hover {
+  background-color: #c1351d;
+}
+
+.login-page-signup-link {
+  font-size: 14px;
+  color: #3498db;
+  margin-top: 15px;
+}
+
+.login-page-signup-link-text {
+  font-weight: 600;
+  color: #3498db;
+  cursor: pointer;
   text-decoration: none;
 }
 
-.login-container a:hover {
-  text-decoration: underline;
+.login-page-signup-link-text:hover {
+  color: #8e44ad;
+}
+
+/* Custom CSS for the background image */
+.login-page-container {
+  background-image: url("../img/Login.webp");
+  background-size: cover;
+  background-position: center center;
 }
