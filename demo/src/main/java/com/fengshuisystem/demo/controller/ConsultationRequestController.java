@@ -39,5 +39,11 @@ public class ConsultationRequestController {
                 .build();
     }
 
-
+    @GetMapping("/completed-count")
+    public ApiResponse<Long> getCompletedConsultationRequests() {
+        long completedCount = consultationRequestService.getCompletedConsultationRequestCount();
+        return ApiResponse.<Long>builder()
+                .result(completedCount)
+                .build();
+    }
 }

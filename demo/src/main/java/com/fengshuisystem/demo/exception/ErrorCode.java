@@ -32,6 +32,8 @@ public enum ErrorCode {
     CONSULATION_CATEGORY_NOT_EXISTED(1022, "Consulation Category not existed", HttpStatus.NOT_FOUND),
     SHAPE_EXISTED(1023, "Shape existed", HttpStatus.BAD_REQUEST), // added from second file
     CONSULTATION_CATEGORY_NOT_EXISTED(1024, "Consulation Category not existed", HttpStatus.NOT_FOUND),
+    CONSULTATION_SHELTER_DOES_NOT_EXIST(1025, "Consulation shelter does not exist", HttpStatus.NOT_FOUND),
+    CONSULTATION_ANIMAL_DOES_NOT_EXIST(1026, "Consulation animal does not exist", HttpStatus.NOT_FOUND),
     POST_NOT_EXISTED(2001, "Post not existed", HttpStatus.NOT_FOUND),
     COMMENT_NOT_EXISTED(2002, "Comment not existed", HttpStatus.NOT_FOUND),
     POST_IMAGE_NOT_EXISTED(2003, "Post image not existed", HttpStatus.NOT_FOUND),

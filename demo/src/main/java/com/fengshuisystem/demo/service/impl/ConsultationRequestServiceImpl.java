@@ -138,4 +138,9 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
         return email;
     }
 
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public long getCompletedConsultationRequestCount() {
+        return consultationRequestRepository.countCompletedConsultationRequests();
+    }
 }

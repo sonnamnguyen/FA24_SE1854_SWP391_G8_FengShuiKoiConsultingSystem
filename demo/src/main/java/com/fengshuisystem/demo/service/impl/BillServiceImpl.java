@@ -31,6 +31,7 @@ import java.time.Instant;
 @Slf4j
 public class BillServiceImpl implements BillService {
 
+
     private final BillRepository billRepository;
     private final ConsultationRequestRepository consultationRequestRepository;
     private final BillMapper billMapper;
@@ -114,5 +115,10 @@ public class BillServiceImpl implements BillService {
         String email = jwt.getClaimAsString("sub");
         log.info("Extracted email from JWT: {}", email);
         return email;
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @Override
+    public BigDecimal getTotalIncomeThisMonth() {
+        return billRepository.getTotalIncomeThisMonth();
     }
 }

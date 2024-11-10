@@ -3,6 +3,8 @@ package com.fengshuisystem.demo.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fengshuisystem.demo.entity.enums.Request;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -54,11 +56,22 @@ public class ConsultationRequestDetail {
     @Column(name = "updated_by", nullable = false, length = 300)
     private String updatedBy;
 
-    @Size(max = 1000)
     @NotNull
+    @NotBlank
     @Nationalized
     @Column(name = "description", nullable = false, length = 1000)
     private String description;
+
+    // Phương thức kiểm tra số từ có đủ ít nhất 100 từ
+    @AssertTrue(message = "The description must contain at least 100 words.")
+    public boolean isDescriptionValid() {
+        if (description == null) {
+            return false;
+        }
+        // Tách `description` thành các từ bằng regex
+        String[] words = description.trim().split("\\s+");
+        return words.length >= 100;
+    }
 
     @OneToMany(mappedBy = "requestDetail", cascade = CascadeType.ALL)
     private Set<ConsultationResult> consultationResults = new LinkedHashSet<>();

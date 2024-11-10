@@ -22,7 +22,9 @@ public interface UserService {
      PageResponse<UserResponse> getAllUsers(int page, int size);
      PageResponse<UserResponse> getUsersBySearch(String name, int page, int size);
      UserResponse setRole(Integer userId, List<Integer> ids);
-
+    long getNewUsersToday();
+    long getNewUsersThisWeek();
+    long getNewUsersThisMonth();
 
 
 }
