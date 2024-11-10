@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../axious/axious';
+import api from '../../../axious/axious';
 import { Form, Input, Radio, Button, message, Select } from 'antd';
-import { getToken } from '../../service/localStorageService';
-import '../../css/ConsultationRequest.css';
+import { getToken } from '../../../service/localStorageService';
+import '../../../css/ConsultationRequest.css';
 
 const { Option } = Select;
 

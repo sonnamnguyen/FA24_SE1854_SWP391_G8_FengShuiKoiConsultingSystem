@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, message } from 'antd';
-import api from '../axious/axious';
-import { getToken } from '../service/localStorageService';
-import '../css/BillPage.css';
+import api from '../../axious/axious';
+import { getToken } from '../../service/localStorageService';
+import '../../css/BillPage.css';
 
 // Import các đường dẫn SVG
-import billLogo from '../assets/images/bill_logo.svg';
-import cartLogo from '../assets/images/cart_logo.svg';
-import moneyLogo from '../assets/images/money_logo.svg';
-import walletLogo from '../assets/images/wallet_logo.svg';
-import personLogo from '../assets/images/person_logo.svg';
-import statusLogo from '../assets/images/status-warning_logo.svg';
-import dateLogo from '../assets/images/date_logo.svg';
-import vnPayLogo from '../assets/images/v-vnpay-svgrepo-com.svg';
+import billLogo from '../../assets/images/bill_logo.svg';
+import cartLogo from '../../assets/images/cart_logo.svg';
+import moneyLogo from '../../assets/images/money_logo.svg';
+import walletLogo from '../../assets/images/wallet_logo.svg';
+import personLogo from '../../assets/images/person_logo.svg';
+import statusLogo from '../../assets/images/status-warning_logo.svg';
+import dateLogo from '../../assets/images/date_logo.svg';
+import vnPayLogo from '../../assets/images/v-vnpay-svgrepo-com.svg';
 
 interface Bill {
   id: number;
