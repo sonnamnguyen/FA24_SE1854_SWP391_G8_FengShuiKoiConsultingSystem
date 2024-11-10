@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { logOut } from "../../service/authentication";
-import { getToken } from '../../service/localStorageService'; // Import getToken function
+import { getToken } from "../../service/localStorageService"; // Import getToken function
 import "../css/NavbarUser.css";
 import logo from "../../img/logo.png";
 
@@ -98,7 +98,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               </NavLink>
               <ul className="dropdown-menu bg-light">
                 <li>
-                  <NavLink className="dropdown-item text-dark" to="/posts">
+                  <NavLink className="dropdown-item text-dark" to="/post-list">
                     Blogs
                   </NavLink>
                 </li>
@@ -111,7 +111,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink className="dropdown-item text-dark" to="/my-post">
+                  <NavLink
+                    className="dropdown-item text-dark"
+                    to="/my-post-list"
+                  >
                     My Blogs
                   </NavLink>
                 </li>
@@ -132,7 +135,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink className="dropdown-item" to="/compatibility_caculation">
+                  <NavLink
+                    className="dropdown-item"
+                    to="/compatibility_caculation"
+                  >
                     Compatibility Caculation Tool
                   </NavLink>
                 </li>
@@ -149,7 +155,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link menunav text-dark" to="/consultation-request">
+              <NavLink
+                className="nav-link menunav text-dark"
+                to="/consultation-request"
+              >
                 Book a Consultation
               </NavLink>
             </li>
