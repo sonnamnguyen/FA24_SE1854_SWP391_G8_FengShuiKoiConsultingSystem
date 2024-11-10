@@ -52,7 +52,17 @@ public class ShelterController {
             .result(shelterService.getSheltersBySearch(name, page, size))
             .build();
   }
+  @GetMapping("/search-destiny")
+  public ApiResponse<PageResponse<ShelterCategoryDTO>> getShelterByDestiny(
+          @RequestParam String destiny,
+          @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+          @RequestParam(value = "size", required = false, defaultValue = "10") int size
 
+  ) {
+    return ApiResponse.<PageResponse<ShelterCategoryDTO>>builder()
+            .result(shelterService.getSheltersByDestiny(destiny, page, size))
+            .build();
+  }
   @PutMapping("/{id}")
   public ApiResponse<ShelterCategoryDTO> updateShelter(@PathVariable Integer id, @Valid @RequestBody ShelterCategoryDTO shelterCreationRequest) {
     return ApiResponse.<ShelterCategoryDTO>builder()

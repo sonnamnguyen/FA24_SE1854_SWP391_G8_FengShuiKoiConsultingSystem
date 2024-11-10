@@ -17,4 +17,5 @@ public interface ShelterService {
     List<ShelterCategoryDTO> getAllSheltersByShape(Integer shape);
     ShelterCategoryDTO getShelterById(Integer id);
     List<ShelterCategoryDTO> getAllShelterCategory();
+    PageResponse<ShelterCategoryDTO> getSheltersByDestiny(String destiny, int page, int size);
 }
