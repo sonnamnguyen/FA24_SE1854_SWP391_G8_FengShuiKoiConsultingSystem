@@ -25,6 +25,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -123,29 +124,57 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         // 4. Lấy email từ account liên quan đến request
         String email = consultationResult.getRequest().getAccount().getEmail();
 
+        // Lấy danh sách AnimalCategory và ShelterCategory từ request
+        Set<AnimalCategory> animalsNeedToConsultation = consultationResult.getRequestDetail().getAnimalCategories();
+        Set<ShelterCategory> sheltersNeedToConsultation = consultationResult.getRequestDetail().getShelterCategories();
 
-        // Kiểm tra nếu bất kỳ Animal nào không có description
-        List<ConsultationAnimal> animals = consultationAnimalRepository.findByConsultationResult(consultationResult);
-        for (ConsultationAnimal animal : animals) {
-            if (animal.getDescription() == null || animal.getDescription().isEmpty()) {
-                throw new IllegalArgumentException("One or more consultation animals do not have a description. Email not sent.");
-            }
+        // Lọc danh sách ConsultationAnimal và ConsultationShelter khớp với các category từ requestDetail
+        List<ConsultationAnimal> matchingAnimals = consultationAnimalRepository.findByConsultationResult(consultationResult)
+                .stream()
+                .filter(animal -> animalsNeedToConsultation.contains(animal.getAnimalCategory()))
+                .collect(Collectors.toList());
+
+        List<ConsultationShelter> matchingShelters = consultationShelterRepository.findByConsultationResult(consultationResult)
+                .stream()
+                .filter(shelter -> sheltersNeedToConsultation.contains(shelter.getShelterCategory()))
+                .collect(Collectors.toList());
+
+        // Tìm AnimalCategory nào từ requestDetail không có trong matchingAnimals
+        Set<Integer> matchedAnimalCategoryIds = matchingAnimals.stream()
+                .map(animal -> animal.getAnimalCategory().getId())
+                .collect(Collectors.toSet());
+        Set<Integer> missingAnimalCategoryIds = animalsNeedToConsultation.stream()
+                .map(AnimalCategory::getId)
+                .filter(id -> !matchedAnimalCategoryIds.contains(id))
+                .collect(Collectors.toSet());
+
+        if (!missingAnimalCategoryIds.isEmpty()) {
+            System.out.println("Các AnimalCategory thiếu trong ConsultationAnimal: " + missingAnimalCategoryIds);
+            throw new RuntimeException("Thiếu các AnimalCategory ID: " + missingAnimalCategoryIds);
         }
 
-        // Kiểm tra nếu bất kỳ Shelter nào không có description
-        List<ConsultationShelter> shelters = consultationShelterRepository.findByConsultationResult(consultationResult);
-        for (ConsultationShelter shelter : shelters) {
-            if (shelter.getDescription() == null || shelter.getDescription().isEmpty()) {
-                throw new IllegalArgumentException("One or more consultation shelters do not have a description. Email not sent.");
-            }
+        // Tìm ShelterCategory nào từ requestDetail không có trong matchingShelters
+        Set<Integer> matchedShelterCategoryIds = matchingShelters.stream()
+                .map(shelter -> shelter.getShelterCategory().getId())
+                .collect(Collectors.toSet());
+        Set<Integer> missingShelterCategoryIds = sheltersNeedToConsultation.stream()
+                .map(ShelterCategory::getId)
+                .filter(id -> !matchedShelterCategoryIds.contains(id))
+                .collect(Collectors.toSet());
+
+        if (!missingShelterCategoryIds.isEmpty()) {
+            System.out.println("Các ShelterCategory thiếu trong ConsultationShelter: " + missingShelterCategoryIds);
+            throw new RuntimeException("Thiếu các ShelterCategory ID: " + missingShelterCategoryIds);
         }
 
-        // 5. Gửi email với nội dung chi tiết
-        sendConsultationDetailsEmail(email, consultationResult, animals, shelters);
+        // 5. Gửi email với danh sách chính xác từ requestDetail
+        sendConsultationDetailsEmail(email, consultationResult, matchingAnimals, matchingShelters);
 
         // 6. Trả về DTO sau khi cập nhật
         return consultationResultMapper.toDto(consultationResult);
     }
+
+
 
     /**
      * Gửi email với nội dung chi tiết của consultation result, bao gồm các Animal và Shelter.

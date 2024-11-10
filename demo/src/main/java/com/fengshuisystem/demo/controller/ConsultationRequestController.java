@@ -46,4 +46,11 @@ public class ConsultationRequestController {
                 .result(completedCount)
                 .build();
     }
+
+    @PutMapping("/{id}")
+    public ApiResponse<ConsultationRequestDTO> updateStatus(@PathVariable Integer id) {
+        return ApiResponse.<ConsultationRequestDTO>builder()
+                .result(consultationRequestService.updateStatusConsultationRequest(id))
+                .build();
+    }
 }

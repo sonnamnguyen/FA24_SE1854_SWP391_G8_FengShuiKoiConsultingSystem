@@ -47,21 +47,28 @@ public class ConsultationShelterServiceImpl implements ConsultationShelterServic
 
         log.info("Bắt đầu tạo ConsultationShelter cho resultId: {} và animalCategoryId: {}", resultId, shelterCategoryId);
 
-
         // Lấy ConsultationResult dựa trên resultId
         ConsultationResult consultationResult = consultationResultRepository.findById(resultId)
-                .orElseThrow(() -> new RuntimeException("ConsultationResult không tìm thấy với ID: " + resultId));
+                .orElseThrow(() -> {
+                    String errorMessage = "ConsultationResult không tìm thấy với ID: " + resultId;
+                    log.error(errorMessage);
+                    throw new RuntimeException(errorMessage);
+                });
 
         if (!consultationResult.getStatus().equals(Request.PENDING)) {
             throw new RuntimeException("Result có Status khác PENDING");
         }
 
-        // Lấy ShelterCategory dựa trên shelterCategoryId
+        // Kiểm tra sự tồn tại của AnimalCategory
         ShelterCategory shelterCategory = shelterCategoryRepository.findById(shelterCategoryId)
-                .orElseThrow(() -> new RuntimeException("ShelterCategory không tìm thấy với ID: " + shelterCategoryId));
+                .orElseThrow(() -> {
+                    String errorMessage = "AnimalCategory không tìm thấy với ID: " + shelterCategoryId;
+                    log.error(errorMessage);
+                    throw new RuntimeException(errorMessage);
+                });
 
         // Kiểm tra xem cặp resultId và shelterCategoryId có tồn tại hay không
-        Optional<ConsultationShelter> existingShelter = consultationShelterRepository.existsByConsultationResultIdAndShelterCategoryId(resultId, shelterCategoryId);
+        Optional<ConsultationShelter> existingShelter = consultationShelterRepository.findByConsultationResultIdAndShelterCategoryId(resultId, shelterCategoryId);
         if (existingShelter.isPresent()) {
             throw new RuntimeException("Cặp resultId và shelterCategoryId đã tồn tại.");
         }
