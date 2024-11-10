@@ -249,7 +249,7 @@ const Register: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <Button type="primary" htmlType="submit">
+                  <Button className="register-btn" type="primary" htmlType="submit">
                     Submit
                   </Button>
                   <div>

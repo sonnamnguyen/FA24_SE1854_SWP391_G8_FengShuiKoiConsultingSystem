@@ -175,7 +175,7 @@ const CompatibilityForm = () => {
         <div className="background-fenghsui">
             <form onSubmit={handleSubmit} className="compatibility-form">
                 <div className="blur-background"></div>
-                <h1 className="form-title">CHECK FENG SHUI COMPATIBILITY OF KOI POND BASED ON THE FIVE ELEMENTS</h1>
+                <h1 className="compa-form-title">CHECK FENG SHUI COMPATIBILITY OF KOI POND BASED ON THE FIVE ELEMENTS</h1>
                 <table className="compatibility-table">
                     <tbody>
                         <tr className="form-group year-section">

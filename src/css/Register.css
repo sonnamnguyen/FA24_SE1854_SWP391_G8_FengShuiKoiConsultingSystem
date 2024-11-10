@@ -77,7 +77,7 @@
 }
 
 /* Button Styling */
-button[type="submit"] {
+.register-btn{
   background-color: #4caf50;
   color: white;
   padding: 12px 20px;
@@ -89,12 +89,12 @@ button[type="submit"] {
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-button[type="submit"]:hover {
+.register-btn:hover {
   background-color: #45a049;
   transform: translateY(-2px);
 }
 
-button[type="submit"]:active {
+.register-btn:active {
   transform: translateY(0);
 }
 

@@ -121,7 +121,6 @@ const AutoConsultationComponent: React.FC = () => {
             <form className="AutoConsultationForm" onSubmit={handleSubmit}>
                 <div>
                     <h1 className="titleDestiny">Five Element Destiny Consultation</h1>
-                    <label htmlFor="year">Choose Year:</label>
                     <select id="year" value={year} onChange={handleYearChange}>
                         <option>-- Select a Year --</option>
                         {years.map((y) => (
@@ -150,9 +149,9 @@ const AutoConsultationComponent: React.FC = () => {
                     </div>
                 </>
             )}            {consultationData && (
-                <div className="consultation-results">
-                    <h2 className="titleDestiny2">Your Element Destiny is {consultationData.destiny}</h2>
-                    <div id={consultationData.destiny}>
+                <div id={consultationData.destiny} className="consultation-results">
+                    <h2 id={consultationData.destiny} className="titleDestiny2">Your Element Destiny is {consultationData.destiny}</h2>
+                    <div id="wood" className={consultationData.destiny}>
                         <i></i>
                         <i></i>
                         <i></i>
@@ -195,15 +194,15 @@ const AutoConsultationComponent: React.FC = () => {
                     <div id="shield" className={consultationData.destiny}>
                         <div id={consultationData.destiny} className="shield__inner"></div>
                     </div>
-                    <div>
-                        <h3 className="titleDestiny2">1. Number of Fish</h3>
+                    <div className="ac-text">
+                        <h3 id={consultationData.destiny} className="titleDestiny2">1. Number of Fish</h3>
                         <p>For those with the {consultationData.destiny} destiny, having the right number of fish not only supports fortune but also activates feng shui, attracting wealth and creating harmony in life.</p>
                         <p>Lucky numbers belonging to the {consultationData.destiny} element, such as {consultationData.consultation2.numbers.join(", ")}, will contribute to the stability and enhancement of your destiny energy. This brings sustainability and favor, helping you achieve harmony and growth.</p>
                         <p>Meanwhile, numbers representing the {consultationData.destinyTuongSinh} element, such as {consultationData.consultation1.numbers.join(", ")}, possess mutual generation power, supporting the {consultationData.destiny} destiny. Choosing the number of fish according to these numbers will bring prosperity, increase fortune, and expand opportunities for success in your career.</p>
                         <p>For 11 or more koi fish, disregard the tens digit and use the units digit. For example: 11, 15, 38, 40, 49 fish... count as 1, 5, 8, 4, 9 fish. Then refer to the table above for calculation.</p>
                     </div>
-                    <div>
-                        <h3 className="titleDestiny2">2. Colors and Fish Types</h3>
+                    <div className="ac-text">
+                        <h3 id={consultationData.destiny} className="titleDestiny2">2. Colors and Fish Types</h3>
                         <p>Fish types and colors that are mutually generating and compatible with the {consultationData.destiny} destiny:</p>
                         <ul>
                             <li>Fish with colors {consultationData.consultation2.colors.join(", ")}: These colors belong to the {consultationData.destiny} element, enhancing stability and peace.</li>
@@ -211,7 +210,7 @@ const AutoConsultationComponent: React.FC = () => {
                                 {consultationData.consultation2.animals.map((animal: AnimalCategory, index: number) => (
                                     <React.Fragment key={animal.id}>
                                         {" "}
-                                        <button className="autoConsultation-view" onClick={() => showAnimalModal(animal)}>
+                                        <button id={consultationData.destiny} className="autoConsultation-view" onClick={() => showAnimalModal(animal)}>
                                             {animal.animalCategoryName}
                                         </button>
                                         {index < consultationData.consultation2.animals.length - 1 && ", "}
@@ -223,7 +222,7 @@ const AutoConsultationComponent: React.FC = () => {
                                 {consultationData.consultation1.animals.map((animal: AnimalCategory, index: number) => (
                                     <React.Fragment key={animal.id}>
                                         {" "}
-                                        <button className="autoConsultation-view" onClick={() => showAnimalModal(animal)}>
+                                        <button id={consultationData.destiny} className="autoConsultation-view" onClick={() => showAnimalModal(animal)}>
                                             {animal.animalCategoryName}
                                         </button>
                                         {index < consultationData.consultation1.animals.length - 1 && ", "}
@@ -232,23 +231,23 @@ const AutoConsultationComponent: React.FC = () => {
                             </p>
                         </ul>
                     </div>
-                    <div>
-                        <h3 className="titleDestiny2">3. Pond Direction</h3>
+                    <div className="ac-text">
+                        <h3 id={consultationData.destiny} className="titleDestiny2">3. Pond Direction</h3>
                         <p>The pond direction for those with the {consultationData.destiny} destiny should be placed in directions belonging to the {consultationData.destiny} element or the {consultationData.destinyTuongSinh} element:</p>
                         <ul>
                             <li>Directions {consultationData.consultation2.directions.join(", ")}: Belonging to the {consultationData.destiny} element, very beneficial for advancement and wealth.</li>
                             <li>Directions {consultationData.consultation1.directions.join(", ")}: These support and enhance the fortune of the {consultationData.destiny} destiny.</li>
                         </ul>
                     </div>
-                    <div>
-                        <h3 className="titleDestiny2">4. Pond Shape</h3>
+                    <div className="ac-text">
+                        <h3 id={consultationData.destiny} className="titleDestiny2">4. Pond Shape</h3>
                         <ul>
                             <li>Shape {consultationData.consultation2.shapes.join(", ")}, as these shapes represent the Water element, fostering harmony and energy flow.</li>
                             <p>Collected pond models:
                                 {consultationData.consultation2.shelters.map((shelter: ShelterCategory, index: number) => (
                                     <React.Fragment key={shelter.id}>
                                         {" "}
-                                        <button className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
+                                        <button id={consultationData.destiny} className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
                                             {shelter.shelterCategoryName}
                                         </button>
                                         {index < consultationData.consultation2.shelters.length - 1 && ", "}
@@ -260,7 +259,7 @@ const AutoConsultationComponent: React.FC = () => {
                                 {consultationData.consultation1.shelters.map((shelter: ShelterCategory, index: number) => (
                                     <React.Fragment key={shelter.id}>
                                         {" "}
-                                        <button className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
+                                        <button id={consultationData.destiny}className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
                                             {shelter.shelterCategoryName}
                                         </button>
                                         {index < consultationData.consultation1.shelters.length - 1 && ", "}
@@ -292,7 +291,7 @@ const AutoConsultationComponent: React.FC = () => {
                                     )}
                                 </div>
 
-                                <div className="ac-fish-infor col-6">
+                                <div id={consultationData.destiny}  className="ac-fish-infor col-6">
                                     <h3>{selectedAnimal.animalCategoryName}</h3>
                                     <p>Description: {selectedAnimal.description}</p>
                                     <p>Origin: {selectedAnimal.origin}</p>
