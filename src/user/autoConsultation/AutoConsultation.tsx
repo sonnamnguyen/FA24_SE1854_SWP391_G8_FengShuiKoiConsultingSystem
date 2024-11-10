@@ -4,9 +4,14 @@ import AutoConsultationContainer from "./AutoConsultationContainer";
 import "./AutoConsultation.css"
 import AnimalCategory from "../../models/AnimalCategory";
 import ShelterCategory from "../../models/ShelterCategory";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-
-
+interface ArrowButtonProps {
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
 
 const AutoConsultationComponent: React.FC = () => {
     const currentYear = new Date().getFullYear();
@@ -57,6 +62,59 @@ const AutoConsultationComponent: React.FC = () => {
             setError("Failed to fetch data. Please try again.");
         }
     };
+
+
+    const NextArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }> = ({ onClick }) => (
+        <button
+          onClick={onClick}
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "10px",
+            transform: "translateY(-50%)",
+            background: "rgba(0, 0, 0, 0.5)",
+            color: "white",
+            border: "none",
+            borderRadius: "50%",
+            padding: "10px",
+            cursor: "pointer",
+            zIndex: 1,
+          }}
+        >
+          <FaArrowRight />
+        </button>
+      );
+      
+      const PrevArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }> = ({ onClick }) => (
+        <button
+          onClick={onClick}
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "10px",
+            transform: "translateY(-50%)",
+            background: "rgba(0, 0, 0, 0.5)",
+            color: "white",
+            border: "none",
+            borderRadius: "50%",
+            padding: "10px",
+            cursor: "pointer",
+            zIndex: 1,
+          }}
+        >
+          <FaArrowLeft />
+        </button>
+      );
+    // Slider settings with custom arrows
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
+      };
 
     return (
         <div className="autoConsultation-container">
@@ -213,24 +271,32 @@ const AutoConsultationComponent: React.FC = () => {
                     </div>
 
                     {selectedAnimal && (
-                        <div className="popup-overlay" onClick={() => setSelectedAnimal(null)}>
-                            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                                <h3>{selectedAnimal.animalCategoryName}</h3>
-                                <p>Description: {selectedAnimal.description}</p>
-                                <p>Origin: {selectedAnimal.origin}</p>
-                                <p>Images:</p>
-                                {selectedAnimal.animalImages?.length ? (
-                                    selectedAnimal.animalImages.map((img, index) => (
-                                        <img
-                                            key={index}
-                                            src={img.imageUrl}
-                                            alt={`${selectedAnimal.animalCategoryName} image ${index + 1}`}
-                                            style={{ maxWidth: "100%", height: "auto", objectFit: "contain", marginBottom: "10px" }}
-                                        />
-                                    ))
-                                ) : (
-                                    <p>No images available</p>
-                                )}
+                        <div className="ac-popup-overlay" onClick={() => setSelectedAnimal(null)}>
+                            <div className="ac-popup-content row" onClick={(e) => e.stopPropagation()}>
+                                <div className="ac-image col-6">
+                                    <p>Images:</p>
+                                    {selectedAnimal.animalImages?.length ? (
+                                        <Slider {...settings}>
+                                            {selectedAnimal.animalImages.map((img, index) => (
+                                                <div key={index}>
+                                                    <img
+                                                        src={img.imageUrl}
+                                                        alt={`${selectedAnimal.animalCategoryName} image ${index + 1}`}
+                                                        style={{ maxWidth: "100%", height: "auto", objectFit: "contain", marginBottom: "10px" }}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </Slider>
+                                    ) : (
+                                        <p>No images available</p>
+                                    )}
+                                </div>
+
+                                <div className="ac-fish-infor col-6">
+                                    <h3>{selectedAnimal.animalCategoryName}</h3>
+                                    <p>Description: {selectedAnimal.description}</p>
+                                    <p>Origin: {selectedAnimal.origin}</p>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -238,27 +304,36 @@ const AutoConsultationComponent: React.FC = () => {
 
                     {/* Shelter Pop-up */}
                     {selectedShelter && (
-                        <div className="popup-overlay" onClick={() => setSelectedShelter(null)}>
-                            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                                <h3>{selectedShelter.shelterCategoryName}</h3>
-                                <p>Description: {selectedShelter.description}</p>
-                                <p>Dimensions: {selectedShelter.width} x {selectedShelter.height} x {selectedShelter.length}</p>
-                                <p>Diameter: {selectedShelter.diameter}</p>
-                                <p>Water Volume: {selectedShelter.waterVolume} liters</p>
-                                <p>Filtration System: {selectedShelter.waterFiltrationSystem}</p>
-                                <p>Images:</p>
-                                {selectedShelter.shelterImages?.length ? (
-                                    selectedShelter.shelterImages.map((img, index) => (
-                                        <img
-                                            key={index}
-                                            src={img.imageUrl}
-                                            alt={`${selectedShelter.shelterCategoryName} image ${index + 1}`}
-                                            style={{ maxWidth: "100%", height: "auto", objectFit: "contain", marginBottom: "10px" }}
-                                        />
-                                    ))
-                                ) : (
-                                    <p>No images available</p>
-                                )}
+                        <div className="ac-popup-overlay" onClick={() => setSelectedShelter(null)}>
+                            <div className="ac-popup-content row" onClick={(e) => e.stopPropagation()}>
+                                <div className="ac-image col-6">
+                                    <p>Images:</p>
+                                    {selectedShelter.shelterImages?.length ? (
+                                        <Slider {...settings}>
+                                            {selectedShelter.shelterImages.map((img, index) => (
+                                                <div key={index}>
+                                                    <img
+                                                        src={img.imageUrl}
+                                                        alt={`${selectedShelter.shelterCategoryName} image ${index + 1}`}
+                                                        style={{ maxWidth: "100%", height: "100%", objectFit: "contain", marginBottom: "10px" }}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </Slider>
+                                    ) : (
+                                        <p>No images available</p>
+                                    )}
+                                </div>
+
+
+                                <div className="ac-fish-infor col-6">
+                                    <h3>{selectedShelter.shelterCategoryName}</h3>
+                                    <p>Description: {selectedShelter.description}</p>
+                                    <p>Dimensions: {selectedShelter.width} x {selectedShelter.height} x {selectedShelter.length}</p>
+                                    <p>Diameter: {selectedShelter.diameter}</p>
+                                    <p>Water Volume: {selectedShelter.waterVolume} liters</p>
+                                    <p>Filtration System: {selectedShelter.waterFiltrationSystem}</p>
+                                </div>
                             </div>
                         </div>
                     )}
