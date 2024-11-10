@@ -20,6 +20,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Page<Post> findAllByTitleContaining(@Param("title") String title, Pageable pageable);
     @Query("SELECT COUNT(p) FROM Post p")
     long countAllPosts();
-    @Query(value = "SELECT c from Post c where c.destiny =:destiny and c.status = 'ACTIVE'")
+    @Query(value = "SELECT c from Post c  JOIN c.destiny d where d.destiny =:destiny and c.status = 'ACTIVE'")
     Page<Post> findAllByDestiny(Pageable pageable, String destiny);
 }
