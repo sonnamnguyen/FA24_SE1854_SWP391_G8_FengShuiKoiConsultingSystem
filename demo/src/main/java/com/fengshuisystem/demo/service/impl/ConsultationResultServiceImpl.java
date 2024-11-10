@@ -45,6 +45,23 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
     @Override
     @Transactional
     public ConsultationResultDTO createConsultationResult(Integer requestId, ConsultationResultDTO dto) {
+        // Kiểm tra các trường bắt buộc trong DTO
+        if (dto.getConsultationCategoryId() == null) {
+            throw new RuntimeException("Consultation Category is required.");
+        }
+        if (dto.getConsultantName() == null || dto.getConsultantName().isBlank()) {
+            throw new RuntimeException("Consultant Name is required.");
+        }
+        if (dto.getDescription() == null || dto.getDescription().isBlank()) {
+            throw new RuntimeException("Description is required.");
+        }
+        if (dto.getStatus() == null) {
+            throw new RuntimeException("Status is required.");
+        }
+        if (requestId == null) {
+            throw new RuntimeException("Consultation Request is required.");
+        }
+
         // Lấy email từ admin
         String email = getCurrentUserEmailFromJwt();
         log.info("Fetched email from JWT: {}", email);
@@ -292,10 +309,11 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
 
+        // Lấy ConsultationResult từ DB
         ConsultationResult consultationResult = consultationResultRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CONSULATION_RESULT_NOT_EXISTED));
 
-        // Update specific fields only if they are provided in DTO
+        // Cập nhật các trường từ DTO
         if (consultationResultDTO.getConsultantName() != null) {
             consultationResult.setConsultantName(consultationResultDTO.getConsultantName());
         }
@@ -306,13 +324,21 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
             consultationResult.setStatus(consultationResultDTO.getStatus());
         }
 
+        // Cập nhật ConsultationCategory từ consultationCategoryId
+        if (consultationResultDTO.getConsultationCategoryId() != null) {
+            ConsultationCategory category = consultationCategoryRepository.findById(consultationResultDTO.getConsultationCategoryId())
+                    .orElseThrow(() -> new AppException(ErrorCode.CONSULTATION_CATEGORY_NOT_EXISTED));
+            consultationResult.setConsultationCategory(category);
+        }
+
         consultationResult.setUpdatedBy(name);
         consultationResult.setUpdatedDate(Instant.now());
 
-        // Save the updated entity and return the DTO
+        // Lưu đối tượng đã cập nhật và trả về DTO
         ConsultationResult savedResult = consultationResultRepository.saveAndFlush(consultationResult);
         return consultationResultMapper.toDto(savedResult);
     }
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public long countCompletedConsultations() {
