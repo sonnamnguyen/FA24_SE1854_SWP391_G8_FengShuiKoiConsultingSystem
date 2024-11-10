@@ -621,8 +621,8 @@ const ShelterCollection: React.FC<ShelterCollectionProps> = ({ setIsNavbarVisibl
             </Form.Item>
           </Form>
         ) : (
-          <div style={{ display: 'flex' }}>
-            <div style={{ flex: 1 }}> {/* Phần dành cho Carousel */}
+          <div style={{ display: "flex", gap: "20px" }}>
+            <div style={{ flex: 1, maxHeight: '400px', overflow: 'hidden' }}>
               <Carousel autoplay>
                 {selectedShelter?.shelterImages?.length ? (
                   selectedShelter.shelterImages.map((image, index) => (
@@ -643,18 +643,28 @@ const ShelterCollection: React.FC<ShelterCollectionProps> = ({ setIsNavbarVisibl
               <p><strong>Ponds Name:</strong> {selectedShelter?.shelterCategoryName}</p>
               <p><strong>Description:</strong> {selectedShelter?.description}</p>
               <p><strong>Shape:</strong> {selectedShelter?.shape?.shape}</p>
-              <p><strong>Width:</strong> {selectedShelter?.width}</p>
-              <p><strong>Height:</strong> {selectedShelter?.height}</p>
-              <p><strong>Length:</strong> {selectedShelter?.length}</p>
-              <p><strong>Diameter:</strong> {selectedShelter?.diameter}</p>
-              <p><strong>Water Volume:</strong> {selectedShelter?.waterVolume}</p>
+              <p><strong>Width:</strong> {selectedShelter?.width} m</p>
+              <p><strong>Height:</strong> {selectedShelter?.height} m</p>
+              <p><strong>Length:</strong> {selectedShelter?.length} m</p>
+              <p><strong>Diameter:</strong> {selectedShelter?.diameter} m</p>
+              <p><strong>Water Volume:</strong> {selectedShelter?.waterVolume} L</p>
               <p><strong>Water Filtration System:</strong> {selectedShelter?.waterFiltrationSystem}</p>
-              <p><strong>Created Date:</strong> {selectedShelter?.createdDate?.toString()}</p>
+              <p><strong>Created Date:</strong> {
+  selectedShelter?.createdDate
+    ? new Date(selectedShelter.createdDate).toLocaleDateString('en-GB')
+    : 'No date available'
+}</p>
               <p><strong>Status:</strong> {selectedShelter?.status}</p>
-
+ {/* Direction of Destiny */}
+ <p><strong>Directions:</strong>
+                {selectedShelter?.shape?.destiny?.directions && selectedShelter.shape.destiny.directions.length > 0
+                  ? selectedShelter.shape.destiny.directions.map((direct: any) => direct.direction).join(', ')
+                  : 'No directions available'}
+              </p>
               {/* Destiny Section */}
-              <p><strong>Mutual Accord:</strong> {selectedShelter?.shape?.destiny?.destiny || 'No destiny available'}</p>
-              <p><strong>Mutual Generation:</strong>
+              <p><strong>Result :</strong></p>
+              <p style={{ color: 'blue'}}><strong>Mutual Accord:</strong> {selectedShelter?.shape?.destiny?.destiny || 'No destiny available'}</p>
+              <p style={{ color: 'green'}}><strong>Mutual Generation:</strong>
                 {(() => {
                   const destinyName = selectedShelter?.shape?.destiny?.destiny;
                   const tuongSinhList = destinyName ? destinyToTuongSinhMap[destinyName] || [] : [];
@@ -662,7 +672,7 @@ const ShelterCollection: React.FC<ShelterCollectionProps> = ({ setIsNavbarVisibl
                   return tuongSinhNames || "No data available";
                 })()}
               </p>
-              <p><strong>Mutual Overcoming:</strong>
+              <p style={{ color: 'red' }}><strong>Mutual Overcoming:</strong>
                 {(() => {
                   const destinyName = selectedShelter?.shape?.destiny?.destiny;
                   const tuongKhacList = destinyName ? destinyToTuongKhacMap[destinyName] || [] : [];
@@ -670,12 +680,7 @@ const ShelterCollection: React.FC<ShelterCollectionProps> = ({ setIsNavbarVisibl
                   return tuongKhacNames || "No data available";
                 })()}
               </p>
-              {/* Direction of Destiny */}
-              <p><strong>Directions:</strong>
-                {selectedShelter?.shape?.destiny?.directions && selectedShelter.shape.destiny.directions.length > 0
-                  ? selectedShelter.shape.destiny.directions.map((direct: any) => direct.direction).join(', ')
-                  : 'No directions available'}
-              </p>
+             
             </div>
 
           </div>

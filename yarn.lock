@@ -4850,6 +4850,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-fontawesome@^1.6.8":
+  version "1.6.8"
+  resolved "https://registry.npmjs.org/@types/react-fontawesome/-/react-fontawesome-1.6.8.tgz"
+  integrity sha512-+dQ+4jccHraCd/FI4uSeY/O7c1RZ+wVASTgpCgbC6ijh1zSDsr0cb9XU3Dbfy5eJPyXq5QPp9W9RJTVRf+5+pA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-slick@^0.23.13":
   version "0.23.13"
   resolved "https://registry.npmjs.org/@types/react-slick/-/react-slick-0.23.13.tgz"

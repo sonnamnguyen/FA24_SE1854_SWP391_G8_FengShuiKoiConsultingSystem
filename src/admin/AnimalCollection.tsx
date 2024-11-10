@@ -302,7 +302,7 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
     } catch (error: any) {
       // Log the error for debugging purposes
       console.error('Error during update:', error);
-  
+
       // Display a fallback error message
       const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred during the update.';
       apii.error({
@@ -465,8 +465,9 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
         </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={() => {
           setIsModalVisible(true);
-          setIsNavbarVisible(false);}
-          }>
+          setIsNavbarVisible(false);
+        }
+        }>
           Add Animal
         </Button>
       </div>
@@ -590,96 +591,106 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
           </Form>
         ) : (
           <div style={{ display: "flex", gap: "20px" }}>
-       <div style={{ maxHeight: '400px', overflow: 'hidden' }}>
-  <Carousel autoplay>
-    {selectedAnimal?.animalImages?.length ? (
-      selectedAnimal.animalImages.map((image, index) => (
-        <div
-          key={index}
-          style={{
-            textAlign: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '400px'
-          }}
-        >
-          <img
-            src={image.imageUrl}
-            alt={`Image of ${selectedAnimal?.animalCategoryName}`}
-            style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              height: 'auto',
-              objectFit: 'contain'
-            }}
-          />
-        </div>
-      ))
-    ) : (
-      <div>No images available</div>
-    )}
-  </Carousel>
-</div>
-          {/* Information Section */}
-          <div style={{ flex: 1, padding: '0 20px' }}>
-            <p><strong>Koi Name:</strong> {selectedAnimal?.animalCategoryName}</p>
-            <p><strong>Description:</strong> {selectedAnimal?.description}</p>
-            <p><strong>Origin:</strong> {selectedAnimal?.origin}</p>
-            <p><strong>Created Date:</strong> {selectedAnimal?.createdDate?.toString()}</p>
-            <p><strong>Status:</strong> {selectedAnimal?.status}</p>
-            <p><strong>Colors:</strong> {selectedAnimal?.colors?.map((color: any) => color.color).join(', ')}</p>
-            <p>
-              <strong>Mutual Accord:</strong> {
-                selectedAnimal?.colors
-                  ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : 'No destiny available')
-                  .filter((value, index, self) => self.indexOf(value) === index)
-                  .join(', ')
-              }
-            </p>
-            <p><strong>Mutual Generation:</strong>
-              {(() => {
-                const destinies = selectedAnimal?.colors
-                  ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : null)
-                  .filter((value, index, self) => value !== null && self.indexOf(value) === index);
-  
-                if (!destinies || destinies.length === 0) return "No data available";
-  
-                const tuongSinhList = destinies
-                  .filter((destinyName: string) => destinyName !== null)
-                  .flatMap(destinyName => destinyToTuongSinhMap[destinyName] || []);
-  
-                return Array.from(new Set(tuongSinhList.map(tuongSinh => tuongSinh.name))).join(', ') || "No data available";
-              })()}
-            </p>
-  
-            <p><strong>Mutual Overcoming:</strong>
-              {(() => {
-                const destinies = selectedAnimal?.colors
-                  ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : null)
-                  .filter((value, index, self) => value !== null && self.indexOf(value) === index);
-  
-                if (!destinies || destinies.length === 0) return "No data available";
-  
-                const tuongKhacList = destinies
-                  .filter((destinyName: string) => destinyName !== null)
-                  .flatMap(destinyName => destinyToTuongKhacMap[destinyName] || []);
-  
-                return Array.from(new Set(tuongKhacList.map(tuongKhac => tuongKhac.name))).join(', ') || "No data available";
-              })()}
-            </p>
-  
-            <p>
-              <strong>Numbers:</strong> {
-                selectedAnimal?.colors
-                  ?.flatMap((color: any) => color.destiny?.numbers ? color.destiny.numbers : [])
-                  .filter((value, index, self) => self.findIndex(num => num.id === value.id) === index)
-                  .map((number: any) => number.number)
-                  .join(', ')
-              }
-            </p>
+            <div style={{ flex: 1, maxHeight: '400px', overflow: 'hidden' }}>
+              <Carousel autoplay>
+                {selectedAnimal?.animalImages?.length ? (
+                  selectedAnimal.animalImages.map((image, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        textAlign: 'center',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '400px'
+                      }}
+                    >
+                      <img
+                        src={image.imageUrl}
+                        alt={`Image of ${selectedAnimal?.animalCategoryName}`}
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '100%',
+                          height: 'auto',
+                          objectFit: 'contain'
+                        }}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div>No images available</div>
+                )}
+              </Carousel>
+            </div>
+            {/* Information Section */}
+            <div style={{ flex: 1, padding: '0 20px' }}>
+              <p><strong>Koi Name:</strong> {selectedAnimal?.animalCategoryName}</p>
+              <p><strong>Description:</strong> {selectedAnimal?.description}</p>
+              <p><strong>Origin:</strong> {selectedAnimal?.origin}</p>
+              <p><strong>Created Date:</strong> {selectedAnimal?.createdDate?.toString()}</p>
+              <p><strong>Status:</strong> {selectedAnimal?.status}</p>
+              <p><strong>Colors:</strong> {selectedAnimal?.colors?.map((color: any) => color.color).join(', ')}</p>
+              <p>
+                <strong>
+                  Fortunate Numbers for Destiny{' '}
+                  {selectedAnimal?.colors
+                    ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : 'No destiny available')
+                    .filter((value, index, self) => self.indexOf(value) === index)
+                    .join(', ')}
+                  :
+                </strong> {
+                  selectedAnimal?.colors
+                    ?.flatMap((color: any) => color.destiny?.numbers ? color.destiny.numbers : [])
+                    .filter((value, index, self) => self.findIndex(num => num.id === value.id) === index)
+                    .map((number: any) => number.number)
+                    .join(', ')
+                }
+              </p>
+
+              <p><strong>Result :</strong></p>
+              <p style={{ color: 'blue'}}>
+                <strong>Mutual Accord Destiny:</strong> {
+                  selectedAnimal?.colors
+                    ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : 'No destiny available')
+                    .filter((value, index, self) => self.indexOf(value) === index)
+                    .join(', ')
+                }
+              </p>
+              <p style={{ color: 'green'}}><strong>Mutual Generation Destiny:</strong>
+                {(() => {
+                  const destinies = selectedAnimal?.colors
+                    ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : null)
+                    .filter((value, index, self) => value !== null && self.indexOf(value) === index);
+
+                  if (!destinies || destinies.length === 0) return "No data available";
+
+                  const tuongSinhList = destinies
+                    .filter((destinyName: string) => destinyName !== null)
+                    .flatMap(destinyName => destinyToTuongSinhMap[destinyName] || []);
+
+                  return Array.from(new Set(tuongSinhList.map(tuongSinh => tuongSinh.name))).join(', ') || "No data available";
+                })()}
+              </p>
+
+              <p  style={{ color: 'red' }}><strong>Mutual Overcoming Destiny:</strong>
+                {(() => {
+                  const destinies = selectedAnimal?.colors
+                    ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : null)
+                    .filter((value, index, self) => value !== null && self.indexOf(value) === index);
+
+                  if (!destinies || destinies.length === 0) return "No data available";
+
+                  const tuongKhacList = destinies
+                    .filter((destinyName: string) => destinyName !== null)
+                    .flatMap(destinyName => destinyToTuongKhacMap[destinyName] || []);
+
+                  return Array.from(new Set(tuongKhacList.map(tuongKhac => tuongKhac.name))).join(', ') || "No data available";
+                })()}
+              </p>
+
+            
+            </div>
           </div>
-        </div>
         )}
       </Modal>
     </>

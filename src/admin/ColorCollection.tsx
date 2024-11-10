@@ -148,10 +148,10 @@ const ColorCollection: React.FC<ColorCollectionProps> = ({ setIsNavbarVisible })
         setIsModalVisible(false);
         reloadColorList();
       } else {
-        apii.error({ message: 'Error', description: 'Failed to add color.' });
+        apii.error({ message: 'Error', description: response.data.message });
       }
-    } catch (error) {
-      apii.error({ message: 'Error', description: 'Error adding color.' });
+    } catch (error: any) {
+      apii.error({ message: 'Error', description: error.response.data.message });
     }
   };
 
