@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Input, Select, Spin, message, Popover } from 'antd';
-import api from '../../axious/axious';
+import api from '../../../axious/axious';
 import { ref, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../firebase/firebase';
-import koiFishLogo from '../../assets/images/koifish_logo.svg';
-import pondLogo from '../../assets/images/pond_logo.svg';
-import descriptionLogo from '../../assets/images/description_logo.svg';
-import noteLogo from '../../assets/images/note_logo.svg';
+import { storage } from '../../../firebase/firebase';
+import koiFishLogo from '../../../assets/images/koifish_logo.svg';
+import pondLogo from '../../../assets/images/pond_logo.svg';
+import descriptionLogo from '../../../assets/images/description_logo.svg';
+import noteLogo from '../../../assets/images/note_logo.svg';
 
-import '../../css/ConsultationRequestDetail.css';
+import '../../../css/ConsultationRequestDetail.css';
 
 const { Option } = Select;
 

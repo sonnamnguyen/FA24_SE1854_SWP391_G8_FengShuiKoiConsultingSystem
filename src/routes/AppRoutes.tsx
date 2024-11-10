@@ -37,11 +37,11 @@ import CompatibilityCaculation from "../user/compatibilityCaculation/Compatibili
 import LoginSignUp from "../components/LoginNew";
 
 // Consultation - user
-import ConsultationRequest from "../consultation/request/ConsultationRequest";
-import PaymentPage from "../payment/PaymentPage";
-import BillPage from "../bill/BillPage";
-import PaymentSuccessPage from "../payment/PaymentSuccessPage";
-import ConsultationRequestDetail from "../consultation/request/ConsultationRequestDetail";
+import ConsultationRequest from "../user/consultation/request/ConsultationRequestView";
+import PaymentPage from "../user/payment/PaymentPageView";
+import BillPage from "../user/bill/BillPageView";
+import PaymentSuccessPage from "../user/payment/PaymentSuccessPageView";
+import ConsultationRequestDetail from "../user/consultation/request/ConsultationRequestDetailView";
 
 // Consultation - admin
 import ViewConsultationRequest from "../admin/consultation/ViewConsultationRequest";

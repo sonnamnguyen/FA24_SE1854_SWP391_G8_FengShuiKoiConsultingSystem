@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message, Modal } from 'antd';
-import api from '../axious/axious';
-import '../css/PaymentPage.css';
+import api from '../../axious/axious';
+import '../../css/PaymentPage.css';
 
-import vnpayLogo from '../assets/images/v-vnpay-svgrepo-com.svg';
-import paypalLogo from '../assets/images/paypal-svgrepo-com.svg';
-import visaLogo from '../assets/images/visa_logo.svg';
-import mastercardLogo from '../assets/images/mastercard_logo.svg';
-import amexLogo from '../assets/images/amex_logo.svg';
-import discoverLogo from '../assets/images/discover_logo.svg';
-import unionpayLogo from '../assets/images/unionpay_logo.svg';
-import vietcombankLogo from '../assets/images/vietcombank_logo.svg';
-import tpbankLogo from '../assets/images/tpbank_logo.svg';
-import techcombankLogo from '../assets/images/techcombank_logo.svg';
+import vnpayLogo from '../../assets/images/v-vnpay-svgrepo-com.svg';
+import paypalLogo from '../../assets/images/paypal-svgrepo-com.svg';
+import visaLogo from '../../assets/images/visa_logo.svg';
+import mastercardLogo from '../../assets/images/mastercard_logo.svg';
+import amexLogo from '../../assets/images/amex_logo.svg';
+import discoverLogo from '../../assets/images/discover_logo.svg';
+import unionpayLogo from '../../assets/images/unionpay_logo.svg';
+import vietcombankLogo from '../../assets/images/vietcombank_logo.svg';
+import tpbankLogo from '../../assets/images/tpbank_logo.svg';
+import techcombankLogo from '../../assets/images/techcombank_logo.svg';
 
 const PaymentPage: React.FC = () => {
   const { requestId } = useParams<{ requestId: string }>(); 

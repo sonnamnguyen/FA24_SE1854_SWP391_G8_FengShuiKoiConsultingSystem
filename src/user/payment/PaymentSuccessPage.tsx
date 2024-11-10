@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { message, Modal, Spin } from 'antd';
-import api from '../axious/axious';
-import { getToken } from '../service/localStorageService';
-import '../css/PaymentSuccessPage.css';
+import api from '../../axious/axious';
+import { getToken } from '../../service/localStorageService';
+import '../../css/PaymentSuccessPage.css';
 
 const PaymentSuccessPage: React.FC = () => {
   const location = useLocation();

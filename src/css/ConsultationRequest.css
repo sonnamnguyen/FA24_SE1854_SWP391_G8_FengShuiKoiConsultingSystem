@@ -6,8 +6,8 @@
   align-items: center;
   min-height: 100vh;
   margin: 0;
+  margin-left: 100;
 }
-
 /* Container chính của form */
 .khoi_con_req_consultation-form-container {
   max-width: 600px;
