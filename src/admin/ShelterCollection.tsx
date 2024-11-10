@@ -176,10 +176,10 @@ const ShelterCollection: React.FC<ShelterCollectionProps> = ({ setIsNavbarVisibl
         apii.success({ message: 'Success', description: 'Shelter has been successfully deleted.' });
         reloadShelterList();
       } else {
-        apii.error({ message: 'Error', description: 'Failed to delete shelter.' });
+        apii.error({ message: 'Error', description: response.data.message });
       }
-    } catch (error) {
-      apii.error({ message: 'Error', description: 'Error deleting shelter.' });
+    } catch (error: any) {
+      apii.error({ message: 'Error', description: error.response.data.message });
     }
   };
 
@@ -293,10 +293,10 @@ const ShelterCollection: React.FC<ShelterCollectionProps> = ({ setIsNavbarVisibl
         setIsModalVisible(false);
         reloadShelterList();
       } else {
-        apii.error({ message: 'Error', description: 'Failed to update shelter.' });
+        apii.error({ message: 'Error', description: response.data.message });
       }
-    } catch (error) {
-      apii.error({ message: 'Error', description: 'Error updating shelter.' });
+    } catch (error: any) {
+      apii.error({ message: 'Error', description: error.response.data.message });
     }
   };
 

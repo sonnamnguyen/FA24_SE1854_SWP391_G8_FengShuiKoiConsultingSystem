@@ -50,24 +50,31 @@ const AddShape: React.FC = () => {
         .matches(/^[a-zA-Z\s]+$/, "Shape must only contain letters and spaces"), // Allow only letters and spaces
   });
 
-  // Form submission
   const handleSubmit = async (values: any) => {
     try {
+      // API call to add a shape
       const response = await api.post('/shapes', {
         shape: values.shape,
         destiny: { id: selectedDestiny },
       });
-
-      const data = await response.data;
+  
+      const data = response.data;
+  
+      // Check if the response code is successful
       if (data.code === 1000) {
         apii.success({ message: 'Success', description: 'Shape has been successfully added.' });
         // Optionally reset form here
       } else {
-        apii.error({ message: 'Error', description: 'Failed to add shape.' });
+        apii.error({ message: 'Error', description: data.message });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      apii.error({ message: 'Error', description: 'Error adding shape.' });
+  
+      // In case of an error, display a generic error message
+      apii.error({
+        message: 'Error',
+        description: error.response?.data?.message || error.message || 'An unexpected error occurred.',
+      });
     }
   };
 

@@ -81,9 +81,16 @@ const AddShelter: React.FC = () => {
       } else {
         apii.error({ message: 'Error', description: response.data.message });
       }
-    } catch (error) {
-      console.error(error); // Log error for debugging
-      apii.error({ message: 'Error', description: `Error adding shelter. Please try again later.` });
+    } catch (error: any) {
+      console.error(error); // Log the error for debugging
+  
+      // Fallback error handling in case `error.response` is not available
+      const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred.';
+      
+      apii.error({
+        message: 'Error',
+        description: errorMessage,
+      });
     }
   };
 

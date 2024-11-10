@@ -98,8 +98,8 @@ const ColorCollection: React.FC<ColorCollectionProps> = ({ setIsNavbarVisible })
       }
       console.error("Failed to fetch destinies: ", response.status);
       return null;
-    } catch (error) {
-      console.error("Error fetching destinies: ", error);
+    } catch (error: any) {
+      apii.error({ message: 'Error', description: error.response.data.message });
       return null;
     }
   };
@@ -122,10 +122,10 @@ const ColorCollection: React.FC<ColorCollectionProps> = ({ setIsNavbarVisible })
         apii.success({ message: 'Success', description: 'Color has been successfully deleted.' });
         reloadColorList();
       } else {
-        apii.error({ message: 'Error', description: 'Failed to delete color.' });
+        apii.error({ message: 'Error', description: response.data.message });
       }
-    } catch (error) {
-      apii.error({ message: 'Error', description: 'Error deleting color.' });
+    } catch (error: any) {
+      apii.error({ message: 'Error', description: error.response.data.message });
     }
   };
 

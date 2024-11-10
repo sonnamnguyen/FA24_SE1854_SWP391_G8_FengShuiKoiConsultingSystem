@@ -130,27 +130,6 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
     }
   };
 
-  // const handleUpdate = (id: number) => {
-  //   const animal = listAnimalCategory.find((animal) => animal.id === id);
-  //   if (animal) {
-  //     setSelectedAnimal(animal);
-  //     setIsModalVisible(true);
-  //     setIsUpdateMode(true);
-  //     setCheckedList(animal.colors.map((color) => color.id).filter((id): id is number => id !== undefined));
-
-  //     // Set animal images, populating animalImageMetadata for preview
-  //     setAnimalImageMetadata(
-  //       animal.animalImages
-  //         .filter((image) => image.imageUrl) // Filter out images without a URL
-  //         .map((image, index) => ({
-  //           uid: `${image.imageUrl}-${index}`, // Unique identifier
-  //           name: `Image-${index + 1}`, // Set a display name for each image
-  //           url: image.imageUrl || "", // Use an empty string as a fallback if undefined
-  //         }))
-  //     );
-
-  //   };
-  // }
 
   const handleUpdate = async (id: number) => {
     const animal = listAnimalCategory.find((animal) => animal.id === id);
@@ -200,10 +179,10 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
         apii.success({ message: 'Success', description: 'Animal has been successfully deleted.' });
         reloadAnimalList();
       } else {
-        apii.error({ message: 'Error', description: 'Failed to delete animal.' });
+        apii.error({ message: 'Error', description: response.data.message });
       }
-    } catch (error) {
-      apii.error({ message: 'Error', description: 'Error deleting animal.' });
+    } catch (error: any) {
+      apii.error({ message: 'Error', description: error.response.data.message });
     }
   };
 
@@ -292,7 +271,7 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
       if (imagesToDelete.length > 0) {
         const deleteResponse = await api.post(`/animal-images/${selectedAnimal?.id}`, imagesToDelete);
         if (deleteResponse.data.code !== 1000) {
-          apii.error({ message: 'Error', description: 'Failed to delete old images.' });
+          apii.error({ message: 'Error', description: deleteResponse.data.message });
           return;
         }
       }
@@ -318,11 +297,18 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
         setIsModalVisible(false);
         reloadAnimalList();
       } else {
-        apii.error({ message: 'Error', description: 'Failed to update animal.' });
+        apii.error({ message: 'Error', description: response.data.message });
       }
-    } catch (error) {
+    } catch (error: any) {
+      // Log the error for debugging purposes
       console.error('Error during update:', error);
-      apii.error({ message: 'Error', description: 'Error updating animal.' });
+  
+      // Display a fallback error message
+      const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred during the update.';
+      apii.error({
+        message: 'Error',
+        description: errorMessage,
+      });
     }
   };
 
@@ -603,99 +589,97 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
             </Form.Item>
           </Form>
         ) : (
-          <div style={{ display: 'flex' }}>
-            <div style={{ flex: 1 }}> {/* Phần dành cho Carousel */}
-              <Carousel autoplay>
-                {selectedAnimal?.animalImages?.length ? (
-                  selectedAnimal.animalImages.map((image, index) => (
-                    <div key={index}>
-                      <img
-                        src={image.imageUrl}
-                        alt={`Image of ${selectedAnimal?.animalCategoryName}`}
-                        style={{ maxWidth: "100%", height: "auto", objectFit: "contain" }}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div>No images available</div>
-                )}
-              </Carousel>
-            </div>
-            <div style={{ flex: 1, padding: '0 20px' }}> {/* Phần dành cho thông tin */}
-              <p><strong>Koi Name:</strong> {selectedAnimal?.animalCategoryName}</p>
-              <p><strong>Description:</strong> {selectedAnimal?.description}</p>
-              <p><strong>Origin:</strong> {selectedAnimal?.origin}</p>
-              <p><strong>Created Date:</strong> {selectedAnimal?.createdDate?.toString()}</p>
-              <p><strong>Status:</strong> {selectedAnimal?.status}</p>
-              <p><strong>Colors:</strong> {selectedAnimal?.colors?.map((color: any) => color.color).join(', ')}</p>
-              <p>
-                <strong>Mutual Accord:</strong> {
-                  selectedAnimal?.colors
-                    ?.flatMap((color: Color) => color.destiny ? color.destiny.destiny : 'No destiny available')
-                    .filter((value, index, self) => self.indexOf(value) === index)
-                    .join(', ')
-                }
-              </p>
-              <p><strong>Mutual Generation:</strong>
-                {(() => {
-                  // Lấy danh sách các destiny từ thuộc tính colors của selectedAnimal
-                  const destinies = selectedAnimal?.colors
-                    ?.flatMap((color: Color) => color.destiny ? color.destiny.destiny : null)
-                    .filter((value, index, self) => value !== null && self.indexOf(value) === index);
-
-                  // Kiểm tra nếu destinies tồn tại và không rỗng
-                  if (!destinies || destinies.length === 0) {
-                    return "No data available";
-                  }
-
-                  // Dùng các destiny để lấy danh sách tuongSinh, bỏ qua null và undefined
-                  const tuongSinhList = destinies
-                    .filter((destinyName): destinyName is string => destinyName !== null && destinyName !== undefined)
-                    .flatMap(destinyName => destinyToTuongSinhMap[destinyName] || []);
-
-                  // Lấy tên từ danh sách và loại bỏ các tên trùng lặp
-                  const tuongSinhNames = Array.from(new Set(tuongSinhList.map(tuongSinh => tuongSinh.name))).join(', ');
-
-                  return tuongSinhNames || "No data available";
-                })()}
-              </p>
-
-              <p><strong>Mutual Overcoming:</strong>
-                {(() => {
-                  // Lấy danh sách các destiny từ thuộc tính colors của selectedAnimal
-                  const destinies = selectedAnimal?.colors
-                    ?.flatMap((color: Color) => color.destiny ? color.destiny.destiny : null)
-                    .filter((value, index, self) => value !== null && self.indexOf(value) === index);
-
-                  // Kiểm tra nếu destinies tồn tại và không rỗng
-                  if (!destinies || destinies.length === 0) {
-                    return "No data available";
-                  }
-
-                  // Dùng các destiny để lấy danh sách tuongKhac, bỏ qua null và undefined
-                  const tuongKhacList = destinies
-                    .filter((destinyName): destinyName is string => destinyName !== null && destinyName !== undefined)
-                    .flatMap(destinyName => destinyToTuongKhacMap[destinyName] || []);
-
-                  // Lấy tên từ danh sách và loại bỏ các tên trùng lặp
-                  const tuongKhacNames = Array.from(new Set(tuongKhacList.map(tuongKhac => tuongKhac.name))).join(', ');
-
-                  return tuongKhacNames || "No data available";
-                })()}
-              </p>
-              <p>
-                <strong>Numbers:</strong> {
-                  selectedAnimal?.colors
-                    ?.flatMap((color: Color) => color.destiny?.numbers ? color.destiny.numbers : [])
-                    .filter((value, index, self) => self.findIndex(num => num.id === value.id) === index)
-                    .map((number: any) => number.number) // Lấy giá trị number từ object
-                    .join(', ')
-                }
-              </p>
-
-
-            </div>
+          <div style={{ display: "flex", gap: "20px" }}>
+       <div style={{ maxHeight: '400px', overflow: 'hidden' }}>
+  <Carousel autoplay>
+    {selectedAnimal?.animalImages?.length ? (
+      selectedAnimal.animalImages.map((image, index) => (
+        <div
+          key={index}
+          style={{
+            textAlign: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '400px'
+          }}
+        >
+          <img
+            src={image.imageUrl}
+            alt={`Image of ${selectedAnimal?.animalCategoryName}`}
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+              height: 'auto',
+              objectFit: 'contain'
+            }}
+          />
+        </div>
+      ))
+    ) : (
+      <div>No images available</div>
+    )}
+  </Carousel>
+</div>
+          {/* Information Section */}
+          <div style={{ flex: 1, padding: '0 20px' }}>
+            <p><strong>Koi Name:</strong> {selectedAnimal?.animalCategoryName}</p>
+            <p><strong>Description:</strong> {selectedAnimal?.description}</p>
+            <p><strong>Origin:</strong> {selectedAnimal?.origin}</p>
+            <p><strong>Created Date:</strong> {selectedAnimal?.createdDate?.toString()}</p>
+            <p><strong>Status:</strong> {selectedAnimal?.status}</p>
+            <p><strong>Colors:</strong> {selectedAnimal?.colors?.map((color: any) => color.color).join(', ')}</p>
+            <p>
+              <strong>Mutual Accord:</strong> {
+                selectedAnimal?.colors
+                  ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : 'No destiny available')
+                  .filter((value, index, self) => self.indexOf(value) === index)
+                  .join(', ')
+              }
+            </p>
+            <p><strong>Mutual Generation:</strong>
+              {(() => {
+                const destinies = selectedAnimal?.colors
+                  ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : null)
+                  .filter((value, index, self) => value !== null && self.indexOf(value) === index);
+  
+                if (!destinies || destinies.length === 0) return "No data available";
+  
+                const tuongSinhList = destinies
+                  .filter((destinyName: string) => destinyName !== null)
+                  .flatMap(destinyName => destinyToTuongSinhMap[destinyName] || []);
+  
+                return Array.from(new Set(tuongSinhList.map(tuongSinh => tuongSinh.name))).join(', ') || "No data available";
+              })()}
+            </p>
+  
+            <p><strong>Mutual Overcoming:</strong>
+              {(() => {
+                const destinies = selectedAnimal?.colors
+                  ?.flatMap((color: any) => color.destiny ? color.destiny.destiny : null)
+                  .filter((value, index, self) => value !== null && self.indexOf(value) === index);
+  
+                if (!destinies || destinies.length === 0) return "No data available";
+  
+                const tuongKhacList = destinies
+                  .filter((destinyName: string) => destinyName !== null)
+                  .flatMap(destinyName => destinyToTuongKhacMap[destinyName] || []);
+  
+                return Array.from(new Set(tuongKhacList.map(tuongKhac => tuongKhac.name))).join(', ') || "No data available";
+              })()}
+            </p>
+  
+            <p>
+              <strong>Numbers:</strong> {
+                selectedAnimal?.colors
+                  ?.flatMap((color: any) => color.destiny?.numbers ? color.destiny.numbers : [])
+                  .filter((value, index, self) => self.findIndex(num => num.id === value.id) === index)
+                  .map((number: any) => number.number)
+                  .join(', ')
+              }
+            </p>
           </div>
+        </div>
         )}
       </Modal>
     </>

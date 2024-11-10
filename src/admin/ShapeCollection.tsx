@@ -98,8 +98,8 @@ const ShapeCollection: React.FC<ShapeCollectionProps> = ({ setIsNavbarVisible })
       }
       console.error("Failed to fetch destinies: ", response.status);
       return null;
-    } catch (error) {
-      console.error("Error fetching destinies: ", error);
+    } catch (error: any) {
+      apii.error({ message: 'Error', description: error.response.data.message });
       return null;
     }
   };
@@ -122,10 +122,10 @@ const ShapeCollection: React.FC<ShapeCollectionProps> = ({ setIsNavbarVisible })
         apii.success({ message: 'Success', description: 'Shape has been successfully deleted.' });
         reloadShapeList();
       } else {
-        apii.error({ message: 'Error', description: 'Failed to delete shape.' });
+        apii.error({ message: 'Error', description: response.data.message });
       }
-    } catch (error) {
-      apii.error({ message: 'Error', description: 'Error deleting shape.' });
+    } catch (error: any) {
+      apii.error({ message: 'Error', description: error.response.data.message });
     }
   };
 
@@ -148,10 +148,10 @@ const ShapeCollection: React.FC<ShapeCollectionProps> = ({ setIsNavbarVisible })
         setIsModalVisible(false);
         reloadShapeList();
       } else {
-        apii.error({ message: 'Error', description: 'Failed to add shape.' });
+        apii.error({ message: 'Error', description: response.data.message });
       }
-    } catch (error) {
-      apii.error({ message: 'Error', description: 'Error adding shape.' });
+    } catch (error: any) {
+      apii.error({ message: 'Error', description: error.response.data.message });
     }
   };
 

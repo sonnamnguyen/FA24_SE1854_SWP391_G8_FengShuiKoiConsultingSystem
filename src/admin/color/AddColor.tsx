@@ -71,11 +71,18 @@ const AddColor: React.FC = () => {
         apii.success({ message: 'Success', description: 'Color has been successfully added.' });
         // Optionally reset form here
       } else {
-        apii.error({ message: 'Error', description: 'Failed to add color.' });
+        apii.error({ message: 'Error', description: data.message });
       }
-    } catch (error) {
-      console.error(error);
-      apii.error({ message: 'Error', description: 'Error adding color.' });
+    } catch (error: any) {
+      console.error(error); // Log the error for debugging
+  
+      // Fallback error handling in case `error.response` is not available
+      const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred.';
+      
+      apii.error({
+        message: 'Error',
+        description: errorMessage,
+      });
     }
   };
 
