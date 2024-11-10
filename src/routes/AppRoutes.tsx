@@ -24,7 +24,9 @@ import ViewAddShape from "../admin/shape/layoutShape/ViewAddShape";
 import ViewColorManagement from "../admin/color/layoutCokor/ViewColorManagement";
 import ViewShapeManagement from "../admin/shape/layoutShape/ViewManagementShape";
 import ViewPost from "../user/ViewPost";
-import MyPostList from "../user/MyPostList"
+import MyPostList from "../user/MyPostList";
+import Postlist from "../user/Postlist";
+import UpdatePost from "../user/UpdatePost";
 import CreatePost from "../user/CreatePost";
 import ViewMyPost from "../user/ViewMyPost";
 import VNPAY from "../user/VNPAY";
@@ -81,11 +83,16 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/vnpay-success" element={<VNPAY />} />
         <Route path="/my-post" element={<ViewMyPost />} />
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/posts" element={<ViewPost />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/vnpay-success" element={<VNPAY />} />
+        <Route path="/posts/:id" element={<ViewPost />} />
+        <Route path="/post-list" element={<Postlist />} />
+        <Route path="/update-post/:id" element={<UpdatePost />} />
+        <Route path="/my-post-list" element={<MyPostList />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/view-profile" element={<ViewProfile />} />
         <Route path="/register" element={<Register />} />

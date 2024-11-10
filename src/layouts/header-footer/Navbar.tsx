@@ -98,7 +98,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               </NavLink>
               <ul className="dropdown-menu bg-light">
                 <li>
-                  <NavLink className="dropdown-item text-dark" to="/posts">
+                  <NavLink className="dropdown-item text-dark" to="/post-list">
                     Blogs
                   </NavLink>
                 </li>
@@ -111,7 +111,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink className="dropdown-item text-dark" to="/my-post">
+                  <NavLink
+                    className="dropdown-item text-dark"
+                    to="/my-post-list"
+                  >
                     My Blogs
                   </NavLink>
                 </li>
@@ -132,7 +135,10 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink className="dropdown-item" to="/compatibility_caculation">
+                  <NavLink
+                    className="dropdown-item"
+                    to="/compatibility_caculation"
+                  >
                     Compatibility Caculation Tool
                   </NavLink>
                 </li>
