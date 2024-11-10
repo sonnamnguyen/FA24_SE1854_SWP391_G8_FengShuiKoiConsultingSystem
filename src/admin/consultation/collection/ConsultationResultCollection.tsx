@@ -366,12 +366,6 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
 
   const columns = [
     {
-      title: 'STT',
-      dataIndex: 'index',
-      key: 'index',
-      render: (_: any, __: ConsultationResult, index: number) => index + 1 + (page - 1) * pageSize,
-    },
-    {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',

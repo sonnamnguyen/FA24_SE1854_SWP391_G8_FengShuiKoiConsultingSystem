@@ -13,9 +13,9 @@ const ViewConsultationRequestDetail: React.FC = () => {
     <div className="container-fluid position-relative bg-white d-flex p-0">
       <SidebarAdmin />
       <div className="content">
-        <NavbarAdmin />
+      {isNavbarVisible && <NavbarAdmin />}
         <div className="container-fluid pt-4 px-4">
-          <ConsultationRequestDetailCollection />
+          <ConsultationRequestDetailCollection setIsNavbarVisible={setIsNavbarVisible} />
         </div>
         <FooterAdmin />
       </div>
