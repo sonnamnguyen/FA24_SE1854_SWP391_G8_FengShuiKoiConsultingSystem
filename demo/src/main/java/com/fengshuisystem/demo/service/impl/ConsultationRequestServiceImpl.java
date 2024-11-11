@@ -156,7 +156,6 @@ public class ConsultationRequestServiceImpl implements ConsultationRequestServic
         } else if (phone != null && !phone.isEmpty()) {
             requests = consultationRequestRepository.findByPhoneContainingIgnoreCase(phone);
         } else {
-            // Trả về toàn bộ danh sách nếu không có tham số tìm kiếm nào
             requests = consultationRequestRepository.findAll();
         }
 
