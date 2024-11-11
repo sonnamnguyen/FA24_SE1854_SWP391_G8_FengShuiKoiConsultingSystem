@@ -15,7 +15,7 @@ const ViewConsultationResult: React.FC = () => {
       <div className="content">
         {isNavbarVisible && <NavbarAdmin />}
         <div className="container-fluid pt-4 px-4">
-          <ConsultationResultCollection setIsNavbarVisible={setIsNavbarVisible}/>
+          <ConsultationResultCollection setIsNavbarVisible={setIsNavbarVisible} />
         </div>
         <FooterAdmin />
       </div>
