@@ -5,6 +5,7 @@ import com.fengshuisystem.demo.constant.PredefinedRole;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
 import com.fengshuisystem.demo.dto.request.PasswordCreationRequest;
+import com.fengshuisystem.demo.dto.request.UpdateFCMRequest;
 import com.fengshuisystem.demo.dto.request.UserCreationRequest;
 import com.fengshuisystem.demo.dto.request.UserUpdateRequest;
 import com.fengshuisystem.demo.dto.response.UserResponse;
@@ -290,4 +291,25 @@ public class UserServiceImpl implements UserService {
     public long getNewUsersThisMonth() {
         return userRepository.countNewUsersThisMonth();
     }
+
+    // Phương thức để lưu hoặc cập nhật FCM token cho người dùng đã đăng nhập
+    public Account updateFCM(UpdateFCMRequest updateFCMRequest) {
+        Account account = getCurrentAccount();
+
+        // Kiểm tra nếu FCM token mới khác với token hiện tại
+        if (updateFCMRequest.getFcmToken() != null &&
+                !updateFCMRequest.getFcmToken().equals(account.getFcmToken())) {
+            account.setFcmToken(updateFCMRequest.getFcmToken());
+            return userRepository.save(account);
+        }
+
+        return account;
+    }
+
+    private Account getCurrentAccount() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    }
+
 }

@@ -74,11 +74,13 @@ public class Account {
     private String createdBy;
 
     @Column(name = "updated_date")
-    private Instant updatedDate;;
+    private Instant updatedDate;
 
     @Size(max = 50)
     @Column(name = "updated_by", length = 50)
-    private String updatedBy;;
+    private String updatedBy;
+
+    private String fcmToken;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinTable(name = "account_role",

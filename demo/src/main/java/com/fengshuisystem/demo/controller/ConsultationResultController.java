@@ -1,12 +1,15 @@
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.*;
+import com.fengshuisystem.demo.entity.NotificationFCM;
+import com.fengshuisystem.demo.service.NotificationService;
 import com.fengshuisystem.demo.service.impl.ConsultationResultServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +20,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsultationResultController {
+
+
 
     private final ConsultationResultServiceImpl consultationResultService;
 
