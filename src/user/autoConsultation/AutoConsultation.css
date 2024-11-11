@@ -212,6 +212,50 @@
   font-weight: normal; /* Reduce weight on labels */
 }
 
+.ac-infor-next-arrow,
+.ac-infor-prev-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: #ff6600; /* Orange color */
+    color: #fff; /* White text/icon color */
+    border: none;
+    border-radius: 50%; /* Circular button */
+    font-size: 1.2em; /* Font size for icons */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s; /* Animation on hover */
+    z-index: 10;
+}
+
+.ac-infor-next-arrow {
+    right: -20px; /* Position to the right */
+}
+
+.ac-infor-prev-arrow {
+    left: -20px; /* Position to the left */
+}
+
+.ac-infor-next-arrow:disabled,
+.ac-infor-prev-arrow:disabled {
+    background-color: #ccc; /* Disabled state with grey background */
+    cursor: not-allowed; /* Disable cursor */
+}
+
+.ac-infor-next-arrow:hover:not(:disabled),
+.ac-infor-prev-arrow:hover:not(:disabled) {
+    background-color: #e55b00; /* Darker orange on hover */
+    transform: scale(1.2); /* Scale up on hover */
+}
+
+.post-link {
+  text-decoration: none;
+}
+
 #WOOD.ac-fish-infor h3{color: #01a119;}
 #WATER.ac-fish-infor h3{color: #003366;}
 #FIRE.ac-fish-infor h3{color: #9a0000;}
@@ -566,6 +610,87 @@
     }
   }
    
+
+  .ac-posts-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 4rem ;
+}
+
+.ac-post{
+  margin-left: 1.6rem;
+}
+
+.ac-post-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 15rem;
+    height: 18rem;
+    margin: 0 1rem;
+}
+
+.ac-post-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ac-post-card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 3px solid #ff6600;
+}
+
+.ac-post-card-title {
+    font-size: 1.1em;
+    color: #333;
+    margin: 15px 0;
+    font-weight: bold;
+}
+
+.ac-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.ac-arrow-left {
+    left: -20px;
+}
+
+.ac-arrow-right {
+    right: -20px;
+}
+
+.ac-arrow:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.ac-arrow:hover:not(:disabled) {
+    background-color: #e55b00;
+    transform: scale(1.2);
+}
+
+  
     @media (max-width: 768px) {
 
       form, .consultation-results {
