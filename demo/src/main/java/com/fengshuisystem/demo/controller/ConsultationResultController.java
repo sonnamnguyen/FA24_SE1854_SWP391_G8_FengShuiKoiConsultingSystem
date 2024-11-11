@@ -21,8 +21,6 @@ import java.util.List;
 @Slf4j
 public class ConsultationResultController {
 
-
-
     private final ConsultationResultServiceImpl consultationResultService;
 
     @PostMapping("/requestId/{requestId}")
@@ -49,6 +47,13 @@ public class ConsultationResultController {
     ) {
         return ApiResponse.<List<ConsultationResultDTO>>builder()
                 .result(consultationResultService.getAll())
+                .build();
+    }
+
+    @GetMapping("/user/{email}")
+    public ApiResponse<List<ConsultationResultDTO>> getUserConsultationResults(@PathVariable("email") String email) {
+        return ApiResponse.<List<ConsultationResultDTO>>builder()
+                .result(consultationResultService.getUserConsultationResults(email))
                 .build();
     }
 

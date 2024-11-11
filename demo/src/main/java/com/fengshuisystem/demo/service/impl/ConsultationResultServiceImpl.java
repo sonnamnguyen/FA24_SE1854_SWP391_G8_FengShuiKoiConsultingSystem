@@ -22,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.Instant;
@@ -397,6 +398,16 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         return consultationResultDTOS;
     }
 
+    @Override
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public List<ConsultationResultDTO> getUserConsultationResults(String email) {
+        Account account = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Account not found for email: " + email));
+        log.info("Account found: {}", account.getEmail());
+
+        List<ConsultationResult> results = consultationResultRepository.findByAccount(account);
+        return results.stream().map(consultationResultMapper::toDto).collect(Collectors.toList());
+    }
 }
 
 

@@ -17,4 +17,6 @@ public interface ConsultationResultService {
     public long countCompletedConsultations();
 
     List<ConsultationResultDTO> getAll();
+
+    List<ConsultationResultDTO> getUserConsultationResults(String email);
 }
