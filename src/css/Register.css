@@ -1,14 +1,13 @@
 /* General Container */
 .Register-container {
   width: 100%;
-  width: 1400px;
   margin: 0 auto;
   padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: #f7f7f7;
+  background-image: url("../img/Login.webp");
 }
 
 /* Heading */
@@ -26,9 +25,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
   padding: 40px;
   width: 100%;
   box-sizing: border-box;
@@ -42,6 +41,9 @@
 /* Form Item Styling */
 .form-item {
   margin-bottom: 20px;
+}
+.RegisterSubmit {
+  margin-top: 60px;
 }
 
 .form-item label {
@@ -64,7 +66,7 @@
 }
 
 .form-control:focus {
-  border-color: #4caf50;
+  border-color: #4c89af;
   background-color: #fff;
   outline: none;
 }
@@ -77,19 +79,18 @@
 
 /* Button Styling */
 .register-btn {
-  background-color: #4caf50;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
   width: 100%;
-  font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  background-color: #3498db;
+  border-radius: 50px;
+  border: none;
+  padding: 12px 0;
+  font-size: 18px;
+  color: white;
+  transition: all 0.3s ease;
 }
 
 .register-btn:hover {
-  background-color: #45a049;
+  background-color: #2980b9;
   transform: translateY(-2px);
 }
 
@@ -135,7 +136,7 @@
 
 /* Links and extra text */
 .login-page-signup-link-text {
-  color: #4caf50;
+  color: #417fdc;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;

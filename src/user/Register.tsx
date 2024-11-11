@@ -212,7 +212,7 @@ const Register: React.FC = () => {
                   <DatePicker
                     onChange={(date) => setFieldValue("dob", date)}
                     value={values.dob}
-                    style={{ width: "100%" }}
+                    style={{ width: "100%", height: "37.47px" }}
                   />
                   <ErrorMessage
                     name="dob"
@@ -248,9 +248,13 @@ const Register: React.FC = () => {
                     className="error-message"
                   />
                 </div>
-                <div>
-                  <Button className="register-btn" type="primary" htmlType="submit">
-                    Submit
+                <div className="RegisterSubmit">
+                  <Button
+                    className="register-btn"
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    Sign Up
                   </Button>
                   <div>
                     <span> You have an account? </span>
