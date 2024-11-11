@@ -54,7 +54,7 @@ public class AnimalController {
     }
     @GetMapping("/animal-destiny")
     public ApiResponse<PageResponse<AnimalCategoryDTO>> getAnimalByDestiny(
-            @RequestParam String destiny,
+            @RequestParam List<String> destiny,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
 

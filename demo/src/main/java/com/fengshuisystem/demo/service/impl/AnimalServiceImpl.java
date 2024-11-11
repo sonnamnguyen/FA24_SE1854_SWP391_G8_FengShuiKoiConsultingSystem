@@ -102,11 +102,11 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     @PreAuthorize("hasRole('USER')")
-    public PageResponse<AnimalCategoryDTO> getAnimalsByDestiny(String destiny, int page, int size) {
+    public PageResponse<AnimalCategoryDTO> getAnimalsByDestiny(List<String> destiny, int page, int size) {
         Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
-        var pageData = animalRepository.findAllByAnimalCategoryNameContainingOriginContaining(destiny, status,pageable);
+        var pageData = animalRepository.findActiveAnimalCategoriesByDestiny(destiny, status,pageable);
         if(pageData.isEmpty()) {
             throw new AppException(ErrorCode.NONE_DATA_ANIMAL);
         }
