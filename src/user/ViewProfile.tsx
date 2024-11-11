@@ -20,10 +20,31 @@ const ViewProfile: React.FC = () => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  const [destinys, setDestiny] = useState("");
   useEffect(() => {
-    getUserDetails(); 
-  }, []);
+    const fetchDetails = async () => {
+      await getUserDetails();
+      if (userDetails?.dob) {
+        await getDestiny();
+      }
+    };
+    fetchDetails();
+  }, [userDetails]);
+  
+  const getDestiny = async () => {
+    if (!userDetails?.dob) return;
+    try {
+      // Extract the year from dob
+      const year = new Date(userDetails.dob).getFullYear();
+      const response = await api.get(`/destinys/autoConsultation/${year}`);
+      if (response.data.code !== 1000) {
+        throw new Error(`Error: ${response.data.message}`);
+      }
+      setDestiny(response.data.result.destiny);
+    } catch (error) {
+      console.error("Error fetching destiny:", error);
+    }
+  };
 
   const getUserDetails = async () => {
     try {
@@ -36,7 +57,6 @@ const ViewProfile: React.FC = () => {
       console.error("Error fetching user details:", error);
     }
   };
-
   const addPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -76,6 +96,10 @@ const ViewProfile: React.FC = () => {
                   <div className="media">
                     <label>Phone</label>
                     <p>{userDetails?.phoneNumber || "N/A"}</p>
+                  </div>
+                  <div className="media">
+                    <label>Destiny</label>
+                    <p>{destinys || "N/A"}</p>
                   </div>
                 </div>
                 <div className="col-md-6">
