@@ -85,8 +85,8 @@ const Login = () => {
 
       // Gửi FCM token lên server để liên kết với tài khoản của người dùng (sau khi xác thực thành công)
       if (fcmToken) {
-        await fetch(`http://localhost:9090/user/save-fcm-token`, {
-          method: "POST",
+        await fetch(`http://localhost:9090/users/fcm`, {
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${result.result?.token}`,
