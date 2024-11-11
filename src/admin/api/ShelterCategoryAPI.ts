@@ -135,18 +135,17 @@ export async function findByShelterCategory(name: string, page: number, pageSize
 }
 
 export async function findByShelterCategoryDestiny(destinyList: string[] = [], page: number, pageSize: number): Promise<ResultInterface | null> {
-    if (!Array.isArray(destinyList)) {
-        throw new TypeError("Expected an array for destinyList");
-      }
-  
-      // Convert destiny list to a comma-separated string
-      const destinyQuery = destinyList.join(',');
-    const endpoint: string = `/shelters/search-destiny?destiny=${destinyQuery}`;
+   
     const result: ShelterCategory[] = [];
 
     try {
-        
-        const response = await api.get(endpoint);  // Use endpoint here for consistency
+        if (!Array.isArray(destinyList)) {
+            throw new TypeError("Expected an array for destinyList");
+          }
+      
+          // Convert destiny list to a comma-separated string
+          const destinyQuery = destinyList.join(',');
+        const response = await api.get(`/shelters/search-destiny?destiny=${destinyQuery}&page=${page}&size=${pageSize}`);  // Use endpoint here for consistency
 
         if (response.data.code === 1000) {
             const responseData = response.data.result.data;
