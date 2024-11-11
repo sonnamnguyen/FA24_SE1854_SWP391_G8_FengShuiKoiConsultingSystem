@@ -54,7 +54,7 @@ public class ShelterController {
   }
   @GetMapping("/search-destiny")
   public ApiResponse<PageResponse<ShelterCategoryDTO>> getShelterByDestiny(
-          @RequestParam String destiny,
+          @RequestParam List<String> destiny,
           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
           @RequestParam(value = "size", required = false, defaultValue = "10") int size
 

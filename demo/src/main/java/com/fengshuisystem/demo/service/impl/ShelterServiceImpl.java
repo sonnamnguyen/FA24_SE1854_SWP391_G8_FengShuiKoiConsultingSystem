@@ -84,7 +84,7 @@ public class ShelterServiceImpl implements ShelterService {
     }
     @Override
     @PreAuthorize("hasRole('USER')")
-   public PageResponse<ShelterCategoryDTO> getSheltersByDestiny(String destiny, int page, int size){
+   public PageResponse<ShelterCategoryDTO> getSheltersByDestiny(List<String> destiny, int page, int size){
         Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
