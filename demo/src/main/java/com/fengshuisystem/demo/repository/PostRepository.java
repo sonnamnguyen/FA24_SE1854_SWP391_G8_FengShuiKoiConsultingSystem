@@ -14,8 +14,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Page<Post> findAllByStatus(Status status, Pageable pageable);
     @Query(value = "SELECT c from Post c where c.status = 'ACTIVE'")
     Page<Post> findAllByPostCategory(String postCategory, Pageable pageable);
-    @Query(value = "SELECT c from Post c where c.status = 'ACTIVE'")
-    Page<Post> findAllByAccount_Email(String email, Pageable pageable);
+    @Query("SELECT p FROM Post p WHERE p.status = 'ACTIVE' AND p.createdBy = :email")
+    Page<Post> findAllByAccount_Email(@Param("email") String email, Pageable pageable);
     @Query("SELECT c FROM Post c WHERE c.status = 'ACTIVE' AND c.title LIKE %:title%")
     Page<Post> findAllByTitleContaining(@Param("title") String title, Pageable pageable);
     @Query("SELECT COUNT(p) FROM Post p")
