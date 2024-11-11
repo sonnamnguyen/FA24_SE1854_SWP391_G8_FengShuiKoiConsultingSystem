@@ -1,6 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getToken } from "../../service/localStorageService";
 interface JwtPayload {
     iss: string;
     sub: string;
@@ -11,12 +12,11 @@ interface JwtPayload {
 }
 
 const UserRoute = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
-    const WithAdminCheck: React.FC<P> = (props) => {
+    const WithUserCheck: React.FC<P> = (props) => {
         const navigate = useNavigate();
 
         useEffect(() => {
-            const token = localStorage.getItem('token');
-            // Trong tình huống chưa đăng nhập
+            const token =  getToken();
             if (!token) {
                 navigate("/login");
                 return;
@@ -25,6 +25,8 @@ const UserRoute = <P extends object>(WrappedComponent: React.ComponentType<P>) =
             try {
                 // Giải mã token
                 const decodedToken = jwtDecode<JwtPayload>(token);
+                console.log("Decoded Token:", decodedToken);
+
                 // Lấy thông tin cụ thể
                 const isUser = decodedToken.scope === "ROLE_USER";             
 
@@ -43,7 +45,7 @@ const UserRoute = <P extends object>(WrappedComponent: React.ComponentType<P>) =
         return <WrappedComponent {...props} />;
     }
 
-    return WithAdminCheck;
+    return WithUserCheck;
 }
 
 export default UserRoute;

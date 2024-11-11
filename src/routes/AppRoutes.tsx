@@ -53,6 +53,8 @@ import ViewConsultationShelter from "../admin/consultation/ViewConsultationShelt
 // Bill - Payment
 import ViewBill from "../admin/transaction/ViewBill";
 import ViewPayment from "../admin/transaction/ViewPayment";
+import UserRoute from "../user/UserRoute/UserRoute";
+import KoiFish from "../user/suitableDestiny/KoiFishSuitable/KoiFish";
 
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
@@ -79,10 +81,14 @@ const AppRoutes = () => {
 
   const PageViewBill = AdminRoute(ViewBill);
   const PageViewPayment = AdminRoute(ViewPayment);
+//route user
 
+const UserKoiFish = UserRoute(KoiFish);
   return (
     <Router>
       <Routes>
+      <Route path="/koi-fishs" element={<UserKoiFish />} />
+
         <Route path="/my-post" element={<ViewMyPost />} />
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/posts" element={<ViewPost />} />

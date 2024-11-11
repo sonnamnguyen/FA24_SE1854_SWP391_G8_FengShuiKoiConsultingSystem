@@ -150,8 +150,13 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link menunav text-dark" to="">
-                KoiFish
+              <NavLink className="nav-link menunav text-dark" to="/koi-fishs">
+                Koi Fishs
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link menunav text-dark" to="/koi-ponds">
+                Koi Ponds
               </NavLink>
             </li>
             <li className="nav-item">
