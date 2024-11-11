@@ -2,6 +2,8 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.BillDTO;
+import com.fengshuisystem.demo.dto.ConsultationResultDTO;
+import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.Bill;
 import com.fengshuisystem.demo.entity.ConsultationRequest;
@@ -18,6 +20,9 @@ import com.fengshuisystem.demo.repository.UserRepository;
 import com.fengshuisystem.demo.service.BillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -25,12 +30,13 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class BillServiceImpl implements BillService {
-
 
     private final BillRepository billRepository;
     private final ConsultationRequestRepository consultationRequestRepository;
@@ -77,8 +83,6 @@ public class BillServiceImpl implements BillService {
         return billMapper.toDto(billRepository.save(bill));
     }
 
-
-
     @Override
     public BillDTO getBillById(Integer billId) {
         return billRepository.findById(billId)
@@ -86,6 +90,7 @@ public class BillServiceImpl implements BillService {
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_EXISTED));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @Override
     public void updateStatusAfterPayment(Integer billId, BillStatus billStatus, Request requestStatus) {
         Bill bill = billRepository.findById(billId)
@@ -120,5 +125,80 @@ public class BillServiceImpl implements BillService {
     @Override
     public BigDecimal getTotalIncomeThisMonth() {
         return billRepository.getTotalIncomeThisMonth();
+    }
+
+    @Override
+    public PageResponse<BillDTO> getAllBills(int page, int size) {
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = billRepository.findAll(pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.BILL_NOT_EXISTED);
+        }
+        return PageResponse.<BillDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(billMapper::toDto).toList())
+                .build();
+    }
+
+    @Override
+    public List<BillDTO> getAll() {
+        List<BillDTO> billDTOS= billRepository.findAll()
+                .stream()
+                .map(billMapper::toDto)
+                .toList();
+        if (billDTOS.isEmpty()) {
+            throw new AppException(ErrorCode.BILL_NOT_EXISTED);
+        }
+        return billDTOS;
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<BillDTO> searchBills(BillStatus status, String createdBy, BigDecimal minTotalAmount, BigDecimal maxTotalAmount, String paymentMethod) {
+        List<Bill> bills = billRepository.findAll();
+
+        // Lọc theo trạng thái
+        if (status != null) {
+            bills = bills.stream().filter(bill -> bill.getStatus().equals(status)).collect(Collectors.toList());
+        }
+
+        // Lọc theo người tạo
+        if (createdBy != null && !createdBy.isEmpty()) {
+            bills = bills.stream().filter(bill -> bill.getCreatedBy().toLowerCase().contains(createdBy.toLowerCase())).collect(Collectors.toList());
+        }
+
+        // Lọc theo khoảng giá trị của TotalAmount
+        if (minTotalAmount != null || maxTotalAmount != null) {
+            if (minTotalAmount != null && maxTotalAmount != null) {
+                // Khi cả min và max đều có giá trị
+                bills = bills.stream()
+                        .filter(bill -> bill.getTotalAmount().compareTo(minTotalAmount) >= 0 && bill.getTotalAmount().compareTo(maxTotalAmount) <= 0)
+                        .collect(Collectors.toList());
+            } else if (minTotalAmount != null) {
+                // Khi chỉ có minTotalAmount
+                bills = bills.stream()
+                        .filter(bill -> bill.getTotalAmount().compareTo(minTotalAmount) >= 0)
+                        .collect(Collectors.toList());
+            } else if (maxTotalAmount != null) {
+                // Khi chỉ có maxTotalAmount
+                bills = bills.stream()
+                        .filter(bill -> bill.getTotalAmount().compareTo(maxTotalAmount) <= 0)
+                        .collect(Collectors.toList());
+            }
+        }
+
+        // Lọc theo phương thức thanh toán
+        if (paymentMethod != null && !paymentMethod.isEmpty()) {
+            bills = bills.stream()
+                    .filter(bill -> bill.getPayment().getPaymentMethod().toLowerCase().contains(paymentMethod.toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+
+        // Trả về danh sách hóa đơn đã được chuyển đổi thành DTO
+        return bills.stream().map(billMapper::toDto).collect(Collectors.toList());
     }
 }

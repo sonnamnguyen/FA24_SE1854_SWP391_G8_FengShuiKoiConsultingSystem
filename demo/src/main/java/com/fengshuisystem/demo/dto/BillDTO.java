@@ -39,4 +39,7 @@ public class BillDTO {
     private Integer consultationRequestId;
 
     private List<PackageDTO> packageFields;
+
+    private Integer accountId;
+    private Integer paymentId;
 }
