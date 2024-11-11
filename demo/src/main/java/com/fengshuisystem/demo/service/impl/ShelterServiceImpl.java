@@ -83,7 +83,7 @@ public class ShelterServiceImpl implements ShelterService {
                 .build();
     }
     @Override
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
    public PageResponse<ShelterCategoryDTO> getSheltersByDestiny(List<String> destiny, int page, int size){
         Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
