@@ -65,10 +65,21 @@ public class ConsultationRequest {
     private String phone;
 
     @NotNull
-    @Size(min = 10, max = 1000, message = "The request description must be between 10 and 1000 characters.")
+    @NotBlank
     @Nationalized
-    @Column(name = "description", length = 1000)
+    @Column(name = "description", nullable = false, length = 4000)
     private String description;
+
+    @SuppressWarnings("unused")
+    @AssertTrue(message = "The description must contain at least 20 words.")
+    public boolean isDescriptionValid() {
+        if (description == null) {
+            return false;
+        }
+        // Tách `description` thành các từ bằng regex
+        String[] words = description.trim().split("\\s+");
+        return words.length >= 20;
+    }
 
     @NotNull
     @Enumerated(EnumType.STRING)
