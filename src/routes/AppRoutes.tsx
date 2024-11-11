@@ -27,7 +27,7 @@ import ViewPost from "../user/ViewPost";
 import MyPostList from "../user/MyPostList";
 import UpdatePost from "../user/UpdatePost";
 import CreatePost from "../user/CreatePost";
-import Postlist from "../user/Postlist";
+import Postlist from "../user/PostList"
 import ViewMyPost from "../user/ViewMyPost";
 import VNPAY from "../user/VNPAY";
 import AboutUs from "../user/AboutUs";
@@ -56,6 +56,9 @@ import ViewPayment from "../admin/transaction/ViewPayment";
 import UserRoute from "../user/UserRoute/UserRoute";
 import KoiFish from "../user/suitableDestiny/KoiFishSuitable/KoiFish";
 import KoiPond from "../user/suitableDestiny/KoiPondSuitable/KoiPond";
+
+// History
+import ViewHistory from "../user/ViewHistory";
 
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
@@ -172,6 +175,9 @@ const UserPondFish = UserRoute(KoiPond);
         {/* Bill - Payment*/}
         <Route path="/view-bills" element={<PageViewBill />} />
         <Route path="/view-payments" element={<PageViewPayment />} />
+
+        {/* History */}
+        <Route path="/view-history" element={<ViewHistory />} />
       </Routes>
     </Router>
   );
