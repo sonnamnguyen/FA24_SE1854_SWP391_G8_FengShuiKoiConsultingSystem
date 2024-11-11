@@ -48,7 +48,7 @@ public class EndPoint {
         public static final String[] USER_GET_ENDPOINTS = {
                 "/posts", "/posts/search-posts", "/post/comments", "/post/images",
                 "api/bills/{billId}", "/vn_pay/create_vn_pay","/search-posts/title","/search-posts/email",
-                "/animals/animal-destiny", "shelters/search-destiny", "/posts/search-posts/year"
+                "/animals/animal-destiny", "/posts/search-posts/year", "/shelters/search-destiny"
         };
 
         public static final String[] USER_POST_ENDPOINTS = {
