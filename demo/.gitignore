@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+demo/src/main/resources/fcm-credentials.json
