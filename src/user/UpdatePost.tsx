@@ -134,7 +134,7 @@ const UpdatePost: React.FC = () => {
     <div>
       <Navbar searchData={searchData} setSearchData={setSearchData} />
       <div className="post-content-update">
-        <h2 className="update-post-title">Update Post</h2>
+        <h2 className="update-post-title">Update Blog</h2>
         {error && <p className="error-message">{error}</p>}
         {post ? (
           <form onSubmit={handleUpdatePost} className="update-post-form">
