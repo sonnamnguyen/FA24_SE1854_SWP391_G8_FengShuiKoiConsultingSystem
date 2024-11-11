@@ -8,6 +8,10 @@ import { setToken } from "../service/localStorageService";
 import imgLogin from "../img/Login.webp"; // Path to the background image
 import { jwtDecode } from "jwt-decode";
 
+//fcm token
+import { getToken } from 'firebase/messaging'
+import { messaging } from "../firebase/firebase";
+
 interface JwtPayload {
   iss: string;
   sub: string;
@@ -32,6 +36,14 @@ const Login = () => {
 
   const handleLogin = async (values: { email: string; password: string }) => {
     const { email, password } = values;
+
+    // create FCM token
+    const fcmToken = await getToken(messaging, {
+      vapidKey: "BEWVqlpy-txsAzvUdwjM9CAo26aoa08pcLh7GNAxP4x2LAh9SVTJd8IP5na9Biup_b46livPPyT-U5gKZWLou-Q",
+    })
+
+    // test fcm token
+    console.log("fcm token: " + fcmToken);
 
     try {
       const response = await fetch(`http://localhost:9090/auth/token`, {
