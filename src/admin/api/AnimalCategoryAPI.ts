@@ -141,7 +141,7 @@ export async function findByAnimalDestiny(destinyList: string[] = [], page: numb
       // Convert destiny list to a comma-separated string
       const destinyQuery = destinyList.join(',');
   
-      const response = await api.get(`/animals/animal-destiny?destiny=${destinyQuery}`);
+      const response = await api.get(`/animals/animal-destiny?destiny=${destinyQuery}&page=${page}&size=${pageSize}`);
   
       if (response.data.code === 1000) {
         const responseData = response.data.result.data;

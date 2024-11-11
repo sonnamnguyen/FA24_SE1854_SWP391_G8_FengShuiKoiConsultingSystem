@@ -55,6 +55,7 @@ import ViewBill from "../admin/transaction/ViewBill";
 import ViewPayment from "../admin/transaction/ViewPayment";
 import UserRoute from "../user/UserRoute/UserRoute";
 import KoiFish from "../user/suitableDestiny/KoiFishSuitable/KoiFish";
+import KoiPond from "../user/suitableDestiny/KoiPondSuitable/KoiPond";
 
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
@@ -84,11 +85,13 @@ const AppRoutes = () => {
 //route user
 
 const UserKoiFish = UserRoute(KoiFish);
+const UserPondFish = UserRoute(KoiPond);
+
   return (
     <Router>
       <Routes>
       <Route path="/koi-fishs" element={<UserKoiFish />} />
-
+      <Route path="/koi-ponds" element={<UserPondFish />} />
         <Route path="/my-post" element={<ViewMyPost />} />
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/posts" element={<ViewPost />} />
