@@ -290,7 +290,21 @@ const ConsultationShelterCollection: React.FC<ConsultationShelterCollectionProps
           <Form.Item
             label="Description"
             name="description"
-            rules={[{ required: true, message: 'Please enter a description' }]}
+            rules={[
+              { required: true, message: 'Please enter a description' },
+              {
+                validator: (_, value) => {
+                  if (!value) {
+                    return Promise.resolve();
+                  }
+                  const wordCount = value.trim().split(/\s+/).length;
+                  if (wordCount < 20) {
+                    return Promise.reject(new Error('Description must contain at least 20 words.'));
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
           >
             <Input.TextArea
               disabled={isViewMode}

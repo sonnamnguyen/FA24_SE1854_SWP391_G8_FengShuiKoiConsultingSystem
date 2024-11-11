@@ -296,7 +296,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
     if (selectedResult) {
       const token = getToken();
   
-      // Chuẩn bị dữ liệu với kiểm tra các trường bắt buộc và xử lý undefined
+      // Prepare data with required fields validation
       const dataToSend = {
         consultantName: selectedResult.consultantName || null,
         description: selectedResult.description || null,
@@ -305,18 +305,36 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
         consultationRequestId: selectedResult.consultationRequestId || null,
       };
   
-      // Kiểm tra các trường bắt buộc
-      if (!dataToSend.consultantName || !dataToSend.description || !dataToSend.status || !dataToSend.consultationCategoryId || !dataToSend.consultationRequestId) {
+      // Helper function to count words
+      const countWords = (text: string) => text.trim().split(/\s+/).length;
+  
+      // Validate required fields
+      if (
+        !dataToSend.consultantName ||
+        !dataToSend.description ||
+        !dataToSend.status ||
+        !dataToSend.consultationCategoryId ||
+        !dataToSend.consultationRequestId
+      ) {
         notification.error({
           message: 'Validation Error',
           description: 'All fields are required. Please ensure no fields are left blank.',
         });
-        return; // Dừng nếu thiếu trường bắt buộc
+        return; // Stop if any required field is missing
+      }
+  
+      // Check if description has at least 20 words
+      if (countWords(dataToSend.description) < 20) {
+        notification.error({
+          message: 'Validation Error',
+          description: 'Description must contain at least 20 words.',
+        });
+        return; // Stop if description has less than 20 words
       }
   
       try {
         if (isUpdateMode && selectedResult.id) {
-          // Gửi request để cập nhật kết quả tư vấn
+          // Send request to update consultation result
           await api.put(
             `/api/consultation-results/${selectedResult.id}`,
             dataToSend,
@@ -326,7 +344,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
           );
           notification.success({ message: 'Update successful!' });
         } else if (!isViewMode) {
-          // Gửi request để thêm mới kết quả tư vấn
+          // Send request to add new consultation result
           await api.post(
             `/api/consultation-results/requestId/${selectedResult.consultationRequestId}`,
             dataToSend,
@@ -337,17 +355,17 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
           notification.success({ message: 'Addition successful!' });
         }
   
-        // Reload lại danh sách sau khi lưu thành công
+        // Reload list after successful save
         fetchConsultationResults(page, pageSize, search);
   
-        // Đặt lại các biến trạng thái và đóng modal
+        // Reset state and close modal
         setIsModalVisible(false);
-        setSelectedResult(null); // Xóa trạng thái của selectedResult để tránh dữ liệu cũ còn sót lại
+        setSelectedResult(null);
         setIsNavbarVisible(true);
       } catch (error: any) {
         console.error('Error saving consultation result: ', error);
   
-        // Hiển thị lỗi nếu có
+        // Show error if any
         const errorMessage = error.response?.data?.message || 'Failed to save consultation result.';
         notification.error({
           message: 'Error',
@@ -357,8 +375,6 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
     }
   };
   
-  
-
   const handleModalCancel = () => {
     setIsModalVisible(false);
     setIsNavbarVisible(true);
@@ -448,143 +464,152 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
         style={{ marginTop: '20px', textAlign: 'center' }}
       />
 
-<Modal
-  title={isViewMode ? "View Consultation Result" : isUpdateMode ? "Edit Consultation Result" : "Add Consultation Result"}
-  open={isModalVisible}
-  onOk={isViewMode ? handleModalCancel : handleModalOk}
-  onCancel={handleModalCancel}
-  okText={isViewMode ? "Close" : "Save"}
-  width={800}
-  cancelButtonProps={{ style: { display: isViewMode ? 'none' : 'inline-block' } }}
->
-  <Form layout="vertical" style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#fff' }}>
-    {/* Conditional sections for Update or View Mode */}
-    {isUpdateMode || isViewMode ? (
-      <>
-        {/* Account Details Section */}
-        <Form.Item label="Account Details" style={{ marginBottom: '16px' }}>
-          <p><strong>ID:</strong> {accountDetails?.id}</p>
-          <p><strong>Name:</strong> {accountDetails?.fullName}</p>
-          <p><strong>Email:</strong> {accountDetails?.email}</p>
-          <p><strong>Phone Number:</strong> {accountDetails?.phoneNumber}</p>
-        </Form.Item>
+      <Modal
+        title={isViewMode ? "View Consultation Result" : isUpdateMode ? "Edit Consultation Result" : "Add Consultation Result"}
+        open={isModalVisible}
+        onOk={isViewMode ? handleModalCancel : handleModalOk}
+        onCancel={handleModalCancel}
+        okText={isViewMode ? "Close" : "Save"}
+        width={800}
+        cancelButtonProps={{ style: { display: isViewMode ? 'none' : 'inline-block' } }}
+      >
+        <Form layout="vertical" style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#fff' }}>
+          {/* Conditional sections for Update or View Mode */}
+          {isUpdateMode || isViewMode ? (
+            <>
+              {/* Account Details Section */}
+              <Form.Item label="Account Details" style={{ marginBottom: '16px' }}>
+                <p><strong>ID:</strong> {accountDetails?.id}</p>
+                <p><strong>Name:</strong> {accountDetails?.fullName}</p>
+                <p><strong>Email:</strong> {accountDetails?.email}</p>
+                <p><strong>Phone Number:</strong> {accountDetails?.phoneNumber}</p>
+              </Form.Item>
 
-        {/* Consultation Request Info Section */}
-        <Form.Item label="Consultation Request Info:" style={{ marginBottom: '16px' }}>
-          <p><strong>ID:</strong> {selectedRequestInfo?.id}</p>
-          <p><strong>Description:</strong> {selectedRequestInfo?.description}</p>
-          <p><strong>Created Date:</strong> {selectedRequestInfo?.createdDate}</p>
-        </Form.Item>
+              {/* Consultation Request Info Section */}
+              <Form.Item label="Consultation Request Info" style={{ marginBottom: '16px' }}>
+                <p><strong>ID:</strong> {selectedRequestInfo?.id}</p>
+                <p><strong>Description:</strong> {selectedRequestInfo?.description}</p>
+                <p><strong>Created Date:</strong> {selectedRequestInfo?.createdDate}</p>
+              </Form.Item>
+            </>
+          ) : (
+            <>
+              {/* Consultation Request Selection */}
+              <Form.Item
+                label={<span>Consultation Request <span style={{ color: 'red' }}>*</span></span>}
+                colon={false}
+                required
+                validateStatus={!selectedResult?.consultationRequestId ? 'error' : 'success'}
+                help={!selectedResult?.consultationRequestId && 'Please select a consultation request.'}
+                style={{ marginBottom: '16px' }}
+              >
+                <Select
+                  placeholder="Select Consultation Request"
+                  onChange={(requestId) => {
+                    setSelectedResult({ ...selectedResult!, consultationRequestId: requestId });
+                    fetchRequestDetailInfo(requestId);
+                  }}
+                  value={selectedResult?.consultationRequestId}
+                >
+                  {consultationRequests.map((request) => (
+                    <Option key={request.id} value={request.id}>
+                      {request.id} - {request.fullName} - {request.createdDate} - {request.status}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </>
+          )}
 
-        {/* Consultation Request Detail Info Section */}
-        <Form.Item label="Consultation Request Detail Info:" style={{ marginBottom: '16px' }}>
-  <p><strong>ID:</strong> {selectedRequestDetail?.id}</p>
-  
-  {/* Description with Toggle */}
-  <p><strong>Description:</strong></p>
-  <p>
-    {isDescriptionExpanded ? selectedRequestDetail?.description : `${selectedRequestDetail?.description.slice(0, 100)}...`}
-    <a onClick={toggleDescription} style={{ marginLeft: '10px', color: '#1890ff', cursor: 'pointer' }}>
-      {isDescriptionExpanded ? 'Show less' : 'Show more'}
-    </a>
-  </p>
-
-  {/* Sắp xếp Shelter Categories và Animal Categories */}
-  <p><strong>Shelter Categories:</strong> {selectedRequestDetail?.shelterCategoryIds?.sort((a, b) => a - b).join(', ')}</p>
-  <p><strong>Animal Categories:</strong> {selectedRequestDetail?.animalCategoryIds?.sort((a, b) => a - b).join(', ')}</p>
-
-  <p><strong>Created By:</strong> {selectedRequestDetail?.createdBy}</p>
-  <p><strong>Updated By:</strong> {selectedRequestDetail?.updatedBy}</p>
-
-  {/* Table for Consultation Results */}
-  <Table
-    dataSource={selectedRequestDetail?.consultationResults}
-    columns={[
-      { title: 'ID', dataIndex: 'id', key: 'id' },
-      { title: 'Consultant Name', dataIndex: 'consultantName', key: 'consultantName' },
-      { title: 'Description', dataIndex: 'description', key: 'description' },
-    ]}
-    pagination={false}
-    rowKey="id"
-    style={{ marginTop: '10px' }}
-  />
-</Form.Item>
-
-      </>
-    ) : (
-      <>
-        {/* Consultation Request Selection */}
-        <Form.Item label="Consultation Request" style={{ marginBottom: '16px' }}>
-          <Select
-            placeholder="Select Consultation Request"
-            onChange={(requestId) => {
-              setSelectedResult({ ...selectedResult!, consultationRequestId: requestId });
-              fetchRequestDetailInfo(requestId);
-            }}
-            value={selectedResult?.consultationRequestId}
+          {/* Consultation Category Selection */}
+          <Form.Item
+            label={<span>Consultation Category <span style={{ color: 'red' }}>*</span></span>}
+            colon={false}
+            required
+            validateStatus={!selectedResult?.consultationCategoryId ? 'error' : 'success'}
+            help={!selectedResult?.consultationCategoryId && 'Please select a consultation category.'}
+            style={{ marginBottom: '16px' }}
           >
-            {consultationRequests.map((request) => (
-              <Option key={request.id} value={request.id}>
-                {request.id} - {request.fullName} - {request.createdDate} - {request.status}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </>
-    )}
+            <Select
+              placeholder="Select Consultation Category"
+              onChange={(categoryId) => setSelectedResult({ ...selectedResult!, consultationCategoryId: categoryId })}
+              value={selectedResult?.consultationCategoryId}
+              disabled={isViewMode}
+            >
+              {consultationCategories.map((category) => (
+                <Option key={category.id} value={category.id}>
+                  {category.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-    {/* Consultation Category Selection - Editable in both View and Edit modes */}
-    <Form.Item label="Consultation Category" style={{ marginBottom: '16px' }}>
-      <Select
-        placeholder="Select Consultation Category"
-        onChange={(categoryId) => setSelectedResult({ ...selectedResult!, consultationCategoryId: categoryId })}
-        value={selectedResult?.consultationCategoryId}
-        disabled={isViewMode}
-      >
-        {consultationCategories.map((category) => (
-          <Option key={category.id} value={category.id}>
-            {category.name}
-          </Option>
-        ))}
-      </Select>
-    </Form.Item>
+          {/* Consultant Name Field */}
+          <Form.Item
+            label={<span>Consultant Name <span style={{ color: 'red' }}>*</span></span>}
+            colon={false}
+            required
+            validateStatus={!selectedResult?.consultantName ? 'error' : 'success'}
+            help={!selectedResult?.consultantName && 'Consultant name is required.'}
+            style={{ marginBottom: '16px' }}
+          >
+            <Input
+              value={selectedResult?.consultantName}
+              onChange={(e) => setSelectedResult({ ...selectedResult!, consultantName: e.target.value })}
+              disabled={isViewMode}
+            />
+          </Form.Item>
 
-    {/* Consultant Name Field */}
-    <Form.Item label="Consultant Name" style={{ marginBottom: '16px' }}>
-      <Input
-        value={selectedResult?.consultantName}
-        onChange={(e) => setSelectedResult({ ...selectedResult!, consultantName: e.target.value })}
-        disabled={isViewMode}
-      />
-    </Form.Item>
+          {/* Description Field with 20-word validation */}
+          <Form.Item
+            label={<span>Description <span style={{ color: 'red' }}>*</span></span>}
+            colon={false}
+            required
+            validateStatus={selectedResult?.description && selectedResult.description.trim().split(/\s+/).length >= 20 ? 'success' : 'error'}
+            help={
+              !selectedResult?.description
+                ? 'Description is required.'
+                : selectedResult.description.trim().split(/\s+/).length < 20
+                ? 'Description must contain at least 20 words.'
+                : ''
+            }
+            style={{ marginBottom: '16px' }}
+          >
+            <Input.TextArea
+              value={selectedResult?.description}
+              onChange={(e) => setSelectedResult({ ...selectedResult!, description: e.target.value })}
+              disabled={isViewMode}
+              autoSize={{ minRows: 3, maxRows: 6 }}
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
 
-    {/* Collapsible Description Field */}
-    <Form.Item label="Description" style={{ marginBottom: '16px' }}>
-      <Input.TextArea
-        value={selectedResult?.description}
-        onChange={(e) => setSelectedResult({ ...selectedResult!, description: e.target.value })}
-        disabled={isViewMode}
-        autoSize={{ minRows: 3, maxRows: 6 }}
-        style={{ width: '100%' }}
-      />
-    </Form.Item>
+          {/* Status Selection */}
+          <Form.Item
+            label={<span>Status <span style={{ color: 'red' }}>*</span></span>}
+            colon={false}
+            required
+            validateStatus={!selectedResult?.status ? 'error' : 'success'}
+            help={!selectedResult?.status && 'Please select a status.'}
+            style={{ marginBottom: '16px' }}
+          >
+            <Select
+              value={selectedResult?.status}
+              onChange={(status) => setSelectedResult({ ...selectedResult!, status })}
+              disabled={!isUpdateMode}
+            >
+              {statusOptions.map(option => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
 
-    {/* Status Selection */}
-    <Form.Item label="Status" style={{ marginBottom: '16px' }}>
-      <Select
-        value={selectedResult?.status}
-        onChange={(status) => setSelectedResult({ ...selectedResult!, status })}
-        disabled={!isUpdateMode}
-      >
-        {statusOptions.map(option => (
-          <Option key={option.value} value={option.value}>
-            {option.label}
-          </Option>
-        ))}
-      </Select>
-    </Form.Item>
-  </Form>
-</Modal>
+
+
+      </Modal>
 
     </div>
   );
