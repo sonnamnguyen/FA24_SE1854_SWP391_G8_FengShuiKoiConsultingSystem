@@ -18,14 +18,6 @@ public class UserUpdateRequest {
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     String userName;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, max = 15, message = "Password must be between 8 and 15 characters")
-    @Pattern(
-            regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,15}$",
-            message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
-    )
-    private String password;
-
     @NotBlank(message = "Full name is required")
     @Size(min = 3, max = 100, message = "Full name must be between 3 and 100 characters")
     String fullName;

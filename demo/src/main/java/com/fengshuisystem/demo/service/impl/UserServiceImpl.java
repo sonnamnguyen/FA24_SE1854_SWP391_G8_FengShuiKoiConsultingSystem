@@ -122,8 +122,6 @@ public class UserServiceImpl implements UserService {
         Account user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userMapper.updateUser(user, request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
         return userMapper.toUserResponse(userRepository.save(user));
     }
     public boolean existByUsername(String username) {
