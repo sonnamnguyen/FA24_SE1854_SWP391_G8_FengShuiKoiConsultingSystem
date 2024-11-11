@@ -8,8 +8,8 @@ import { setToken } from "../service/localStorageService";
 import imgLogin from "../img/Login.webp"; // Path to the background image
 import { jwtDecode } from "jwt-decode";
 
-//fcm token
-import { getToken } from 'firebase/messaging'
+// FCM token
+import { getToken } from 'firebase/messaging';
 import { messaging } from "../firebase/firebase";
 
 interface JwtPayload {
@@ -37,15 +37,19 @@ const Login = () => {
   const handleLogin = async (values: { email: string; password: string }) => {
     const { email, password } = values;
 
-    // create FCM token
-    const fcmToken = await getToken(messaging, {
-      vapidKey: "BEWVqlpy-txsAzvUdwjM9CAo26aoa08pcLh7GNAxP4x2LAh9SVTJd8IP5na9Biup_b46livPPyT-U5gKZWLou-Q",
-    })
-
-    // test fcm token
-    console.log("fcm token: " + fcmToken);
+    // Tạo FCM token trước khi đăng nhập
+    let fcmToken;
+    try {
+      fcmToken = await getToken(messaging, {
+        vapidKey: "BEWVqlpy-txsAzvUdwjM9CAo26aoa08pcLh7GNAxP4x2LAh9SVTJd8IP5na9Biup_b46livPPyT-U5gKZWLou-Q",
+      });
+      console.log("FCM token:", fcmToken);
+    } catch (error) {
+      console.error("FCM token error:", error);
+    }
 
     try {
+      // Gửi yêu cầu đăng nhập
       const response = await fetch(`http://localhost:9090/auth/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -62,8 +66,11 @@ const Login = () => {
         throw new Error(result.message);
       }
 
+      // Lưu token sau khi đăng nhập thành công
       setToken(result.result?.token);
       const decodedToken = jwtDecode<JwtPayload>(result.result?.token);
+
+      // Kiểm tra quyền hạn và chuyển hướng người dùng
       if (decodedToken.scope === "ROLE_USER") {
         navigate("/");
       } else if (decodedToken.scope === "ROLE_ADMIN") {
@@ -72,6 +79,19 @@ const Login = () => {
         apii.error({
           message: "Error",
           description: "Invalid role",
+        });
+        return;
+      }
+
+      // Gửi FCM token lên server để liên kết với tài khoản của người dùng (sau khi xác thực thành công)
+      if (fcmToken) {
+        await fetch(`http://localhost:9090/user/save-fcm-token`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${result.result?.token}`,
+          },
+          body: JSON.stringify({ fcmToken }),
         });
       }
     } catch (error) {
