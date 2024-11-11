@@ -25,14 +25,13 @@ public interface AnimalRepository extends JpaRepository<AnimalCategory, Integer>
     Page<AnimalCategory> findAllByAnimalCategoryNameContainingOriginContaining(String name, Status status, Pageable pageable);
     @Query("SELECT ac FROM AnimalCategory ac JOIN ac.colors c WHERE c.id = :colorId AND ac.status = 'ACTIVE'")
     List<AnimalCategory> findAllByColorId(@Param("colorId") Integer colorId);
-    @Query(value = "SELECT a.* FROM animal_category a " +
-            "INNER JOIN animal_color ac ON a.animal_category_id = ac.animal_category_id " +
-            "INNER JOIN color c ON ac.color_id = c.color_id " +
-            "INNER JOIN destiny d ON c.destiny_id = d.destiny_id " +
-            "WHERE d.destiny = :destiny AND a.status = :status",
-            nativeQuery = true)
-    Page<AnimalCategory> findActiveAnimalCategoriesByDestiny(@Param("destiny") String destiny,
-                                                                  @Param("status") Status status,
-                                                                  Pageable pageable);
+    @Query("SELECT DISTINCT a FROM AnimalCategory a " +
+            "JOIN a.colors c " +
+            "JOIN c.destiny d " +
+            "WHERE d.destiny IN :destiny AND a.status = :status " +
+            "ORDER BY a.id DESC")
+    Page<AnimalCategory> findActiveAnimalCategoriesByDestiny(@Param("destiny") List<String> destiny,
+                                                             @Param("status") Status status,
+                                                             Pageable pageable);
 
 }
