@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Đảm bảo bạn đã import useNavigate
 import "../css/viewprofile.css";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import api from "../axious/axious";
+import Navbar from "../layouts/header-footer/Navbar";
+import Footer from "../layouts/header-footer/Footer";
 
 interface UserDetails {
-  username: string;
-  firstName: string;
-  lastName: string;
+  userName: string;
+  fullName: string;
   dob: string;
   roles?: { name: string }[];
   noPassword?: boolean;
@@ -19,18 +20,20 @@ interface UserDetails {
 const ViewProfile: React.FC = () => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook to navigate to different routes
   const [destinys, setDestiny] = useState("");
+  const [searchData, setSearchData] = useState<string>("");
+
   useEffect(() => {
     const fetchDetails = async () => {
-      await getUserDetails();
+      await getUserDetails(); // Lấy thông tin người dùng khi component mount
       if (userDetails?.dob) {
-        await getDestiny();
+        await getDestiny(); // Gọi getDestiny nếu ngày sinh có sẵn
       }
     };
     fetchDetails();
-  }, [userDetails]);
-  
+  }, []); // Empty dependency array ensures this runs once after mount
+
   const getDestiny = async () => {
     if (!userDetails?.dob) return;
     try {
@@ -57,6 +60,7 @@ const ViewProfile: React.FC = () => {
       console.error("Error fetching user details:", error);
     }
   };
+
   const addPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -75,85 +79,72 @@ const ViewProfile: React.FC = () => {
     }
   };
 
-  return (
-    <section className="section about-section gray-bg" id="about">
-      <div className="container">
-        <div className="row align-items-center flex-row-reverse">
-          <div className="col-lg-6">
-            <div className="about-text go-to">
-              <h3 className="dark-color">About Me</h3>
-              <h6 className="theme-color lead">A Member &amp; in FengShuiKoi</h6>
-              <p>
-                I am planning to build a <mark>Koi fish pond</mark> at my house and would like to receive <mark>Feng Shui consultation</mark> regarding this fish species. I have heard that Koi fish not only have high aesthetic value but also bring <mark>prosperity, luck, and wealth</mark> if placed in the right Feng Shui setup.
-              </p>
+  // Hàm điều hướng đến trang cập nhật hồ sơ
+  const navigateToUpdateProfile = () => {
+    navigate("/update-profile"); // Điều hướng đến trang /update-profile
+  };
 
-              <div className="row about-list">
-                <div className="col-md-6">
-                  <div className="media">
-                    <label>Birthday</label>
-                    <p>{userDetails?.dob ? new Date(userDetails.dob).toLocaleDateString() : "N/A"}</p>
-                  </div>
-                  <div className="media">
-                    <label>Phone</label>
-                    <p>{userDetails?.phoneNumber || "N/A"}</p>
-                  </div>
-                  <div className="media">
-                    <label>Destiny</label>
-                    <p>{destinys || "N/A"}</p>
-                  </div>
+  return (
+    <div>
+      <Navbar searchData={searchData} setSearchData={setSearchData} />
+      <div className="Pcontainer">
+        <div className="col-lg-6 right-contain">
+          <div className="about-avatar">
+            <img
+              src={userDetails?.avatar}
+              title="Profile Avatar"
+              alt="Profile Avatar"
+            />
+          </div>
+          <div>
+            {/* Thêm sự kiện onClick để điều hướng khi nhấn nút */}
+            <button className="btnSeeMore" onClick={navigateToUpdateProfile}>
+              Update Your Profile
+            </button>
+          </div>
+        </div>
+        <div className="col-lg-6 left-contain">
+          <div className="about-text go-to">
+            <h3 className="dark-color">Your Profile</h3>
+            <h6 className="theme-color lead">
+              {userDetails?.fullName || "User not found"}
+            </h6>
+            <div className="row about-list">
+              <div className="col-lg-6">
+                <div className="media">
+                  <label>Birthday</label>
+                  <p>
+                    {userDetails?.dob
+                      ? new Date(userDetails.dob).toLocaleDateString()
+                      : "N/A"}
+                  </p>
                 </div>
-                <div className="col-md-6">
-                  <div className="media">
-                    <label>E-mail</label>
-                    <p>{userDetails?.email || "N/A"}</p>
-                  </div>
-                  <div className="media">
-                    <label>Residence</label>
-                    <p>Canada</p>
-                  </div>
+                <div className="media">
+                  <label>Phone</label>
+                  <p>{userDetails?.phoneNumber || "N/A"}</p>
+                </div>
+                <div className="media">
+                  <label>Destiny</label>
+                  <p>{destinys || "N/A"}</p>
+                </div>
+              </div>
+              <div className="col-lg-6">
+                <div className="media">
+                  <label>E-mail</label>
+                  <p>{userDetails?.email || "N/A"}</p>
+                </div>
+                <div className="media">
+                  <label>Residence</label>
+                  <p>Canada</p>
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-lg-6">
-            <div className="about-avatar">
-              <img
-                src={userDetails?.avatar}
-                title="Profile Avatar"
-                alt="Profile Avatar"
-              />
-            </div>
-          </div>
         </div>
-
-        {userDetails?.noPassword && (
-          <Box
-            component="form"
-            onSubmit={addPassword}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-              width: "100%",
-            }}
-          >
-            <Typography>Do you want to create a password?</Typography>
-            <TextField
-              label="Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Button type="submit" variant="contained" color="primary" size="large" fullWidth>
-              Create Password
-            </Button>
-          </Box>
-        )}
       </div>
-    </section>
+
+      <Footer></Footer>
+    </div>
   );
 };
 

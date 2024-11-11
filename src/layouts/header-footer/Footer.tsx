@@ -46,9 +46,9 @@ function Footer() {
                 <i className="fas fa-gem me-3"></i>KoiFeng Shui
               </h6>
               <p>
-                Here you can use rows and columns to organize your footer
-                content. Lorem ipsum dolor sit amet, consectetur adipisicing
-                elit.
+                Koi Feng Shui aimed at creating a harmonious environment that
+                brings wealth, good luck, and positive energy to one's living or
+                working space.
               </p>
             </div>
             {/* Grid column */}
@@ -57,22 +57,22 @@ function Footer() {
               <h6 className="text-uppercase fw-bold mb-4">Products</h6>
               <p>
                 <Link to="/" className="text-reset">
-                  Angular
+                  HomePage
                 </Link>
               </p>
               <p>
-                <Link to="/" className="text-reset">
-                  React
+                <Link to="/post-list" className="text-reset">
+                  View Blog
                 </Link>
               </p>
               <p>
-                <Link to="/" className="text-reset">
-                  Vue
+                <Link to="/auto-consultation" className="text-reset">
+                  FengShui Tool
                 </Link>
               </p>
               <p>
-                <Link to="/" className="text-reset">
-                  Laravel
+                <Link to="/consultation-request" className="text-reset">
+                  Consultation
                 </Link>
               </p>
             </div>
@@ -86,13 +86,13 @@ function Footer() {
                 </Link>
               </p>
               <p>
-                <Link to="/" className="text-reset">
+                <Link to="/view-profile" className="text-reset">
                   Settings
                 </Link>
               </p>
               <p>
-                <Link to="/" className="text-reset">
-                  Orders
+                <Link to="/about-us" className="text-reset">
+                  About Us
                 </Link>
               </p>
               <p>
@@ -106,26 +106,21 @@ function Footer() {
               {/* Links */}
               <h6 className="text-uppercase fw-bold mb-4">Contact</h6>
               <p>
-                <i className="fas fa-home me-3"></i> New York, NY 10012, US
+                <i className="fas fa-home me-3"></i> Japan, JP 10012,Tokyo
               </p>
               <p>
-                <i className="fas fa-envelope me-3"></i> info@example.com
+                <i className="fas fa-envelope me-3"></i> FengShuiKoi@gmail.com
               </p>
               <p>
-                <i className="fas fa-phone me-3"></i> + 01 234 567 88
+                <i className="fas fa-phone me-3"></i> +84986 888 666
               </p>
               <p>
-                <i className="fas fa-print me-3"></i> + 01 234 567 89
+                <i className="fas fa-print me-3"></i> +84986 888 666
               </p>
             </div>
           </div>
         </div>
       </section>
-      {/* Copyright */}
-      <div
-        className="text-center p-4"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
-      ></div>
     </footer>
   );
 }

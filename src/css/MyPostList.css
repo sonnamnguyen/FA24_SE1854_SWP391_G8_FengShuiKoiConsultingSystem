@@ -60,6 +60,8 @@
   text-transform: uppercase;
   font-family: "Arial", sans-serif;
 }
+.form-label {
+}
 
 .btnUpdate {
   background-color: #dc3545; /* Đỏ */

@@ -301,6 +301,7 @@ const CompatibilityForm = () => {
 
                 <button type="submit" className="compability-btn">Check compatibility</button>
             </form>
+            <p className="notify-login-blog">*For 11 or more koi fish, disregard the tens digit and use the units digit. For example: 11, 15, 38, 40, 49 fish... count as 1, 5, 8, 4, 9 fish. Then refer to the table above for calculation.</p>
 
             {error && (
                 <>
