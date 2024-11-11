@@ -3,6 +3,8 @@ package com.fengshuisystem.demo.entity;
 import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.entity.enums.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -40,10 +42,22 @@ public class ConsultationShelter {
     )
     private Set<Direction> directions = new LinkedHashSet<>();
 
-    @Size(max = 500)
+    @NotNull
+    @NotBlank
     @Nationalized
-    @Column(name = "description", length = 500)
+    @Column(name = "description", nullable = false, length = 4000)
     private String description;
+
+    @SuppressWarnings("unused")
+    @AssertTrue(message = "The description must contain at least 20 words.")
+    public boolean isDescriptionValid() {
+        if (description == null) {
+            return false;
+        }
+        // Tách `description` thành các từ bằng regex
+        String[] words = description.trim().split("\\s+");
+        return words.length >= 20;
+    }
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

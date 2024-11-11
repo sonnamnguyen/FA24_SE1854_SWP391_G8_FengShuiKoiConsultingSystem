@@ -63,6 +63,7 @@ public class ConsultationRequestDetail {
     private String description;
 
     // Phương thức kiểm tra số từ có đủ ít nhất 100 từ
+    @SuppressWarnings("unused")
     @AssertTrue(message = "The description must contain at least 100 words.")
     public boolean isDescriptionValid() {
         if (description == null) {
