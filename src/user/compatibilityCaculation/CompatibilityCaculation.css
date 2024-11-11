@@ -251,7 +251,9 @@
     .compatibility-form, .compatibility-table, .compability-btn {
         width: 100%; /* Full width on small screens */
     }
-    
+    .background-fenghsui{
+        margin-top: 10rem;
+        }
     .form-select {
         width: 100%; /* Adjust select dropdown width */
         margin-left: 0; /* Remove extra left margin */
@@ -280,7 +282,9 @@
     .background-fenghsui {
         margin-top: 4rem;
     }
-    
+    .background-fenghsui{
+        margin-top: 10rem;
+        }
     .compa-form-title {
         font-size: 1.5em; /* Smaller font size */
     }

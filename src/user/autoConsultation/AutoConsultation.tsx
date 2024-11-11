@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getAutoConsultationByYear } from "./AutoConsultationAPI";
 import AutoConsultationContainer from "./AutoConsultationContainer";
 import "./AutoConsultation.css"
@@ -7,7 +7,30 @@ import ShelterCategory from "../../models/ShelterCategory";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import { getToken } from "../../service/localStorageService";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import api from "../../axious/axious";
+import { Link } from "react-router-dom";
+
+
+interface Post {
+    id: number;
+    postCategory: { postCategoryName: string };
+    title: string;
+    images: { id: number; imageUrl: string }[];
+    content: string;
+    destiny: { destiny: string };
+    likeNumber: number;
+    dislikeNumber: number;
+    createdBy: string;
+    createdDate: string;
+    comments: {
+        id: number;
+        content: string;
+        createdBy: string;
+        createdDate: string;
+    }[];
+}
 
 interface ArrowButtonProps {
     onClick: React.MouseEventHandler<HTMLButtonElement>;
@@ -23,6 +46,42 @@ const AutoConsultationComponent: React.FC = () => {
     const [isShelterModalVisible, setShelterModalVisible] = useState(false);
     const [selectedAnimal, setSelectedAnimal] = useState<AnimalCategory | null>(null);
     const [selectedShelter, setSelectedShelter] = useState<ShelterCategory | null>(null);
+    const [currentIndex, setCurrentIndex] = useState(0); // State to track current slide index
+    const totalImages = selectedAnimal?.animalImages?.length ?? 0; // Safely get the number of images
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(2);
+    const [totalPages, setTotalPages] = useState(0);
+
+    const fetchPostsByYear = async () => {
+        const token = getToken();
+        const parsedYear = Number(year);
+        try {
+            const response = await api.get(`/posts/search-posts/year?year=${parsedYear}&page=${page}&size=${size}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const result = response.data.result;
+            setPosts(result.data);
+            setTotalPages(Math.floor(result.totalPages / 2));
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPostsByYear();
+    }, [year, page, size]);
+
+    const handlePreviousPage = () => {
+        if (page > 1) setPage(page - 1);
+    };
+
+    const handleNextPage = () => {
+        if (page < totalPages) setPage(page + 1);
+    };
+
 
     const showAnimalModal = (animal: AnimalCategory) => {
         setSelectedAnimal(animal);
@@ -63,58 +122,39 @@ const AutoConsultationComponent: React.FC = () => {
         }
     };
 
+    const NextArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement>, disabled?: boolean }> = ({ onClick, disabled }) => (
+        <button
+            className="ac-infor-next-arrow"
+            onClick={onClick}
+            disabled={disabled} // Add disabled attribute to button
+        >
+            <FaArrowRight />
+        </button>
+    );
 
-    const NextArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }> = ({ onClick }) => (
+    const PrevArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement>, disabled?: boolean }> = ({ onClick, disabled }) => (
         <button
-          onClick={onClick}
-          style={{
-            position: "absolute",
-            top: "50%",
-            right: "10px",
-            transform: "translateY(-50%)",
-            background: "rgba(0, 0, 0, 0.5)",
-            color: "white",
-            border: "none",
-            borderRadius: "50%",
-            padding: "10px",
-            cursor: "pointer",
-            zIndex: 1,
-          }}
+            className="ac-infor-prev-arrow"
+            onClick={onClick}
+            disabled={disabled} // Add disabled attribute to button
         >
-          <FaArrowRight />
+            <FaArrowLeft />
         </button>
-      );
-      
-      const PrevArrow: React.FC<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }> = ({ onClick }) => (
-        <button
-          onClick={onClick}
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "10px",
-            transform: "translateY(-50%)",
-            background: "rgba(0, 0, 0, 0.5)",
-            color: "white",
-            border: "none",
-            borderRadius: "50%",
-            padding: "10px",
-            cursor: "pointer",
-            zIndex: 1,
-          }}
-        >
-          <FaArrowLeft />
-        </button>
-      );
-    // Slider settings with custom arrows
+    );
+
+
     const settings = {
         dots: true,
-        infinite: true,
+        infinite: false, // Disable infinite scrolling
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        nextArrow: <NextArrow />,
-        prevArrow: <PrevArrow />,
-      };
+        beforeChange: (current: number, next: number) => {
+            setCurrentIndex(next); // Update index before change
+        },
+        nextArrow: <NextArrow disabled={currentIndex === totalImages - 1 || totalImages === 1} />, // Disable when at last image or only one image
+        prevArrow: <PrevArrow disabled={currentIndex === 0 || totalImages === 1} />, // Disable when at first image or only one image
+    };
 
     return (
         <div className="autoConsultation-container">
@@ -259,7 +299,7 @@ const AutoConsultationComponent: React.FC = () => {
                                 {consultationData.consultation1.shelters.map((shelter: ShelterCategory, index: number) => (
                                     <React.Fragment key={shelter.id}>
                                         {" "}
-                                        <button id={consultationData.destiny}className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
+                                        <button id={consultationData.destiny} className="autoConsultation-view" onClick={() => showShelterModal(shelter)}>
                                             {shelter.shelterCategoryName}
                                         </button>
                                         {index < consultationData.consultation1.shelters.length - 1 && ", "}
@@ -268,11 +308,63 @@ const AutoConsultationComponent: React.FC = () => {
                             </p>
                         </ul>
                     </div>
+                    <div>
+
+                        {posts && posts.length > 0 && (
+                            <h2 id={consultationData.destiny} className="titleDestiny2">
+                                Blog liên quan đến mệnh của bạn
+                            </h2>
+                        )}
+                    </div>
+                    <div className="container ac-posts-container">
+
+                        {/* Conditionally render the left arrow button only if there are posts */}
+                        {posts && posts.length > 0 && page > 1 && (
+                            <button
+                                className="ac-arrow ac-arrow-left"
+                                onClick={handlePreviousPage}
+                                disabled={page === 1}
+                            >
+                                <FaArrowLeft />
+                            </button>
+                        )}
+
+                        <div className="row ac-post">
+                            {posts && posts.length > 0 ? (
+                                posts.map((post) => (
+                                    <div key={post.id} className="col-md-3 ac-post-card">
+                                        <Link to={`/posts/${post.id}`} className="post-link">
+                                            <img
+                                                className="ac-post-card-image"
+                                                src={post.images && post.images[0] ? post.images[0].imageUrl : "placeholder.jpg"}
+                                                alt={post.title}
+                                            />
+                                            <h3 className="ac-post-card-title">{post.title}</h3>
+                                        </Link>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="notify-login-blog">*Login to view blog.</p>
+                            )}
+                        </div>
+
+                        {/* Conditionally render the right arrow button only if there are posts */}
+                        {posts && posts.length > 0 && (
+                            <button
+                                className="ac-arrow ac-arrow-right"
+                                onClick={handleNextPage}
+                                disabled={page === totalPages}
+                            >
+                                <FaArrowRight />
+                            </button>
+                        )}
+                    </div>
+
 
                     {selectedAnimal && (
                         <div className="ac-popup-overlay" onClick={() => setSelectedAnimal(null)}>
                             <div className="ac-popup-content row" onClick={(e) => e.stopPropagation()}>
-                                <div className="ac-image col-6">
+                                <div className="autoConsul-image col-6">
                                     <p>Images:</p>
                                     {selectedAnimal.animalImages?.length ? (
                                         <Slider {...settings}>
@@ -291,7 +383,7 @@ const AutoConsultationComponent: React.FC = () => {
                                     )}
                                 </div>
 
-                                <div id={consultationData.destiny}  className="ac-fish-infor col-6">
+                                <div id={consultationData.destiny} className="ac-fish-infor col-6">
                                     <h3>{selectedAnimal.animalCategoryName}</h3>
                                     <p>Description: {selectedAnimal.description}</p>
                                     <p>Origin: {selectedAnimal.origin}</p>
@@ -301,11 +393,11 @@ const AutoConsultationComponent: React.FC = () => {
                     )}
 
 
-                    {/* Shelter Pop-up */}
+
                     {selectedShelter && (
                         <div className="ac-popup-overlay" onClick={() => setSelectedShelter(null)}>
                             <div className="ac-popup-content row" onClick={(e) => e.stopPropagation()}>
-                                <div className="ac-image col-6">
+                                <div className="autoConsul-image col-6">
                                     <p>Images:</p>
                                     {selectedShelter.shelterImages?.length ? (
                                         <Slider {...settings}>
