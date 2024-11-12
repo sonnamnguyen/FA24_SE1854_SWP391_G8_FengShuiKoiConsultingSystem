@@ -55,13 +55,6 @@ const UpdateProfile: React.FC = () => {
         .min(3, "Username must be between 3 and 50 characters")
         .max(50, "Username must be between 3 and 50 characters")
         .required("Username is required"),
-    password: Yup.string()
-        .min(6, "Password must be between 6 and 50 characters")
-        .max(50, "Password must be between 6 and 50 characters")
-        .required("Password is required"),
-    confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password")], "Passwords must match")
-        .required("Confirm your password"),
     fullName: Yup.string()
         .min(3, "Full name must be between 3 and 100 characters")
         .max(100, "Full name must be between 3 and 100 characters")
@@ -78,7 +71,6 @@ const UpdateProfile: React.FC = () => {
       const avatar = fileList.length > 0 ? await uploadImagesToFirebase(fileList) : null;
       const data = {
         userName,
-        password,
         email,
         dob: dob ? dob.format("YYYY-MM-DD") : "",
         phoneNumber,
@@ -95,7 +87,6 @@ const UpdateProfile: React.FC = () => {
           message: "Success",
           description: "Profile has been successfully updated.",
         });
-        navigate("/profile");
       }
     } catch (error) {
       apii.error({
@@ -112,8 +103,6 @@ const UpdateProfile: React.FC = () => {
         <Formik
             initialValues={{
               userName: "",
-              password: "",
-              confirmPassword: "",
               fullName: "",
               dob: null,
               phoneNumber: "",
@@ -129,17 +118,6 @@ const UpdateProfile: React.FC = () => {
                   <ErrorMessage name="userName" component="div" className="error-message" />
                 </div>
 
-                <div className="form-item">
-                  <label>Password</label>
-                  <Field name="password" type="password" className="form-control" />
-                  <ErrorMessage name="password" component="div" className="error-message" />
-                </div>
-
-                <div className="form-item">
-                  <label>Confirm Password</label>
-                  <Field name="confirmPassword" type="password" className="form-control" />
-                  <ErrorMessage name="confirmPassword" component="div" className="error-message" />
-                </div>
 
                 <div className="form-item">
                   <label>Full Name</label>
