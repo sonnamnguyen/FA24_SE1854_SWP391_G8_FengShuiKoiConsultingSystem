@@ -30,13 +30,10 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.GET, EndPoint.BOTH_GET_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, EndPoint.ADMIN_GET_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, EndPoint.USER_GET_ENDPOINTS).hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.GET, EndPoint.ADMIN_GET_ENDPOINTS).hasAuthority("ROLE_ADMIN")
 
                         .requestMatchers(HttpMethod.GET, EndPoint.PUBLIC_GET_ENDPOINTS).permitAll()
-
-
-
 
                         .requestMatchers(HttpMethod.POST, EndPoint.ADMIN_POST_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, EndPoint.PUBLIC_ENDPOINTS).permitAll()
