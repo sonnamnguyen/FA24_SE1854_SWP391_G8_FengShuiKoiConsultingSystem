@@ -53,14 +53,6 @@ public class BillController {
                 .build();
     }
 
-    @GetMapping("/find-all")
-    public ApiResponse<List<BillDTO>> getAll(
-    ) {
-        return ApiResponse.<List<BillDTO>>builder()
-                .result(billService.getAll())
-                .build();
-    }
-
     @PutMapping("/{billId}/status")
     public ResponseEntity<String> updateBillStatus(
             @PathVariable Integer billId,
