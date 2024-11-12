@@ -91,8 +91,8 @@ const ConsultationRequestDetail: React.FC = () => {
       message.error('Please select at least one pond.');
       return;
     }
-    if (description.split(' ').filter(Boolean).length < 100) {
-      message.error('The detailed description must be at least 100 words.');
+    if (description.split(' ').filter(Boolean).length < 10) {
+      message.error('The detailed description must be at least 10 words.');
       return;
     }
   
