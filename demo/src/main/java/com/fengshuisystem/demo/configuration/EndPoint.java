@@ -70,7 +70,7 @@ public class EndPoint {
 
         public static final String[] BOTH_GET_ENDPOINTS = {
                 "api/bills/{id}/status",
-                "api/bills/{billId}",
+                "/api/bills/{billId}",
                 "/destinys"
 
         };

@@ -29,11 +29,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST, EndPoint.ADMIN_POST_ENDPOINTS).hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, EndPoint.PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, EndPoint.ADMIN_GET_ENDPOINTS).hasAuthority("ROLE_ADMIN")
-
                         .requestMatchers(HttpMethod.GET, EndPoint.USER_GET_ENDPOINTS).hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.GET, EndPoint.BOTH_GET_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, EndPoint.PUBLIC_GET_ENDPOINTS).permitAll()
+
+
+
+
+                        .requestMatchers(HttpMethod.POST, EndPoint.ADMIN_POST_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, EndPoint.PUBLIC_ENDPOINTS).permitAll()
 
 
@@ -42,7 +47,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, EndPoint.USER_POST_ENDPOINTS).hasAuthority("ROLE_USER")
                         .requestMatchers(HttpMethod.PUT, EndPoint.USER_PUT_ENDPOINTS).hasAuthority("ROLE_USER")
                         .requestMatchers(HttpMethod.DELETE, EndPoint.USER_DELETE_ENDPOINTS).hasAuthority("ROLE_USER")
-                        .requestMatchers(HttpMethod.GET, EndPoint.BOTH_GET_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
                         .requestMatchers(HttpMethod.DELETE, EndPoint.BOTH_DELETE_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/*").authenticated()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
