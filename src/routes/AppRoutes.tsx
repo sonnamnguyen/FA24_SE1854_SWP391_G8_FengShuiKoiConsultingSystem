@@ -27,7 +27,7 @@ import ViewPost from "../user/ViewPost";
 import MyPostList from "../user/MyPostList";
 import UpdatePost from "../user/UpdatePost";
 import CreatePost from "../user/CreatePost";
-import Postlist from "../user/Postlist";
+import Postlist from "../user/PostList";
 import ViewMyPost from "../user/ViewMyPost";
 import VNPAY from "../user/VNPAY";
 import AboutUs from "../user/AboutUs";
@@ -60,6 +60,8 @@ import UpdatePassword from "../user/UpdatePassword";
 
 // History
 import ViewHistory from "../user/ViewHistory";
+
+import Dashboard from "../admin/DashBoard";
 
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
@@ -126,6 +128,7 @@ const AppRoutes = () => {
         <Route path="/add-shape" element={<PageViewAddShape />} />
         <Route path="/view-color" element={<PageViewColor />} />
         <Route path="/view-shape" element={<PageViewShape />} />
+        <Route path="/dash-board" element={<Dashboard />} />
         <Route path="/auto-consultation" element={<AutoConsultation />} />
         <Route
           path="/compatibility_caculation"
