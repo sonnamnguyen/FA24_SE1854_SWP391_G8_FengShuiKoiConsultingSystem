@@ -10,11 +10,14 @@ import java.util.List;
 
 public interface BillService {
     BillDTO createBillByRequestAndPayment(Integer requestId, Integer paymentId);
-    List<BillDTO> searchBills(BillStatus status, String createdBy, BigDecimal minTotalAmount, BigDecimal maxTotalAmount, String paymentMethod);
     BillDTO getBillById(Integer billId);
     void updateStatusAfterPayment(Integer billId, BillStatus billStatus, Request requestStatus);
     Integer getRequestIdByBillId(Integer billId);
     BigDecimal getTotalIncomeThisMonth();
 
     PageResponse<BillDTO> getAllBills(int page, int size);
+
+    List<BillDTO> getAll();
+
+    List<BillDTO> searchingBills(BillStatus status, String createdBy, BigDecimal minTotalAmount, BigDecimal maxTotalAmount, String paymentMethod);
 }
