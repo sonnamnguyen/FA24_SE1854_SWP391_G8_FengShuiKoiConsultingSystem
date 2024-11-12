@@ -222,8 +222,8 @@ const ConsultationRequestDetail: React.FC = () => {
                 validator: (_, value) => {
                   if (value) {
                     const wordCount = value.trim().split(/\s+/).filter((word: string) => word.length > 0).length;
-                    if (wordCount < 100) {
-                      return Promise.reject(new Error('The detailed description must be at least 100 words.'));
+                    if (wordCount < 10) {
+                      return Promise.reject(new Error('The detailed description must be at least 10 words.'));
                     }
                   }
                   return Promise.resolve();
