@@ -1,0 +1,133 @@
+/* Style for the error message */
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Style for the loading spinner */
+.loading-spinner {
+  display: block;
+  margin: auto;
+}
+
+/* Style for the card row */
+.card-row {
+  padding: 50px;
+}
+
+/* Style for each individual card */
+.card-container {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect for the card */
+.card-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-image {
+  margin-top: 30px;
+  border-radius: 8px; /* Bo góc của hình ảnh */
+  margin-left: 30%; /* Định vị hình ảnh */
+  border: 2px solid #ff6347; /* Thêm border cho hình ảnh */
+  transition: transform 0.3s ease, border-color 0.3s ease; /* Hiệu ứng khi hover vào */
+}
+
+/* Hover effect */
+.card-image:hover {
+  transform: scale(1.05); /* Tăng kích thước hình ảnh khi hover */
+  border-color: #ff6347; /* Thay đổi màu border khi hover */
+}
+/* Hover effect for image */
+.card-container:hover .card-image {
+  transform: scale(1.1);
+}
+
+/* Title and description for card */
+.card-title {
+  margin: 10px 0;
+}
+
+.card-description {
+  margin: 0;
+  color: #666;
+}
+.titleKoi {
+  margin-top: 150px;
+  margin-bottom: 0px;
+}
+/* Cấu trúc và kiểu chữ */
+.titleKoi {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Phông chữ hiện đại và dễ đọc */
+  font-size: 36px; /* Kích thước chữ vừa phải */
+  font-weight: 600; /* Độ đậm trung bình */
+  text-align: center; /* Căn giữa */
+  color: #ff6347; /* Màu chữ tối giản, không quá chói */
+  text-transform: uppercase; /* Chữ viết hoa toàn bộ */
+  letter-spacing: 2px; /* Khoảng cách giữa các chữ để dễ đọc */
+  position: relative;
+}
+
+/* Hiệu ứng bóng đổ nhẹ */
+.titleKoi::after {
+  content: ""; /* Thêm một phần tử giả sau tiêu đề */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px; /* Đưa bóng xuống dưới một chút */
+  height: 2px; /* Chiều cao bóng đổ */
+  background-color: #ff7f00; /* Màu cam nhẹ cho bóng */
+  opacity: 0.6; /* Làm cho bóng nhẹ nhàng */
+}
+
+/* Hiệu ứng khi hover */
+.titleKoi:hover {
+  color: #ff7f00; /* Chuyển màu chữ thành cam khi hover */
+  transform: translateY(-5px); /* Di chuyển tiêu đề lên khi hover */
+  transition: transform 0.3s ease, color 0.3s ease; /* Hiệu ứng mượt mà cho màu sắc và di chuyển */
+}
+
+/* Pagination style */
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Modal content */
+.modal-content {
+  display: flex;
+  gap: 20px;
+}
+
+/* Carousel container */
+.carousel-container {
+  flex: 1;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+/* Carousel item */
+.carousel-item {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+/* Image in the carousel */
+.carousel-image {
+  max-height: 400px;
+  width: 100%;
+  object-fit: contain;
+}
+
+/* Animal details */
+.animal-details {
+  flex: 1;
+  padding: 0 20px;
+}

@@ -3,6 +3,9 @@ import { Card, Col, Row, Pagination, Modal, Carousel, Spin } from "antd";
 import api from "../../../axious/axious";
 import AnimalCategory from "../../../models/AnimalCategory";
 import { findByAnimalDestiny } from "../../../admin/api/AnimalCategoryAPI";
+import "./KoiFish.css"; // Import CSS file
+import Navbar from "../../../layouts/header-footer/Navbar";
+import Footer from "../../../layouts/header-footer/Footer";
 
 interface UserDetails {
   dob: string;
@@ -11,12 +14,18 @@ interface UserDetails {
 const KoiFish: React.FC = () => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [listDestiny, setListDestiny] = useState<string[]>([]);
-  const [listAnimalCategory, setListAnimalCategory] = useState<AnimalCategory[]>([]);
+  const [listAnimalCategory, setListAnimalCategory] = useState<
+    AnimalCategory[]
+  >([]);
   const [totalElements, setTotalElements] = useState(0);
+  const [searchData, setSearchData] = useState<string>("");
+
   const [pageNow, setPageNow] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [selectedAnimal, setSelectedAnimal] = useState<AnimalCategory | null>(null);
+  const [selectedAnimal, setSelectedAnimal] = useState<AnimalCategory | null>(
+    null
+  );
   const [isModalVisible, setIsModalVisible] = useState(false);
   const pageSize = 10;
 
@@ -55,8 +64,8 @@ const KoiFish: React.FC = () => {
 
       if (destinyTuongSinhs || destiny) {
         const combinedDestiny = [
-          ...(destinyTuongSinhs ? destinyTuongSinhs.split(',') : []),
-          ...(destiny ? destiny.split(',') : [])
+          ...(destinyTuongSinhs ? destinyTuongSinhs.split(",") : []),
+          ...(destiny ? destiny.split(",") : []),
         ];
         setListDestiny(combinedDestiny);
       } else {
@@ -119,37 +128,36 @@ const KoiFish: React.FC = () => {
 
   return (
     <>
-      {error && <div style={{ color: "red", textAlign: "center" }}>{error}</div>}
+      <Navbar searchData={searchData} setSearchData={setSearchData} />
+      <h2 className="titleKoi"> Koi Fish Categories</h2>
+      {error && <div className="error-message">{error}</div>}
       {loading ? (
-        <Spin style={{ display: "block", margin: "auto" }} />
+        <Spin className="loading-spinner" />
       ) : (
-        <>
-          <Row gutter={[24, 24]} justify="center" style={{ padding: "20px" }}>
+        <div>
+          <Row gutter={[24, 24]} justify="center" className="card-row">
             {listAnimalCategory.map((fish, index) => (
               <Col xs={24} sm={12} md={8} key={index}>
                 <Card
                   hoverable
+                  className="card-container"
                   cover={
                     <img
                       alt={fish.animalCategoryName}
                       src={fish.animalImages[0]?.imageUrl}
-                      style={{
-                        border: "2px solid red",
-                        padding: "10px",
-                        borderRadius: "8px",
-                      }}
+                      className="card-image"
+                      style={{ width: "40%" }}
                     />
                   }
-                  style={{
-                    border: "1px solid #f0f0f0",
-                    borderRadius: "8px",
-                    textAlign: "center",
-                  }}
                   onClick={() => handleAnimalClick(fish)}
                 >
                   <Card.Meta
-                    title={<h3 style={{ margin: "10px 0" }}>{fish.animalCategoryName}</h3>}
-                    description={<p style={{ margin: "0", color: "#666" }}>{fish.description}</p>}
+                    title={
+                      <h3 className="card-title">{fish.animalCategoryName}</h3>
+                    }
+                    description={
+                      <p className="card-description">{fish.description}</p>
+                    }
                   />
                 </Card>
               </Col>
@@ -161,7 +169,7 @@ const KoiFish: React.FC = () => {
             total={totalElements}
             pageSize={pageSize}
             onChange={onPaginationChange}
-            style={{ textAlign: "center", marginTop: "20px" }}
+            className="pagination"
           />
 
           <Modal
@@ -170,30 +178,19 @@ const KoiFish: React.FC = () => {
             onOk={handleModalCancel}
             onCancel={handleModalCancel}
             width={1000}
-            style={{ top: '15%' }}
+            style={{ top: "15%" }}
           >
             {selectedAnimal && (
-              <div style={{ display: "flex", gap: "20px" }}>
-                <div style={{ flex: 1, maxHeight: "400px", overflow: "hidden" }}>
+              <div className="modal-content">
+                <div className="carousel-container">
                   <Carousel autoplay>
                     {selectedAnimal.animalImages.length ? (
                       selectedAnimal.animalImages.map((image, index) => (
-                        <div
-                          key={index}
-                          style={{
-                            textAlign: "center",
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
-                        >
+                        <div key={index} className="carousel-item">
                           <img
                             alt={selectedAnimal.animalCategoryName}
                             src={image.imageUrl}
-                            style={{
-                              maxHeight: "400px",
-                              width: "100%",
-                              objectFit: "contain",
-                            }}
+                            className="carousel-image"
                           />
                         </div>
                       ))
@@ -202,16 +199,23 @@ const KoiFish: React.FC = () => {
                     )}
                   </Carousel>
                 </div>
-                <div style={{ flex: 1, padding: "0 20px" }}>
-                  <p><strong>Description:</strong> {selectedAnimal.description}</p>
-                  <p><strong>Origin:</strong> {selectedAnimal.origin}</p>
-                  <p><strong>Status:</strong> {selectedAnimal.status}</p>
+                <div className="animal-details">
+                  <p>
+                    <strong>Description:</strong> {selectedAnimal.description}
+                  </p>
+                  <p>
+                    <strong>Origin:</strong> {selectedAnimal.origin}
+                  </p>
+                  <p>
+                    <strong>Status:</strong> {selectedAnimal.status}
+                  </p>
                 </div>
               </div>
             )}
           </Modal>
-        </>
+        </div>
       )}
+      <Footer></Footer>
     </>
   );
 };
