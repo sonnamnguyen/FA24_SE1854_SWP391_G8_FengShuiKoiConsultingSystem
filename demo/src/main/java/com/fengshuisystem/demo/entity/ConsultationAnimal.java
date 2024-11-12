@@ -37,14 +37,14 @@ public class ConsultationAnimal {
     private String description;
 
     @SuppressWarnings("unused")
-    @AssertTrue(message = "The description must contain at least 20 words.")
+    @AssertTrue(message = "The description must contain at least 10 words.")
     public boolean isDescriptionValid() {
         if (description == null) {
             return false;
         }
         // Tách `description` thành các từ bằng regex
         String[] words = description.trim().split("\\s+");
-        return words.length >= 20;
+        return words.length >= 10;
     }
 
     @ManyToMany
