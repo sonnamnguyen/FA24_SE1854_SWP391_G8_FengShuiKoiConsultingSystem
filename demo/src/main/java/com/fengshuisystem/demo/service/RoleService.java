@@ -8,5 +8,6 @@ import java.util.List;
 public interface RoleService {
     RoleResponse create(RoleRequest request);
     List<RoleResponse> getAll();
+    
     void delete(Integer role);
 }
