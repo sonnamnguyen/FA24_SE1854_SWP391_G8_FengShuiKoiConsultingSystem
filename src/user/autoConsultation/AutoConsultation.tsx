@@ -11,7 +11,7 @@ import { getToken } from "../../service/localStorageService";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import api from "../../axious/axious";
 import { Link } from "react-router-dom";
-
+import noImage from "../../img/pngtree-no-image-available-icon-flatvector-illustration-pic-design-profile-vector-png-image_40966566.jpg";
 
 interface Post {
     id: number;
@@ -126,7 +126,7 @@ const AutoConsultationComponent: React.FC = () => {
         <button
             className="ac-infor-next-arrow"
             onClick={onClick}
-            disabled={disabled} // Add disabled attribute to button
+            hidden={disabled} // Add disabled attribute to button
         >
             <FaArrowRight />
         </button>
@@ -136,7 +136,7 @@ const AutoConsultationComponent: React.FC = () => {
         <button
             className="ac-infor-prev-arrow"
             onClick={onClick}
-            disabled={disabled} // Add disabled attribute to button
+            hidden={disabled} // Add disabled attribute to button
         >
             <FaArrowLeft />
         </button>
@@ -144,8 +144,8 @@ const AutoConsultationComponent: React.FC = () => {
 
 
     const settings = {
-        dots: true,
-        infinite: false, // Disable infinite scrolling
+        dots: false,
+        infinite: false, 
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -312,7 +312,7 @@ const AutoConsultationComponent: React.FC = () => {
 
                         {posts && posts.length > 0 && (
                             <h2 id={consultationData.destiny} className="titleDestiny2">
-                                Blog liên quan đến mệnh của bạn
+                                Blog related to your destiny
                             </h2>
                         )}
                     </div>
@@ -336,7 +336,7 @@ const AutoConsultationComponent: React.FC = () => {
                                         <Link to={`/posts/${post.id}`} className="post-link">
                                             <img
                                                 className="ac-post-card-image"
-                                                src={post.images && post.images[0] ? post.images[0].imageUrl : "placeholder.jpg"}
+                                                src={post.images && post.images[0] ? post.images[0].imageUrl : noImage}
                                                 alt={post.title}
                                             />
                                             <h3 className="ac-post-card-title">{post.title}</h3>
@@ -353,7 +353,7 @@ const AutoConsultationComponent: React.FC = () => {
                             <button
                                 className="ac-arrow ac-arrow-right"
                                 onClick={handleNextPage}
-                                disabled={page === totalPages}
+                                hidden={page === totalPages}
                             >
                                 <FaArrowRight />
                             </button>
@@ -361,36 +361,38 @@ const AutoConsultationComponent: React.FC = () => {
                     </div>
 
 
-                    {selectedAnimal && (
-                        <div className="ac-popup-overlay" onClick={() => setSelectedAnimal(null)}>
-                            <div className="ac-popup-content row" onClick={(e) => e.stopPropagation()}>
-                                <div className="autoConsul-image col-6">
-                                    <p>Images:</p>
-                                    {selectedAnimal.animalImages?.length ? (
-                                        <Slider {...settings}>
-                                            {selectedAnimal.animalImages.map((img, index) => (
-                                                <div key={index}>
-                                                    <img
-                                                        src={img.imageUrl}
-                                                        alt={`${selectedAnimal.animalCategoryName} image ${index + 1}`}
-                                                        style={{ maxWidth: "100%", height: "auto", objectFit: "contain", marginBottom: "10px" }}
-                                                    />
-                                                </div>
-                                            ))}
-                                        </Slider>
-                                    ) : (
-                                        <p>No images available</p>
-                                    )}
-                                </div>
+                        {selectedAnimal && (
+                            <div className="ac-popup-overlay" onClick={() => setSelectedAnimal(null)}>
+                                <div className="ac-popup-content row" onClick={(e) => e.stopPropagation()}>
+                                    <div className="autoConsul-image col-6">
+                                        {selectedAnimal.animalImages?.length ? (
+                                            <Slider {...settings}>
+                                                {selectedAnimal.animalImages.map((img, index) => (
+                                                    <div className="autoConsul-popup-class" key={index}>
+                                                        <img 
+                                                            src={img.imageUrl}
+                                                            alt={`${selectedAnimal.animalCategoryName} image ${index + 1}`}
+                                                            
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </Slider>
+                                        ) : (
+                                            <img
+                                                src={noImage}
+                                                alt="No images available"
+                                            />
+                                        )}
+                                    </div>
 
-                                <div id={consultationData.destiny} className="ac-fish-infor col-6">
-                                    <h3>{selectedAnimal.animalCategoryName}</h3>
-                                    <p>Description: {selectedAnimal.description}</p>
-                                    <p>Origin: {selectedAnimal.origin}</p>
+                                    <div id={consultationData.destiny} className="ac-fish-infor col-6">
+                                        <h3>{selectedAnimal.animalCategoryName}</h3>
+                                        <p>Description: {selectedAnimal.description}</p>
+                                        <p>Origin: {selectedAnimal.origin}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
 
 
@@ -398,21 +400,22 @@ const AutoConsultationComponent: React.FC = () => {
                         <div className="ac-popup-overlay" onClick={() => setSelectedShelter(null)}>
                             <div className="ac-popup-content row" onClick={(e) => e.stopPropagation()}>
                                 <div className="autoConsul-image col-6">
-                                    <p>Images:</p>
                                     {selectedShelter.shelterImages?.length ? (
                                         <Slider {...settings}>
                                             {selectedShelter.shelterImages.map((img, index) => (
-                                                <div key={index}>
+                                                <div className="autoConsul-popup-class" key={index}>
                                                     <img
                                                         src={img.imageUrl}
                                                         alt={`${selectedShelter.shelterCategoryName} image ${index + 1}`}
-                                                        style={{ maxWidth: "100%", height: "100%", objectFit: "contain", marginBottom: "10px" }}
                                                     />
                                                 </div>
                                             ))}
                                         </Slider>
                                     ) : (
-                                        <p>No images available</p>
+                                        <img
+                                            src={noImage}
+                                            alt="No images available"
+                                        />
                                     )}
                                 </div>
 

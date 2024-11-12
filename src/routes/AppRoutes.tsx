@@ -27,7 +27,7 @@ import ViewPost from "../user/ViewPost";
 import MyPostList from "../user/MyPostList";
 import UpdatePost from "../user/UpdatePost";
 import CreatePost from "../user/CreatePost";
-import Postlist from "../user/PostList";
+import Postlist from "../user/Postlist";
 import ViewMyPost from "../user/ViewMyPost";
 import VNPAY from "../user/VNPAY";
 import AboutUs from "../user/AboutUs";
