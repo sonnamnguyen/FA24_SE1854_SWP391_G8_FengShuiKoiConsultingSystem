@@ -4,7 +4,6 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-
 public interface EntityMapper<D, E> {
     @BeanMapping(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     E toEntity(D dto);

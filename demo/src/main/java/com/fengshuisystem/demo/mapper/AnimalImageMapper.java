@@ -7,10 +7,7 @@ import com.fengshuisystem.demo.entity.ConsultationAnimal;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(
-        config = DefaultConfigMapper.class
-
-)
+@Mapper(config = DefaultConfigMapper.class)
 public interface AnimalImageMapper extends EntityMapper<AnimalImageDTO, AnimalImage> {
     @Mapping(target = "animalCategory.id", source = "animalId")
     public AnimalImage toEntity(AnimalImageDTO dto);

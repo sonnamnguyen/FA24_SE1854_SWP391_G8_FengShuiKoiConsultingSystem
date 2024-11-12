@@ -20,8 +20,4 @@ public interface ConsultationRequestMapper {
     @Mapping(source = "phone", target = "phone")
     ConsultationRequest toEntity(ConsultationRequestDTO consultationRequestDTO);
 
-    @Named("packageToPackageId")
-    default Integer mapPackageToPackageId(com.fengshuisystem.demo.entity.Package packageEntity) {
-        return packageEntity != null ? packageEntity.getId() : null;
-    }
 }

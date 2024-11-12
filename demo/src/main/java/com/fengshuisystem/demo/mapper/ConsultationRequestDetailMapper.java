@@ -26,21 +26,6 @@ public interface ConsultationRequestDetailMapper {
     @Mapping(target = "consultationRequest", ignore = true)
     ConsultationRequestDetail toEntity(ConsultationRequestDetailDTO dto);
 
-    // Custom method to map a set of ShelterCategory entities to a list of their IDs
-    @Named("shelterCategoryToIds")
-    default List<Integer> mapShelterCategoriesToIds(Set<ShelterCategory> shelterCategories) {
-        return shelterCategories.stream()
-                .map(com.fengshuisystem.demo.entity.ShelterCategory::getId)
-                .toList();
-    }
-
-    // Custom method to map a set of AnimalCategory entities to a list of their IDs
-    @Named("animalCategoryToIds")
-    default List<Integer> mapAnimalCategoriesToIds(Set<com.fengshuisystem.demo.entity.AnimalCategory> animalCategories) {
-        return animalCategories.stream()
-                .map(com.fengshuisystem.demo.entity.AnimalCategory::getId)
-                .toList();
-    }
 
     // Phương thức để cập nhật dữ liệu từ DTO vào entity
     void updateEntityFromDTO(ConsultationRequestDetailDTO detailDTO, @MappingTarget ConsultationRequestDetail detail);
