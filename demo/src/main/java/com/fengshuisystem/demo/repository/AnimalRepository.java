@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.repository;
 
 import com.fengshuisystem.demo.entity.AnimalCategory;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @Repository
 public interface AnimalRepository extends JpaRepository<AnimalCategory, Integer> {

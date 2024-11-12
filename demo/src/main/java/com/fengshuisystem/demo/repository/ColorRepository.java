@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.repository;
 
 import com.fengshuisystem.demo.entity.Color;

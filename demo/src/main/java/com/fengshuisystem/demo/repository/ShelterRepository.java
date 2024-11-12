@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.repository;
 
 import com.fengshuisystem.demo.entity.ShelterCategory;
@@ -11,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 
 @Repository
 public interface ShelterRepository extends JpaRepository<ShelterCategory, Integer> {

@@ -1,6 +1,5 @@
 package com.fengshuisystem.demo.repository;
 
-
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.AnimalCategory;
 import com.fengshuisystem.demo.entity.Role;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<Account, Integer> {
     boolean existsByUserName(String username);
