@@ -107,10 +107,15 @@ public class ColorServiceImpl implements ColorService {
     public ColorDTO updateColor(Integer id, ColorDTO colorDTO) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
+        Color color = colorRepository.findById(colorDTO.getId()).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
+        if (!color.getColor().equals(colorDTO.getColor())) {
+            boolean nameExists = colorRepository.existsByColor(colorDTO.getColor());
+            if (nameExists) {
+                throw new AppException(ErrorCode.COLOR_EXISTED);
+            }
+        }
         if(colorDTO.getDestiny() == null) throw new AppException(ErrorCode.DESTINY_NOT_EXISTED);
         Destiny destiny = destinyRepository.findById(colorDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
-        Color color = colorRepository.findById(colorDTO.getId()).orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
-        if(colorRepository.existsByColor(colorDTO.getColor())) throw new AppException(ErrorCode.COLOR_EXISTED);
         color.setDestiny(destiny);
         colorMapper.update(colorDTO, color);
         color.setUpdatedDate(Instant.now());

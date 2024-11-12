@@ -112,10 +112,15 @@ public class ShapeServiceImpl implements ShapeService {
         }
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
+        Shape shape = shapeRepository.findById(shapeDTO.getId()).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
+        if (!shape.getShape().equals(shapeDTO.getShape())) {
+            boolean nameExists = shapeRepository.existsByShape(shapeDTO.getShape());
+            if (nameExists) {
+                throw new AppException(ErrorCode.SHAPE_EXISTED);
+            }
+        }
         if(shapeDTO.getDestiny() == null) throw new AppException(ErrorCode.DESTINY_NOT_EXISTED);
         Destiny destiny = destinyRepository.findById(shapeDTO.getDestiny().getId()).orElseThrow(() -> new AppException(ErrorCode.DESTINY_NOT_EXISTED));
-        Shape shape = shapeRepository.findById(shapeDTO.getId()).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
-        if(shapeRepository.findByShape((shapeDTO.getShape())).isPresent()) throw new AppException(ErrorCode.SHAPE_EXISTED);
         shape.setDestiny(destiny);
         shapeMapper.update(shapeDTO, shape);
         shape.setUpdatedBy(name);

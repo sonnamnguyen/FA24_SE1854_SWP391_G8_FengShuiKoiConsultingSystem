@@ -173,22 +173,31 @@ public class AnimalServiceImpl implements AnimalService {
     public AnimalCategoryDTO updateAnimal(Integer id, AnimalCategoryDTO request) {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
-        AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
-        if(request.getAnimalImages().isEmpty()) throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
-        if(request.getColors().isEmpty()) throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
+
+        AnimalCategory animalCategory = animalRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
+
+        if (!animalCategory.getAnimalCategoryName().equals(request.getAnimalCategoryName())) {
+            boolean nameExists = animalRepository.existsByAnimalCategoryName(request.getAnimalCategoryName());
+            if (nameExists) {
+                throw new AppException(ErrorCode.ANIMAL_EXISTED);
+            }
+        }
+        if (request.getAnimalImages().isEmpty()) {
+            throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
+        }
+        if (request.getColors().isEmpty()) {
+            throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
+        }
         animalMapper.update(request, animalCategory);
         Set<Color> colors = new HashSet<>();
-        if (request.getColors() != null) {
-            for (ColorDTO colorDTO : request.getColors()) {
-                Color color = colorRepository.findById(colorDTO.getId())
-                        .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
-                colors.add(color);
-            }
-            if (colors.size() > 3) {
-                throw new AppException(ErrorCode.TOO_MANY_COLORS);
-            }
-        } else {
-            throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
+        for (ColorDTO colorDTO : request.getColors()) {
+            Color color = colorRepository.findById(colorDTO.getId())
+                    .orElseThrow(() -> new AppException(ErrorCode.COLOR_NOT_EXISTED));
+            colors.add(color);
+        }
+        if (colors.size() > 3) {
+            throw new AppException(ErrorCode.TOO_MANY_COLORS);
         }
         for (AnimalImage animalImage : animalCategory.getAnimalImages()) {
             animalImage.setAnimalCategory(animalCategory);

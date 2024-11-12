@@ -30,7 +30,7 @@ public enum ErrorCode {
     CONSULATION_RESULT_NOT_EXISTED(1020, "Consulation result not existed", HttpStatus.NOT_FOUND),
     SHAPE_NOT_EXISTED(1021, "No shape selected. Please choose a shape before proceeding.", HttpStatus.NOT_FOUND),
     CONSULATION_CATEGORY_NOT_EXISTED(1022, "Consulation Category not existed", HttpStatus.NOT_FOUND),
-    SHAPE_EXISTED(1023, "Shape existed", HttpStatus.BAD_REQUEST), // added from second file
+    SHAPE_EXISTED(1023, "The shape name already exists in the system. Please choose another name.", HttpStatus.BAD_REQUEST),
     CONSULTATION_CATEGORY_NOT_EXISTED(1024, "Consulation Category not existed", HttpStatus.NOT_FOUND),
     CONSULTATION_SHELTER_DOES_NOT_EXIST(1025, "Consulation shelter does not exist", HttpStatus.NOT_FOUND),
     CONSULTATION_ANIMAL_DOES_NOT_EXIST(1026, "Consulation animal does not exist", HttpStatus.NOT_FOUND),

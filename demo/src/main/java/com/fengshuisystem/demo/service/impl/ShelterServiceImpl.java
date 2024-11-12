@@ -117,6 +117,12 @@ public class ShelterServiceImpl implements ShelterService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         ShelterCategory shelterCategory = shelterRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SHELTER_NOT_EXISTED));
+        if (!shelterCategory.getShelterCategoryName().equals(request.getShelterCategoryName())) {
+            boolean nameExists = shelterRepository.existsByShelterCategoryName(request.getShelterCategoryName());
+            if (nameExists) {
+                throw new AppException(ErrorCode.SHELTER_EXISTED);
+            }
+        }
         if(request.getShelterImages().isEmpty()) throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
         if(request.getShape() == null) throw new AppException(ErrorCode.SHAPE_NOT_EXISTED);
         Shape shape = shapeRepository.findById(request.getShape().getId()).orElseThrow(() -> new AppException(ErrorCode.SHAPE_NOT_EXISTED));
