@@ -28,8 +28,4 @@ public class Direction {
     @Nationalized
     @Column(name = "direction", length = 50)
     private String direction;
-
-    @ManyToMany(mappedBy = "directions", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    private Set<ConsultationShelter> consultationShelters = new LinkedHashSet<>();
-
 }

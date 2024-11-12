@@ -24,8 +24,4 @@ public class Number {
 
     @Column(name = "number")
     private Integer number;
-
-    @ManyToMany (mappedBy = "numbers", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    private Set<ConsultationAnimal> consultationAnimals = new LinkedHashSet<>();
-
 }

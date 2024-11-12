@@ -12,8 +12,6 @@ import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -32,14 +30,6 @@ public class ConsultationShelter {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "shelter_category_id")
     private ShelterCategory shelterCategory;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinTable(
-            name = "consultation_shelter_direction",
-            joinColumns = @JoinColumn(name = "consultation_shelter_id"),
-            inverseJoinColumns = @JoinColumn(name = "direction_id")
-    )
-    private Set<Direction> directions = new LinkedHashSet<>();
 
     @NotNull
     @NotBlank

@@ -46,14 +46,6 @@ public class ConsultationAnimal {
         return words.length >= 10;
     }
 
-    @ManyToMany
-    @JoinTable(
-            name = "consultation_animal_numbers",
-            joinColumns = @JoinColumn(name = "consultation_animal_id"),
-            inverseJoinColumns = @JoinColumn(name = "number_id")
-    )
-    private Set<Number> numbers;
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Request status = Request.CANCELLED;

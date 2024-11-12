@@ -1,12 +1,7 @@
 package com.fengshuisystem.demo.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.Account;
-import com.fengshuisystem.demo.entity.ConsultationRequest;
-import com.fengshuisystem.demo.entity.Package;
-import com.fengshuisystem.demo.entity.Payment;
 import com.fengshuisystem.demo.entity.enums.BillStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
