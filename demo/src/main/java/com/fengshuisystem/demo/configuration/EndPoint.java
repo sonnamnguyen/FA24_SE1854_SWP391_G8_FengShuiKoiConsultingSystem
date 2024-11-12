@@ -41,8 +41,8 @@ public class EndPoint {
         public static final String[] PUBLIC_GET_ENDPOINTS = {
                 "users/existByUserName", "users/existByEmail", "users/activate",
                 "/destinys/destiny/{yearOfBirth}", "/destinys/autoConsultation/{yearOfBirth}",
-                "api/vn_pay/create_vn_pay", "/api/number",
-                "animals/animalCategory", "colors/getAll-Colors", "/shelters/shelterCategory","api/direction",
+                "api/vn_pay/create_vn_pay", "/api/number"
+                , "colors/getAll-Colors","api/direction",
                 "shapes/getAll-Shapes"
         };
 
@@ -71,8 +71,7 @@ public class EndPoint {
         public static final String[] BOTH_GET_ENDPOINTS = {
                 "api/bills/{id}/status",
                 "/api/bills/{billId}",
-                "/destinys", "/api/bills/search", "/shelters/shelter-search",  "/shelters/shelter-search-name"
-
+                "/destinys", "/api/bills/search", "/shelters/shelter-search",  "/shelters/shelter-search-name", "/packages/{id}", "/shelters/shelterCategory", "animals/animalCategory"
         };
 
         public static final String[] BOTH_DELETE_ENDPOINTS = {
