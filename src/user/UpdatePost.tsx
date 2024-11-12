@@ -188,6 +188,7 @@ const UpdatePost: React.FC = () => {
               <label className="form-label">Content:</label>
               <textarea
                 className="form-textarea"
+                required
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
@@ -196,6 +197,7 @@ const UpdatePost: React.FC = () => {
               <label className="form-label">Created Date:</label>
               <input
                 className="form-input"
+                required
                 type="datetime-local"
                 value={
                   createdDate

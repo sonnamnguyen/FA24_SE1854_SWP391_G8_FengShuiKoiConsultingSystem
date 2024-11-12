@@ -167,6 +167,7 @@ const CreatePost: React.FC = () => {
             placeholder="Email"
             required
             className="input-field email-input"
+            disabled
           />
 
           <select
@@ -178,9 +179,11 @@ const CreatePost: React.FC = () => {
             <option value="" disabled>
               Select Post Category
             </option>
-            <option value={1}>Lifestyle</option>
-            <option value={2}>Experience</option>
-            <option value={3}>Buy and Sell</option>
+            <option value={1}>Koi Fish Care</option>
+            <option value={2}>Pond Maintenance</option>
+            <option value={3}>Aquatic Plants</option>
+            <option value={4}>Feng Shui Tips</option>
+            <option value={5}>Koi Breeding</option>
           </select>
 
           <select
@@ -192,7 +195,9 @@ const CreatePost: React.FC = () => {
             <option value="" disabled>
               Select Package
             </option>
-            <option value={1}>Basic Package</option>
+            <option value={1}>Fish Consultation</option>
+            <option value={2}>Pond Consultation</option>
+            <option value={3}>Fish and Pond Consultation</option>
           </select>
 
           <select
