@@ -36,7 +36,7 @@ public interface AnimalRepository extends JpaRepository<AnimalCategory, Integer>
             "JOIN c.destiny d " +
             "WHERE d.destiny IN :destiny " +
             "AND a.status = :status " +
-            "AND a.animalCategoryName LIKE %:name% " +
+            "AND (:name IS NULL OR TRIM(:name) = '' OR a.animalCategoryName LIKE LOWER(CONCAT('%', :name, '%'))) " +
             "ORDER BY a.id DESC")
     Page<AnimalCategory> findActiveAnimalCategoriesByDestinyAndName(@Param("destiny") List<String> destiny,
                                                                     @Param("status") Status status,
