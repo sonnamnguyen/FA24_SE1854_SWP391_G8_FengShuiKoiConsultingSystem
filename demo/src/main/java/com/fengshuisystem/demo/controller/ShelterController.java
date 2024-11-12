@@ -52,7 +52,7 @@ public class ShelterController {
             .result(shelterService.getSheltersBySearch(name, page, size))
             .build();
   }
-  @GetMapping("/shelter-destiny")
+  @GetMapping("/shelter-searchtui p")
   public ApiResponse<PageResponse<ShelterCategoryDTO>> getShelterByDestiny(
           @RequestParam List<String> destiny,
           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
