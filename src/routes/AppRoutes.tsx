@@ -57,6 +57,9 @@ import UserRoute from "../user/UserRoute/UserRoute";
 import KoiFish from "../user/suitableDestiny/KoiFishSuitable/KoiFish";
 import KoiPond from "../user/suitableDestiny/KoiPondSuitable/KoiPond";
 
+// History
+import ViewHistory from "../user/ViewHistory";
+
 const AppRoutes = () => {
   // const ProtectedBlog = AdminRoute(Blog);
   const Page = AdminRoute(AdminPage);
@@ -172,6 +175,9 @@ const UserPondFish = UserRoute(KoiPond);
         {/* Bill - Payment*/}
         <Route path="/view-bills" element={<PageViewBill />} />
         <Route path="/view-payments" element={<PageViewPayment />} />
+
+        {/* History */}
+        <Route path="/view-history" element={<ViewHistory />} />
       </Routes>
     </Router>
   );
