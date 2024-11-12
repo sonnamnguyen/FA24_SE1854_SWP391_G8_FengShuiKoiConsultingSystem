@@ -3,7 +3,7 @@ package com.fengshuisystem.demo.configuration;
 public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
-                "/animals", "/animals/animal-search", "/shelters", "/shelters/search-name", "/shelters/{search}",
+                "/animals", "/animals/animal-search", "api/bills/search", "/shelters", "/shelters/search-name", "/shelters/{search}",
                 "/colors", "shapes", "/animal-images", "/shelter-images", "colors/getAll-Colors",
                 "shapes/getAll-Shapes", "shapes/shape-search", "/users", "/users/search-name", "/roles",
                 "colors/search-colors", "api/bills"
@@ -39,10 +39,11 @@ public class EndPoint {
         };
 
         public static final String[] PUBLIC_GET_ENDPOINTS = {
+
                 "users/existByUserName", "users/existByEmail", "users/activate",
                 "/destinys/destiny/{yearOfBirth}", "/destinys/autoConsultation/{yearOfBirth}",
                 "api/vn_pay/create_vn_pay", "shapes/getAll-Shapes", "/api/number",
-                "animals/animalCategory", "colors/getAll-Colors", "/shelters/shelterCategory","api/direction","/api/bills/search"
+                "animals/animalCategory", "colors/getAll-Colors", "/shelters/shelterCategory","api/direction"
         };
 
         public static final String[] USER_GET_ENDPOINTS = {

@@ -141,6 +141,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BillDTO> searchBills(BillStatus status, String createdBy, BigDecimal minTotalAmount, BigDecimal maxTotalAmount, String paymentMethod) {
         List<Bill> bills = billRepository.findAll();
 
