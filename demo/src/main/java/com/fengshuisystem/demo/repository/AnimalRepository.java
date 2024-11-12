@@ -44,4 +44,6 @@ public interface AnimalRepository extends JpaRepository<AnimalCategory, Integer>
                                                                     @Param("status") Status status,
                                                                     @Param("name") String name,
                                                                     Pageable pageable);
+    @Query("SELECT ac FROM AnimalCategory ac WHERE ac.status = :status ORDER BY ac.animalCategoryName ASC")
+    List<AnimalCategory> getAnimalCategoriesByStatus(@Param("status") Status status);
 }

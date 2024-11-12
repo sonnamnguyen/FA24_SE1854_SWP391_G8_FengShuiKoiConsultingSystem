@@ -215,7 +215,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public List<AnimalCategoryDTO> getAllAnimalCategory() {
-        List<AnimalCategoryDTO> animalCategoryDTOS = animalRepository.findAll()
+        List<AnimalCategoryDTO> animalCategoryDTOS = animalRepository.getAnimalCategoriesByStatus(Status.ACTIVE)
                 .stream()
                 .map(animalMapper::toDto)
                 .toList();
