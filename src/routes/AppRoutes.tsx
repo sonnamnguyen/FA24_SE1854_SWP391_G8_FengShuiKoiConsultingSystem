@@ -27,7 +27,7 @@ import ViewPost from "../user/ViewPost";
 import MyPostList from "../user/MyPostList";
 import UpdatePost from "../user/UpdatePost";
 import CreatePost from "../user/CreatePost";
-import Postlist from "../user/PostList";
+import Postlist from "../user/Postlist";
 import ViewMyPost from "../user/ViewMyPost";
 import VNPAY from "../user/VNPAY";
 import AboutUs from "../user/AboutUs";
@@ -86,17 +86,17 @@ const AppRoutes = () => {
 
   const PageViewBill = AdminRoute(ViewBill);
   const PageViewPayment = AdminRoute(ViewPayment);
-//route user
+  //route user
 
-const UserKoiFish = UserRoute(KoiFish);
-const UserPondFish = UserRoute(KoiPond);
-const UserUpdatePassword = UserRoute(UpdatePassword);
+  const UserKoiFish = UserRoute(KoiFish);
+  const UserPondFish = UserRoute(KoiPond);
+  const UserUpdatePassword = UserRoute(UpdatePassword);
   return (
     <Router>
       <Routes>
-      <Route path="/update-password" element={<UserUpdatePassword />} />
-      <Route path="/koi-fishs" element={<UserKoiFish />} />
-      <Route path="/koi-ponds" element={<UserPondFish />} />
+        <Route path="/update-password" element={<UserUpdatePassword />} />
+        <Route path="/koi-fishs" element={<UserKoiFish />} />
+        <Route path="/koi-ponds" element={<UserPondFish />} />
         <Route path="/my-post" element={<ViewMyPost />} />
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/posts" element={<ViewPost />} />

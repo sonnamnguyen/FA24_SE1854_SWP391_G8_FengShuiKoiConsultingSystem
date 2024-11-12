@@ -9,12 +9,14 @@ import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase/firebase";
 import api from "../axious/axious";
 import { jwtDecode } from "jwt-decode";
-
+import Navbar from "../layouts/header-footer/Navbar";
+import Footer from "../layouts/header-footer/Footer";
 const UpdateProfile: React.FC = () => {
   const [fileList, setFileList] = useState<File[]>([]);
   const [email, setEmail] = useState("");
   const [apii, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
+  const [searchData, setSearchData] = useState<string>("");
 
   useEffect(() => {
     const token = getToken();
@@ -98,88 +100,96 @@ const UpdateProfile: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      {contextHolder}
-      <h1 className="mt-5 text-center">Update Profile</h1>
-      <Formik
-        initialValues={{
-          userName: "",
-          fullName: "",
-          dob: null,
-          phoneNumber: "",
-        }}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ setFieldValue, values }) => (
-          <Form className="col-md-6 col-12 mx-auto">
-            <div className="form-item">
-              <label>Username</label>
-              <Field name="userName" type="text" className="form-control" />
-              <ErrorMessage
-                name="userName"
-                component="div"
-                className="error-message"
-              />
-            </div>
+    <div>
+      <Navbar searchData={searchData} setSearchData={setSearchData} />
+      <div className="container" style={{ marginTop: "150px" }}>
+        {contextHolder}
+        <h1 className="mt-5 text-center">Update Profile</h1>
+        <Formik
+          initialValues={{
+            userName: "",
+            fullName: "",
+            dob: null,
+            phoneNumber: "",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ setFieldValue, values }) => (
+            <Form className="col-md-6 col-12 mx-auto">
+              <div className="form-item">
+                <label>Username</label>
+                <Field name="userName" type="text" className="form-control" />
+                <ErrorMessage
+                  name="userName"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
 
-            <div className="form-item">
-              <label>Full Name</label>
-              <Field name="fullName" type="text" className="form-control" />
-              <ErrorMessage
-                name="fullName"
-                component="div"
-                className="error-message"
-              />
-            </div>
+              <div className="form-item">
+                <label>Full Name</label>
+                <Field name="fullName" type="text" className="form-control" />
+                <ErrorMessage
+                  name="fullName"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
 
-            <div className="form-item">
-              <label>Date of Birth</label>
-              <DatePicker
-                onChange={(date) => setFieldValue("dob", date)}
-                value={values.dob}
-                style={{ width: "100%" }}
-              />
-              <ErrorMessage
-                name="dob"
-                component="div"
-                className="error-message"
-              />
-            </div>
+              <div className="form-item">
+                <label>Date of Birth</label>
+                <DatePicker
+                  onChange={(date) => setFieldValue("dob", date)}
+                  value={values.dob}
+                  style={{ width: "100%" }}
+                />
+                <ErrorMessage
+                  name="dob"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
 
-            <div className="form-item">
-              <label>Phone Number</label>
-              <Field name="phoneNumber" type="text" className="form-control" />
-              <ErrorMessage
-                name="phoneNumber"
-                component="div"
-                className="error-message"
-              />
-            </div>
+              <div className="form-item">
+                <label>Phone Number</label>
+                <Field
+                  name="phoneNumber"
+                  type="text"
+                  className="form-control"
+                />
+                <ErrorMessage
+                  name="phoneNumber"
+                  component="div"
+                  className="error-message"
+                />
+              </div>
 
-            <div className="form-item">
-              <label>Avatar</label>
-              <Upload
-                maxCount={1}
-                accept="image/*"
-                showUploadList={true}
-                beforeUpload={() => false}
-                onChange={handleUploadChange}
-                listType="picture-card"
-              >
-                <div>
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </div>
-              </Upload>
-            </div>
+              <div className="form-item">
+                <label>Avatar</label>
+                <Upload
+                  maxCount={1}
+                  accept="image/*"
+                  showUploadList={true}
+                  beforeUpload={() => false}
+                  onChange={handleUploadChange}
+                  listType="picture-card"
+                >
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                </Upload>
+              </div>
 
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form>
-        )}
-      </Formik>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+      <Footer></Footer>
     </div>
   );
 };

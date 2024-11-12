@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import api from "../axious/axious";
+import Navbar from "../layouts/header-footer/Navbar";
+import Footer from "../layouts/header-footer/Footer";
 
 const UpdatePassword: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -8,8 +10,11 @@ const UpdatePassword: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [searchData, setSearchData] = useState<string>("");
 
-  const handleUpdatePassword = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdatePassword = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     if (newPassword !== confirmPassword) {
@@ -34,61 +39,70 @@ const UpdatePassword: React.FC = () => {
       setConfirmPassword("");
     } catch (error) {
       console.error("Error updating password:", error);
-      setError("Failed to update password. Please ensure your current password is correct.");
+      setError(
+        "Failed to update password. Please ensure your current password is correct."
+      );
       setSuccessMessage(null);
     }
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleUpdatePassword}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 2,
-        padding: 3,
-        maxWidth: 400,
-        margin: "auto",
-      }}
-    >
-      <Typography variant="h5">Update Password</Typography>
+    <div>
+      <Navbar searchData={searchData} setSearchData={setSearchData} />
 
-      {error && <Typography color="error">{error}</Typography>}
-      {successMessage && <Typography color="primary">{successMessage}</Typography>}
+      <Box
+        component="form"
+        onSubmit={handleUpdatePassword}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+          padding: 3,
+          maxWidth: 400,
+          margin: "150px auto",
+        }}
+      >
+        <Typography variant="h5">Update Password</Typography>
 
-      <TextField
-        label="Current Password"
-        type="password"
-        value={currentPassword}
-        onChange={(e) => setCurrentPassword(e.target.value)}
-        fullWidth
-        required
-      />
+        {error && <Typography color="error">{error}</Typography>}
+        {successMessage && (
+          <Typography color="primary">{successMessage}</Typography>
+        )}
 
-      <TextField
-        label="New Password"
-        type="password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        fullWidth
-        required
-      />
+        <TextField
+          label="Current Password"
+          type="password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          fullWidth
+          required
+        />
 
-      <TextField
-        label="Confirm New Password"
-        type="password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        fullWidth
-        required
-      />
+        <TextField
+          label="New Password"
+          type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          fullWidth
+          required
+        />
 
-      <Button type="submit" variant="contained" color="primary" fullWidth>
-        Update Password
-      </Button>
-    </Box>
+        <TextField
+          label="Confirm New Password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          fullWidth
+          required
+        />
+
+        <Button type="submit" variant="contained" color="primary" fullWidth>
+          Update Password
+        </Button>
+      </Box>
+      <Footer></Footer>
+    </div>
   );
 };
 
