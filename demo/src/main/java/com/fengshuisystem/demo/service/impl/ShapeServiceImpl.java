@@ -122,6 +122,7 @@ public class ShapeServiceImpl implements ShapeService {
         shape.setUpdatedDate(Instant.now());
         return shapeMapper.toDto(shapeRepository.saveAndFlush(shape));
     }
+
     public List<ShapeDTO> getAllShapes() {
         Status status = Status.ACTIVE;
         return shapeRepository.findAllByStatus(status).stream().map(shapeMapper::toDto).toList();
