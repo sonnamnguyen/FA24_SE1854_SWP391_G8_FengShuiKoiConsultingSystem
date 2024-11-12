@@ -3,7 +3,6 @@ package com.fengshuisystem.demo.service;
 import com.fengshuisystem.demo.dto.PackageDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
 
-
 public interface PackageService {
     PackageDTO createPackage(PackageDTO packageDTO);
     void deletePackage(Integer id);

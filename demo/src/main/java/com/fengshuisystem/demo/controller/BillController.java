@@ -4,9 +4,7 @@ import com.fengshuisystem.demo.dto.*;
 import com.fengshuisystem.demo.entity.enums.BillStatus;
 import com.fengshuisystem.demo.entity.enums.Request;
 import com.fengshuisystem.demo.service.impl.BillServiceImpl;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/bills")
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class BillController {
 
@@ -51,17 +48,6 @@ public class BillController {
         return ApiResponse.<PageResponse<BillDTO>>builder()
                 .result(billService.getAllBills(page, size))
                 .build();
-    }
-
-    @PutMapping("/{billId}/status")
-    public ResponseEntity<String> updateBillStatus(
-            @PathVariable Integer billId,
-            @RequestBody Map<String, String> statusUpdate) {
-        String billStatus = statusUpdate.get("billStatus");
-        String requestStatus = statusUpdate.get("requestStatus");
-
-        billService.updateStatusAfterPayment(billId, BillStatus.valueOf(billStatus), Request.valueOf(requestStatus));
-        return ResponseEntity.ok("Status updated!!");
     }
 
     @PostMapping("/vnpay/success")
@@ -107,15 +93,21 @@ public class BillController {
             @RequestParam(value = "minTotalAmount", required = false) BigDecimal minTotalAmount,
             @RequestParam(value = "maxTotalAmount", required = false) BigDecimal maxTotalAmount,
             @RequestParam(value = "paymentMethod", required = false) String paymentMethod) {
-        if (minTotalAmount == null) {
-            minTotalAmount = BigDecimal.ZERO;
-        }
-        if (maxTotalAmount == null) {
-            maxTotalAmount = BigDecimal.valueOf(1000000);
-        }
+
         return ApiResponse.<List<BillDTO>>builder()
                 .result(billService.searchBills(status, createdBy, minTotalAmount, maxTotalAmount, paymentMethod))
                 .build();
+    }
+
+    @PutMapping("/{billId}/status")
+    public ResponseEntity<String> updateBillStatus(
+            @PathVariable Integer billId,
+            @RequestBody Map<String, String> statusUpdate) {
+        String billStatus = statusUpdate.get("billStatus");
+        String requestStatus = statusUpdate.get("requestStatus");
+
+        billService.updateStatusAfterPayment(billId, BillStatus.valueOf(billStatus), Request.valueOf(requestStatus));
+        return ResponseEntity.ok("Status updated!!");
     }
 
 }

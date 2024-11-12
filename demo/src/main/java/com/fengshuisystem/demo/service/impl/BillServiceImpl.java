@@ -33,6 +33,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -117,8 +118,8 @@ public class BillServiceImpl implements BillService {
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_EXISTED));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public BigDecimal getTotalIncomeThisMonth() {
         return billRepository.getTotalIncomeThisMonth();
     }
@@ -141,49 +142,45 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BillDTO> searchBills(BillStatus status, String createdBy, BigDecimal minTotalAmount, BigDecimal maxTotalAmount, String paymentMethod) {
         List<Bill> bills = billRepository.findAll();
 
+        // Gán giá trị mặc định cho các biến trung gian
+        final BigDecimal effectiveMinTotalAmount = (minTotalAmount == null) ? BigDecimal.ZERO : minTotalAmount;
+        final BigDecimal effectiveMaxTotalAmount = (maxTotalAmount == null) ? BigDecimal.valueOf(1000000) : maxTotalAmount;
+
+        // Kiểm tra điều kiện ràng buộc max >= min >= 0
+        if (effectiveMinTotalAmount.compareTo(BigDecimal.ZERO) < 0 || effectiveMaxTotalAmount.compareTo(effectiveMinTotalAmount) < 0) {
+            throw new IllegalArgumentException("Invalid amount range: Ensure that max >= min >= 0");
+        }
+
+        Stream<Bill> billStream = bills.stream();
+
         // Lọc theo trạng thái
         if (status != null) {
-            bills = bills.stream().filter(bill -> bill.getStatus().equals(status)).collect(Collectors.toList());
+            billStream = billStream.filter(bill -> bill.getStatus().equals(status));
         }
 
         // Lọc theo người tạo
         if (createdBy != null && !createdBy.isEmpty()) {
-            bills = bills.stream().filter(bill -> bill.getCreatedBy().toLowerCase().contains(createdBy.toLowerCase())).collect(Collectors.toList());
+            billStream = billStream.filter(bill -> bill.getCreatedBy().toLowerCase().contains(createdBy.toLowerCase()));
         }
 
-        // Lọc theo khoảng giá trị của TotalAmount
-        if (minTotalAmount != null || maxTotalAmount != null) {
-            if (minTotalAmount != null && maxTotalAmount != null) {
-                // Khi cả min và max đều có giá trị
-                bills = bills.stream()
-                        .filter(bill -> bill.getTotalAmount().compareTo(minTotalAmount) >= 0 && bill.getTotalAmount().compareTo(maxTotalAmount) <= 0)
-                        .collect(Collectors.toList());
-            } else if (minTotalAmount != null) {
-                // Khi chỉ có minTotalAmount
-                bills = bills.stream()
-                        .filter(bill -> bill.getTotalAmount().compareTo(minTotalAmount) >= 0)
-                        .collect(Collectors.toList());
-            } else if (maxTotalAmount != null) {
-                // Khi chỉ có maxTotalAmount
-                bills = bills.stream()
-                        .filter(bill -> bill.getTotalAmount().compareTo(maxTotalAmount) <= 0)
-                        .collect(Collectors.toList());
-            }
-        }
+        // Lọc theo khoảng giá trị của TotalAmount (effectiveMinTotalAmount <= TotalAmount <= effectiveMaxTotalAmount)
+        billStream = billStream.filter(bill ->
+                bill.getTotalAmount().compareTo(effectiveMinTotalAmount) >= 0 && bill.getTotalAmount().compareTo(effectiveMaxTotalAmount) <= 0);
 
         // Lọc theo phương thức thanh toán
         if (paymentMethod != null && !paymentMethod.isEmpty()) {
-            bills = bills.stream()
-                    .filter(bill -> bill.getPayment().getPaymentMethod().toLowerCase().contains(paymentMethod.toLowerCase()))
-                    .collect(Collectors.toList());
+            billStream = billStream.filter(bill ->
+                    bill.getPayment().getPaymentMethod().toLowerCase().contains(paymentMethod.toLowerCase()));
         }
 
         // Trả về danh sách hóa đơn đã được chuyển đổi thành DTO
-        return bills.stream().map(billMapper::toDto).collect(Collectors.toList());
+        return billStream.map(billMapper::toDto).collect(Collectors.toList());
     }
+
 
     private String getCurrentUserEmailFromJwt() {
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

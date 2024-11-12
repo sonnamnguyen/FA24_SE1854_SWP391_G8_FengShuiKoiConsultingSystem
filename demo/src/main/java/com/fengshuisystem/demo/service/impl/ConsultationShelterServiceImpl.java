@@ -14,7 +14,9 @@ import com.fengshuisystem.demo.repository.ConsultationResultRepository;
 import com.fengshuisystem.demo.repository.ConsultationShelterRepository;
 import com.fengshuisystem.demo.repository.ShelterCategoryRepository;
 import com.fengshuisystem.demo.service.ConsultationShelterService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,13 +33,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsultationShelterServiceImpl implements ConsultationShelterService {
 
-    private final ConsultationShelterRepository consultationShelterRepository;
-    private final ConsultationResultRepository consultationResultRepository;
-    private final ShelterCategoryRepository shelterCategoryRepository;
-    private final ConsultationShelterMapper consultationShelterMapper;
+    ConsultationShelterRepository consultationShelterRepository;
+    ConsultationResultRepository consultationResultRepository;
+    ShelterCategoryRepository shelterCategoryRepository;
+    ConsultationShelterMapper consultationShelterMapper;
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")

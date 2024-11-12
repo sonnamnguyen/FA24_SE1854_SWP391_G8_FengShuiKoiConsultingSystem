@@ -1,4 +1,5 @@
 package com.fengshuisystem.demo.service.impl;
+
 import com.fengshuisystem.demo.dto.CommentDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.*;
@@ -27,9 +28,11 @@ import java.time.Instant;
 @Slf4j
 @Service
 public class CommentServiceImpl implements CommentService {
+
     CommentMapper commentMapper;
     CommentRepository commentRepository;
     PostRepository postRepository;
+
     @PreAuthorize("hasRole('USER')")
     @Override
     public CommentDTO createComment(CommentDTO commentDTO) {

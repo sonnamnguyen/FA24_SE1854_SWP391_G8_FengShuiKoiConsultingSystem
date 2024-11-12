@@ -1,7 +1,6 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ConsultationRequestDetailDTO;
-import com.fengshuisystem.demo.dto.ConsultationResultDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.*;
 import com.fengshuisystem.demo.entity.enums.Request;
@@ -11,7 +10,9 @@ import com.fengshuisystem.demo.mapper.ConsultationRequestDetailMapper;
 import com.fengshuisystem.demo.repository.ConsultationRequestDetailRepository;
 import com.fengshuisystem.demo.repository.ConsultationRequestRepository;
 import com.fengshuisystem.demo.service.ConsultationRequestDetailService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +27,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsultationRequestDetailServiceImpl implements ConsultationRequestDetailService {
 
-    private final ConsultationRequestDetailRepository detailRepository;
-    private final ConsultationRequestRepository requestRepository;
-    private final ConsultationRequestDetailMapper detailMapper;
+    ConsultationRequestDetailRepository detailRepository;
+    ConsultationRequestRepository requestRepository;
+    ConsultationRequestDetailMapper detailMapper;
 
     @Override
     @PreAuthorize("hasRole('USER')")

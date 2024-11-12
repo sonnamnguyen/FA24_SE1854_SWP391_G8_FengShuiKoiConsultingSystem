@@ -24,6 +24,6 @@ public interface UserService {
     long getNewUsersToday();
     long getNewUsersThisWeek();
     long getNewUsersThisMonth();
-  UserResponse updatePassword(UpdatePasswordRequest updatePasswordRequest);
+    UserResponse updatePassword(UpdatePasswordRequest updatePasswordRequest);
     Account updateFCM(@Valid UpdateFCMRequest updateFCMRequest);
 }

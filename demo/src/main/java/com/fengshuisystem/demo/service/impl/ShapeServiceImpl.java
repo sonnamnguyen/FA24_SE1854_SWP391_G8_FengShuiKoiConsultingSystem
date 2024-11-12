@@ -33,9 +33,11 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ShapeServiceImpl implements ShapeService {
+
     ShapeMapper shapeMapper;
     ShapeRepository shapeRepository;
     DestinyRepository destinyRepository;
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ShapeDTO createShape(ShapeDTO shapeDTO) {

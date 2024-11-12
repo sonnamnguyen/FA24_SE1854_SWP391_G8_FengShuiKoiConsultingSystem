@@ -22,6 +22,7 @@ public class ShelterImageServiceImpl implements ShelterImageService {
 
     ShelterImageRepository shelterImageRepository;
     ShelterImageMapper shelterImageMapper;
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public List<ShelterImageDTO> getAllShelterImage(Integer id, List<String> imgUrl) {

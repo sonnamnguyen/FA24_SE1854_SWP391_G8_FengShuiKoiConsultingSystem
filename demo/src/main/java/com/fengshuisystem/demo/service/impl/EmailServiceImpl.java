@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmailServiceImpl implements EmailService {
+
     JavaMailSender mailSender;
+
     @Override
     public void sendEmail(String from, String to, String subject, String body) {
         MimeMessage message = mailSender.createMimeMessage();

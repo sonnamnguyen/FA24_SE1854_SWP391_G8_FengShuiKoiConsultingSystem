@@ -13,7 +13,9 @@ import com.fengshuisystem.demo.repository.AnimalCategoryRepository;
 import com.fengshuisystem.demo.repository.ConsultationAnimalRepository;
 import com.fengshuisystem.demo.repository.ConsultationResultRepository;
 import com.fengshuisystem.demo.service.ConsultationAnimalService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +32,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsultationAnimalServiceImpl implements ConsultationAnimalService {
 
-    private final ConsultationAnimalRepository consultationAnimalRepository;
-    private final ConsultationResultRepository consultationResultRepository;
-    private final AnimalCategoryRepository animalCategoryRepository;
-    private final ConsultationAnimalMapper consultationAnimalMapper;
+    ConsultationAnimalRepository consultationAnimalRepository;
+    ConsultationResultRepository consultationResultRepository;
+    AnimalCategoryRepository animalCategoryRepository;
+    ConsultationAnimalMapper consultationAnimalMapper;
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")

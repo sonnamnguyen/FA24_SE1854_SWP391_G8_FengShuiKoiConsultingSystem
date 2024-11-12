@@ -16,7 +16,9 @@ import com.fengshuisystem.demo.repository.ConsultationRequestRepository;
 import com.fengshuisystem.demo.repository.PackageRepository;
 import com.fengshuisystem.demo.repository.UserRepository;
 import com.fengshuisystem.demo.service.ConsultationRequestService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,14 +31,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsultationRequestServiceImpl implements ConsultationRequestService {
 
-    private final ConsultationRequestRepository consultationRequestRepository;
-    private final UserRepository userRepository;
-    private final PackageRepository packageRepository;
-    private final ConsultationRequestMapper consultationRequestMapper;
-    private final BillRepository billRepository;
+    ConsultationRequestRepository consultationRequestRepository;
+    UserRepository userRepository;
+    PackageRepository packageRepository;
+    ConsultationRequestMapper consultationRequestMapper;
+    BillRepository billRepository;
 
     @Override
     @PreAuthorize("hasRole('USER')")

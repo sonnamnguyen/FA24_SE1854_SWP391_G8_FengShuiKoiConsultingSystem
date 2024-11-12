@@ -9,7 +9,7 @@ public class EndPoint {
                 "colors/search-colors", "api/bills"
                 ,"/users/new-users-today", "/users/new-users-this-week", "/users/new-users-this-month",
                 "/api/consultation-requests/completed-count",  "/posts/count", "/consultation-results/completed-count",
-                "/api/bills/total-income-this-month"
+                "/api/bills/total-income-this-month","/api/bills/searching"
         };
 
         public static final String[] ADMIN_POST_ENDPOINTS = {
@@ -42,7 +42,7 @@ public class EndPoint {
                 "users/existByUserName", "users/existByEmail", "users/activate",
                 "/destinys/destiny/{yearOfBirth}", "/destinys/autoConsultation/{yearOfBirth}",
                 "api/vn_pay/create_vn_pay", "shapes/getAll-Shapes", "/api/number",
-                "animals/animalCategory", "colors/getAll-Colors", "/shelters/shelterCategory","api/direction","/api/bills/search"
+                "animals/animalCategory", "colors/getAll-Colors", "/shelters/shelterCategory","api/direction"
         };
 
         public static final String[] USER_GET_ENDPOINTS = {

@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class DestinyServiceImpl implements DestinyService {
+
     DestinyRepository destinyRepository;
     DestinyMapper destinyMapper;
     ShapeService shapeService;

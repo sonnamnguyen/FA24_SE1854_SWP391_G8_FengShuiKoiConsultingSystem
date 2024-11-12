@@ -32,6 +32,7 @@ import java.util.List;
 @Slf4j
 @Service
 public class PostServiceImpl implements PostService {
+
     PostMapper postMapper;
     PostRepository postRepository;
     PostCategoryRepository postCategoryRepository;

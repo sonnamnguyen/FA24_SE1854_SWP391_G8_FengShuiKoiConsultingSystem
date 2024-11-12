@@ -36,6 +36,7 @@ public class ShelterServiceImpl implements ShelterService {
     ShelterMapper shelterMapper;
     ShapeRepository shapeRepository;
     ShelterImageRepository shelterImageRepository;
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ShelterCategoryDTO createShelter(ShelterCategoryDTO request) {

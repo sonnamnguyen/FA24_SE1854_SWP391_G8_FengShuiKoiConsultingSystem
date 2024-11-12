@@ -22,8 +22,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class AnimalImageServiceImpl implements AnimalImageService {
+
     AnimalImageRepository animalImageRepository;
     AnimalImageMapper animalImageMapper;
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public List<AnimalImageDTO> getAllAnimalImage(Integer animalId, List<String> imgUrl) {

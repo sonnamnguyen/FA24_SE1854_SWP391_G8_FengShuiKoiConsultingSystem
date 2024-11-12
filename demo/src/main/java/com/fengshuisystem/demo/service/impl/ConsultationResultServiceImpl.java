@@ -12,7 +12,9 @@ import com.fengshuisystem.demo.service.EmailService;
 import com.fengshuisystem.demo.service.NotificationService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -33,25 +35,26 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ConsultationResultServiceImpl implements ConsultationResultService {
 
-    private final NotificationService notificationService;
+    NotificationService notificationService;
 
-    private final ConsultationResultRepository consultationResultRepository;
-    private final ConsultationResultMapper consultationResultMapper;
-    private final ConsultationAnimalRepository consultationAnimalRepository;
-    private final ConsultationShelterRepository consultationShelterRepository;
-    private final EmailService emailService;
-    private final UserRepository userRepository;
-    private final ConsultationRequestRepository consultationRequestRepository;
-    private final ConsultationCategoryRepository consultationCategoryRepository;
+    ConsultationResultRepository consultationResultRepository;
+    ConsultationResultMapper consultationResultMapper;
+    ConsultationAnimalRepository consultationAnimalRepository;
+    ConsultationShelterRepository consultationShelterRepository;
+    EmailService emailService;
+    UserRepository userRepository;
+    ConsultationRequestRepository consultationRequestRepository;
+    ConsultationCategoryRepository consultationCategoryRepository;
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     @Transactional
     public ConsultationResultDTO createConsultationResult(Integer requestId, ConsultationResultDTO dto) {
-        // Kiểm tra các trường bắt buộc trong DTO
+
         if (dto.getConsultationCategoryId() == null) {
             throw new RuntimeException("Consultation Category is required.");
         }

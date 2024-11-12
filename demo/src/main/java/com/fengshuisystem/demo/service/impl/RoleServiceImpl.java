@@ -19,8 +19,10 @@ import java.util.List;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleServiceImpl implements RoleService {
+
     RoleRepository roleRepository;
     RoleMapper roleMapper;
+
     @Override
     public RoleResponse create(RoleRequest request) {
         var role = roleMapper.toRole(request);

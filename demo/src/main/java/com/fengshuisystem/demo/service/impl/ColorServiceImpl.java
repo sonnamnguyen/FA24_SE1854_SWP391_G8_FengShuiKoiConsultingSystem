@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.ColorDTO;
@@ -33,9 +32,11 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ColorServiceImpl implements ColorService {
+
     ColorMapper colorMapper;
     ColorRepository colorRepository;
     DestinyRepository destinyRepository;
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ColorDTO createColor(ColorDTO colorDTO) {

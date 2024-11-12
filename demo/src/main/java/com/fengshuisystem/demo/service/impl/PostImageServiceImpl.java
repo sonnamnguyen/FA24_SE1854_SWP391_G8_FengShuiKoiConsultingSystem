@@ -30,6 +30,7 @@ import java.util.List;
 @Slf4j
 @Service
 public class PostImageServiceImpl implements PostImageService {
+
     PostImageMapper postImageMapper;
     PostImageRepository postImageRepository;
     PostRepository  postRepository;
