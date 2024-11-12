@@ -32,11 +32,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Cho phép truy cập Swagger UI và API Docs công khai
                         .requestMatchers(HttpMethod.GET, EndPoint.USER_GET_ENDPOINTS).hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.POST, EndPoint.ADMIN_POST_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, EndPoint.PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, EndPoint.PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, EndPoint.ADMIN_GET_ENDPOINTS).hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, EndPoint.ADMIN_POST_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, EndPoint.ADMIN_PUT_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, EndPoint.ADMIN_DELETE_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, EndPoint.USER_POST_ENDPOINTS).hasAuthority("ROLE_USER")

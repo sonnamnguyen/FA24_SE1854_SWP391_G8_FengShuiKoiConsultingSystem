@@ -33,5 +33,15 @@ public interface AnimalRepository extends JpaRepository<AnimalCategory, Integer>
     Page<AnimalCategory> findActiveAnimalCategoriesByDestiny(@Param("destiny") List<String> destiny,
                                                              @Param("status") Status status,
                                                              Pageable pageable);
-
+    @Query("SELECT DISTINCT a FROM AnimalCategory a " +
+            "JOIN a.colors c " +
+            "JOIN c.destiny d " +
+            "WHERE d.destiny IN :destiny " +
+            "AND a.status = :status " +
+            "AND a.animalCategoryName LIKE %:name% " +
+            "ORDER BY a.id DESC")
+    Page<AnimalCategory> findActiveAnimalCategoriesByDestinyAndName(@Param("destiny") List<String> destiny,
+                                                                    @Param("status") Status status,
+                                                                    @Param("name") String name,
+                                                                    Pageable pageable);
 }

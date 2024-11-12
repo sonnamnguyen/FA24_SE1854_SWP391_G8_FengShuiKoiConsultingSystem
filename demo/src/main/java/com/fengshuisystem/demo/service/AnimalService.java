@@ -15,4 +15,6 @@ public interface AnimalService {
     AnimalCategoryDTO getAnimalById(Integer id);
     List<AnimalCategoryDTO> getAllAnimalCategory();
     PageResponse<AnimalCategoryDTO> getAnimalsByDestiny(List<String> destiny, int page, int size);
+    PageResponse<AnimalCategoryDTO> getAnimalsByDestinyAndName(List<String> destiny, String name, int page, int size);
+
 }

@@ -180,4 +180,22 @@ public class ShelterServiceImpl implements ShelterService {
                 .data(pageData.getContent().stream().map(shelterMapper::toDto).toList())
                 .build();
     }
+
+    @Override
+    public PageResponse<ShelterCategoryDTO> getSheltersByDestinyAndName(List<String> destiny, String name, int page, int size) {
+        Status status = Status.ACTIVE;
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = shelterRepository.findShelterCategoriesByDestinyStatusAndName(destiny, status,name, pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.NONE_DATA_SHELTER);
+        }
+        return PageResponse.<ShelterCategoryDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(shelterMapper::toDto).toList())
+                .build();
+    }
 }

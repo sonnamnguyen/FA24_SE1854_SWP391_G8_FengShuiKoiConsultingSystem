@@ -63,6 +63,18 @@ public class AnimalController {
                 .result(animalService.getAnimalsByDestiny(destiny, page, size))
                 .build();
     }
+    @GetMapping("/animal-destiny-name")
+    public ApiResponse<PageResponse<AnimalCategoryDTO>> getAnimalByDestinyAndName(
+            @RequestParam List<String> destiny,
+            @RequestParam String name,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+
+    ) {
+        return ApiResponse.<PageResponse<AnimalCategoryDTO>>builder()
+                .result(animalService.getAnimalsByDestinyAndName(destiny,name, page, size))
+                .build();
+    }
     @PutMapping("/{id}")
     public ApiResponse<AnimalCategoryDTO> updateAnimal(@PathVariable Integer id, @Valid @RequestBody AnimalCategoryDTO animalCreationRequest) {
         return ApiResponse.<AnimalCategoryDTO>builder()

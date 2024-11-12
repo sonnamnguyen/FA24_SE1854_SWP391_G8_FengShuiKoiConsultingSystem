@@ -30,5 +30,15 @@ public interface ShelterRepository extends JpaRepository<ShelterCategory, Intege
     Page<ShelterCategory> findShelterCategoriesByDestinyAndStatus(@Param("destiny") List<String> destiny,
                                                                   @Param("status") Status status,
                                                                   Pageable pageable);
-
+    @Query("SELECT DISTINCT sc FROM ShelterCategory sc " +
+            "JOIN sc.shape sa " +
+            "JOIN sa.destiny d " +
+            "WHERE d.destiny IN :destiny " +
+            "AND sc.status = :status " +
+            "AND sc.shelterCategoryName LIKE %:name% " +
+            "ORDER BY sc.id DESC")
+    Page<ShelterCategory> findShelterCategoriesByDestinyStatusAndName(@Param("destiny") List<String> destiny,
+                                                                      @Param("status") Status status,
+                                                                      @Param("name") String name,
+                                                                      Pageable pageable);
 }
