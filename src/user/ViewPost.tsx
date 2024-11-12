@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../css/ViewPost.css";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import Navbar from "../layouts/header-footer/Navbar";
 import Footer from "../layouts/header-footer/Footer";
 import { getToken } from "../service/localStorageService";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import "../css/ViewPost.css";
 
 interface Post {
   id: number;
@@ -64,7 +66,7 @@ const ViewPost: React.FC = () => {
     fetchPost();
   }, [id]);
 
-  const handleCommentSubmit = async () => {
+  const handleCommentSubmit = async (values: { content: string }) => {
     const token = getToken();
     if (token && post) {
       const decodedToken: any = jwtDecode(token);
@@ -74,7 +76,7 @@ const ViewPost: React.FC = () => {
           "http://localhost:9090/post/comments",
           {
             postId: post.id,
-            content: newComment,
+            content: values.content,
             status: "ACTIVE",
             createdBy: userEmail,
             createdDate: new Date().toISOString(),
@@ -89,7 +91,7 @@ const ViewPost: React.FC = () => {
         if (response.data) {
           const newCommentData = {
             id: response.data.id,
-            content: newComment,
+            content: values.content,
             createdBy: userEmail,
             createdDate: new Date().toISOString(),
           };
@@ -102,7 +104,6 @@ const ViewPost: React.FC = () => {
             }
             return prevPost;
           });
-          setNewComment("");
         }
       } catch (error) {
         console.error("Gửi bình luận thất bại", error);
@@ -111,21 +112,13 @@ const ViewPost: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (post && post.images.length > 0) {
-        setCurrentImageIndex((prev) => {
-          if (prev === post.images.length - 1) {
-            return 0;
-          }
-          return prev + 1;
-        });
-      }
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [post]);
-
+  // Validation schema with Yup
+  const validationSchema = Yup.object({
+    content: Yup.string()
+      .min(1, "Comments must have at least 1 character")
+      .max(200, "Comments must not exceed 200 characters")
+      .required("Comments must have at least 1 character"),
+  });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -143,6 +136,7 @@ const ViewPost: React.FC = () => {
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
+            {/* Display Images (optional part) */}
             <div className="slide">
               <div className="images">
                 <div
@@ -199,17 +193,33 @@ const ViewPost: React.FC = () => {
                 <p className="no-comments">No Comment Yet.</p>
               )}
 
-              <div className="comment-form">
-                <textarea
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Your comment here..."
-                  className="comment-input"
-                />
-                <button onClick={handleCommentSubmit} className="submit-button">
-                  Send Your Comment
-                </button>
-              </div>
+              <Formik
+                initialValues={{ content: "" }}
+                validationSchema={validationSchema}
+                onSubmit={handleCommentSubmit}
+              >
+                {({ values, handleChange, handleBlur }) => (
+                  <Form className="comment-form">
+                    <Field
+                      as="textarea"
+                      name="content"
+                      placeholder="Your comment here..."
+                      className="comment-input"
+                      value={values.content}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                    <ErrorMessage
+                      name="content"
+                      component="div"
+                      className="error-message"
+                    />
+                    <button type="submit" className="submit-button">
+                      Send Your Comment
+                    </button>
+                  </Form>
+                )}
+              </Formik>
             </div>
           </div>
         ) : (

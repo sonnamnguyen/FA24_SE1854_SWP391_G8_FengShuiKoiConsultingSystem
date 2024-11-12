@@ -1,0 +1,139 @@
+/* General styles */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7fc;
+}
+
+/* Error message styles */
+.error-message {
+  color: red;
+  text-align: center;
+  margin: 20px;
+}
+
+.error-message button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.error-message button:hover {
+  background-color: #0056b3;
+}
+
+/* Loading spinner styles */
+.loading-spinner {
+  display: block;
+  margin: 50px auto;
+}
+
+/* Koi Pond title */
+.koi-pond-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 150px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Phông chữ hiện đại và dễ đọc */
+  font-size: 36px; /* Kích thước chữ vừa phải */
+  font-weight: 600; /* Độ đậm trung bình */
+  text-align: center; /* Căn giữa */
+  color: #ff6347; /* Màu chữ tối giản, không quá chói */
+  text-transform: uppercase; /* Chữ viết hoa toàn bộ */
+  letter-spacing: 2px; /* Khoảng cách giữa các chữ để dễ đọc */
+  position: relative;
+}
+.koi-pond-title::after {
+  content: ""; /* Thêm một phần tử giả sau tiêu đề */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px; /* Đưa bóng xuống dưới một chút */
+  height: 2px; /* Chiều cao bóng đổ */
+  background-color: #ff7f00; /* Màu cam nhẹ cho bóng */
+  opacity: 0.6; /* Làm cho bóng nhẹ nhàng */
+}
+.koi-pond-title:hover {
+  color: #ff7f00; /* Chuyển màu chữ thành cam khi hover */
+  transform: translateY(-5px); /* Di chuyển tiêu đề lên khi hover */
+  transition: transform 0.3s ease, color 0.3s ease; /* Hiệu ứng mượt mà cho màu sắc và di chuyển */
+}
+/* Shelter row styles */
+.shelter-row {
+  padding: 20px;
+}
+
+/* Shelter card styles */
+.shelter-card {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.shelter-card:hover {
+  transform: scale(1.05);
+}
+
+.shelter-card-image {
+  border-radius: 8px;
+  max-height: 250px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.shelter-card-title {
+  margin: 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.shelter-card-description {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Pagination styles */
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Modal styles */
+.shelter-modal {
+  top: 15%;
+}
+
+.shelter-modal-content {
+  display: flex;
+  gap: 20px;
+}
+
+.carousel-container {
+  flex: 1;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.carousel-item {
+  display: flex;
+  justify-content: center;
+}
+
+.carousel-image {
+  max-height: 400px;
+  width: 100%;
+  object-fit: contain;
+}
+
+.shelter-details {
+  flex: 1;
+  padding: 0 20px;
+}
+
+.shelter-details p {
+  font-size: 1rem;
+  line-height: 1.6;
+}

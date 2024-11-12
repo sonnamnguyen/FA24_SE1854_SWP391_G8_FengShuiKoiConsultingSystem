@@ -118,9 +118,9 @@ function Blog() {
               Blog <i className="bx bxl-blogger"></i>
             </h4>
             <p>
-              Tư vấn thiết kế lập hồ sơ bản vẽ kiến trúc và xây dựng mới cho các
-              loại công trình nhà dân dụng, thương mại như biệt thự, nhà ở,
-              chung cư, khách sạn, nhà hàng.
+              Through Blog you can share your knowledge, experience and
+              experience, in addition you can post sales news and many other
+              functions.
             </p>
           </div>
         </div>
