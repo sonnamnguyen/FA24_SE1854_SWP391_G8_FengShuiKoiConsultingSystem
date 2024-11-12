@@ -22,9 +22,7 @@ public class UserResponse {
     String fullName;
     String email;
     String phoneNumber;
-
     Gender gender;
-
     String avatar;
     LocalDate dob;
     String code;

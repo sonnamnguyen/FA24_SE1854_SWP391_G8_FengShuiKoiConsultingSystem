@@ -125,6 +125,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUser(user, request);
         return userMapper.toUserResponse(userRepository.save(user));
     }
+
     public boolean existByUsername(String username) {
         return userRepository.existsByUserName(username);
     }
