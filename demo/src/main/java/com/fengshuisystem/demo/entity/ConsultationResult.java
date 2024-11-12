@@ -3,6 +3,8 @@ package com.fengshuisystem.demo.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fengshuisystem.demo.entity.enums.Request;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -57,11 +59,22 @@ public class ConsultationResult {
     @Enumerated(EnumType.STRING)
     private Request status = Request.PENDING;
 
-    @Size(max = 1000)
     @NotNull
+    @NotBlank
     @Nationalized
-    @Column(name = "description", nullable = false, length = 1000)
+    @Column(name = "description", nullable = false, length = 4000)
     private String description;
+
+    @SuppressWarnings("unused")
+    @AssertTrue(message = "The description must contain at least 10 words.")
+    public boolean isDescriptionValid() {
+        if (description == null) {
+            return false;
+        }
+        // Tách `description` thành các từ bằng regex
+        String[] words = description.trim().split("\\s+");
+        return words.length >= 10;
+    }
 
     @Column(name = "created_date")
     private Instant createdDate;

@@ -62,16 +62,16 @@ public class ConsultationRequestDetail {
     @Column(name = "description", nullable = false, length = 4000)
     private String description;
 
-    // Phương thức kiểm tra số từ có đủ ít nhất 100 từ
+    // Phương thức kiểm tra số từ có đủ ít nhất 10 từ
     @SuppressWarnings("unused")
-    @AssertTrue(message = "The description must contain at least 100 words.")
+    @AssertTrue(message = "The description must contain at least 10 words.")
     public boolean isDescriptionValid() {
         if (description == null) {
             return false;
         }
         // Tách `description` thành các từ bằng regex
         String[] words = description.trim().split("\\s+");
-        return words.length >= 100;
+        return words.length >= 10;
     }
 
     @OneToMany(mappedBy = "requestDetail", cascade = CascadeType.ALL)
