@@ -145,7 +145,7 @@ export async function findByShelterCategoryDestiny(destinyList: string[] = [], p
       
           // Convert destiny list to a comma-separated string
           const destinyQuery = destinyList.join(',');
-        const response = await api.get(`/shelters/search-destiny?destiny=${destinyQuery}&page=${page}&size=${pageSize}`);  // Use endpoint here for consistency
+        const response = await api.get(`/shelters/shelter-search?destiny=${destinyQuery}&page=${page}&size=${pageSize}`);  // Use endpoint here for consistency
 
         if (response.data.code === 1000) {
             const responseData = response.data.result.data;
