@@ -56,6 +56,7 @@ import ViewPayment from "../admin/transaction/ViewPayment";
 import UserRoute from "../user/UserRoute/UserRoute";
 import KoiFish from "../user/suitableDestiny/KoiFishSuitable/KoiFish";
 import KoiPond from "../user/suitableDestiny/KoiPondSuitable/KoiPond";
+import UpdatePassword from "../user/UpdatePassword";
 
 // History
 import ViewHistory from "../user/ViewHistory";
@@ -89,10 +90,11 @@ const AppRoutes = () => {
 
 const UserKoiFish = UserRoute(KoiFish);
 const UserPondFish = UserRoute(KoiPond);
-
+const UserUpdatePassword = UserRoute(UpdatePassword);
   return (
     <Router>
       <Routes>
+      <Route path="/update-password" element={<UserUpdatePassword />} />
       <Route path="/koi-fishs" element={<UserKoiFish />} />
       <Route path="/koi-ponds" element={<UserPondFish />} />
         <Route path="/my-post" element={<ViewMyPost />} />

@@ -74,7 +74,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  padding: 20px 30px;
   border-radius: 10px;
   max-width: 400px;
   width: 90%;
@@ -82,7 +81,20 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   z-index: 1101;
 }
-
+.slick-list, 
+.autoConsul-image, 
+.ac-fish-infor, 
+.slick-track, 
+.slick-slider, 
+.slick-slide, 
+.slick-slide :first-child, 
+.autoConsul-popup-class {
+    margin: 0 !important;
+}
+.autoConsul-popup-class img{
+  max-width: 360px;
+  max-height: 360px;
+}
 .ac-error-icon {
   font-size: 40px;
   color: #f44336; 
@@ -93,6 +105,7 @@
   font-size: 18px;
   color: #333;
   margin-bottom: 20px;
+ 
 }
 
 .ac-error-button {
@@ -239,13 +252,6 @@
 .ac-infor-prev-arrow {
     left: -20px; /* Position to the left */
 }
-
-.ac-infor-next-arrow:disabled,
-.ac-infor-prev-arrow:disabled {
-    background-color: #ccc; /* Disabled state with grey background */
-    cursor: not-allowed; /* Disable cursor */
-}
-
 .ac-infor-next-arrow:hover:not(:disabled),
 .ac-infor-prev-arrow:hover:not(:disabled) {
     background-color: #e55b00; /* Darker orange on hover */
@@ -261,6 +267,11 @@
 #FIRE.ac-fish-infor h3{color: #9a0000;}
 #EARTH.ac-fish-infor h3{color: #664200;}
 #METAL.ac-fish-infor h3{color: #828282;}
+
+
+.ac-fish-infor p{
+  line-height: 1.8
+}
 
 .WOOD {position:relative;top:-50px;width:100%;text-align: right;}
 
@@ -679,12 +690,6 @@
 .ac-arrow-right {
     right: -20px;
 }
-
-.ac-arrow:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
 .ac-arrow:hover:not(:disabled) {
     background-color: #e55b00;
     transform: scale(1.2);
@@ -695,6 +700,8 @@
     width: 45%;
     color: red;
   }
+
+
 
     @media (max-width: 768px) {
 
@@ -707,4 +714,12 @@
       width: 90%;
     }
    
+    #water.WATER{
+      width: 15rem;
+    }
+    .autoConsul-popup-class img{
+      max-width: 130px;
+      max-height: 130px;
+    }
+    
 }
