@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Cho phép truy cập Swagger UI và API Docs công khai
+                        .requestMatchers(HttpMethod.GET, EndPoint.USER_GET_ENDPOINTS).hasAuthority("ROLE_USER")
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, EndPoint.PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, EndPoint.PUBLIC_GET_ENDPOINTS).permitAll()
@@ -41,7 +42,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, EndPoint.USER_POST_ENDPOINTS).hasAuthority("ROLE_USER")
                         .requestMatchers(HttpMethod.PUT, EndPoint.USER_PUT_ENDPOINTS).hasAuthority("ROLE_USER")
                         .requestMatchers(HttpMethod.DELETE, EndPoint.USER_DELETE_ENDPOINTS).hasAuthority("ROLE_USER")
-                        .requestMatchers(HttpMethod.GET, EndPoint.USER_GET_ENDPOINTS).hasAuthority("ROLE_USER")
                         .requestMatchers(HttpMethod.GET, EndPoint.BOTH_GET_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, EndPoint.BOTH_DELETE_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/*").authenticated()

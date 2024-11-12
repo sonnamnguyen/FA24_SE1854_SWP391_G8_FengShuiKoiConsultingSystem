@@ -82,24 +82,7 @@ public class ShelterServiceImpl implements ShelterService {
                 .data(pageData.getContent().stream().map(shelterMapper::toDto).toList())
                 .build();
     }
-    @Override
-    @PreAuthorize("hasRole('USER')")
-   public PageResponse<ShelterCategoryDTO> getSheltersByDestiny(List<String> destiny, int page, int size){
-        Status status = Status.ACTIVE;
-        Sort sort = Sort.by("createdDate").descending();
-        Pageable pageable = PageRequest.of(page - 1, size, sort);
-        var pageData = shelterRepository.findShelterCategoriesByDestinyAndStatus(destiny, status, pageable);
-        if(pageData.isEmpty()) {
-            throw new AppException(ErrorCode.NONE_DATA_SHELTER);
-        }
-        return PageResponse.<ShelterCategoryDTO>builder()
-                .currentPage(page)
-                .pageSize(pageData.getSize())
-                .totalPages(pageData.getTotalPages())
-                .totalElements(pageData.getTotalElements())
-                .data(pageData.getContent().stream().map(shelterMapper::toDto).toList())
-                .build();
-    }
+
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<ShelterCategoryDTO> getAllShelters(int page, int size) {
@@ -177,5 +160,24 @@ public class ShelterServiceImpl implements ShelterService {
             throw new AppException(ErrorCode.SHELTER_NOT_EXISTED);
         }
         return shelterCategoryDTOS;
+    }
+
+    @Override
+    @PreAuthorize("hasRole('USER')")
+    public PageResponse<ShelterCategoryDTO> getSheltersByDestiny(List<String> destiny, int page, int size){
+        Status status = Status.ACTIVE;
+        Sort sort = Sort.by("createdDate").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        var pageData = shelterRepository.findShelterCategoriesByDestinyAndStatus(destiny, status, pageable);
+        if(pageData.isEmpty()) {
+            throw new AppException(ErrorCode.NONE_DATA_SHELTER);
+        }
+        return PageResponse.<ShelterCategoryDTO>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(pageData.getContent().stream().map(shelterMapper::toDto).toList())
+                .build();
     }
 }

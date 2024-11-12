@@ -101,7 +101,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public PageResponse<AnimalCategoryDTO> getAnimalsByDestiny(List<String> destiny, int page, int size) {
         Status status = Status.ACTIVE;
         Sort sort = Sort.by("createdDate").descending();
