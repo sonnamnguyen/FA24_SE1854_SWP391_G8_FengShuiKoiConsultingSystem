@@ -9,10 +9,12 @@ import com.fengshuisystem.demo.mapper.ConsultationResultMapper;
 import com.fengshuisystem.demo.repository.*;
 import com.fengshuisystem.demo.service.ConsultationResultService;
 import com.fengshuisystem.demo.service.EmailService;
+import com.fengshuisystem.demo.service.NotificationService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,6 +22,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -31,6 +35,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ConsultationResultServiceImpl implements ConsultationResultService {
+
+    private final NotificationService notificationService;
 
     private final ConsultationResultRepository consultationResultRepository;
     private final ConsultationResultMapper consultationResultMapper;
@@ -139,7 +145,15 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         consultationResult.getRequestDetail().setStatus(Request.COMPLETED);
 
         // 4. Lấy email từ account liên quan đến request
-        String email = consultationResult.getRequest().getAccount().getEmail();
+        String email = consultationResult.getRequest().getEmail();
+        if (email == null || email.isEmpty()) {
+            throw new RuntimeException("Email của người dùng không có sẵn.");
+        }
+
+        // Kiểm tra account liên quan
+        if (consultationResult.getAccount() == null) {
+            throw new RuntimeException("Account của người dùng không có sẵn.");
+        }
 
         // Lấy danh sách AnimalCategory và ShelterCategory từ request
         Set<AnimalCategory> animalsNeedToConsultation = consultationResult.getRequestDetail().getAnimalCategories();
@@ -200,10 +214,26 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         // 5. Gửi email với danh sách chính xác từ requestDetail
         sendConsultationDetailsEmail(email, consultationResult, matchingAnimals, matchingShelters);
 
+        // Kiểm tra thông tin cần thiết cho notification
+        NotificationFCM notificationFCM = new NotificationFCM();
+        String title = "Result of your request #" + consultationResult.getRequest().getId();
+        String message = "The result of request #" + consultationResult.getRequest().getId() + " has been sent to the email: " + email + ". Please check and confirm. If there are any issues, contact our hotline for support and to report any errors.";
+
+        if (title == null || title.isEmpty() || message == null || message.isEmpty()) {
+            throw new RuntimeException("Thiếu thông tin tiêu đề hoặc nội dung thông báo.");
+        }
+
+        notificationFCM.setTitle(title);
+        notificationFCM.setMessage(message);
+
+        // Gửi thông báo
+        notificationService.sendNotificationToAccount(notificationFCM, consultationResult.getAccount());
+
         // 6. Trả về DTO sau khi cập nhật
         return consultationResultMapper.toDto(consultationResult);
     }
-    
+
+
     /**
      * Gửi email với nội dung chi tiết của consultation result, bao gồm các Animal và Shelter.
      */
@@ -368,6 +398,14 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
         return consultationResultDTOS;
     }
 
+    @Override
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public List<ConsultationResultDTO> getUserConsultationResults(String email) {
+        Account account = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Account not found for email: " + email));
+        log.info("Account found: {}", account.getEmail());
+
+        List<ConsultationResult> results = consultationResultRepository.findByAccount(account);
+        return results.stream().map(consultationResultMapper::toDto).collect(Collectors.toList());
+    }
 }
-
-

@@ -4,6 +4,7 @@ import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
 import com.fengshuisystem.demo.dto.request.PasswordCreationRequest;
+import com.fengshuisystem.demo.dto.request.UpdateFCMRequest;
 import com.fengshuisystem.demo.dto.request.UserCreationRequest;
 import com.fengshuisystem.demo.dto.request.UserUpdateRequest;
 import com.fengshuisystem.demo.dto.response.UserResponse;
@@ -166,6 +167,14 @@ public class UserController {
         long newUsersThisMonth = userService.getNewUsersThisMonth();
         return ApiResponse.<Long>builder()
                 .result(newUsersThisMonth)
+                .build();
+    }
+
+    @PatchMapping("/fcm")
+    public ApiResponse<String> saveFcmToken(@RequestBody @Valid UpdateFCMRequest updateFCMRequest) {
+        userService.updateFCM(updateFCMRequest);
+        return ApiResponse.<String>builder()
+                .result("FCM token updated successfully")
                 .build();
     }
 

@@ -3,10 +3,8 @@ import com.fengshuisystem.demo.dto.CommentDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
 
 public interface CommentService {
-    public CommentDTO createComment(CommentDTO commentDTO);
-    public void deleteComment(Integer id);
-    public CommentDTO updateComment(Integer id, CommentDTO commentDTO);
-    public PageResponse<CommentDTO> getComments(int page, int size);
-
-
+    CommentDTO createComment(CommentDTO commentDTO);
+    void deleteComment(Integer id);
+    CommentDTO updateComment(Integer id, CommentDTO commentDTO);
+    PageResponse<CommentDTO> getComments(int page, int size);
 }

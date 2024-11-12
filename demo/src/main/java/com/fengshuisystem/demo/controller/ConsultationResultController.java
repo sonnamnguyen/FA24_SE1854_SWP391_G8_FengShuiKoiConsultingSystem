@@ -1,12 +1,15 @@
 package com.fengshuisystem.demo.controller;
 
 import com.fengshuisystem.demo.dto.*;
+import com.fengshuisystem.demo.entity.NotificationFCM;
+import com.fengshuisystem.demo.service.NotificationService;
 import com.fengshuisystem.demo.service.impl.ConsultationResultServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +47,13 @@ public class ConsultationResultController {
     ) {
         return ApiResponse.<List<ConsultationResultDTO>>builder()
                 .result(consultationResultService.getAll())
+                .build();
+    }
+
+    @GetMapping("/user/{email}")
+    public ApiResponse<List<ConsultationResultDTO>> getUserConsultationResults(@PathVariable("email") String email) {
+        return ApiResponse.<List<ConsultationResultDTO>>builder()
+                .result(consultationResultService.getUserConsultationResults(email))
                 .build();
     }
 

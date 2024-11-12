@@ -33,3 +33,5 @@ build/
 .vscode/
 
 demo/src/main/resources/fcm-credentials.json
+
+*.json
