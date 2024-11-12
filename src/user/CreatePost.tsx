@@ -10,6 +10,12 @@ import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase/firebase";
 import { CKEditor } from "@ckeditor/ckeditor5-react"; // Import CKEditor
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic"; // CKEditor build
+import api from "../axious/axious";
+
+interface Destinys {
+  id: number;
+  destiny: string;
+}
 
 interface PostData {
   email: string;
@@ -34,11 +40,13 @@ const CreatePost: React.FC = () => {
   const [selectedPostCategory, setSelectedPostCategory] = useState<
     number | null
   >(null);
-  const [selectedpackageId, setSelectedpackageId] = useState<number | null>(
+  const [selectedPackageId, setSelectedPackageId] = useState<number | null>(
     null
   );
   const [content, setContent] = useState<string>(""); // State for CKEditor content
+  const [destinies, setDestinies] = useState<Destinys[]>([]); // State to hold destinies from API
 
+  // Fetch user info from the token and set email value
   useEffect(() => {
     const token = getToken();
     if (token) {
@@ -48,6 +56,25 @@ const CreatePost: React.FC = () => {
     }
   }, [setValue]);
 
+  // Fetch destinies from the API when component mounts
+  useEffect(() => {
+    const fetchDestinies = async () => {
+      try {
+        const response = await api.get("/destinys");
+        if (response.data.code === 1000) {
+          setDestinies(response.data.result); // Set destinies to state
+        } else {
+          console.error("Failed to fetch destinies:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching destinies:", error);
+      }
+    };
+
+    fetchDestinies();
+  }, []);
+
+  // Handle form submission
   const onSubmit = async (data: PostData) => {
     const token = getToken();
 
@@ -88,7 +115,7 @@ const CreatePost: React.FC = () => {
         {
           userResponse: { email: data.email },
           postCategory: { id: selectedPostCategory },
-          packageId: { id: selectedpackageId },
+          packageId: { id: selectedPackageId },
           destiny: { id: selectedDestiny },
           content: content, // Use content from CKEditor
           status: data.status,
@@ -112,6 +139,7 @@ const CreatePost: React.FC = () => {
     }
   };
 
+  // Handle image selection for upload
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
@@ -157,8 +185,8 @@ const CreatePost: React.FC = () => {
 
           <select
             className="input-field package-select"
-            value={selectedpackageId || ""}
-            onChange={(e) => setSelectedpackageId(Number(e.target.value))}
+            value={selectedPackageId || ""}
+            onChange={(e) => setSelectedPackageId(Number(e.target.value))}
             required
           >
             <option value="" disabled>
@@ -176,11 +204,11 @@ const CreatePost: React.FC = () => {
             <option value="" disabled>
               Select Destiny
             </option>
-            <option value={1}>Fire</option>
-            <option value={2}>Water</option>
-            <option value={3}>Earth</option>
-            <option value={4}>Wood</option>
-            <option value={5}>Metal</option>
+            {destinies.map((destiny) => (
+              <option key={destiny.id} value={destiny.id}>
+                {destiny.destiny}
+              </option>
+            ))}
           </select>
 
           {/* Replace textarea with CKEditor */}

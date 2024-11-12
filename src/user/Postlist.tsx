@@ -4,7 +4,6 @@ import "../css/MyPostList.css";
 import Navbar from "../layouts/header-footer/Navbar";
 import Footer from "../layouts/header-footer/Footer";
 import { getToken } from "../service/localStorageService";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 interface Post {
@@ -27,23 +26,25 @@ interface Post {
 }
 
 const MyPostList: React.FC = () => {
-  const [newComment, setNewComment] = useState<string>("");
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchData, setSearchData] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [searchData, setSearchData] = useState<string>(""); // Search data for search functionality
+  const [currentPage, setCurrentPage] = useState<number>(1); // Current page
+  const [totalPages, setTotalPages] = useState<number>(0); // Total number of pages
+  const [pageSize, setPageSize] = useState<number>(10); // Number of posts per page
+  const navigate = useNavigate(); // useNavigate to navigate to post detail
 
-  const navigate = useNavigate(); // Khai báo useNavigate
+  // Fetch posts based on search and pagination
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       const token = getToken();
       try {
+        // Define the API URL with pagination parameters (page and size)
         const url = searchData
-          ? `http://localhost:9090/posts/search-posts/title?title=${searchData}`
-          : `http://localhost:9090/posts?page=${currentPage}`;
+          ? `http://localhost:9090/posts/search-posts/title?title=${searchData}&page=${currentPage}&size=${pageSize}`
+          : `http://localhost:9090/posts?page=${currentPage}&size=${pageSize}`;
 
         const response = await axios.get(url, {
           headers: {
@@ -51,13 +52,10 @@ const MyPostList: React.FC = () => {
           },
         });
 
-        if (
-          response.data &&
-          response.data.result &&
-          response.data.result.data
-        ) {
+        if (response.data && response.data.result) {
           console.log("API Response:", response.data);
-          setPosts(response.data.result.data);
+          setPosts(response.data.result.data); // Set posts data
+          setTotalPages(response.data.result.totalPages); // Set total pages from response
         } else {
           setError("Invalid data structure from API");
         }
@@ -69,9 +67,7 @@ const MyPostList: React.FC = () => {
     };
 
     fetchPosts();
-  }, [searchData, currentPage]); // Fetch posts whenever searchData changes
-
-  const totalPages = Math.ceil(posts.length / 10);
+  }, [searchData, currentPage]); // Fetch posts whenever searchData or currentPage changes
 
   const getFirst100Chars = (htmlContent: string): string => {
     const parser = new DOMParser();
@@ -82,9 +78,8 @@ const MyPostList: React.FC = () => {
     );
   };
 
-  // Hàm xử lý sự kiện khi nhấn nút See More
+  // Handle "See More" button click to navigate to post detail
   const handleSeeMore = (postId: number) => {
-    // Điều hướng tới trang ViewPost với id của bài viết
     navigate(`/posts/${postId}`);
   };
 
@@ -100,8 +95,8 @@ const MyPostList: React.FC = () => {
               style={{ width: "95%" }}
               key={post.id}
             >
-              <div className="row g-0 ">
-                {/* Hiển thị ảnh đầu tiên */}
+              <div className="row g-0">
+                {/* Display first image */}
                 <div className="col-md-4">
                   {post.images.length > 0 && (
                     <img
@@ -113,15 +108,15 @@ const MyPostList: React.FC = () => {
                 </div>
                 <div className="col-md-8">
                   <div className="card-body">
-                    {/* Hiển thị tiêu đề bài viết */}
+                    {/* Display post title */}
                     <h5 className="card-title">{post.title}</h5>
 
-                    {/* Hiển thị 100 ký tự đầu của content */}
+                    {/* Display first 100 characters of content */}
                     <p className="card-text">
                       {getFirst100Chars(post.content)}
                     </p>
 
-                    {/* Hiển thị Destiny */}
+                    {/* Display Destiny */}
                     <p className="card-text">
                       <div>
                         <strong>Destiny:</strong> {post.destiny.destiny}
@@ -134,13 +129,13 @@ const MyPostList: React.FC = () => {
                       </div>
                       <button
                         className="btnSeeMore"
-                        onClick={() => handleSeeMore(post.id)} // Sử dụng hàm điều hướng
+                        onClick={() => handleSeeMore(post.id)}
                       >
                         See more
                       </button>
                     </p>
 
-                    {/* Hiển thị ngày tạo bài viết */}
+                    {/* Display post creation date */}
                   </div>
                 </div>
               </div>
@@ -163,7 +158,7 @@ const MyPostList: React.FC = () => {
           </span>
           <button
             onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
             disabled={currentPage === totalPages}
           >

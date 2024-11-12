@@ -52,23 +52,24 @@ const UpdateProfile: React.FC = () => {
 
   const validationSchema = Yup.object({
     userName: Yup.string()
-        .min(3, "Username must be between 3 and 50 characters")
-        .max(50, "Username must be between 3 and 50 characters")
-        .required("Username is required"),
+      .min(3, "Username must be between 3 and 50 characters")
+      .max(50, "Username must be between 3 and 50 characters")
+      .required("Username is required"),
     fullName: Yup.string()
-        .min(3, "Full name must be between 3 and 100 characters")
-        .max(100, "Full name must be between 3 and 100 characters")
-        .required("Full name is required"),
+      .min(3, "Full name must be between 3 and 100 characters")
+      .max(100, "Full name must be between 3 and 100 characters")
+      .required("Full name is required"),
     dob: Yup.date().required("Date of birth is required"),
     phoneNumber: Yup.string()
-        .matches(/^\d{10}$/, "Phone number must be 10 digits")
-        .required("Phone number is required"),
+      .matches(/^\d{10}$/, "Phone number must be 10 digits")
+      .required("Phone number is required"),
   });
 
   const handleSubmit = async (values: any) => {
     const { userName, password, fullName, dob, phoneNumber, gender } = values;
     try {
-      const avatar = fileList.length > 0 ? await uploadImagesToFirebase(fileList) : null;
+      const avatar =
+        fileList.length > 0 ? await uploadImagesToFirebase(fileList) : null;
       const data = {
         userName,
         email,
@@ -97,74 +98,89 @@ const UpdateProfile: React.FC = () => {
   };
 
   return (
-      <div className="container">
-        {contextHolder}
-        <h1 className="mt-5 text-center">Update Profile</h1>
-        <Formik
-            initialValues={{
-              userName: "",
-              fullName: "",
-              dob: null,
-              phoneNumber: "",
-            }}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-        >
-          {({ setFieldValue, values }) => (
-              <Form className="col-md-6 col-12 mx-auto">
-                <div className="form-item">
-                  <label>Username</label>
-                  <Field name="userName" type="text" className="form-control" />
-                  <ErrorMessage name="userName" component="div" className="error-message" />
+    <div className="container">
+      {contextHolder}
+      <h1 className="mt-5 text-center">Update Profile</h1>
+      <Formik
+        initialValues={{
+          userName: "",
+          fullName: "",
+          dob: null,
+          phoneNumber: "",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ setFieldValue, values }) => (
+          <Form className="col-md-6 col-12 mx-auto">
+            <div className="form-item">
+              <label>Username</label>
+              <Field name="userName" type="text" className="form-control" />
+              <ErrorMessage
+                name="userName"
+                component="div"
+                className="error-message"
+              />
+            </div>
+
+            <div className="form-item">
+              <label>Full Name</label>
+              <Field name="fullName" type="text" className="form-control" />
+              <ErrorMessage
+                name="fullName"
+                component="div"
+                className="error-message"
+              />
+            </div>
+
+            <div className="form-item">
+              <label>Date of Birth</label>
+              <DatePicker
+                onChange={(date) => setFieldValue("dob", date)}
+                value={values.dob}
+                style={{ width: "100%" }}
+              />
+              <ErrorMessage
+                name="dob"
+                component="div"
+                className="error-message"
+              />
+            </div>
+
+            <div className="form-item">
+              <label>Phone Number</label>
+              <Field name="phoneNumber" type="text" className="form-control" />
+              <ErrorMessage
+                name="phoneNumber"
+                component="div"
+                className="error-message"
+              />
+            </div>
+
+            <div className="form-item">
+              <label>Avatar</label>
+              <Upload
+                maxCount={1}
+                accept="image/*"
+                showUploadList={true}
+                beforeUpload={() => false}
+                onChange={handleUploadChange}
+                listType="picture-card"
+              >
+                <div>
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Upload</div>
                 </div>
+              </Upload>
+            </div>
 
-
-                <div className="form-item">
-                  <label>Full Name</label>
-                  <Field name="fullName" type="text" className="form-control" />
-                  <ErrorMessage name="fullName" component="div" className="error-message" />
-                </div>
-
-                <div className="form-item">
-                  <label>Date of Birth</label>
-                  <DatePicker
-                      onChange={(date) => setFieldValue("dob", date)}
-                      value={values.dob}
-                      style={{ width: "100%" }}
-                  />
-                  <ErrorMessage name="dob" component="div" className="error-message" />
-                </div>
-
-                <div className="form-item">
-                  <label>Phone Number</label>
-                  <Field name="phoneNumber" type="text" className="form-control" />
-                  <ErrorMessage name="phoneNumber" component="div" className="error-message" />
-                </div>
-
-                <div className="form-item">
-                  <label>Avatar</label>
-                  <Upload
-                      maxCount={1}
-                      accept="image/*"
-                      showUploadList={true}
-                      beforeUpload={() => false}
-                      onChange={handleUploadChange}
-                      listType="picture-card"
-                  >
-                    <div>
-                      <PlusOutlined />
-                      <div style={{ marginTop: 8 }}>Upload</div>
-                    </div>
-                  </Upload>
-                </div>
-
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-              </Form>
-          )}
-        </Formik>
-      </div>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 };
 
