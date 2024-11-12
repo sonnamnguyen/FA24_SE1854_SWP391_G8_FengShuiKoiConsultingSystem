@@ -174,7 +174,6 @@ public class AnimalServiceImpl implements AnimalService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         AnimalCategory animalCategory = animalRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ANIMAL_NOT_EXISTED));
-        if(animalRepository.existsByAnimalCategoryName(request.getAnimalCategoryName())) throw new AppException(ErrorCode.ANIMAL_EXISTED);
         if(request.getAnimalImages().isEmpty()) throw new AppException(ErrorCode.IMAGE_NOT_FOUND);
         if(request.getColors().isEmpty()) throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
         animalMapper.update(request, animalCategory);
@@ -191,13 +190,7 @@ public class AnimalServiceImpl implements AnimalService {
         } else {
             throw new AppException(ErrorCode.COLOR_NOT_EXISTED);
         }
-        Set<String> uniqueUrls = new HashSet<>();
         for (AnimalImage animalImage : animalCategory.getAnimalImages()) {
-            String imageUrl = animalImage.getImageUrl();
-            if (!uniqueUrls.add(imageUrl)) {
-                throw new AppException(ErrorCode.PICK_SAME_IMAGE);
-            }
-            if(animalImageRepository.existsByImageUrl(animalImage.getImageUrl())) throw new AppException(ErrorCode.IMAGE_ALREADY_EXISTED);
             animalImage.setAnimalCategory(animalCategory);
         }
         animalCategory.setUpdatedBy(name);
