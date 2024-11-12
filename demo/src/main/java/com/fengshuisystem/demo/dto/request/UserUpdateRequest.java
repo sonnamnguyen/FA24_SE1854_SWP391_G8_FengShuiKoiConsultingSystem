@@ -34,6 +34,6 @@ public class UserUpdateRequest {
     @Past(message = "Date of birth must be a past date")
     LocalDate dob;
 
-
+    String avatar;
 
 }

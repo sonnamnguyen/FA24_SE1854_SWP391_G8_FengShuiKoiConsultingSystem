@@ -53,7 +53,8 @@ public enum ErrorCode {
     NONE_DATA_ANIMAL(2017, "No animal data found for the given search. Please verify the details and try again.", HttpStatus.NOT_FOUND),
     NONE_DATA_SHELTER(2018, "No shelter data found for the given search. Please verify the details and try again.", HttpStatus.NOT_FOUND),
     NONE_DATA_COLOR(2019, "No color data found for the given search. Please verify the details and try again.", HttpStatus.NOT_FOUND),
-    NONE_DATA_SHAPE(2020, "No shape data found for the given search. Please verify the details and try again.", HttpStatus.NOT_FOUND);
+    NONE_DATA_SHAPE(2020, "No shape data found for the given search. Please verify the details and try again.", HttpStatus.NOT_FOUND),
+    PASSWORD_NOT_EXISTED(2021, "Old password not existed. Please set up a password to secure your account.", HttpStatus.NOT_FOUND);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

@@ -4,10 +4,7 @@ import com.fengshuisystem.demo.constant.PredefinedRole;
 
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
-import com.fengshuisystem.demo.dto.request.PasswordCreationRequest;
-import com.fengshuisystem.demo.dto.request.UpdateFCMRequest;
-import com.fengshuisystem.demo.dto.request.UserCreationRequest;
-import com.fengshuisystem.demo.dto.request.UserUpdateRequest;
+import com.fengshuisystem.demo.dto.request.*;
 import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.Role;
@@ -118,6 +115,26 @@ public class UserServiceImpl implements UserService {
         return userResponse;
     }
     @Override
+    @PreAuthorize("hasRole('USER')")
+    public UserResponse updatePassword(UpdatePasswordRequest updatePasswordRequest) {
+        var context = SecurityContextHolder.getContext();
+        String email = context.getAuthentication().getName();
+
+        Account user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        // Check if the current password matches
+        if (!passwordEncoder.matches(updatePasswordRequest.getCurrentPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_NOT_EXISTED); // Custom error if password is incorrect
+        }
+
+        // Set new encoded password
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+
+        // Save and return updated user information
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+    @Override
     @PostAuthorize("returnObject.email == authentication.principal.claims['sub']")
     public UserResponse updateUser(String email, UserUpdateRequest request) {
         Account user = userRepository.findByEmail(email)
@@ -125,6 +142,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUser(user, request);
         return userMapper.toUserResponse(userRepository.save(user));
     }
+
     public boolean existByUsername(String username) {
         return userRepository.existsByUserName(username);
     }
