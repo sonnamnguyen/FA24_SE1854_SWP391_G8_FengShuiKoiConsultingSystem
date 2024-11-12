@@ -129,7 +129,7 @@ const KoiFish: React.FC = () => {
   return (
     <>
       <Navbar searchData={searchData} setSearchData={setSearchData} />
-      <h2 className="titleKoi"> Koi Fish Categories</h2>
+      <h2 className="titleKoi"> Koi Fish Categories For Your Destiny</h2>
       {error && <div className="error-message">{error}</div>}
       {loading ? (
         <Spin className="loading-spinner" />

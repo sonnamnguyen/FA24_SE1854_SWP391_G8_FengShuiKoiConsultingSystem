@@ -3,6 +3,9 @@ import { Card, Col, Row, Pagination, Modal, Carousel, Spin } from "antd";
 import ShelterCategory from "../../../models/ShelterCategory";
 import { findByShelterCategoryDestiny } from "../../../admin/api/ShelterCategoryAPI";
 import api from "../../../axious/axious";
+import "../../../css/KoiPond.css";
+import Navbar from "../../../layouts/header-footer/Navbar";
+import Footer from "../../../layouts/header-footer/Footer";
 
 interface UserDetails {
   dob: string;
@@ -11,12 +14,17 @@ interface UserDetails {
 const KoiPond: React.FC = () => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [listDestiny, setListDestiny] = useState<string[]>([]);
-  const [listShelterCategory, setListShelterCategory] = useState<ShelterCategory[]>([]);
+  const [listShelterCategory, setListShelterCategory] = useState<
+    ShelterCategory[]
+  >([]);
   const [totalElements, setTotalElements] = useState(0);
   const [pageNow, setPageNow] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [selectedShelter, setSelectedShelter] = useState<ShelterCategory | null>(null);
+  const [selectedShelter, setSelectedShelter] =
+    useState<ShelterCategory | null>(null);
+  const [searchData, setSearchData] = useState<string>("");
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const pageSize = 10;
 
@@ -55,8 +63,8 @@ const KoiPond: React.FC = () => {
 
       if (destinyTuongSinhs || destiny) {
         const combinedDestiny = [
-          ...(destinyTuongSinhs ? destinyTuongSinhs.split(',') : []),
-          ...(destiny ? destiny.split(',') : []),
+          ...(destinyTuongSinhs ? destinyTuongSinhs.split(",") : []),
+          ...(destiny ? destiny.split(",") : []),
         ];
         setListDestiny(combinedDestiny);
       } else {
@@ -120,16 +128,21 @@ const KoiPond: React.FC = () => {
   return (
     <>
       {error && (
-        <div style={{ color: "red", textAlign: "center" }}>
+        <div className="error-message">
           <p>{error}</p>
           <button onClick={getUserDetails}>Retry</button>
         </div>
       )}
       {loading ? (
-        <Spin style={{ display: "block", margin: "auto" }} />
+        <Spin className="loading-spinner" />
       ) : (
         <>
-          <Row gutter={[24, 24]} justify="center" style={{ padding: "20px" }}>
+          <Navbar searchData={searchData} setSearchData={setSearchData} />
+
+          <h3 className="koi-pond-title">
+            Koi Pond Categories For Your Destiny
+          </h3>
+          <Row gutter={[24, 24]} justify="center" className="shelter-row">
             {listShelterCategory.length === 0 ? (
               <div>No shelters available</div>
             ) : (
@@ -140,24 +153,24 @@ const KoiPond: React.FC = () => {
                     cover={
                       <img
                         alt={shelter.shelterCategoryName}
-                        src={shelter.shelterImages?.[0]?.imageUrl}  // Using optional chaining
-                        style={{
-                          border: "2px solid red",
-                          padding: "10px",
-                          borderRadius: "8px",
-                        }}
+                        src={shelter.shelterImages?.[0]?.imageUrl}
+                        className="shelter-card-image"
                       />
                     }
-                    style={{
-                      border: "1px solid #f0f0f0",
-                      borderRadius: "8px",
-                      textAlign: "center",
-                    }}
+                    className="shelter-card"
                     onClick={() => handleShelterClick(shelter)}
                   >
                     <Card.Meta
-                      title={<h3 style={{ margin: "10px 0" }}>{shelter.shelterCategoryName}</h3>}
-                      description={<p style={{ margin: "0", color: "#666" }}>{shelter.description}</p>}
+                      title={
+                        <h3 className="shelter-card-title">
+                          {shelter.shelterCategoryName}
+                        </h3>
+                      }
+                      description={
+                        <p className="shelter-card-description">
+                          {shelter.description}
+                        </p>
+                      }
                     />
                   </Card>
                 </Col>
@@ -170,39 +183,28 @@ const KoiPond: React.FC = () => {
             total={totalElements}
             pageSize={pageSize}
             onChange={onPaginationChange}
-            style={{ textAlign: "center", marginTop: "20px" }}
+            className="pagination"
           />
 
           <Modal
-            title={"Shelter Details"}
+            title="Shelter Details"
             open={isModalVisible}
             onOk={handleModalCancel}
             onCancel={handleModalCancel}
             width={1000}
-            style={{ top: '15%' }}
+            className="shelter-modal"
           >
             {selectedShelter && (
-              <div style={{ display: "flex", gap: "20px" }}>
-                <div style={{ flex: 1, maxHeight: "400px", overflow: "hidden" }}>
+              <div className="shelter-modal-content">
+                <div className="carousel-container">
                   <Carousel autoplay>
-                  {selectedShelter?.shelterImages?.length ? (
-                  selectedShelter.shelterImages.map((image, index) => (
-                        <div
-                          key={index}
-                          style={{
-                            textAlign: "center",
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
-                        >
+                    {selectedShelter?.shelterImages?.length ? (
+                      selectedShelter.shelterImages.map((image, index) => (
+                        <div key={index} className="carousel-item">
                           <img
                             alt={selectedShelter.shelterCategoryName}
                             src={image.imageUrl}
-                            style={{
-                              maxHeight: "400px",
-                              width: "100%",
-                              objectFit: "contain",
-                            }}
+                            className="carousel-image"
                           />
                         </div>
                       ))
@@ -211,13 +213,18 @@ const KoiPond: React.FC = () => {
                     )}
                   </Carousel>
                 </div>
-                <div style={{ flex: 1, padding: "0 20px" }}>
-                  <p><strong>Description:</strong> {selectedShelter.description}</p>
-                  <p><strong>Status:</strong> {selectedShelter.status}</p>
+                <div className="shelter-details">
+                  <p>
+                    <strong>Description:</strong> {selectedShelter.description}
+                  </p>
+                  <p>
+                    <strong>Status:</strong> {selectedShelter.status}
+                  </p>
                 </div>
               </div>
             )}
           </Modal>
+          <Footer></Footer>
         </>
       )}
     </>
