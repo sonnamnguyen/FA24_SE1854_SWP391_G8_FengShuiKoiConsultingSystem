@@ -1,4 +1,3 @@
-
 package com.fengshuisystem.demo.entity;
 
 import com.fengshuisystem.demo.entity.enums.Status;

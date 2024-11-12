@@ -1,11 +1,8 @@
 package com.fengshuisystem.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.enums.Gender;
 import com.fengshuisystem.demo.entity.enums.Request;
-import com.fengshuisystem.demo.entity.enums.Status;
 import com.fengshuisystem.demo.validator.ValidYearOfBirth;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -15,7 +12,6 @@ import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.Instant;
-import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 
