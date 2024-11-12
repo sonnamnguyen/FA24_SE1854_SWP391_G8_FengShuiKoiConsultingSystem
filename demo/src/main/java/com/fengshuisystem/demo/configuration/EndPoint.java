@@ -73,6 +73,6 @@ public class EndPoint {
         };
 
         public static final String[] BOTH_DELETE_ENDPOINTS = {
-                "/posts/{id}"
+                "/posts/{id}",
         };
 }
