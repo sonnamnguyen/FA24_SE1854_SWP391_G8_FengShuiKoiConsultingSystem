@@ -29,9 +29,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.GET, EndPoint.BOTH_GET_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, EndPoint.ADMIN_GET_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, EndPoint.USER_GET_ENDPOINTS).hasAuthority("ROLE_USER")
-                        .requestMatchers(HttpMethod.GET, EndPoint.BOTH_GET_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                         .requestMatchers(HttpMethod.GET, EndPoint.PUBLIC_GET_ENDPOINTS).permitAll()
 
