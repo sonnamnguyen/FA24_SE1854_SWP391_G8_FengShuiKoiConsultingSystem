@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Card, Col, Row, Pagination, Modal, Carousel, Spin } from "antd";
 import ShelterCategory from "../../../models/ShelterCategory";
-import { findByShelterCategoryDestiny } from "../../../admin/api/ShelterCategoryAPI";
+import { findByShelterCategoryDestiny, findByShelterCategoryDestinyAndName } from "../../../admin/api/ShelterCategoryAPI";
 import api from "../../../axious/axious";
 import "../../../css/KoiPond.css";
 import Navbar from "../../../layouts/header-footer/Navbar";
@@ -92,7 +92,7 @@ const KoiPond: React.FC = () => {
 
   // Fetch shelters based on destiny list
   useEffect(() => {
-    if (listDestiny.length > 0) {
+    if (listDestiny.length > 0 && searchData === "") {
       setLoading(true);
       findByShelterCategoryDestiny(listDestiny, pageNow, pageSize)
         .then((shelterData) => {
@@ -108,8 +108,24 @@ const KoiPond: React.FC = () => {
           setError("Failed to load shelters.");
         })
         .finally(() => setLoading(false));
+    } else {
+      setLoading(true);
+      findByShelterCategoryDestinyAndName(listDestiny, searchData, pageNow, pageSize)
+        .then((shelterData) => {
+          if (shelterData) {
+            setListShelterCategory(shelterData.result);
+            setTotalElements(shelterData.totalElements);
+          } else {
+            setError("No data found.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching shelters:", error);
+          setError("Failed to load shelters.");
+        })
+        .finally(() => setLoading(false));
     }
-  }, [listDestiny, pageNow]);
+  }, [listDestiny, pageNow, searchData]);
 
   const handleShelterClick = (shelter: ShelterCategory) => {
     setSelectedShelter(shelter);

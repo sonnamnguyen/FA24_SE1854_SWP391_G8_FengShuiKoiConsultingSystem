@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Card, Col, Row, Pagination, Modal, Carousel, Spin } from "antd";
 import api from "../../../axious/axious";
 import AnimalCategory from "../../../models/AnimalCategory";
-import { findByAnimalDestiny } from "../../../admin/api/AnimalCategoryAPI";
+import { findByAnimalDestiny, findByAnimalDestinyAndName } from "../../../admin/api/AnimalCategoryAPI";
 import "./KoiFish.css"; // Import CSS file
 import Navbar from "../../../layouts/header-footer/Navbar";
 import Footer from "../../../layouts/header-footer/Footer";
@@ -93,7 +93,7 @@ const KoiFish: React.FC = () => {
 
   // Fetch animals based on destiny list
   useEffect(() => {
-    if (listDestiny.length > 0) {
+    if (listDestiny.length > 0 && searchData === "") {
       setLoading(true);
       findByAnimalDestiny(listDestiny, pageNow, pageSize)
         .then((animalData) => {
@@ -109,9 +109,25 @@ const KoiFish: React.FC = () => {
           setError("Failed to load animal categories.");
         })
         .finally(() => setLoading(false));
+    } else if (listDestiny.length > 0 && searchData !== "") {
+      setLoading(true);
+      findByAnimalDestinyAndName(listDestiny, searchData, pageNow, pageSize)
+        .then((animalData) => {
+          if (animalData) {
+            setListAnimalCategory(animalData.result);
+            setTotalElements(animalData.totalElements);
+          } else {
+            setError("No data found.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching animal categories:", error);
+          setError("Failed to load animal categories.");
+        })
+        .finally(() => setLoading(false));
     }
-  }, [listDestiny, pageNow]);
-
+  }, [listDestiny, pageNow, searchData]);
+  
   const handleAnimalClick = (animal: AnimalCategory) => {
     setSelectedAnimal(animal);
     setIsModalVisible(true);
