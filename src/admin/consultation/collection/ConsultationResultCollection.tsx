@@ -323,13 +323,13 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
         return; // Stop if any required field is missing
       }
   
-      // Check if description has at least 20 words
-      if (countWords(dataToSend.description) < 20) {
+      // Check if description has at least 10 words
+      if (countWords(dataToSend.description) < 10) {
         notification.error({
           message: 'Validation Error',
           description: 'Description must contain at least 20 words.',
         });
-        return; // Stop if description has less than 20 words
+        return; // Stop if description has less than 10 words
       }
   
       try {
@@ -565,7 +565,7 @@ const ConsultationResultsPage: React.FC<ConsultationResultsPageProps> = ({ setIs
             label={<span>Description <span style={{ color: 'red' }}>*</span></span>}
             colon={false}
             required
-            validateStatus={selectedResult?.description && selectedResult.description.trim().split(/\s+/).length >= 20 ? 'success' : 'error'}
+            validateStatus={selectedResult?.description && selectedResult.description.trim().split(/\s+/).length >= 10 ? 'success' : 'error'}
             help={
               !selectedResult?.description
                 ? 'Description is required.'

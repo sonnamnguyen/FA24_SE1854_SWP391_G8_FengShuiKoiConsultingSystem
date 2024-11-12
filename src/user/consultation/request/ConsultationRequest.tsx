@@ -71,10 +71,9 @@ const ConsultationRequest: React.FC = () => {
 
     document.body.classList.add('khoi_body');
 
-  // Gỡ bỏ lớp `khoi_body` khi component bị unmount
-  return () => {
-    document.body.classList.remove('khoi_body');
-  };
+    return () => {
+      document.body.classList.remove('khoi_body');
+    };
   }, [navigate]);
 
   const fetchPackageInfo = async (id: number) => {
@@ -134,8 +133,9 @@ const ConsultationRequest: React.FC = () => {
         setLoading(false);
         return;
       }
-      if (!description || description.length < 10 || description.length > 1000) {
-        message.error('The request description must be between 10 and 1000 characters.');
+      const wordCount = description.trim().split(/\s+/).length;
+      if (!description || wordCount < 10) {
+        message.error('The request description must contain greater or equal 10 words.');
         setLoading(false);
         return;
       }
@@ -232,7 +232,7 @@ const ConsultationRequest: React.FC = () => {
         <Form.Item label="Request Description" required className="khoi_con_req_form-item">
           <Input.TextArea
             rows={4}
-            placeholder="Enter request description (between 10 and 1000 characters)"
+            placeholder="Enter request description (minimum 10 words)"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className={!description ? 'khoi_con_req_input-error' : ''}

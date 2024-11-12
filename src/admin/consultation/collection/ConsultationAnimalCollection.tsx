@@ -298,8 +298,8 @@ const ConsultationAnimalCollection: React.FC<ConsultationAnimalCollectionProps> 
                     return Promise.resolve();
                   }
                   const wordCount = value.trim().split(/\s+/).length;
-                  if (wordCount < 20) {
-                    return Promise.reject(new Error('Description must contain at least 20 words.'));
+                  if (wordCount < 10) {
+                    return Promise.reject(new Error('Description must contain at least 10 words.'));
                   }
                   return Promise.resolve();
                 },
