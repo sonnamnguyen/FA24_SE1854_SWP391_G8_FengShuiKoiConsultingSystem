@@ -1,10 +1,9 @@
 package com.fengshuisystem.demo.dto;
-import com.fengshuisystem.demo.entity.Bill;
+
 import com.fengshuisystem.demo.entity.enums.Status;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.Instant;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

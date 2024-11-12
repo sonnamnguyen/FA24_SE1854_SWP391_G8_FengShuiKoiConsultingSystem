@@ -1,6 +1,5 @@
 package com.fengshuisystem.demo.dto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fengshuisystem.demo.entity.Post;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.Instant;

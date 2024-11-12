@@ -1,13 +1,11 @@
 package com.fengshuisystem.demo.dto;
-import com.fengshuisystem.demo.entity.Bill;
-import com.fengshuisystem.demo.entity.ConsultationRequest;
-import com.fengshuisystem.demo.entity.Post;
+
 import com.fengshuisystem.demo.entity.enums.Status;
 import lombok.*;
-        import lombok.experimental.FieldDefaults;
+import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
+
 
 @Data
 @NoArgsConstructor

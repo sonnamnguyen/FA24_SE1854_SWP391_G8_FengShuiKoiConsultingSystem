@@ -17,38 +17,18 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConsultationShelterDTO {
 
-  Integer id;
+    Integer id;
 
-  Integer consultationResultId;
+    Integer consultationResultId;
 
-  Integer shelterCategoryId;
+    Integer shelterCategoryId;
 
-  @JsonIgnore
-  List<DirectionDTO> direction;
-  String description;
-  Request status;
-  Instant createdDate;
-  String createdBy;
-  Instant updatedDate;
-  String updatedBy;
-
-  public ConsultationShelterDTO(
-          Integer id,
-          Integer shelterCategoryId,
-          String description,
-          Request status,
-          Instant createdDate,
-          String createdBy,
-          Instant updatedDate,
-          String updatedBy) {
-    this.id = id;
-    this.shelterCategoryId = shelterCategoryId;
-    this.description = description;
-    this.status = status;
-    this.createdDate = createdDate;
-    this.createdBy = createdBy;
-    this.updatedDate = updatedDate;
-    this.updatedBy = updatedBy;
-  }
-
+    @JsonIgnore
+    List<DirectionDTO> direction;
+    String description;
+    Request status;
+    Instant createdDate;
+    String createdBy;
+    Instant updatedDate;
+    String updatedBy;
 }
