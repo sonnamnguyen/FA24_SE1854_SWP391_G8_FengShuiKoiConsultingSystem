@@ -4,7 +4,7 @@ public class EndPoint {
 
         public static final String[] ADMIN_GET_ENDPOINTS = {
                 "/animals", "/animals/animal-search", "/shelters", "/shelters/search-name", "/shelters/{search}",
-                "/colors", "shapes", "/animal-images", "/shelter-images", "/destinys", "colors/getAll-Colors",
+                "/colors", "shapes", "/animal-images", "/shelter-images", "colors/getAll-Colors",
                 "shapes/getAll-Shapes", "shapes/shape-search", "/users", "/users/search-name", "/roles",
                 "colors/search-colors", "/bills", "/bills/status", "api/bills", "api/bills/status"
                 ,"/users/new-users-today", "/users/new-users-this-week", "/users/new-users-this-month",
@@ -70,6 +70,7 @@ public class EndPoint {
         public static final String[] BOTH_GET_ENDPOINTS = {
                 "api/bills/{accountId}/status",
                 "api/bills/{billId}",
+                "/destinys"
         };
 
         public static final String[] BOTH_DELETE_ENDPOINTS = {
