@@ -18,9 +18,14 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(fcmCredentials).getInputStream())) //load data từ trong file gắn vô
-                .build();
-        return FirebaseApp.initializeApp(options);
+        // Kiểm tra nếu FirebaseApp đã được khởi tạo để tránh lỗi trùng lặp
+        if (FirebaseApp.getApps().isEmpty()) {
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(fcmCredentials).getInputStream()))
+                    .build();
+            return FirebaseApp.initializeApp(options);
+        } else {
+            return FirebaseApp.getInstance();
+        }
     }
 }

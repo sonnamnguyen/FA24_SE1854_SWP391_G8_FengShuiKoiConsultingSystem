@@ -1,12 +1,9 @@
-
 package com.fengshuisystem.demo.service;
 
-import com.fengshuisystem.demo.dto.AnimalCategoryDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
 
 import java.util.List;
-
 
 public interface ShelterService {
     ShelterCategoryDTO createShelter(ShelterCategoryDTO request);

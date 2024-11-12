@@ -22,18 +22,5 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
             "AND YEAR(b.createdDate) = YEAR(CURRENT_DATE)")
     BigDecimal getTotalIncomeThisMonth();
 
-    List<Bill> findByStatus(BillStatus status);
-
-    List<Bill> findByCreatedByContainingIgnoreCase(String createdBy);
-
-    @Query("SELECT b FROM Bill b WHERE b.totalAmount BETWEEN :minTotalAmount AND :maxTotalAmount")
-    List<Bill> findByTotalAmountBetween(@Param("minTotalAmount") BigDecimal minTotalAmount, @Param("maxTotalAmount") BigDecimal maxTotalAmount);
-
-    @Query("SELECT b FROM Bill b WHERE LOWER(b.payment.paymentMethod) LIKE LOWER(CONCAT('%', :paymentMethod, '%'))")
-    List<Bill> findByPaymentMethodContainingIgnoreCase(@Param("paymentMethod") String paymentMethod);
-
-    List<Bill> findByTotalAmountGreaterThanEqual(BigDecimal minTotalAmount);
-
-    List<Bill> findByTotalAmountLessThanEqual(BigDecimal maxTotalAmount);
 }
 
