@@ -1,10 +1,7 @@
 package com.fengshuisystem.demo.service;
 
 import com.fengshuisystem.demo.dto.PageResponse;
-import com.fengshuisystem.demo.dto.request.PasswordCreationRequest;
-import com.fengshuisystem.demo.dto.request.UpdateFCMRequest;
-import com.fengshuisystem.demo.dto.request.UserCreationRequest;
-import com.fengshuisystem.demo.dto.request.UserUpdateRequest;
+import com.fengshuisystem.demo.dto.request.*;
 import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.entity.Account;
 import jakarta.validation.Valid;
@@ -27,7 +24,6 @@ public interface UserService {
     long getNewUsersToday();
     long getNewUsersThisWeek();
     long getNewUsersThisMonth();
-
-
+  UserResponse updatePassword(UpdatePasswordRequest updatePasswordRequest);
     Account updateFCM(@Valid UpdateFCMRequest updateFCMRequest);
 }

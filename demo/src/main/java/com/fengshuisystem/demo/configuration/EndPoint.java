@@ -56,7 +56,8 @@ public class EndPoint {
                 "api/bills",
                 "api/bills/request/{requestId}/payments/{paymentId}",
                 "/api/consultation-requests",
-                "/api/consultation-request-details/request-id/{requestId}"
+                "/api/consultation-request-details/request-id/{requestId}",
+                "users/update-password"
         };
 
         public static final String[] USER_PUT_ENDPOINTS = {

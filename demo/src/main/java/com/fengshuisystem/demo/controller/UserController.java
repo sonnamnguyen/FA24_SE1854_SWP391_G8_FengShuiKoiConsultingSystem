@@ -3,10 +3,7 @@ package com.fengshuisystem.demo.controller;
 import com.fengshuisystem.demo.dto.ApiResponse;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.dto.ShelterCategoryDTO;
-import com.fengshuisystem.demo.dto.request.PasswordCreationRequest;
-import com.fengshuisystem.demo.dto.request.UpdateFCMRequest;
-import com.fengshuisystem.demo.dto.request.UserCreationRequest;
-import com.fengshuisystem.demo.dto.request.UserUpdateRequest;
+import com.fengshuisystem.demo.dto.request.*;
 import com.fengshuisystem.demo.dto.response.UserResponse;
 import com.fengshuisystem.demo.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -66,6 +63,12 @@ public class UserController {
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
+                .build();
+    }
+    @PostMapping("/update-password")
+    ApiResponse<UserResponse> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.updatePassword(updatePasswordRequest))
                 .build();
     }
 
