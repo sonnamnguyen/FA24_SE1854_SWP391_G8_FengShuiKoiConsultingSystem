@@ -190,7 +190,7 @@ public class DestinyServiceImpl implements DestinyService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<DestinyDTO> getAllDestiny() {
         return destinyMapper.toDto(destinyRepository.findAll());
     }
