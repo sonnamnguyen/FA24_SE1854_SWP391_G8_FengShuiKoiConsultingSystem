@@ -18,32 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/bills")
+@RequestMapping("api/bills")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class BillController {
 
     private final BillServiceImpl billService;
-
-    // API search
-    @GetMapping("/search")
-    public ApiResponse<List<BillDTO>> searchingBills(
-            @RequestParam(value = "status", required = false) BillStatus status,
-            @RequestParam(value = "createdBy", required = false) String createdBy,
-            @RequestParam(value = "minTotalAmount", required = false) BigDecimal minTotalAmount,
-            @RequestParam(value = "maxTotalAmount", required = false) BigDecimal maxTotalAmount,
-            @RequestParam(value = "paymentMethod", required = false) String paymentMethod) {
-        if (minTotalAmount == null) {
-            minTotalAmount = BigDecimal.ZERO;
-        }
-        if (maxTotalAmount == null) {
-            maxTotalAmount = BigDecimal.valueOf(1000000);
-        }
-        return ApiResponse.<List<BillDTO>>builder()
-                .result(billService.searchingBills(status, createdBy, minTotalAmount, maxTotalAmount, paymentMethod))
-                .build();
-    }
 
     @PostMapping("/request/{requestId}/payments/{paymentId}")
     public ApiResponse<BillDTO> createBill(
@@ -69,14 +50,6 @@ public class BillController {
     ) {
         return ApiResponse.<PageResponse<BillDTO>>builder()
                 .result(billService.getAllBills(page, size))
-                .build();
-    }
-
-    @GetMapping("/find-all")
-    public ApiResponse<List<BillDTO>> getAll(
-    ) {
-        return ApiResponse.<List<BillDTO>>builder()
-                .result(billService.getAll())
                 .build();
     }
 
@@ -126,6 +99,23 @@ public class BillController {
                 .build();
     }
 
-
+    // API search
+    @GetMapping("/search")
+    public ApiResponse<List<BillDTO>> searchBills(
+            @RequestParam(value = "status", required = false) BillStatus status,
+            @RequestParam(value = "createdBy", required = false) String createdBy,
+            @RequestParam(value = "minTotalAmount", required = false) BigDecimal minTotalAmount,
+            @RequestParam(value = "maxTotalAmount", required = false) BigDecimal maxTotalAmount,
+            @RequestParam(value = "paymentMethod", required = false) String paymentMethod) {
+        if (minTotalAmount == null) {
+            minTotalAmount = BigDecimal.ZERO;
+        }
+        if (maxTotalAmount == null) {
+            maxTotalAmount = BigDecimal.valueOf(1000000);
+        }
+        return ApiResponse.<List<BillDTO>>builder()
+                .result(billService.searchBills(status, createdBy, minTotalAmount, maxTotalAmount, paymentMethod))
+                .build();
+    }
 
 }

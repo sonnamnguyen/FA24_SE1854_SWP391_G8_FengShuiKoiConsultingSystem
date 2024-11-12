@@ -1,6 +1,7 @@
 package com.fengshuisystem.demo.service.impl;
 
 import com.fengshuisystem.demo.dto.BillDTO;
+import com.fengshuisystem.demo.dto.ConsultationResultDTO;
 import com.fengshuisystem.demo.dto.PageResponse;
 import com.fengshuisystem.demo.entity.Account;
 import com.fengshuisystem.demo.entity.Bill;
@@ -16,7 +17,9 @@ import com.fengshuisystem.demo.repository.ConsultationRequestRepository;
 import com.fengshuisystem.demo.repository.PaymentRepository;
 import com.fengshuisystem.demo.repository.UserRepository;
 import com.fengshuisystem.demo.service.BillService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,14 +36,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class BillServiceImpl implements BillService {
 
-    private final BillRepository billRepository;
-    private final ConsultationRequestRepository consultationRequestRepository;
-    private final BillMapper billMapper;
-    private final UserRepository userRepository;
-    private final PaymentRepository paymentRepository;
+    BillRepository billRepository;
+    ConsultationRequestRepository consultationRequestRepository;
+    BillMapper billMapper;
+    UserRepository userRepository;
+    PaymentRepository paymentRepository;
 
     @PreAuthorize("hasRole('USER')")
     @Override
@@ -113,12 +117,6 @@ public class BillServiceImpl implements BillService {
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_EXISTED));
     }
 
-    private String getCurrentUserEmailFromJwt() {
-        Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = jwt.getClaimAsString("sub");
-        log.info("Extracted email from JWT: {}", email);
-        return email;
-    }
     @PreAuthorize("hasRole('ADMIN')")
     @Override
     public BigDecimal getTotalIncomeThisMonth() {
@@ -143,20 +141,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public List<BillDTO> getAll() {
-        List<BillDTO> billDTOS= billRepository.findAll()
-                .stream()
-                .map(billMapper::toDto)
-                .toList();
-        if (billDTOS.isEmpty()) {
-            throw new AppException(ErrorCode.BILL_NOT_EXISTED);
-        }
-        return billDTOS;
-    }
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<BillDTO> searchingBills(BillStatus status, String createdBy, BigDecimal minTotalAmount, BigDecimal maxTotalAmount, String paymentMethod) {
+    public List<BillDTO> searchBills(BillStatus status, String createdBy, BigDecimal minTotalAmount, BigDecimal maxTotalAmount, String paymentMethod) {
         List<Bill> bills = billRepository.findAll();
 
         // Lọc theo trạng thái
@@ -198,5 +183,12 @@ public class BillServiceImpl implements BillService {
 
         // Trả về danh sách hóa đơn đã được chuyển đổi thành DTO
         return bills.stream().map(billMapper::toDto).collect(Collectors.toList());
+    }
+
+    private String getCurrentUserEmailFromJwt() {
+        Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = jwt.getClaimAsString("sub");
+        log.info("Extracted email from JWT: {}", email);
+        return email;
     }
 }

@@ -9,7 +9,7 @@ public class EndPoint {
                 "colors/search-colors", "api/bills"
                 ,"/users/new-users-today", "/users/new-users-this-week", "/users/new-users-this-month",
                 "/api/consultation-requests/completed-count",  "/posts/count", "/consultation-results/completed-count",
-                "/api/bills/total-income-this-month"
+                "/api/bills/total-income-this-month", "/api/bills/total-income-between-dates"
         };
 
         public static final String[] ADMIN_POST_ENDPOINTS = {

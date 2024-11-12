@@ -20,5 +20,11 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
             "AND YEAR(b.createdDate) = YEAR(CURRENT_DATE)")
     BigDecimal getTotalIncomeThisMonth();
 
+    @Query("SELECT MONTH(b.createdDate) AS month, SUM(b.totalAmount) AS totalAmount " +
+            "FROM Bill b " +
+            "WHERE FUNCTION('YEAR', b.createdDate) = FUNCTION('YEAR', CURRENT_DATE) " +
+            "GROUP BY MONTH(b.createdDate) " +
+            "ORDER BY MONTH(b.createdDate)")
+    List<Object[]> countTotalMoneyPerMonthForCurrentYear();
 }
 
