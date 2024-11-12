@@ -233,6 +233,14 @@ const Navbar: React.FC<NavbarProps> = ({ searchData, setSearchData }) => {
                   <li>
                     <NavLink
                       className="dropdown-item text-dark"
+                      to="/update-password"
+                    >
+                      Update Password
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      className="dropdown-item text-dark"
                       to="/view-profile"
                     >
                       View Profile

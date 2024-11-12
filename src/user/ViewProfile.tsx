@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Đảm bảo bạn đã import useNavigate
+import { useNavigate } from "react-router-dom";
 import "../css/viewprofile.css";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import api from "../axious/axious";
@@ -20,27 +20,29 @@ interface UserDetails {
 const ViewProfile: React.FC = () => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Hook to navigate to different routes
+  const navigate = useNavigate();
   const [destinys, setDestiny] = useState("");
   const [searchData, setSearchData] = useState<string>("");
 
   useEffect(() => {
     const fetchDetails = async () => {
-      await getUserDetails(); // Lấy thông tin người dùng khi component mount
-      if (userDetails?.dob) {
-        await getDestiny(); // Gọi getDestiny nếu ngày sinh có sẵn
-      }
+      await getUserDetails(); // Get user details on component mount
     };
     fetchDetails();
-  }, []); // Empty dependency array ensures this runs once after mount
+  }, []);
+
+  useEffect(() => {
+    if (userDetails?.dob) {
+      getDestiny(); // Call getDestiny if dob is available
+    }
+  }, [userDetails?.dob]); // Dependency ensures this runs when dob is set
 
   const getDestiny = async () => {
     if (!userDetails?.dob) return;
     try {
-      // Extract the year from dob
       const year = new Date(userDetails.dob).getFullYear();
       const response = await api.get(`/destinys/autoConsultation/${year}`);
-      if (response.data.code !== 1000) {
+      if (response.data.code !== 1000 || !response.data.result.destiny) {
         throw new Error(`Error: ${response.data.message}`);
       }
       setDestiny(response.data.result.destiny);
@@ -56,6 +58,7 @@ const ViewProfile: React.FC = () => {
         throw new Error(`Error: ${response.data.message}`);
       }
       setUserDetails(response.data.result);
+      console.log(userDetails?.fullName);
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
@@ -63,11 +66,10 @@ const ViewProfile: React.FC = () => {
 
   const addPassword = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const body = { password };
 
     try {
-      const response = await api.post("/users/create-password", body); // Body passed directly
+      const response = await api.post("/users/create-password", body);
       if (response.data.code !== 1000) {
         throw new Error(response.data.message);
       }
@@ -79,9 +81,8 @@ const ViewProfile: React.FC = () => {
     }
   };
 
-  // Hàm điều hướng đến trang cập nhật hồ sơ
   const navigateToUpdateProfile = () => {
-    navigate("/update-profile"); // Điều hướng đến trang /update-profile
+    navigate("/update-profile");
   };
 
   return (
@@ -91,13 +92,12 @@ const ViewProfile: React.FC = () => {
         <div className="col-lg-6 right-contain">
           <div className="about-avatar">
             <img
-              src={userDetails?.avatar}
+              src={userDetails?.avatar}// Use a default avatar if none is provided
               title="Profile Avatar"
               alt="Profile Avatar"
             />
           </div>
           <div>
-            {/* Thêm sự kiện onClick để điều hướng khi nhấn nút */}
             <button className="btnSeeMore" onClick={navigateToUpdateProfile}>
               Update Your Profile
             </button>
@@ -142,7 +142,6 @@ const ViewProfile: React.FC = () => {
           </div>
         </div>
       </div>
-
       <Footer></Footer>
     </div>
   );
