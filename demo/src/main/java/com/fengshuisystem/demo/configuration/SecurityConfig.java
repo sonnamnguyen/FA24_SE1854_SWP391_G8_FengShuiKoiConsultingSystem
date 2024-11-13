@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, EndPoint.BOTH_GET_ENDPOINTS).hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, EndPoint.ADMIN_GET_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET, EndPoint.USER_GET_ENDPOINTS).hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.PUT, EndPoint.ADMIN_PUT_ENDPOINTS).hasAuthority("ROLE_ADMIN")
 
                         .requestMatchers(HttpMethod.GET, EndPoint.PUBLIC_GET_ENDPOINTS).permitAll()
 
@@ -42,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, EndPoint.PUBLIC_ENDPOINTS).permitAll()
 
 
-                        .requestMatchers(HttpMethod.PUT, EndPoint.ADMIN_PUT_ENDPOINTS).hasAuthority("ROLE_ADMIN")
+
                         .requestMatchers(HttpMethod.DELETE, EndPoint.ADMIN_DELETE_ENDPOINTS).hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, EndPoint.USER_POST_ENDPOINTS).hasAuthority("ROLE_USER")
                         .requestMatchers(HttpMethod.PUT, EndPoint.USER_PUT_ENDPOINTS).hasAuthority("ROLE_USER")
