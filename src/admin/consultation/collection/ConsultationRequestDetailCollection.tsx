@@ -223,6 +223,7 @@ const ConsultationRequestDetailCollection: React.FC<ConsultationRequestDetailCol
               <p><strong>Shelter Categories:</strong> {selectedDetail.shelterCategoryIds.sort((a, b) => a - b).join(', ')}</p>
               <p><strong>Animal Categories:</strong> {selectedDetail.animalCategoryIds.sort((a, b) => a - b).join(', ')}</p>
               <p><strong>Created By:</strong> {selectedDetail.createdBy}</p>
+              <p><strong>Created Date:</strong> {selectedDetail.createdDate}</p>
               <p><strong>Updated By:</strong> {selectedDetail.updatedBy}</p>
             </>
           ) : (

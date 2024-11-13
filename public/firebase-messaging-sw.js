@@ -31,7 +31,7 @@ messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification?.title || "Background Message Title";
     const notificationOptions = {
         body: payload.notification?.body || "Background Message body.",
-        icon: payload.notification?.icon || "/firebase_icon.png", // Set a default icon if needed
+        icon: payload.notification?.icon || "./koifish.png", // Set a default icon if needed
     };
 
   

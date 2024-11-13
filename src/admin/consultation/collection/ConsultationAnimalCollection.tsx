@@ -18,6 +18,12 @@ interface ConsultationResult {
   id: number;
   description: string;
   status: string;
+  consultationRequestDetailId?: number; // Added field
+}
+
+interface ConsultationRequestDetail {
+  id: number;
+  animalCategoryIds: number[]; // Only retrieving necessary fields
 }
 
 interface AnimalCategory {
@@ -46,6 +52,7 @@ const ConsultationAnimalCollection: React.FC<ConsultationAnimalCollectionProps> 
   const [consultationAnimals, setConsultationAnimals] = useState<ConsultationAnimal[]>([]);
   const [consultationResults, setConsultationResults] = useState<ConsultationResult[]>([]);
   const [animalCategories, setAnimalCategories] = useState<AnimalCategory[]>([]);
+  const [filteredAnimalCategories, setFilteredAnimalCategories] = useState<AnimalCategory[]>([]); // Filtered categories based on `animalCategoryIds`
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState<ConsultationAnimal | null>(null);
@@ -99,6 +106,33 @@ const ConsultationAnimalCollection: React.FC<ConsultationAnimalCollectionProps> 
       setAnimalCategories(response.data.result || []);
     } catch (error) {
       notification.error({ message: 'Failed to load animal categories' });
+    }
+  };
+
+  const fetchConsultationRequestDetail = async (detailId: number) => {
+    const token = getToken();
+    try {
+      const response = await api.get(`/api/consultation-request-details/${detailId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const detailData = response.data.result as ConsultationRequestDetail;
+      filterAnimalCategories(detailData.animalCategoryIds);
+    } catch (error) {
+      notification.error({ message: 'Failed to load consultation request detail' });
+    }
+  };
+
+  const filterAnimalCategories = (categoryIds: number[]) => {
+    const filtered = animalCategories.filter(cat => categoryIds.includes(cat.id));
+    setFilteredAnimalCategories(filtered);
+  };
+
+  const handleConsultationResultChange = (resultId: number) => {
+    const result = consultationResults.find(res => res.id === resultId);
+    if (result?.consultationRequestDetailId) {
+      fetchConsultationRequestDetail(result.consultationRequestDetailId);
+    } else {
+      setFilteredAnimalCategories([]); // Reset if no detail ID
     }
   };
 
@@ -239,39 +273,29 @@ const ConsultationAnimalCollection: React.FC<ConsultationAnimalCollectionProps> 
         width={800}
       >
         <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
-          {isViewMode && selectedAnimal && (
-            <>
-              <p><strong>Consultation Result ID:</strong> {selectedAnimal.consultationResultId}</p>
-              <p><strong>Animal Category:</strong> {animalCategories.find(cat => cat.id === selectedAnimal.animalCategoryId)?.animalCategoryName || 'N/A'}</p>
-            </>
-          )}
-          {!isViewMode && !selectedAnimal && (
-            <>
-              <Form.Item label="Consultation Result ID" name="consultationResultId" rules={[{ required: true, message: 'Please select a consultation result' }]}>
-                <Select placeholder="Select Consultation Result" disabled={isViewMode}>
-                  {consultationResults.map(result => (
-                    <Option key={result.id} value={result.id}>
-                      {result.id} - {result.description}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
+          <Form.Item label="Consultation Result ID" name="consultationResultId" rules={[{ required: true, message: 'Please select a consultation result' }]}>
+            <Select placeholder="Select Consultation Result" onChange={handleConsultationResultChange} disabled={isViewMode}>
+              {consultationResults.map(result => (
+                <Option key={result.id} value={result.id}>
+                  {result.id} - {result.description}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-              <Form.Item
-                label="Animal Category"
-                name="animalCategoryId"
-                rules={[{ required: true, message: 'Please select an animal category' }]}
-              >
-                <Select placeholder="Select Animal Category" disabled={isViewMode}>
-                  {animalCategories.map(category => (
-                    <Option key={category.id} value={category.id}>
-                      {category.id} - {category.animalCategoryName} - {category.description}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </>
-          )}
+          <Form.Item
+            label="Animal Category"
+            name="animalCategoryId"
+            rules={[{ required: true, message: 'Please select an animal category' }]}
+          >
+            <Select placeholder="Select Animal Category" disabled={isViewMode}>
+              {filteredAnimalCategories.map(category => (
+                <Option key={category.id} value={category.id}>
+                  {category.id} - {category.animalCategoryName} - {category.description}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
           <Form.Item
             label="Status"

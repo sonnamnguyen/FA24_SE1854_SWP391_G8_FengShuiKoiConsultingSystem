@@ -28,7 +28,7 @@ export const generateToken = async () => {
   if (permission === "granted") {
     console.log(permission);
     const token = await getToken(messaging, {
-      vapidKey: "BEWVqlpy-txsAzvUdwjM9CAo26aoa08pcLh7GNAxP4x2LAh9SVTJd8IP5na9Biup_b46livPPyT-U5gKZWLou-Q"
+      vapidKey: "BEOgb7UBkJy8EP1lwHiCSmOX5E0ZidSQiiWNYfrVe5cs9G_oIpZa8KsPz7Hd9WYXOhXZJWQXhUBgQnikqQGp8YA"
     })
     console.log(token);
   }
