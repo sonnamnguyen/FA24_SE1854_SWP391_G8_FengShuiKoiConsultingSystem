@@ -216,15 +216,16 @@ const KoiFish: React.FC = () => {
                   </Carousel>
                 </div>
                 <div className="animal-details">
+                <p><strong>Koi Name:</strong> {selectedAnimal?.animalCategoryName}</p>
+
                   <p>
                     <strong>Description:</strong> {selectedAnimal.description}
                   </p>
                   <p>
                     <strong>Origin:</strong> {selectedAnimal.origin}
                   </p>
-                  <p>
-                    <strong>Status:</strong> {selectedAnimal.status}
-                  </p>
+                  <p><strong>Colors:</strong> {selectedAnimal?.colors?.map((color: any) => color.color).join(', ')}</p>
+                  
                 </div>
               </div>
             )}
