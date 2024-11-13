@@ -230,12 +230,18 @@ const KoiPond: React.FC = () => {
                   </Carousel>
                 </div>
                 <div className="shelter-details">
+                  <p><strong>Ponds Name:</strong> {selectedShelter?.shelterCategoryName}</p>
+
                   <p>
                     <strong>Description:</strong> {selectedShelter.description}
                   </p>
-                  <p>
-                    <strong>Status:</strong> {selectedShelter.status}
-                  </p>
+                  <p><strong>Shape:</strong> {selectedShelter?.shape?.shape}</p>
+                  <p><strong>Width:</strong> {selectedShelter?.width} m</p>
+                  <p><strong>Height:</strong> {selectedShelter?.height} m</p>
+                  <p><strong>Length:</strong> {selectedShelter?.length} m</p>
+                  <p><strong>Diameter:</strong> {selectedShelter?.diameter} m</p>
+                  <p><strong>Water Volume:</strong> {selectedShelter?.waterVolume} L</p>
+                  <p><strong>Water Filtration System:</strong> {selectedShelter?.waterFiltrationSystem}</p>
                 </div>
               </div>
             )}

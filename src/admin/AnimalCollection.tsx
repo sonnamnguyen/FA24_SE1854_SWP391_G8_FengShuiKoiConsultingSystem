@@ -463,13 +463,7 @@ const AnimalCollection: React.FC<AnimalCollectionProps> = ({ setIsNavbarVisible 
             Search
           </Button>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => {
-          setIsModalVisible(true);
-          setIsNavbarVisible(false);
-        }
-        }>
-          Add Animal
-        </Button>
+        
       </div>
       <Table
         columns={columns}

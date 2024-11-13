@@ -107,23 +107,23 @@ const AddShelter: React.FC = () => {
         .matches(/^[A-Za-z\s]+$/, "Shelter category name cannot contain numbers or special characters"),
     width: Yup.number()
         .required("Width is required")
-        .min(1, "Width must be greater than 0")
+        .min(1, "Width must be greater than 1")
         .max(20, "Width must be less than or equal to 20 meters"),
     height: Yup.number()
         .required("Height is required")
-        .min(1, "Height must be greater than 0")
+        .min(1, "Height must be greater than 1")
         .max(10, "Height must be less than or equal to 10 meters"),
     length: Yup.number()
         .required("Length is required")
-        .min(1, "Length must be greater than 0")
+        .min(1, "Length must be greater than 1")
         .max(50, "Length must be less than or equal to 50 meters"),
     diameter: Yup.number()
         .required("Diameter is required")
-        .min(1, "Diameter must be greater than 0")
+        .min(1, "Diameter must be greater than 1")
         .max(20, "Diameter must be less than or equal to 20 meters"),
     waterVolume: Yup.number()
         .required("Water volume is required")
-        .min(1, "Water volume must be greater than 0")
+        .min(1, "Water volume must be greater than 1")
         .max(10000, "Water volume must be less than or equal to 10000 cubic meters"),
     waterFiltrationSystem: Yup.string()
         .required("Water filtration system is required")

@@ -59,7 +59,7 @@ const SidebarAdmin: React.FC = () => {
           theme="light"
         >
           <Menu.Item key="1" icon={<AppstoreOutlined />}>
-            <Link to="/admin-page">Dashboard</Link>
+            <Link to="/dash-board">Dashboard</Link>
           </Menu.Item>
 
           <Menu.SubMenu key="sub1" icon={<MailOutlined />} title="USER MANAGEMENT">

@@ -15,7 +15,7 @@ import DestinyTuongSinh from "../models/DestinyTuongSinh";
 import DestinyTuongKhac from "../models/DestinyTuongKhac";
 
 interface ShelterCollectionProps {
-  setIsNavbarVisible: (visible: boolean) => void; 
+  setIsNavbarVisible: (visible: boolean) => void;
 }
 
 interface Shapes {
@@ -650,21 +650,22 @@ const ShelterCollection: React.FC<ShelterCollectionProps> = ({ setIsNavbarVisibl
               <p><strong>Water Volume:</strong> {selectedShelter?.waterVolume} L</p>
               <p><strong>Water Filtration System:</strong> {selectedShelter?.waterFiltrationSystem}</p>
               <p><strong>Created Date:</strong> {
-  selectedShelter?.createdDate
-    ? new Date(selectedShelter.createdDate).toLocaleDateString('en-GB')
-    : 'No date available'
-}</p>
+                selectedShelter?.createdDate
+                  ? new Date(selectedShelter.createdDate).toLocaleDateString('en-GB')
+                  : 'No date available'
+              }</p>
               <p><strong>Status:</strong> {selectedShelter?.status}</p>
- {/* Direction of Destiny */}
- <p><strong>Directions:</strong>
+
+              {/* Destiny Section */}
+              <p><strong>Result :</strong></p>
+              {/* Direction of Destiny */}
+              <p><strong>Directions:</strong>
                 {selectedShelter?.shape?.destiny?.directions && selectedShelter.shape.destiny.directions.length > 0
                   ? selectedShelter.shape.destiny.directions.map((direct: any) => direct.direction).join(', ')
                   : 'No directions available'}
               </p>
-              {/* Destiny Section */}
-              <p><strong>Result :</strong></p>
-              <p style={{ color: 'blue'}}><strong>Mutual Accord:</strong> {selectedShelter?.shape?.destiny?.destiny || 'No destiny available'}</p>
-              <p style={{ color: 'green'}}><strong>Mutual Generation:</strong>
+              <p style={{ color: 'blue' }}><strong>Mutual Accord:</strong> {selectedShelter?.shape?.destiny?.destiny || 'No destiny available'}</p>
+              <p style={{ color: 'green' }}><strong>Mutual Generation:</strong>
                 {(() => {
                   const destinyName = selectedShelter?.shape?.destiny?.destiny;
                   const tuongSinhList = destinyName ? destinyToTuongSinhMap[destinyName] || [] : [];
@@ -680,7 +681,7 @@ const ShelterCollection: React.FC<ShelterCollectionProps> = ({ setIsNavbarVisibl
                   return tuongKhacNames || "No data available";
                 })()}
               </p>
-             
+
             </div>
 
           </div>
