@@ -199,7 +199,12 @@ public class AnimalServiceImpl implements AnimalService {
         if (colors.size() > 3) {
             throw new AppException(ErrorCode.TOO_MANY_COLORS);
         }
+        Set<String> uniqueUrls = new HashSet<>();
         for (AnimalImage animalImage : animalCategory.getAnimalImages()) {
+            String imageUrl = animalImage.getImageUrl();
+            if (!uniqueUrls.add(imageUrl)) {
+                throw new AppException(ErrorCode.PICK_SAME_IMAGE);
+            }
             animalImage.setAnimalCategory(animalCategory);
         }
         animalCategory.setUpdatedBy(name);

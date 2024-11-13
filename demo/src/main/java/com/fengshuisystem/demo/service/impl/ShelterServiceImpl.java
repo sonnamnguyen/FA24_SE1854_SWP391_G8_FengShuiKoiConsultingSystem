@@ -130,7 +130,12 @@ public class ShelterServiceImpl implements ShelterService {
         shelterCategory.setShape(shape);
         shelterCategory.setUpdatedDate(Instant.now());
         shelterCategory.setUpdatedBy(name);
+        Set<String> uniqueUrls = new HashSet<>();
         for (ShelterImage shelterImage : shelterCategory.getShelterImages()) {
+            String imageUrl = shelterImage.getImageUrl();
+            if (!uniqueUrls.add(imageUrl)) {
+                throw new AppException(ErrorCode.PICK_SAME_IMAGE);
+            }
             shelterImage.setShelterCategory(shelterCategory);
         }
         return shelterMapper.toDto(shelterRepository.save(shelterCategory));
