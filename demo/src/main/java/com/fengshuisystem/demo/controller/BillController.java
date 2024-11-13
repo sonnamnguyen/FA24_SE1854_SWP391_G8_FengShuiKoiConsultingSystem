@@ -91,14 +91,6 @@ public class BillController {
         }
     }
 
-    @GetMapping("/total-income-this-month")
-    public ApiResponse<BigDecimal> getTotalIncomeThisMonth() {
-        BigDecimal totalIncome = billService.getTotalIncomeThisMonth();
-        return ApiResponse.<BigDecimal>builder()
-                .result(totalIncome)
-                .build();
-    }
-
     // API search
     @GetMapping("/search")
     public ApiResponse<List<BillDTO>> searchBills(
@@ -115,6 +107,15 @@ public class BillController {
         }
         return ApiResponse.<List<BillDTO>>builder()
                 .result(billService.searchBills(status, createdBy, minTotalAmount, maxTotalAmount, paymentMethod))
+                .build();
+    }
+    @GetMapping("/total-income-between-dates")
+    public ApiResponse<List<Object[]>> countTotalMoneyBetweenDates() {
+
+        List<Object[]> totalMoneyByMonth = billService.countTotalMoneyBetweenDates();
+
+        return ApiResponse.<List<Object[]>>builder()
+                .result(totalMoneyByMonth)
                 .build();
     }
 

@@ -191,4 +191,14 @@ public class BillServiceImpl implements BillService {
         log.info("Extracted email from JWT: {}", email);
         return email;
     }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Object[]> countTotalMoneyBetweenDates() {
+        List<Object[]> results = billRepository.countTotalMoneyPerMonthForCurrentYear();
+        if (results == null || results.isEmpty()) {
+            throw new AppException(ErrorCode.BILL_NOT_EXISTED);
+        }
+        return results;
+    }
 }

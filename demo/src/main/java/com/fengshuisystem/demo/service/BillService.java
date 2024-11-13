@@ -15,6 +15,6 @@ public interface BillService {
     void updateStatusAfterPayment(Integer billId, BillStatus billStatus, Request requestStatus);
     Integer getRequestIdByBillId(Integer billId);
     BigDecimal getTotalIncomeThisMonth();
-
+    List<Object[]> countTotalMoneyBetweenDates();
     PageResponse<BillDTO> getAllBills(int page, int size);
 }
