@@ -59,8 +59,6 @@ public class ShelterServiceImpl implements ShelterService {
             if (!uniqueUrls.add(imageUrl)) {
                 throw new AppException(ErrorCode.PICK_SAME_IMAGE);
             }
-            if(shelterImageRepository.existsByImageUrl(shelterImage.getImageUrl())) throw new AppException(ErrorCode.IMAGE_ALREADY_EXISTED);
-            shelterImage.setShelterCategory(shelterCategory);
         }
         return shelterMapper.toDto(shelterRepository.save(shelterCategory));
     }

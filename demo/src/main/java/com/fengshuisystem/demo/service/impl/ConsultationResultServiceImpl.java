@@ -216,21 +216,21 @@ public class ConsultationResultServiceImpl implements ConsultationResultService 
 
         // 5. Gửi email với danh sách chính xác từ requestDetail
         sendConsultationDetailsEmail(email, consultationResult, matchingAnimals, matchingShelters);
-
-        // Kiểm tra thông tin cần thiết cho notification
-        NotificationFCM notificationFCM = new NotificationFCM();
-        String title = "Result of your request #" + consultationResult.getRequest().getId();
-        String message = "The result of request #" + consultationResult.getRequest().getId() + " has been sent to the email: " + email + ". Please check and confirm. If there are any issues, contact our hotline for support and to report any errors.";
-
-        if (title == null || title.isEmpty() || message == null || message.isEmpty()) {
-            throw new RuntimeException("Thiếu thông tin tiêu đề hoặc nội dung thông báo.");
-        }
-
-        notificationFCM.setTitle(title);
-        notificationFCM.setMessage(message);
-
-        // Gửi thông báo
-        notificationService.sendNotificationToAccount(notificationFCM, consultationResult.getAccount());
+//
+//        // Kiểm tra thông tin cần thiết cho notification
+//        NotificationFCM notificationFCM = new NotificationFCM();
+//        String title = "Result of your request #" + consultationResult.getRequest().getId();
+//        String message = "The result of request #" + consultationResult.getRequest().getId() + " has been sent to the email: " + email + ". Please check and confirm. If there are any issues, contact our hotline for support and to report any errors.";
+//
+//        if (title == null || title.isEmpty() || message == null || message.isEmpty()) {
+//            throw new RuntimeException("Thiếu thông tin tiêu đề hoặc nội dung thông báo.");
+//        }
+//
+//        notificationFCM.setTitle(title);
+//        notificationFCM.setMessage(message);
+//
+//        // Gửi thông báo
+//        notificationService.sendNotificationToAccount(notificationFCM, consultationResult.getAccount());
 
         // 6. Trả về DTO sau khi cập nhật
         return consultationResultMapper.toDto(consultationResult);

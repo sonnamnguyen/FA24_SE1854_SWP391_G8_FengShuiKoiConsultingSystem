@@ -75,8 +75,6 @@ public class AnimalServiceImpl implements AnimalService {
             if (!uniqueUrls.add(imageUrl)) {
                 throw new AppException(ErrorCode.PICK_SAME_IMAGE);
             }
-            if(animalImageRepository.existsByImageUrl(animalImage.getImageUrl())) throw new AppException(ErrorCode.IMAGE_ALREADY_EXISTED);
-            animalImage.setAnimalCategory(animalCategory);
         }
         return animalMapper.toDto(animalRepository.save(animalCategory));
     }
