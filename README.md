@@ -38,6 +38,6 @@ npm install
 
 ### **SQL Server: FengShuiKoi.sql**
 
-
+##### **Lưu ý:** Nếu bị lỗi BackEnd liên quan đến firebase (mục notification), hãy liên hệ chúng tôi để được giúp đỡ.
 ---
 Created By: Phạm Đăng Khôi (owner repo)
