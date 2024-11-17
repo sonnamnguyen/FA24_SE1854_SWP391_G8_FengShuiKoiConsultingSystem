@@ -33,8 +33,8 @@ localhost:3000
 1. **Cài đặt các phụ thuộc và build dự án:**
 npm install
 2. **Chạy ứng dụng React:**
-npm start
-npm run dev
+-  npm start
+-  npm run dev
 
 ### **SQL Server: FengShuiKoi.sql**
 
