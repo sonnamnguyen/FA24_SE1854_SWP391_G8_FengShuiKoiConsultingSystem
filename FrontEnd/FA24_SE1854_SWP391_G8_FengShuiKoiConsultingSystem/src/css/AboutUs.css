@@ -1,0 +1,96 @@
+/* General styles for About Us page */
+.about-us-all {
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  padding: 20px 0;
+  background-color: #fffafa;
+  box-sizing: border-box;
+}
+.about-us-img {
+  width: 60%;
+  margin-left: 20%;
+}
+
+/* Container to hold content */
+.about-us-container {
+  margin-top: 130px;
+  margin-bottom: 100px;
+  margin-left: 8%;
+  width: 84%;
+
+  padding: 0 20px;
+  border: 2px solid #ddd; /* Add border around the container */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+  background-color: #fff;
+}
+
+/* Title (ABOUT US) */
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #2d2d2d;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #f77373, #ff3434);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 3px;
+  text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  padding: 10px; /* Add some padding */
+}
+
+/* Subtitle styles */
+.subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 30px;
+  text-align: left;
+  padding-left: 10px;
+  border-left: 4px solid #ff6b6b;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+/* Paragraphs inside content */
+.about-us-content p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 20px;
+  text-align: justify;
+  line-height: 1.8;
+  font-weight: 400;
+  text-indent: 2rem;
+}
+
+/* Add some padding for sections */
+.about-us-content section {
+  padding: 20px;
+  margin-bottom: 50px;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px; /* Rounded corners for content blocks */
+  border: 1px solid #ddd; /* Border around each section */
+}
+
+/* Add responsive design for small devices */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.8rem;
+  }
+
+  .about-us-content p {
+    font-size: 1rem;
+  }
+
+  .about-us-container {
+    padding: 0 10px;
+  }
+}

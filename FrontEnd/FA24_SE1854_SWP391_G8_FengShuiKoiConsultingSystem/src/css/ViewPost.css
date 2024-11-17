@@ -1,0 +1,297 @@
+/* CSS cho container chính */
+
+div {
+  font-family: Arial, sans-serif;
+}
+.contentPost {
+  width: 80%;
+  margin-left: 10%;
+  margin-bottom: 30px;
+}
+.view-post-content {
+  background-color: rgb(251, 251, 251);
+  align-items: center;
+  padding-top: 100px;
+  padding-bottom: 20px;
+}
+
+.title {
+  font-family: "Playfair Display", serif; /* Sử dụng font chữ nghệ thuật */
+  font-size: 3rem; /* Kích thước chữ lớn */
+  color: rgb(244, 88, 57); /* Màu sắc chữ */
+  text-align: center; /* Căn giữa tiêu đề */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Đổ bóng chữ */
+  margin: 20px 0; /* Khoảng cách trên và dưới tiêu đề */
+  transition: transform 0.3s ease; /* Hiệu ứng chuyển động */
+}
+
+.title:hover {
+  transform: scale(1.05); /* Tăng kích thước chữ khi hover */
+}
+
+.post {
+  max-width: 80%;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 15px 15px 15px 15px rgba(223, 76, 76, 0.2);
+  margin-left: 10%;
+  margin-top: 30px;
+  padding-top: 10px;
+}
+
+.first-line-indent {
+  text-indent: 20px; /* Điều chỉnh kích thước thụt đầu dòng theo ý muốn */
+  display: block; /* Đảm bảo nó hoạt động như một khối để có thể thụt đầu dòng */
+}
+
+.post h2 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+  margin-left: 7%;
+  margin-right: 7%;
+}
+.slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.images {
+  position: relative; /* Position relative to contain the absolutely positioned children */
+  width: 550px; /* Set to the width you want for your image area */
+  height: 492.02px;
+
+  overflow: hidden; /* Hide overflow to prevent showing images outside the container */
+}
+
+.image-container {
+  display: flex;
+  transition: transform 0.5s ease-in-out; /* Smooth transition for sliding effect */
+  width: 100%; /* Full width for the flex container */
+}
+
+/* Ảnh bài viết */
+.post-image {
+  min-width: 100%; /* Each image takes full width of the container */
+  height: auto; /* Tự động điều chỉnh chiều cao theo tỷ lệ ảnh */
+  border-radius: 8px; /* Bo góc cho ảnh */
+  object-fit: cover; /* Maintain aspect ratio */
+}
+
+/* Nút điều hướng ảnh */
+.image-button {
+  flex: 0 0 10%; /* Mỗi nút chiếm 10% chiều rộng */
+  background-color: #4caf50; /* Màu nền xanh lá */
+  color: white; /* Chữ trắng */
+  border: none; /* Không viền */
+  padding: 10px; /* Khoảng đệm */
+  border-radius: 5px; /* Bo góc cho nút */
+  cursor: pointer; /* Thay đổi con trỏ khi di chuột */
+  transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+  font-size: 1em; /* Kích thước chữ */
+  text-align: center; /* Căn giữa chữ trong nút */
+}
+
+.image-button:hover {
+  background-color: #45a049; /* Thay đổi màu khi di chuột */
+}
+
+.post p {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0;
+}
+
+.comments h3,
+.images h3 {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.comments p,
+.images p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.comment {
+  background-color: #e9e9e9;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.comment p {
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.comment small {
+  font-size: 12px;
+  color: #888;
+}
+
+/* CSS cho trạng thái Loading và Error */
+.loading,
+.error {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  margin-top: 20px;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Giữa các phần tử trong phân trang */
+  margin: 20px 0; /* Khoảng cách trên và dưới cho phân trang */
+}
+
+.pagination button {
+  background-color: rgb(240, 110, 84); /* Màu nền cho nút */
+  color: white; /* Màu chữ cho nút */
+  border: none; /* Xóa viền cho nút */
+  border-radius: 5px; /* Bo góc cho nút */
+  padding: 10px 15px; /* Khoảng cách trong nút */
+  margin: 0 10px; /* Khoảng cách giữa các nút */
+  cursor: pointer; /* Thay đổi con trỏ khi hover */
+  transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
+}
+
+.pagination button:hover {
+  background-color: rgb(212, 69, 41); /* Màu nền khi hover */
+}
+
+.pagination button:disabled {
+  background-color: #ccc; /* Màu nền cho nút không hoạt động */
+  cursor: not-allowed; /* Con trỏ không cho phép */
+}
+
+.pagination span {
+  font-weight: bold; /* Đậm cho văn bản hiển thị trang */
+  margin: 0 10px; /* Khoảng cách giữa văn bản và nút */
+}
+.comments {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.comments-title {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.comment-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.comment-content {
+  font-size: 1em;
+  color: #555;
+  margin: 0;
+}
+
+.comment-meta {
+  font-size: 0.9em;
+  color: #888;
+}
+
+.no-comments {
+  font-style: italic;
+  color: #aaa;
+}
+
+.comment-form {
+  margin-top: 20px;
+}
+
+.comment-input {
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  resize: none;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment-input:focus {
+  border-color: rgb(215, 65, 35);
+  outline: none;
+}
+
+.submit-button {
+  background-color: rgb(240, 110, 84);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: rgb(212, 69, 41);
+}
+.post-container {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post-destiny {
+  font-size: 1.2em;
+
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.post-category {
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.post-likes-dislikes {
+  font-size: 0.9em;
+  color: #777;
+}
+
+.likes {
+  color: green;
+  font-weight: bold;
+}
+
+.dislikes {
+  color: red;
+  font-weight: bold;
+}
+
+.post-author {
+  font-size: 0.9em;
+  color: #444;
+}
+
+.author-name {
+  font-weight: bold;
+}
+
+.created-date {
+  color: #888;
+}

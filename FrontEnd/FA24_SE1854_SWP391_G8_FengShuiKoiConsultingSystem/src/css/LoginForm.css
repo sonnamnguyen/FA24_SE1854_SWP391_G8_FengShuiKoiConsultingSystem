@@ -1,0 +1,150 @@
+/* General Styles for the Login Page */
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+
+  background-size: cover;
+  background-position: center;
+  padding: 0 20px;
+}
+
+.login-page-form {
+  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  position: relative; /* Đảm bảo form luôn hiển thị trên lớp phủ */
+}
+
+.login-page-title {
+  font-size: 32px;
+  color: #2c3e50;
+  font-family: "Roboto", sans-serif;
+  margin-bottom: 15px;
+}
+
+.login-page-description {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin-bottom: 30px;
+}
+
+.login-page-form-content {
+  max-width: 100%;
+  padding: 0;
+}
+
+.login-page-input {
+  border-radius: 50px;
+  padding: 10px 15px;
+  font-size: 16px;
+  width: 100%;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  background-color: #f4f6f7;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-page-input:focus {
+  border-color: #3498db;
+  outline: none;
+  background-color: #fff;
+}
+
+.site-form-item-icon {
+  color: #3498db;
+}
+
+.login-page-remember {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.login-page-forgot {
+  font-size: 14px;
+  color: #3498db;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.login-page-forgot:hover {
+  color: #8e44ad;
+}
+
+.login-page-submit-button {
+  width: 100%;
+  background-color: #3498db;
+  border-radius: 50px;
+  border: none;
+  padding: 12px 0;
+  font-size: 18px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.login-page-submit-button:hover {
+  background-color: #2980b9;
+}
+
+.login-page-divider {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #7f8c8d;
+}
+
+.login-page-divider span {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.login-page-social-button {
+  width: 100%;
+  background-color: #db4437;
+  color: white;
+  border-radius: 50px;
+  border: none;
+  padding: 12px 0;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.login-page-social-button:hover {
+  background-color: #c1351d;
+}
+
+.login-page-signup-link {
+  font-size: 14px;
+  color: #3498db;
+  margin-top: 15px;
+}
+
+.login-page-signup-link-text {
+  font-weight: 600;
+  color: #3498db;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.login-page-signup-link-text:hover {
+  color: #8e44ad;
+}
+
+/* Custom CSS for the background image */
+.login-page-container {
+  background-image: url("../img/Login.webp");
+  background-size: cover;
+  background-position: center center;
+}

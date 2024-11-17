@@ -1,0 +1,203 @@
+/* General body and container styles */
+.post-content {
+  margin-top: 150px;
+  width: 80%;
+  margin-left: 10%;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+}
+.blogTitle {
+  font-family: "Poppins", sans-serif; /* Font chữ hiện đại */
+  font-size: 3rem; /* Kích thước chữ */
+  color: #333; /* Màu tối cho văn bản */
+  text-align: center; /* Căn giữa tiêu đề */
+  text-transform: uppercase; /* Viết hoa chữ đầu */
+  font-weight: 600; /* Đậm chữ */
+  letter-spacing: 1px; /* Giãn cách giữa các chữ */
+  margin: 20px 0; /* Khoảng cách trên và dưới */
+  position: relative; /* Để áp dụng hiệu ứng */
+  transition: color 0.3s ease, transform 0.3s ease; /* Hiệu ứng chuyển màu và di chuyển */
+}
+
+/* Hiệu ứng khi di chuột */
+.blogTitle:hover {
+  color: #ff6347; /* Màu cam nhẹ khi hover */
+  transform: scale(1.1); /* Phóng to tiêu đề khi hover */
+  letter-spacing: 2px; /* Giãn cách các chữ khi hover */
+}
+
+/* Hiệu ứng động khi trang tải */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Thêm hiệu ứng fade-in khi trang tải */
+.blogTitle {
+  animation: fadeIn 1s ease-out;
+}
+
+.btnMPL {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Định dạng cho tiêu đề */
+.blogTitle {
+  font-size: 40px;
+  font-weight: bold;
+  color: #ff6347;
+  text-align: center;
+  margin: 20px 0;
+  padding: 10px;
+  text-transform: uppercase;
+  font-family: "Arial", sans-serif;
+}
+.form-label {
+}
+
+.btnUpdate {
+  background-color: #dc3545; /* Đỏ */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btnUpdate:hover {
+  background-color: #c82333; /* Đỏ đậm khi hover */
+  color: #f4f4f4;
+}
+
+/* Card styles for each post */
+.cardMyPost {
+  height: 250px;
+  background-color: #ffffff;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.cardMyPost:hover {
+  transform: translateY(-10px); /* Hover effect */
+}
+
+.cardMyPost .row.g-0 {
+  width: 100%;
+}
+
+/* Image in the post */
+.cardMyPost .col-md-4 img {
+  border-radius: 10px;
+  height: 240px;
+  margin-top: 5px;
+  width: 100%;
+  padding: 4%;
+}
+
+/* Card content styles */
+.card-body {
+  padding: 20px;
+}
+
+.card-body h5.card-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.card-body .card-text {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.card-body .card-text strong {
+  color: #333;
+}
+
+/* Created date styling */
+.card-body .card-text small {
+  font-size: 0.85rem;
+  color: #888;
+  display: block;
+  margin-top: 10px;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.pagination button {
+  background-color: rgb(240, 110, 84);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  margin: 0 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #ca0c0c;
+}
+
+.pagination span {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Error and Loading state */
+.error-message,
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: red;
+  margin-top: 20px;
+}
+.btnSeeMore {
+  padding: 12px 24px;
+  background-color: #ff6347;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.btnSeeMore:hover {
+  background-color: #ff6347;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
+}
+.btnSeeMore:active {
+  background-color: #ff6347;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(2px);
+}
+.card-text {
+  display: flex;
+  justify-content: space-between;
+}

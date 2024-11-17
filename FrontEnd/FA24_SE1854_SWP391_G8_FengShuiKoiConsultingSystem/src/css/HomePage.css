@@ -1,0 +1,243 @@
+/* src/pages/HomePage.css */
+.homepage {
+  font-family: Arial, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+.blStart {
+  height: 220px;
+}
+.StartContain {
+  display: flex;
+  justify-content: center;
+}
+.BodyContain {
+  margin-top: 30px;
+}
+.Bodytitle {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #ff6347;
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+.contentBody h4 {
+  color: #ff6347;
+}
+.contentBody h4 {
+  text-align: center;
+}
+.EndContain {
+  margin-top: 50px;
+}
+.Endtitle {
+  font-size: 28px; /* Kích thước chữ lớn */
+  font-weight: bold; /* Chữ đậm */
+  color: #ff6347; /* Màu chữ */
+  text-align: center; /* Căn giữa */
+  margin: 20px 0; /* Khoảng cách phía trên và dưới */
+  padding: 10px; /* Khoảng cách bên trong */
+  text-transform: uppercase; /* Chữ in hoa */
+  font-family: "Arial", sans-serif; /* Phong chữ */
+  transition: color 0.3s ease; /* Hiệu ứng chuyển đổi màu sắc */
+}
+
+.Endtitle:hover {
+  color: #333; /* Màu chữ khi hover */
+}
+.contentBody {
+  border: 1px solid #ccc; /* Màu và độ dày của border */
+  margin: 10px;
+  padding: 20px; /* Khoảng cách bên trong */
+  box-shadow: 0 4px 8px rgba(213, 57, 57, 0.1); /* Đổ bóng */
+  transition: box-shadow 0.3s ease; /* Hiệu ứng chuyển tiếp */
+}
+.EndBody {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+.EndBody img {
+  margin: 20px;
+}
+.EndBody p {
+  margin: 20px;
+}
+.card {
+  margin: 20px;
+}
+
+.card-group {
+  display: flex; /* Arrange cards in a row */
+  justify-content: space-around; /* Space between cards */
+  margin: 20px 0; /* Margin above and below the card group */
+}
+
+.card {
+  border: none; /* Remove default border */
+  border-radius: 10px; /* Rounded corners for cards */
+  overflow: hidden; /* Hide overflow */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  transition: transform 0.3s; /* Smooth transform on hover */
+}
+/* Mặc định ẩn các phần tử */
+.section-fade {
+  opacity: 0; /* Ẩn phần tử */
+  transform: translateY(50px); /* Di chuyển phần tử xuống dưới một chút */
+  transition: opacity 1s ease, transform 1s ease; /* Thêm hiệu ứng cho opacity và transform */
+}
+.blog {
+  padding: 10px;
+  margin: 10px;
+}
+.blog img {
+  height: 95%;
+  width: 95%;
+}
+.blspan {
+  display: flex;
+  justify-content: space-between;
+}
+.blspan button {
+  padding: 12px 24px;
+  background-color: #ff6347;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.blspan button:hover {
+  background-color: #ff6347;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px);
+}
+.blspan button:active {
+  background-color: #ff6347;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(2px);
+}
+
+/* Khi phần tử có class 'visible', nó sẽ hiện lên */
+.section-fade.visible {
+  opacity: 1; /* Hiển thị phần tử */
+  transform: translateY(0); /* Quay lại vị trí ban đầu */
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+}
+
+.card-img-top {
+  border-radius: 10px 10px 0 0; /* Rounded top corners for images */
+  height: 400px; /* Fixed height for uniformity */
+  object-fit: cover; /* Cover to fill the space */
+}
+
+.card-body {
+  padding: 15px; /* Padding inside the card */
+}
+
+.card-title {
+  font-size: 1.25rem; /* Larger font for titles */
+  font-weight: bold; /* Bold title */
+  margin-bottom: 10px; /* Space below title */
+}
+
+.card-text {
+  font-size: 1rem; /* Font size for text */
+  line-height: 1.6; /* Increased line height for readability */
+  color: #555; /* Dark gray color for text */
+}
+.col-md-8 {
+  font-size: 18px; /* Kích thước chữ */
+  line-height: 1.6; /* Khoảng cách giữa các dòng */
+  color: #333; /* Màu chữ tối */
+  font-family: "Georgia", serif; /* Phông chữ serif tạo cảm giác thanh lịch */
+  margin: 20px 0; /* Khoảng cách phía trên và dưới */
+  padding: 10px; /* Khoảng cách bên trong */
+  text-align: justify; /* Căn đều hai bên */
+  background-color: #f9f9f9; /* Màu nền nhẹ */
+  border-left: 4px solid #ff6347; /* Đường viền bên trái */
+  padding-left: 15px; /* Khoảng cách bên trái cho đường viền */
+  border-radius: 5px; /* Bo góc cho khung văn bản */
+  text-indent: 20px; /* Lùi đầu dòng */
+}
+.hero {
+  padding: 0;
+  margin: 0;
+  background-image: url("../img/HomePageImg.jpg"); /* Thay thế bằng đường dẫn đến hình ảnh của bạn */
+  background-position: center; /* Căn giữa hình nền */
+  color: white; /* Thay đổi màu chữ nếu cần */
+  padding: 10px; /* Thêm khoảng cách bên trong */
+  width: 100%;
+
+  height: 800px;
+  text-align: center; /* Căn giữa văn bản */
+}
+.Start {
+  padding-top: 30px;
+  height: 200px;
+  background-color: #333;
+}
+.hero p {
+  color: white;
+}
+.main-content {
+  padding: 0;
+  margin: 0;
+}
+
+.hero {
+  background-color: #ffcccb; /* Màu nền đỏ nhạt */
+  padding: 40px;
+  text-align: center;
+}
+
+.cta-button {
+  background-color: #ff6347; /* Màu đỏ cà chua */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.features {
+  margin-top: 40px;
+}
+
+.feature-item {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px 0;
+}
+.fengShui-bg{
+  background-image:url(../user/compatibilityCaculation/bodybg2.jpg);
+  background-repeat: repeat;
+  background-position: center;
+  position: relative;
+}

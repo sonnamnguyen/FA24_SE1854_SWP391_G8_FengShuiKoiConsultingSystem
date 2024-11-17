@@ -1,0 +1,36 @@
+/* Make the entire modal background transparent to eliminate any underlying white box */
+.khoi_payment_success_modal .ant-modal-root,
+.khoi_payment_success_modal .ant-modal-content {
+  background-color: transparent; /* Remove background */
+  box-shadow: none; /* Remove inner shadow */
+}
+
+.khoi_payment_success_modal .ant-modal-mask {
+  background: rgba(0, 0, 0, 0.6); /* Dark overlay for background */
+}
+
+/* Style for the modal body to give it a gradient and shadow */
+.khoi_payment_success_modal .ant-modal-body {
+  background: linear-gradient(135deg, #eaf7ff, #d0e8f7); /* Gradient background */
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Stronger shadow for modal body */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  margin: auto;
+}
+
+/* Spinner styles */
+.khoi_payment_success_spinner {
+  margin-bottom: 15px;
+}
+
+/* Message styling */
+.khoi_payment_success_message {
+  font-size: 18px;
+  color: #333;
+  font-weight: 500;
+  margin-top: 10px;
+}

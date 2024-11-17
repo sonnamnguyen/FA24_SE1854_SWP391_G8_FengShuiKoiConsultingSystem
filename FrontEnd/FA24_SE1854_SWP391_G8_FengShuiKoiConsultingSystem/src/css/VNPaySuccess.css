@@ -1,0 +1,35 @@
+/* VNPaySuccess.css */
+.vnpay-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.vnpay-title {
+  font-size: 2.5rem;
+  color: #4caf50; /* Màu xanh lá cây cho thông báo thành công */
+}
+
+.vnpay-message {
+  font-size: 1.2rem;
+  margin: 20px 0;
+}
+
+.vnpay-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.vnpay-button:hover {
+  background-color: #45a049; /* Màu khi hover */
+}
