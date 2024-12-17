@@ -31,7 +31,7 @@ interface Post {
 const ViewPost: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [newComment, setNewComment] = useState<string>("");
-  const [post, setPost] = useState<Post | null>(null); // Chỉ sử dụng một bài viết duy nhất
+  const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -52,7 +52,7 @@ const ViewPost: React.FC = () => {
         );
 
         if (response.data && response.data.result) {
-          setPost(response.data.result); // Lưu bài viết duy nhất
+          setPost(response.data.result);
         } else {
           setError("Bài viết không tồn tại");
         }
@@ -65,6 +65,16 @@ const ViewPost: React.FC = () => {
 
     fetchPost();
   }, [id]);
+
+  useEffect(() => {
+    if (post && post.images.length > 1) {
+      const intervalId = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % post.images.length);
+      }, 3000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [post]);
 
   const handleCommentSubmit = async (values: { content: string }) => {
     const token = getToken();
@@ -112,13 +122,13 @@ const ViewPost: React.FC = () => {
     }
   };
 
-  // Validation schema with Yup
   const validationSchema = Yup.object({
     content: Yup.string()
       .min(1, "Comments must have at least 1 character")
       .max(200, "Comments must not exceed 200 characters")
       .required("Comments must have at least 1 character"),
   });
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -130,13 +140,11 @@ const ViewPost: React.FC = () => {
           <div className="post">
             <h1 className="title">{post.title}</h1>
 
-            {/* Display HTML content using dangerouslySetInnerHTML */}
             <div
               className="contentPost"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
-            {/* Display Images (optional part) */}
             <div className="slide">
               <div className="images">
                 <div

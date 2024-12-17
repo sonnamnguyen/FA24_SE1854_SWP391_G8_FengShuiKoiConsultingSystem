@@ -106,9 +106,6 @@ const ViewProfile: React.FC = () => {
         <div className="col-lg-6 left-contain">
           <div className="about-text go-to">
             <h3 className="dark-color">Your Profile</h3>
-            <h6 className="theme-color lead">
-              {userDetails?.fullName || "User not found"}
-            </h6>
             <div className="row about-list">
               <div className="col-lg-6">
                 <div className="media">

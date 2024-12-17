@@ -18,6 +18,12 @@ interface ConsultationResult {
   id: number;
   description: string;
   status: string;
+  consultationRequestDetailId?: number; // Added field for mapping to request details
+}
+
+interface ConsultationRequestDetail {
+  id: number;
+  shelterCategoryIds: number[]; // Only retrieving necessary fields for shelter categories
 }
 
 interface ShelterCategory {
@@ -46,6 +52,7 @@ const ConsultationShelterCollection: React.FC<ConsultationShelterCollectionProps
   const [consultationShelters, setConsultationShelters] = useState<ConsultationShelter[]>([]);
   const [consultationResults, setConsultationResults] = useState<ConsultationResult[]>([]);
   const [shelterCategories, setShelterCategories] = useState<ShelterCategory[]>([]);
+  const [filteredShelterCategories, setFilteredShelterCategories] = useState<ShelterCategory[]>([]); // Filtered list based on shelterCategoryIds
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedShelter, setSelectedShelter] = useState<ConsultationShelter | null>(null);
@@ -73,7 +80,7 @@ const ConsultationShelterCollection: React.FC<ConsultationShelterCollectionProps
     } catch (error) {
       notification.error({ message: 'Failed to load consultation shelters' });
     } finally {
-      setLoading(false);
+setLoading(false);
     }
   };
 
@@ -99,6 +106,33 @@ const ConsultationShelterCollection: React.FC<ConsultationShelterCollectionProps
       setShelterCategories(response.data.result || []);
     } catch (error) {
       notification.error({ message: 'Failed to load shelter categories' });
+    }
+  };
+
+  const fetchConsultationRequestDetail = async (detailId: number) => {
+    const token = getToken();
+    try {
+      const response = await api.get(`/api/consultation-request-details/${detailId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const detailData = response.data.result as ConsultationRequestDetail;
+      filterShelterCategories(detailData.shelterCategoryIds);
+    } catch (error) {
+      notification.error({ message: 'Failed to load consultation request detail' });
+    }
+  };
+
+  const filterShelterCategories = (categoryIds: number[]) => {
+    const filtered = shelterCategories.filter(cat => categoryIds.includes(cat.id));
+    setFilteredShelterCategories(filtered);
+  };
+
+  const handleConsultationResultChange = (resultId: number) => {
+    const result = consultationResults.find(res => res.id === resultId);
+    if (result?.consultationRequestDetailId) {
+      fetchConsultationRequestDetail(result.consultationRequestDetailId);
+    } else {
+      setFilteredShelterCategories([]); // Reset if no detail ID
     }
   };
 
@@ -131,7 +165,7 @@ const ConsultationShelterCollection: React.FC<ConsultationShelterCollectionProps
       } else {
         await api.post('/api/consultation-shelters', values, {
           headers: { Authorization: `Bearer ${token}` },
-        });
+});
         notification.success({ message: 'Created consultation shelter successfully!' });
       }
       fetchConsultationShelters();
@@ -223,7 +257,7 @@ const ConsultationShelterCollection: React.FC<ConsultationShelterCollectionProps
           Add Consultation Shelter
         </Button>
       </Space>
-      <Table columns={columns} dataSource={consultationShelters} loading={loading} rowKey="id" />
+<Table columns={columns} dataSource={consultationShelters} loading={loading} rowKey="id" />
 
       <Modal
         title={isViewMode ? 'View Consultation Shelter' : selectedShelter ? 'Edit Consultation Shelter' : 'Add Consultation Shelter'}
@@ -239,39 +273,29 @@ const ConsultationShelterCollection: React.FC<ConsultationShelterCollectionProps
         width={800}
       >
         <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
-          {isViewMode && selectedShelter && (
-            <>
-              <p><strong>Consultation Result ID:</strong> {selectedShelter.consultationResultId}</p>
-              <p><strong>Shelter Category:</strong> {shelterCategories.find(cat => cat.id === selectedShelter.shelterCategoryId)?.shelterCategoryName || 'N/A'}</p>
-            </>
-          )}
-          {!isViewMode && !selectedShelter && (
-            <>
-              <Form.Item label="Consultation Result ID" name="consultationResultId" rules={[{ required: true, message: 'Please select a consultation result' }]}>
-                <Select placeholder="Select Consultation Result" disabled={isViewMode}>
-                  {consultationResults.map(result => (
-                    <Option key={result.id} value={result.id}>
-                      {result.id} - {result.description}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
+          <Form.Item label="Consultation Result ID" name="consultationResultId" rules={[{ required: true, message: 'Please select a consultation result' }]}>
+            <Select placeholder="Select Consultation Result" onChange={handleConsultationResultChange} disabled={isViewMode}>
+              {consultationResults.map(result => (
+                <Option key={result.id} value={result.id}>
+                  {result.id} - {result.description}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-              <Form.Item
-                label="Shelter Category"
-                name="shelterCategoryId"
-                rules={[{ required: true, message: 'Please select a shelter category' }]}
-              >
-                <Select placeholder="Select Shelter Category" disabled={isViewMode}>
-                  {shelterCategories.map(category => (
-                    <Option key={category.id} value={category.id}>
-                      {category.id} - {category.shelterCategoryName} - {category.description}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </>
-          )}
+          <Form.Item
+            label="Shelter Category"
+            name="shelterCategoryId"
+            rules={[{ required: true, message: 'Please select a shelter category' }]}
+          >
+            <Select placeholder="Select Shelter Category" disabled={isViewMode}>
+              {filteredShelterCategories.map(category => (
+                <Option key={category.id} value={category.id}>
+                  {category.id} - {category.shelterCategoryName} - {category.description}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
           <Form.Item
             label="Status"
@@ -307,7 +331,7 @@ const ConsultationShelterCollection: React.FC<ConsultationShelterCollectionProps
             ]}
           >
             <Input.TextArea
-              disabled={isViewMode}
+disabled={isViewMode}
               autoSize={{ minRows: 3, maxRows: 10 }}
               placeholder="Enter description"
             />

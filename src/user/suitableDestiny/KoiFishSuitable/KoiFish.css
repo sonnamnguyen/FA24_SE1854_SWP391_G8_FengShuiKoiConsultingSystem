@@ -33,6 +33,7 @@
 
 .card-image {
   margin-top: 30px;
+  height: 220px;
   border-radius: 8px; /* Bo góc của hình ảnh */
   margin-left: 30%; /* Định vị hình ảnh */
   border: 2px solid #ff6347; /* Thêm border cho hình ảnh */
