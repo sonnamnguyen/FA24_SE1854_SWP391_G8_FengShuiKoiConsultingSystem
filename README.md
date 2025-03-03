@@ -62,4 +62,4 @@ The **FengShui Koi Consulting System** is a comprehensive **Feng Shui advisory p
 📧 **Email:** [sonnamsonnam402@gmail.com](mailto:sonnamsonnam402@gmail.com)  
 🔗 LinkedIn: [MyLinkedln](https://www.linkedin.com/in/son-nam-nguyen-0a8094354/)
 
-✨ **Contributions are welcome!** Feel free to **fork**, **create a pull request**, or **report issues** to help improve the project. 🚀
+✨ **Contributions are welcome!** Feel free to **fork**, **create a pull request**, or **report issues** to help improve the project.
