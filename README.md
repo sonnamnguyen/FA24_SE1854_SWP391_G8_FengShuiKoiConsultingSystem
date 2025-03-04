@@ -6,7 +6,7 @@ The **FengShui Koi Consulting System** is a comprehensive **Feng Shui advisory p
 
 ##  **System Requirements**  
 ###  **Required Software**  
-- **Java 17** or later ☕  
+- **Java 17** or later  
 - **Apache Maven 3.8.x**  
 - **Node.js v16.x** or later 
 - **NPM** (included with Node.js)   
